@@ -1,0 +1,135 @@
+Erlang Computer Systems Management Console
+[ ESysMan ]
+Version 1.0
+
+ESysMan is an Erlang based client/server computer systems 
+management console in which a web browser (with websockets
+support) is used to manage computer systems.
+
+--------
+
+Features:
+
+Server
+
+Operations that can be performed on the client from the server:
+
+System functions:
+
+- Reboot
+- Shutdown
+- Pping
+- Wake-on-lan
+- Restart/stop windows service
+- Show logged on users
+
+Faronics Deep Freeze functions:
+(When Faronics Deep Freeze is available)
+
+- Freeze
+- Thaw
+- Get freeze/thaw status
+
+Ninite functions:
+
+Run ninite update or run script
+
+General functions:
+
+- Copy a file (script) to client and run command on client
+- When the "All" command check box is selected, then only
+  the checked workstations will have that command done on them
+- Restrict access based on IP address and username/password
+  (both configurable in esysman.conf).
+
+--------
+
+Client
+
+The client periodically sends messages to the server to indicate
+whether the system is "Up" and which user is logged in.  It also
+does the command processing sent from the server.
+
+--------
+
+Todo list:
+
+-Get client OS, applications and hardware inventory
+-Create better comments/specs for functions
+-Add configurations for mac and linux
+
+--------
+
+Basic setup
+
+Prerequisites:
+1. Erlang (on server and client)
+		http://erlang.org
+
+2. Cowboy and Proper (downloaded and compiled when 'make' is run)
+	  https://github.com/extend/cowboy.git
+	  http://git://github.com/manopapad/proper.git
+
+3. OpenSSL for creating selfsigned certificates
+
+--------
+
+Client/Server Setup
+
+1. Server Setup
+   a. file setup
+
+   	  i. esysman.hrl file set up as follow:
+         (see esysman-example.hrl in repo)
+
+	  ii. ecom.hrl setup (for deepfreeze and windows 7)
+         (see ecom-example.hrl in repo)
+
+	 iii. create esysman.conf
+         (see esysman-example.conf in repo)
+
+   	  iv. run Make from a shell command prompt
+
+   b. to run, execute the following command from a shell command prompt:
+
+   	  ./start.sh
+
+   c.
+	  use browser to access http://localhost:8080
+	  
+	  use browser to access https://localhost:8443
+
+2. Windows setup
+
+   a. copy ecom.beam to something like c:\erl on a windows system (erlang must also be installed on windows system)
+   b. set windows system environment variable "Path" to include erlang (location of erl.exe)
+   c. install erlang as a service
+   	  i. per http://www.erlang.org/doc/man/erlsrv.html something like this:
+
+	  erlsrv add "0ecom" -name ecom@host -w "C:/erl" -args "-setcookie my_cookie_string -s ecom"
+
+   e. start service
+   f. set firewall to allow erl.exe to allow traffic from server IP above
+
+--------
+
+Versions
+--------
+1.0
+
+-Move code to Cowboy 
+	  Change history:
+	  		  YAWS to Misultin because of better websocket support in Musultin
+	  		  Misultin to YAWS as Misultin was EOL'd
+	  		  YAWS to Cowboy as YAWS had no wss:// support
+-Remove code - messages are just sent, no more call then wait process.
+-Add larger log console next to Server Messages header (click + to show/hide console)
+-Use Cowboy Examples make/rebar base configuration for easy setup 
+
+-------
+
+To see previous versions of this project (formerly ECSMCons), see:
+
+https://github.com/comptekki/ecsmcons-my
+
+"-my" at the end indicates misultin and yaws versions exist in the repo
