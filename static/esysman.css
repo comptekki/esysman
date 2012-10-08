@@ -27,12 +27,12 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
 
-body {background-color:black; color:yellow;}
+body {background-color:333333; color:yellow;}
 th.oth {font-size:18pt; text-align:center; border:1px solid #555555;}
 table { border-collapse:collapse;}
 input {width:100px;}
 
-#wrapper { width:1850px; margin:0 auto; border:1px solid #000;}
+#wrapper { width:2050px; margin:0 auto; /* border:1px solid #333333;*/}
 
 #menu { width:99%; background-color:#888; font-weight:bold;  margin: 3px 3px 0 3px;}
 
@@ -56,12 +56,16 @@ input {width:100px;}
 
 #tinputs { float:left; height:235px; background-color:#111;  margin: 3px 0 0 0; padding: 5px 5px 0 5px;}
 
-.tmsgsc { float:left;  padding:0 0 0 3px;}
-.mtopc { background-color:#666; width:495px; font-weight:bold; padding:3px 0 3px 3px;}
-.msgc { overflow:scroll; width:495px; height:220px; color:yellow; background-color:black; padding:0 0 0 3px; }
+/*#tmsgs { width: 100px; }
+#tmsgscl { width: 100px; }
+#tmsgsdup { width: 100px; }
+*/
+.tmsgsc { float:left;  width: 550px; padding:0 0 0 3px;}
+.mtopc { background-color:#666; width:550px; font-weight:bold; padding:3px 0 3px 3px;}
+.msgc { overflow:scroll; width:550px; height:220px; color:yellow; background-color:black; padding:0 0 0 3px; }
 
-.mtopcd { background-color:#666; width:330px; font-weight:bold; padding:3px 0 3px 3px;}
-.msgcd { overflow:scroll; width:330px; height:220px; color:yellow; background-color:black; padding:0 0 0 3px; }
+.mtopcd { background-color:#666; width:550px; font-weight:bold; padding:3px 0 3px 3px;}
+.msgcd { overflow:scroll; width:550px; height:220px; color:yellow; background-color:black; padding:0 0 0 3px; }
 
 #workstations { width:100%; margin:0 auto;}
 
@@ -69,7 +73,7 @@ input {width:100px;}
 
 .hltd {
 	float:left;
-	width:290px;
+	width:320px;
 	height:60px;
 	padding:4px;
 	vertical-align:top;
@@ -80,7 +84,7 @@ input {width:100px;}
 
 .ltd {
 	float:left;
-	width:290px;
+	width:320px;
 	height:110px;
 	padding:4px;
 	vertical-align:top;
@@ -123,6 +127,8 @@ a.button { text-decoration:none; padding: 0 2px 0 2px; }
 
 .wkchk { float:left; height:18px; background-color:#454545; padding:3px 0 3px; 0;}
 .wk { float:left; width:91%; background-color:#454545; padding:3px 0 3px; 0;}
+
+input[type=checkbox] {/*width:50px;*/ height:10px;}
 
 .checkbox
 {
