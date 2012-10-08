@@ -54,9 +54,11 @@ does the command processing sent from the server.
 
 Todo list:
 
--Get client OS, applications and hardware inventory
--Create better comments/specs for functions
--Add configurations for mac and linux
+- Get client OS, applications and hardware inventory
+- Create better comments/specs for functions
+- Add configurations for mac and linux
+- Add select all of commands
+- Make better indicators of selected boxes
 
 --------
 
