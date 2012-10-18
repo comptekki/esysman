@@ -121,10 +121,20 @@ process_msg(Box, Com, Args) ->
 			init:restart(),
 			{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":net_restart">>;
         <<"reboot">> ->
-            os:cmd("shutdown -r -t 0"),
+			case ?PLATFORM of
+				"w" ->
+					os:cmd("shutdown -r -t 0");
+				_ -> 
+					os:cmd("shutdown -r now")
+			end,
 			{hanwebs, ?NODE_AT_HOST} ! <<Box/binary, ":reboot">>;
 		<<"shutdown">> ->
-			os:cmd("shutdown -s -t 0"),
+			case ?PLATFORM of
+				"w" ->
+					os:cmd("shutdown -s -t 0");
+				_ ->
+					os:cmd("shutdown -h now")
+			end,
 		    {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":shutdown">>;
         _ ->
 			{hanwebs, ?NODE_AT_HOST} ! <<"Unknown command: '",Com/binary,"'">>
@@ -158,7 +168,9 @@ get_files([],_T) ->
 	<<>>.
 
 fix_log(Log) ->
-	<<"<br>----------------------------------------<br>",(binary:replace(binary:replace(binary:replace(Log,<<":">>,<<"-">>,[global]),<<"\n">>,<<"<br>">>,[global]),<<"\r">>,<<"">>,[global]))/binary,"<br>----------------------------------------<br><br>">>.
+	<<"<br>----------------------------------------<br>",
+	  (binary:replace(binary:replace(binary:replace(Log,<<":">>,<<"-">>,[global]),<<"\n">>,<<"<br>">>,[global]),<<"\r">>,<<"">>,[global]))/binary,
+	  "<br>----------------------------------------<br><br>">>.
 
 get_date() ->
 	{Year,Month,Day}=date(),
@@ -166,24 +178,70 @@ get_date() ->
 	lists:flatten(io_lib:format("~p~2..0B~2..0B_~2..0B~2..0B~2..0B",[Year,Month,Day,Hour,Min,Sec])).
 
 logged_on() ->
-	case file:list_dir(?USERS_DIR) of
-		 {ok, UserDirs} -> get_user(UserDirs);
-		{error, Reason} -> atom_to_list(Reason)
+	case ?PLATFORM of
+		_ ->
+			get_user(string:tokens(os:cmd("who"),"\n"));
+		"w" ->
+			case file:list_dir(?USERS_DIR) of
+				{ok, UserDirs} -> get_user(UserDirs);
+				{error, Reason} -> atom_to_list(Reason)
+			end
 	end.
 
-get_user([User|Rest]) ->
-	case lists:member(User,?USERS) of
-		true ->
-			get_user(Rest);
+get_user([UserInfo|Rest]) ->
+	case ?PLATFORM of
 		_ ->
-			[User|get_user(Rest)]
-	end;
-get_user([]) -> [].
+			User =
+				case string:tokens(UserInfo, " ")  of
+					[Usert,_,_,_] ->
+						Usert;
+					[Usert,_,_,_,_] ->
+						Usert
+				end,
+			case Rest of
+				[] ->
+					User;
+				_ ->
+					User++"|"++get_user(Rest)
+			end;
+		"w" ->
+			case lists:member(UserInfo,?USERS) of
+				true ->
+					case Rest of
+						[] ->
+							[];
+						_ ->
+							get_user(Rest)
+					end;
+				_ ->
+					case Rest of
+						[] ->
+							UserInfo;
+						_ ->
+							UserInfo++"|"++get_user(Rest)
+					end
+			end
+	end.
+
 
 comp_name() ->
-	Output=os:cmd("echo %computername%"),
-	string:to_lower(string:left(Output,length(Output)-2)).
-	
+	case ?PLATFORM of
+		"m" ->
+			case string:tokens(os:cmd("hostname"), ".") of
+				[Hostname, _] ->
+					Hostname;
+				[Hostname, _, _, _] ->
+					Hostname
+			end;
+		"w" ->
+			NBName=os:cmd("echo %computername%"),
+			string:to_lower(string:strip(string:strip(NBName, right, $\n), right, $\r));
+		"x" ->
+			[Hostname]=string:tokens(os:cmd("hostname"), "\n"),
+			Hostname
+	end.
+
 list_up_fls() ->
 	{ok, Files}=file:list_dir(?UPLOADS_DIR),
 	[ X++"<br>" || X <- Files].
+
