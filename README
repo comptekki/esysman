@@ -18,7 +18,7 @@ System functions:
 
 - Reboot
 - Shutdown
-- Pping
+- Ping
 - Wake-on-lan
 - Restart/stop windows service
 - Show logged on users
@@ -39,6 +39,7 @@ General functions:
 - Copy a file (script) to client and run command on client
 - When the "All" command check box is selected, then only
   the checked workstations will have that command done on them
+- Select All or just row or just column
 - Restrict access based on IP address and username/password
   (both configurable in esysman.conf).
 
@@ -56,8 +57,7 @@ Todo list:
 
 - Get client OS, applications and hardware inventory
 - Create better comments/specs for functions
-- Add configurations for mac and linux
-- Add select all of commands
+- Add configurations for mac and linux (begun)
 
 --------
 
