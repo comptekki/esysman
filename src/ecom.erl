@@ -51,42 +51,92 @@ rec_com() ->
 
 %process_msg(Box, Com, Args, Msg_PID) ->
 process_msg(Box, Com, Args) ->
+%	{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,": -> ", Com/binary, " - ", Args/binary>>,
     case Com of
 		<<"com">> ->
             {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":com <- ",Args/binary>>,
 			case Args of
 				<<"mkuploads">> ->
 					os:cmd("mkdir "++?UPLOADS_DIR),
+					case ?PLATFORM of
+						_ ->
+							os:cmd("chmod 700 "++?UPLOADS_DIR);
+						"w" -> ok
+					end,
 					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,(list_to_binary(":mkdir "++?UPLOADS_DIR))/binary>>;
 				<<"anycmd">> ->
-					os:cmd(?UPLOADS_DIR++"any.cmd"),
+					case ?PLATFORM of
+						"w" ->
+							os:cmd(?UPLOADS_DIR++"any.cmd");
+						_ ->
+							os:cmd("sh "++?UPLOADS_DIR++"any.cmd")
+					end,
 					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":anycmd">>;
-				<<"ninitecmd">> ->
-					os:cmd(?UPLOADS_DIR++"ninite.cmd"),
-					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":ninitecmd">>;
-				<<"ninite">> ->
-					Date=get_date(),
-					os:cmd("c:/erl/uploads/NiniteOne.exe /updateonly /exclude Python  /disableshortcuts /silent "++?UPLOADS_DIR++Date++"_log.txt"),
-					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary, (list_to_binary(":ninite date -> "++Date))/binary>>;
-				<<"ninitelog">> ->
-					{ok,Files}=file:list_dir(?UPLOADS_DIR),
-					Log=get_files(Files,n),
-					case size(Log) of
-						0 -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":no ninite logs">>;
-						_ -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":ninitemlog -> ",Log/binary>>
-					end;
 				<<"listupfls">> ->
 					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary, (list_to_binary(":listupfls:<br>"++list_up_fls()))/binary>>;
+				<<"ninitecmd">> ->
+					case ?PLATFORM of
+						"w" ->
+							os:cmd(?UPLOADS_DIR++"ninite.cmd"),
+							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":ninitecmd">>;
+						_ ->
+							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+					end;
+				<<"ninite">> ->
+					case ?PLATFORM of
+						"w" ->
+							Date=get_date(),
+							os:cmd("c:/erl/uploads/NiniteOne.exe /updateonly /exclude Python  /disableshortcuts /silent "++?UPLOADS_DIR++Date++"_log.txt"),
+							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary, (list_to_binary(":ninite date -> "++Date))/binary>>;
+						_ ->
+							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+					end;
+				<<"ninitelog">> ->
+					case ?PLATFORM of
+						"w" ->
+							{ok,Files}=file:list_dir(?UPLOADS_DIR),
+							Log=get_files(Files,n),
+							case size(Log) of
+								0 -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":no ninite logs">>;
+								_ -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":ninitemlog -> ",Log/binary>>
+							end;
+						_ ->
+							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+					end;
+				<<"osxsulog">> ->
+					case ?PLATFORM of
+						"m" ->
+							{ok,Files}=file:list_dir(?UPLOADS_DIR),
+							Log=get_files(Files,o),
+%Blah=list_to_binary(lists:flatten(Files)),
+%{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":no osx blah info-",Blah/binary>>,
+							case size(Log) of
+								0 -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":no osx softwareupdate log ">>;
+								_ -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":osx-softwareupdate-log -> ",Log/binary>>
+							end;
+						_ ->
+							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+					end;
 				<<"wuinstall">> ->
-					Date=get_date(),
-					os:cmd("c:/erl/uploads/wuinstall.exe /install /criteria \"IsInstalled=0 and Type='Software'\" >"++?UPLOADS_DIR++"wui_"++Date++"_log.txt"),
-					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,(list_to_binary(":wuinstall date -> "++Date))/binary>>;
+					case ?PLATFORM of
+						"w" ->
+							Date=get_date(),
+							os:cmd("c:/erl/uploads/wuinstall.exe /install /criteria \"IsInstalled=0 and Type='Software'\" >"++?UPLOADS_DIR++"wui_"++Date++"_log.txt"),
+							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,(list_to_binary(":wuinstall date -> "++Date))/binary>>;
+						_ ->
+							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+					end;
 				<<"wuilog">> ->
-					{ok,Files}=file:list_dir(?UPLOADS_DIR),
-					Log=get_files(Files,w),
-					case size(Log) of
-						0 -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":no wui logs">>;
-						_ -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":wuilog -> ",Log/binary>>
+					case ?PLATFORM of
+						"w" ->
+							{ok,Files}=file:list_dir(?UPLOADS_DIR),
+							Log=get_files(Files,w),
+							case size(Log) of
+								0 -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":no wui logs">>;
+								_ -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":wuilog -> ",Log/binary>>
+							end;
+						_ ->
+							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
 					end;
 				Unsupported -> Unsupported
 			end;
@@ -104,14 +154,29 @@ process_msg(Box, Com, Args) ->
 			file:close(File),
             {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":copied ",FileName/binary>>;
         <<"dffreeze">> ->
-            {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":dffreeze">>,
-            os:cmd(?DFC_DIR++" "++?DFC_PASSWD++" /BOOTFROZEN");
+			case ?PLATFORM of
+				"w" ->
+					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":dffreeze">>,
+					os:cmd(?DFC_DIR++" "++?DFC_PASSWD++" /BOOTFROZEN");
+				_ ->
+					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+			end;
         <<"dfthaw">> ->
-            {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":dfthaw">>,
-            os:cmd(?DFC_DIR++" "++?DFC_PASSWD++" /BOOTTHAWED");
+			case ?PLATFORM of
+				"w" ->
+					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":dfthaw">>,
+					os:cmd(?DFC_DIR++" "++?DFC_PASSWD++" /BOOTTHAWED");
+				_ ->
+					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+			end;
         <<"dfstatus">> ->
-            Output=os:cmd("C:/erl/df-status.cmd"),
-            {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,(list_to_binary(":dfstatus:"++string:left(Output,length(Output)-2)))/binary>>;
+			case ?PLATFORM of
+				"w" ->
+					Output=os:cmd("C:/erl/df-status.cmd"),
+					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,(list_to_binary(":dfstatus:"++string:left(Output,length(Output)-2)))/binary>>;
+				_ ->
+					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+			end;
         <<"ping">> ->
 			{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":pong">>;
 		<<"net_stop">> ->
@@ -149,10 +214,18 @@ get_files([File|Rest],T) ->
 				n ->
 					case string:str(File,"wui") of
 						0 ->
-							{ok,Log}=file:read_file(?UPLOADS_DIR++File),
-							fix_log(Log);
+							get_files(Rest,T);
 						_ ->
-							get_files(Rest,T)
+							{ok,Log}=file:read_file(?UPLOADS_DIR++File),
+							fix_log(Log)
+					end;
+				o ->
+					case string:str(File,"osxsu") of
+						0 ->
+							get_files(Rest,T);
+						_ ->
+							{ok,Log}=file:read_file(?UPLOADS_DIR++File),
+							fix_log(Log)
 					end;
 				w ->
 					case string:str(File,"wui") of
