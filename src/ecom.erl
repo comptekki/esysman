@@ -103,13 +103,23 @@ process_msg(Box, Com, Args) ->
 						_ ->
 							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
 					end;
+				<<"aptulog">> ->
+					case ?PLATFORM of
+						"x" ->
+							{ok,Files}=file:list_dir(?UPLOADS_DIR),
+							Log=get_files(Files,a),
+							case size(Log) of
+								0 -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":no apt update log ">>;
+								_ -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":apt-update-log -> ",Log/binary>>
+							end;
+						_ ->
+							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+					end;
 				<<"osxsulog">> ->
 					case ?PLATFORM of
 						"m" ->
 							{ok,Files}=file:list_dir(?UPLOADS_DIR),
 							Log=get_files(Files,o),
-%Blah=list_to_binary(lists:flatten(Files)),
-%{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":no osx blah info-",Blah/binary>>,
 							case size(Log) of
 								0 -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":no osx softwareupdate log ">>;
 								_ -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":osx-softwareupdate-log -> ",Log/binary>>
@@ -211,8 +221,8 @@ get_files([File|Rest],T) ->
 			get_files(Rest,T);		
 		_ ->
 			case T of
-				n ->
-					case string:str(File,"wui") of
+				a ->
+					case string:str(File,"apt") of
 						0 ->
 							get_files(Rest,T);
 						_ ->
@@ -299,18 +309,11 @@ get_user([UserInfo|Rest]) ->
 
 comp_name() ->
 	case ?PLATFORM of
-		"m" ->
-			case string:tokens(os:cmd("hostname"), ".") of
-				[Hostname, _] ->
-					Hostname;
-				[Hostname, _, _, _] ->
-					Hostname
-			end;
 		"w" ->
 			NBName=os:cmd("echo %computername%"),
 			string:to_lower(string:strip(string:strip(NBName, right, $\n), right, $\r));
-		"x" ->
-			[Hostname]=string:tokens(os:cmd("hostname"), "\n"),
+		_ ->
+			[Hostname]=string:tokens(os:cmd("hostname -s"), "\n"),
 			Hostname
 	end.
 
