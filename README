@@ -59,7 +59,8 @@ Todo list:
 - Add configurations for mac and linux (partially done)
 - Create layout via web app, not just edit text file
 - Move .hrl vars to .conf
-
+- Add muli-server message send (clients send response to more
+  than one server)
 --------
 
 Basic setup
@@ -101,17 +102,27 @@ Client/Server Setup
 	  
 	  use browser to access https://localhost:8443
 
-2. Windows setup
+2. 
+   i. Windows setup
 
-   a. copy ecom.beam to something like c:\erl on a windows system (erlang must also be installed on windows system)
-   b. set windows system environment variable "Path" to include erlang (location of erl.exe)
-   c. install erlang as a service
-   	  i. per http://www.erlang.org/doc/man/erlsrv.html something like this:
+      a. copy ecom.beam to something like c:\erl on a windows system (erlang must also be installed on windows system)
+      b. set windows system environment variable "Path" to include erlang (location of erl.exe)
+      c. install erlang as a service
+   	     i. per http://www.erlang.org/doc/man/erlsrv.html something like this:
 
-	  erlsrv add "0ecom" -name ecom@host -w "C:/erl" -args "-setcookie my_cookie_string -s ecom"
+	     erlsrv add "0ecom" -name ecom@host -w "C:/erl" -args "-setcookie my_cookie_string -s ecom"
 
-   e. start service
-   f. set firewall to allow erl.exe to allow traffic from server IP above
+      e. start service
+      f. set firewall to allow erl.exe to allow traffic from server IP above
+
+   ii. Linux/Mac setup
+
+      a. copy ecom.beam to something like /usr/local/lib/ebin
+      b. run script to start ecom:
+
+         ./start-ecom.sh
+
+      c. set firewall to allow server to talk to client
 
 --------
 
