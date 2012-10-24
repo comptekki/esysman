@@ -62,8 +62,9 @@ websocket_handle({text, <<"client-connected">>}, Req, State) ->
 			{reply, {text, <<"client-connected">> }, Req, State, hibernate};
 websocket_handle({text, Msg}, Req, State) ->
 	Ldata=binary:split(Msg,<<":">>,[global]),
+	io:format("~nLdata: ~p~n",[Ldata]),
 	[Box,Com,Args]=Ldata,
-	Rec_Node=binary_to_atom(<<?NODE_NAME/binary,Box/binary>>,latin1),
+	Rec_Node=binary_to_atom(<<Box/binary>>,latin1),
 	case Com of
 		<<"com">> ->
 			{rec_com, Rec_Node} ! {Box,Com,Args},
@@ -402,85 +403,88 @@ Is_SSL/binary,
 					   boxCom=m.data.split('/');
 					   sepcol=false;
 					}
+					box=boxCom[0].substr(0,boxCom[0].indexOf('.'));
+					if (box.indexOf('@')>0)
+					   box=box.substr(box.indexOf('@')+1, box.length-1);
 					switch(boxCom[1]) {
 						case 'loggedon':
 							message(sepcol,boxCom[0] + ': ' + boxCom[2]);
 							if (boxCom[2].indexOf('command not')<0) {
 								 if(boxCom[2].length)
-								     $('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').html(boxCom[2]);
+								     $('#'+box+'status').html(boxCom[2]);
 							     else
-							         $('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').html('Up');
+							         $('#'+box+'status').html('Up');
                             }
                             else {
-                                $('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').html('.');
-							    $('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').css('color','red');
-							    $('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').css('background-color','#550000');
+                                $('#'+box+'status').html('.');
+							    $('#'+box+'status').css('color','red');
+							    $('#'+box+'status').css('background-color','#550000');
                             }
 							break;
 						case 'pong':
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').css('color','green');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').css('background-color','#005500');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'_hltd').css('background-color','#005555');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'_ltd').css('background-color','#005555');
+							$('#'+box+'status').css('color','green');
+							$('#'+box+'status').css('background-color','#005500');
+							$('#'+box+'_hltd').css('background-color','#005555');
+							$('#'+box+'_ltd').css('background-color','#005555');
 							message(sepcol,boxCom[0] + ': ' + 'pong');
 							break;
 					    case 'pang':
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').css('color','red');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').css('background-color','#550000');
+							$('#'+box+'status').css('color','red');
+							$('#'+box+'status').css('background-color','#550000');
 							message(sepcol,boxCom[0] + ': ' + 'pang');
 							break;
 						case 'reboot':
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').css('color','red');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').css('background-color','#550000');
-                            $('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').html('.');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'_hltd').css('background-color','#000000');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'_ltd').css('background-color','#000000');
+							$('#'+box+'status').css('color','red');
+							$('#'+box+'status').css('background-color','#550000');
+                            $('#'+box+'status').html('.');
+							$('#'+box+'_hltd').css('background-color','#000000');
+							$('#'+box+'_ltd').css('background-color','#000000');
 							break;
 					    case 'shutdown':
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').css('color','red');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').css('background-color','#550000');
-                            $('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').html('.');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'_hltd').css('background-color','#000000');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'_ltd').css('background-color','#000000');
+							$('#'+box+'status').css('color','red');
+							$('#'+box+'status').css('background-color','#550000');
+                            $('#'+box+'status').html('.');
+							$('#'+box+'_hltd').css('background-color','#000000');
+							$('#'+box+'_ltd').css('background-color','#000000');
 							break;
 					    case 'dffreeze':
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'dfstatus').css('color','cyan');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'dfstatus').css('background-color','#006666');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').css('color','red');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').css('background-color','#550000');
-                            $('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').html('.');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'_hltd').css('background-color','#000000');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'_ltd').css('background-color','#000000');
+							$('#'+box+'dfstatus').css('color','cyan');
+							$('#'+box+'dfstatus').css('background-color','#006666');
+							$('#'+box+'status').css('color','red');
+							$('#'+box+'status').css('background-color','#550000');
+                            $('#'+box+'status').html('.');
+							$('#'+box+'_hltd').css('background-color','#000000');
+							$('#'+box+'_ltd').css('background-color','#000000');
 							break;
 					    case 'dfthaw':
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'dfstatus').css('color','green');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'dfstatus').css('background-color','#006600');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').css('color','red');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').css('background-color','#550000');
-                            $('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').html('.');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'_hltd').css('background-color','#000000');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'_ltd').css('background-color','#000000');
+							$('#'+box+'dfstatus').css('color','green');
+							$('#'+box+'dfstatus').css('background-color','#006600');
+							$('#'+box+'status').css('color','red');
+							$('#'+box+'status').css('background-color','#550000');
+                            $('#'+box+'status').html('.');
+							$('#'+box+'_hltd').css('background-color','#000000');
+							$('#'+box+'_ltd').css('background-color','#000000');
 							break;
 					    case 'dfstatus':
 							if(!(boxCom[2].indexOf('thawed'))){
-								$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'dfstatus').html('DF');
-								$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'dfstatus').css('color','green');
-								$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'dfstatus').css('background-color','#006600');
+								$('#'+box+'dfstatus').html('DF');
+								$('#'+box+'dfstatus').css('color','green');
+								$('#'+box+'dfstatus').css('background-color','#006600');
 							}
 							else {
-								$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'dfstatus').html('DF');
-								$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'dfstatus').css('color','cyan');
-								$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'dfstatus').css('background-color','#006666');
+								$('#'+box+'dfstatus').html('DF');
+								$('#'+box+'dfstatus').css('color','cyan');
+								$('#'+box+'dfstatus').css('background-color','#006666');
 							}
 							break;
 					    case 'copy':
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').css('color','#00cc00');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').css('background-color','#006600');
+							$('#'+box+'status').css('color','#00cc00');
+							$('#'+box+'status').css('background-color','#006600');
 							message(sepcol,boxCom[0] + ': ' + 'copy');
 							break;
 					    case 'com':
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').css('color','#00cc00');
-							$('#'+boxCom[0].substr(0,boxCom[0].indexOf('.'))+'status').css('background-color','#006600');
+							$('#'+box+'status').css('color','#00cc00');
+							$('#'+box+'status').css('background-color','#006600');
 							message(sepcol,boxCom[0] + ': ' + 'com');
 							break;
 					    default:
@@ -658,8 +662,8 @@ Is_SSL/binary,
 				 {<<"dfthaw">>,<<"DeepFreeze Thaw All">>},
 				 {<<"dffreeze">>,<<"DeepFreeze Freeze All">>},
 				 {<<"dfstatus">>,<<"DeepFreeze Status All">>},
-				 {<<"net_restart">>,<<"Restart Win Service All">>},
-				 {<<"net_stop">>,<<"Stop Win Service All">>},
+				 {<<"net_restart">>,<<"Restart Service All">>},
+				 {<<"net_stop">>,<<"Stop Service All">>},
 				 {<<"loggedon">>,<<"Logged On All">>}
 				]))/binary,
 "
