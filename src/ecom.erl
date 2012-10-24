@@ -44,17 +44,27 @@ rec_com() ->
             process_msg(Box, Com, Args),
             rec_com()
 		after 60000 ->
-				{hanwebs, ?NODE_AT_HOST} ! {comp_name()++?DOMAIN++"/pong",self()},
-				{hanwebs, ?NODE_AT_HOST} ! {comp_name()++?DOMAIN++"/loggedon/"++logged_on(),self()},
+				send_msg(?SERVERS),
 				rec_com()
     end.
 
-%process_msg(Box, Com, Args, Msg_PID) ->
+send_msg([Server|Rest]) ->
+	{hanwebs, Server} ! {comp_name()++?DOMAIN++"/pong",self()},
+	{hanwebs, Server} ! {comp_name()++?DOMAIN++"/loggedon/"++logged_on(),self()},
+	send_msg(Rest);
+send_msg([]) ->
+	[].
+
+send_msg([Server|Rest], Msg) ->
+	{hanwebs, Server} ! Msg,
+	send_msg(Rest, Msg);
+send_msg([], _Msg) ->
+	[].
+
 process_msg(Box, Com, Args) ->
-%	{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,": -> ", Com/binary, " - ", Args/binary>>,
     case Com of
 		<<"com">> ->
-            {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":com <- ",Args/binary>>,
+			send_msg(?SERVERS, <<Box/binary,":com <- ",Args/binary>>),
 			case Args of
 				<<"mkuploads">> ->
 					os:cmd("mkdir "++?UPLOADS_DIR),
@@ -63,7 +73,7 @@ process_msg(Box, Com, Args) ->
 							os:cmd("chmod 700 "++?UPLOADS_DIR);
 						"w" -> ok
 					end,
-					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,(list_to_binary(":mkdir "++?UPLOADS_DIR))/binary>>;
+					send_msg(?SERVERS, <<Box/binary,(list_to_binary(":mkdir "++?UPLOADS_DIR))/binary>>);
 				<<"anycmd">> ->
 					case ?PLATFORM of
 						"w" ->
@@ -71,25 +81,25 @@ process_msg(Box, Com, Args) ->
 						_ ->
 							os:cmd("sh "++?UPLOADS_DIR++"any.cmd")
 					end,
-					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":anycmd">>;
+					send_msg(?SERVERS, <<Box/binary,":anycmd">>);
 				<<"listupfls">> ->
-					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary, (list_to_binary(":listupfls:<br>"++list_up_fls()))/binary>>;
+					send_msg(?SERVERS, <<Box/binary, (list_to_binary(":listupfls:<br>"++list_up_fls()))/binary>>);
 				<<"ninitecmd">> ->
 					case ?PLATFORM of
 						"w" ->
 							os:cmd(?UPLOADS_DIR++"ninite.cmd"),
-							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":ninitecmd">>;
+							send_msg(?SERVERS, <<Box/binary,":ninitecmd">>);
 						_ ->
-							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+							send_msg(?SERVERS,  <<Box/binary,":error - no function on this platform...">>)
 					end;
 				<<"ninite">> ->
 					case ?PLATFORM of
 						"w" ->
 							Date=get_date(),
 							os:cmd("c:/erl/uploads/NiniteOne.exe /updateonly /exclude Python  /disableshortcuts /silent "++?UPLOADS_DIR++Date++"_log.txt"),
-							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary, (list_to_binary(":ninite date -> "++Date))/binary>>;
+							send_msg(?SERVERS, <<Box/binary, (list_to_binary(":ninite date -> "++Date))/binary>>);
 						_ ->
-							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
 				<<"ninitelog">> ->
 					case ?PLATFORM of
@@ -97,11 +107,13 @@ process_msg(Box, Com, Args) ->
 							{ok,Files}=file:list_dir(?UPLOADS_DIR),
 							Log=get_files(Files,n),
 							case size(Log) of
-								0 -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":no ninite logs">>;
-								_ -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":ninitemlog -> ",Log/binary>>
+								0 ->
+									send_msg(?SERVERS, <<Box/binary,":no ninite logs">>);
+								_ ->
+									send_msg(?SERVERS, <<Box/binary,":ninitemlog -> ",Log/binary>>)
 							end;
 						_ ->
-							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
 				<<"aptulog">> ->
 					case ?PLATFORM of
@@ -109,11 +121,13 @@ process_msg(Box, Com, Args) ->
 							{ok,Files}=file:list_dir(?UPLOADS_DIR),
 							Log=get_files(Files,a),
 							case size(Log) of
-								0 -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":no apt update log ">>;
-								_ -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":apt-update-log -> ",Log/binary>>
+								0 ->
+									send_msg(?SERVERS, <<Box/binary,":no apt update log ">>);
+								_ ->
+									send_msg(?SERVERS, <<Box/binary,":apt-update-log -> ",Log/binary>>)
 							end;
 						_ ->
-							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
 				<<"osxsulog">> ->
 					case ?PLATFORM of
@@ -121,20 +135,22 @@ process_msg(Box, Com, Args) ->
 							{ok,Files}=file:list_dir(?UPLOADS_DIR),
 							Log=get_files(Files,o),
 							case size(Log) of
-								0 -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":no osx softwareupdate log ">>;
-								_ -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":osx-softwareupdate-log -> ",Log/binary>>
+								0 ->
+									send_msg(?SERVERS, <<Box/binary,":no osx softwareupdate log ">>);
+								_ ->
+									send_msg(?SERVERS, <<Box/binary,":osx-softwareupdate-log -> ",Log/binary>>)
 							end;
 						_ ->
-							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
 				<<"wuinstall">> ->
 					case ?PLATFORM of
 						"w" ->
 							Date=get_date(),
 							os:cmd("c:/erl/uploads/wuinstall.exe /install /criteria \"IsInstalled=0 and Type='Software'\" >"++?UPLOADS_DIR++"wui_"++Date++"_log.txt"),
-							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,(list_to_binary(":wuinstall date -> "++Date))/binary>>;
+							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":wuinstall date -> "++Date))/binary>>);
 						_ ->
-							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
 				<<"wuilog">> ->
 					case ?PLATFORM of
@@ -142,16 +158,18 @@ process_msg(Box, Com, Args) ->
 							{ok,Files}=file:list_dir(?UPLOADS_DIR),
 							Log=get_files(Files,w),
 							case size(Log) of
-								0 -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":no wui logs">>;
-								_ -> {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":wuilog -> ",Log/binary>>
+								0 ->
+									send_msg(?SERVERS, <<Box/binary,":no wui logs">>);
+								_ ->
+									send_msg(?SERVERS, <<Box/binary,":wuilog -> ",Log/binary>>)
 							end;
 						_ ->
-							{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
 				Unsupported -> Unsupported
 			end;
 		<<"loggedon">> ->
-			{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,(list_to_binary(":loggedon:"++logged_on()))/binary>>;
+			send_msg(?SERVERS, <<Box/binary,(list_to_binary(":loggedon:"++logged_on()))/binary>>);
 		<<"copy">> ->
 			{FileName, Data} = Args,
 			case FileName of
@@ -162,39 +180,39 @@ process_msg(Box, Com, Args) ->
 			end,
 			file:write(File,Data), 
 			file:close(File),
-            {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":copied ",FileName/binary>>;
+            send_msg(?SERVERS, <<Box/binary,":copied ",FileName/binary>>);
         <<"dffreeze">> ->
 			case ?PLATFORM of
 				"w" ->
-					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":dffreeze">>,
+					send_msg(?SERVERS, <<Box/binary,":dffreeze">>),
 					os:cmd(?DFC_DIR++" "++?DFC_PASSWD++" /BOOTFROZEN");
 				_ ->
-					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+					send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 			end;
         <<"dfthaw">> ->
 			case ?PLATFORM of
 				"w" ->
-					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":dfthaw">>,
+					send_msg(?SERVERS, <<Box/binary,":dfthaw">>),
 					os:cmd(?DFC_DIR++" "++?DFC_PASSWD++" /BOOTTHAWED");
 				_ ->
-					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+					send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 			end;
         <<"dfstatus">> ->
 			case ?PLATFORM of
 				"w" ->
 					Output=os:cmd("C:/erl/df-status.cmd"),
-					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,(list_to_binary(":dfstatus:"++string:left(Output,length(Output)-2)))/binary>>;
+					send_msg(?SERVERS, <<Box/binary,(list_to_binary(":dfstatus:"++string:left(Output,length(Output)-2)))/binary>>);
 				_ ->
-					{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":error - no function on this platform...">>
+					send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 			end;
         <<"ping">> ->
-			{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":pong">>;
+			send_msg(?SERVERS, <<Box/binary,":pong">>);
 		<<"net_stop">> ->
 			init:stop(),
-			{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":net_stop">>;
+			send_msg(?SERVERS, <<Box/binary,":net_stop">>);
 		<<"net_restart">> ->
 			init:restart(),
-			{hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":net_restart">>;
+			send_msg(?SERVERS, <<Box/binary,":net_restart">>);
         <<"reboot">> ->
 			case ?PLATFORM of
 				"w" ->
@@ -202,7 +220,7 @@ process_msg(Box, Com, Args) ->
 				_ -> 
 					os:cmd("shutdown -r now")
 			end,
-			{hanwebs, ?NODE_AT_HOST} ! <<Box/binary, ":reboot">>;
+			send_msg(?SERVERS, <<Box/binary, ":reboot">>);
 		<<"shutdown">> ->
 			case ?PLATFORM of
 				"w" ->
@@ -210,9 +228,9 @@ process_msg(Box, Com, Args) ->
 				_ ->
 					os:cmd("shutdown -h now")
 			end,
-		    {hanwebs, ?NODE_AT_HOST} ! <<Box/binary,":shutdown">>;
+		    send_msg(?SERVERS, <<Box/binary,":shutdown">>);
         _ ->
-			{hanwebs, ?NODE_AT_HOST} ! <<"Unknown command: '",Com/binary,"'">>
+			send_msg(?SERVERS, <<"Unknown command: '",Com/binary,"'">>)
     end.
 
 get_files([File|Rest],T) ->
@@ -311,10 +329,10 @@ comp_name() ->
 	case ?PLATFORM of
 		"w" ->
 			NBName=os:cmd("echo %computername%"),
-			string:to_lower(string:strip(string:strip(NBName, right, $\n), right, $\r));
+			?NODE_NAME ++ string:to_lower(string:strip(string:strip(NBName, right, $\n), right, $\r));
 		_ ->
 			[Hostname]=string:tokens(os:cmd("hostname -s"), "\n"),
-			Hostname
+			?NODE_NAME ++ Hostname
 	end.
 
 list_up_fls() ->
