@@ -44,6 +44,8 @@ rec_com() ->
             process_msg(Box, Com, Args),
             rec_com()
 		after 60000 ->
+%				rpc:multi_server_call(?SERVERS, hanwebs, {comp_name()++?DOMAIN++"/pong",self()}),
+%				rpc:multi_server_call(?SERVERS, hanwebs, {comp_name()++?DOMAIN++"/loggedon/"++logged_on(),self()}),
 				send_msg(?SERVERS),
 				rec_com()
     end.
@@ -56,6 +58,7 @@ send_msg([]) ->
 	[].
 
 send_msg([Server|Rest], Msg) ->
+%	rpc:multi_server_call(?SERVERS, hanwebs, Msg).
 	{hanwebs, Server} ! Msg,
 	send_msg(Rest, Msg);
 send_msg([], _Msg) ->
@@ -77,11 +80,11 @@ process_msg(Box, Com, Args) ->
 				<<"anycmd">> ->
 					case ?PLATFORM of
 						"w" ->
-							os:cmd(?UPLOADS_DIR++"any.cmd");
+							Res = list_to_binary(os:cmd(?UPLOADS_DIR++"any.cmd"));
 						_ ->
-							os:cmd("sh "++?UPLOADS_DIR++"any.cmd")
+							Res = list_to_binary(os:cmd("sh "++?UPLOADS_DIR++"any.cmd"))
 					end,
-					send_msg(?SERVERS, <<Box/binary,":anycmd">>);
+					send_msg(?SERVERS, <<Box/binary,":anycmd - Results -> ", Res/binary>>);
 				<<"listupfls">> ->
 					send_msg(?SERVERS, <<Box/binary, (list_to_binary(":listupfls:<br>"++list_up_fls()))/binary>>);
 				<<"ninitecmd">> ->
@@ -280,31 +283,17 @@ get_date() ->
 
 logged_on() ->
 	case ?PLATFORM of
-		_ ->
-			get_user(string:tokens(os:cmd("who"),"\n"));
 		"w" ->
 			case file:list_dir(?USERS_DIR) of
 				{ok, UserDirs} -> get_user(UserDirs);
 				{error, Reason} -> atom_to_list(Reason)
-			end
+			end;
+		_ ->
+			get_user(string:tokens(os:cmd("who"),"\n"))
 	end.
 
 get_user([UserInfo|Rest]) ->
 	case ?PLATFORM of
-		_ ->
-			User =
-				case string:tokens(UserInfo, " ")  of
-					[Usert,_,_,_] ->
-						Usert;
-					[Usert,_,_,_,_] ->
-						Usert
-				end,
-			case Rest of
-				[] ->
-					User;
-				_ ->
-					User++"|"++get_user(Rest)
-			end;
 		"w" ->
 			case lists:member(UserInfo,?USERS) of
 				true ->
@@ -321,6 +310,20 @@ get_user([UserInfo|Rest]) ->
 						_ ->
 							UserInfo++"|"++get_user(Rest)
 					end
+			end;
+		_ ->
+			User =
+				case string:tokens(UserInfo, " ")  of
+					[Usert,_,_,_] ->
+						Usert;
+					[Usert,_,_,_,_] ->
+						Usert
+				end,
+			case Rest of
+				[] ->
+					User;
+				_ ->
+					User++"|"++get_user(Rest)
 			end
 	end.
 
@@ -328,8 +331,8 @@ get_user([UserInfo|Rest]) ->
 comp_name() ->
 	case ?PLATFORM of
 		"w" ->
-			NBName=os:cmd("echo %computername%"),
-			?NODE_NAME ++ string:to_lower(string:strip(string:strip(NBName, right, $\n), right, $\r));
+			[NBName, _] = string:tokens(os:cmd("echo %computername%"), "\r"),
+			?NODE_NAME ++ string:to_lower(NBName);
 		_ ->
 			[Hostname]=string:tokens(os:cmd("hostname -s"), "\n"),
 			?NODE_NAME ++ Hostname
