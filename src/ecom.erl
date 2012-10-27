@@ -118,6 +118,14 @@ process_msg(Box, Com, Args) ->
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
+				<<"aptupdate">> ->
+					case ?PLATFORM of
+						"x" ->
+							os:cmd("/usr/bin/apt-get update >/tmp/uploads/aptu_log.txt;/usr/bin/apt-get -y upgrade >>/tmp/uploads/aptu_log.txt"),
+							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":aptupdate -> done..."))/binary>>);
+						_ ->
+							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
+					end;
 				<<"aptulog">> ->
 					case ?PLATFORM of
 						"x" ->
@@ -129,6 +137,14 @@ process_msg(Box, Com, Args) ->
 								_ ->
 									send_msg(?SERVERS, <<Box/binary,":apt-update-log -> ",Log/binary>>)
 							end;
+						_ ->
+							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
+					end;
+				<<"osxupdate">> ->
+					case ?PLATFORM of
+						"m" ->
+							os:cmd("/usr/sbin/softwareupdate -ia >/tmp/uploads/osxsu_log.txt"),
+							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":osxupdate -> "))/binary>>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
