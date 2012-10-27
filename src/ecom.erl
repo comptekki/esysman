@@ -250,6 +250,14 @@ get_files([File|Rest],T) ->
 							{ok,Log}=file:read_file(?UPLOADS_DIR++File),
 							fix_log(Log)
 					end;
+				n ->
+					case string:str(File,"log") of
+						0 ->
+							get_files(Rest,T);
+						_ ->
+							{ok,Log}=file:read_file(?UPLOADS_DIR++File),
+							fix_log(Log)
+					end;
 				o ->
 					case string:str(File,"osxsu") of
 						0 ->
