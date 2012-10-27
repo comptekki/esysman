@@ -140,7 +140,7 @@ process_msg(Box, Com, Args) ->
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
-				<<"osxupdate">> ->
+				<<"osxsupdate">> ->
 					case ?PLATFORM of
 						"m" ->
 							os:cmd("/usr/sbin/softwareupdate -ia >/tmp/uploads/osxsu_log.txt"),
@@ -152,7 +152,7 @@ process_msg(Box, Com, Args) ->
 					case ?PLATFORM of
 						"m" ->
 							{ok,Files}=file:list_dir(?UPLOADS_DIR),
-							Log=get_files(Files,o),
+							Log=get_files(Files,m),
 							case size(Log) of
 								0 ->
 									send_msg(?SERVERS, <<Box/binary,":no osx softwareupdate log ">>);
@@ -274,7 +274,7 @@ get_files([File|Rest],T) ->
 							{ok,Log}=file:read_file(?UPLOADS_DIR++File),
 							fix_log(Log)
 					end;
-				o ->
+				m ->
 					case string:str(File,"osxsu") of
 						0 ->
 							get_files(Rest,T);
