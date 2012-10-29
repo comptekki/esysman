@@ -99,7 +99,7 @@ process_msg(Box, Com, Args) ->
 					case ?PLATFORM of
 						"w" ->
 							Date=get_date(),
-							os:cmd("c:/erl/uploads/NiniteOne.exe /updateonly /exclude Python  /disableshortcuts /silent "++?UPLOADS_DIR++Date++"_log.txt"),
+							os:cmd("c:/erl/uploads/NiniteOne.exe /updateonly /exclude Python  /disableshortcuts /silent "++?UPLOADS_DIR++"ninite_"++Date++"_log.txt"),
 							send_msg(?SERVERS, <<Box/binary, (list_to_binary(":ninite date -> "++Date))/binary>>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
@@ -267,7 +267,7 @@ get_files([File|Rest],T) ->
 							fix_log(Log)
 					end;
 				n ->
-					case string:str(File,"log") of
+					case string:str(File,"ninite") of
 						0 ->
 							get_files(Rest,T);
 						_ ->
@@ -332,7 +332,12 @@ get_user([UserInfo|Rest]) ->
 						[] ->
 							UserInfo;
 						_ ->
-							UserInfo++"|"++get_user(Rest)
+							UserInfo++
+								case get_user(Rest) of
+									[] ->
+										get_user(Rest);
+									_ -> "|"++get_user(Rest)
+								end
 					end
 			end;
 		_ ->
@@ -347,7 +352,12 @@ get_user([UserInfo|Rest]) ->
 				[] ->
 					User;
 				_ ->
-					User++"|"++get_user(Rest)
+					case get_user(Rest) of
+						[] ->
+							get_user(Rest);
+						_ -> "|"++get_user(Rest)
+					end
+
 			end
 	end.
 
