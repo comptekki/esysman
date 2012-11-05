@@ -18,7 +18,7 @@ System functions:
 
 - Reboot
 - Shutdown
-- Pping
+- Ping
 - Wake-on-lan
 - Restart/stop windows service
 - Show logged on users
