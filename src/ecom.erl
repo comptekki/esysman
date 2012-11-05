@@ -185,6 +185,16 @@ process_msg(Box, Com, Args) ->
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
+				<<?WOLNAME>> ->
+					case ?PLATFORM of
+						"x" ->
+							% list of mac addresses in different subnet
+							wol(?WOLLIST),
+							io:format("~n done wol - ~p ~n",[Box]),
+							send_msg(?SERVERS, <<Box/binary,":wolbnr360 -> ">>);
+						_ ->
+							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
+					end;
 				Unsupported -> Unsupported
 			end;
 		<<"loggedon">> ->
@@ -251,6 +261,22 @@ process_msg(Box, Com, Args) ->
         _ ->
 			send_msg(?SERVERS, <<"Unknown command: '",Com/binary,"'">>)
     end.
+
+wol([MacAddr|Macs]) ->
+	MacAddrBin= <<<<(list_to_integer(X, 16))>> || X <- string:tokens(MacAddr,"-")>>,
+	MagicPacket= << (dup(<<16#FF>>, 6))/binary, (dup(MacAddrBin, 16))/binary >>,
+	{ok,S} = gen_udp:open(0, [{broadcast, true}]),
+	gen_udp:send(S, ?BROADCAST_ADDR, 9, MagicPacket),
+	gen_udp:close(S),
+	wol(Macs);
+wol([]) ->
+	[].
+
+dup(B,Acc) when Acc > 1 ->	
+    B2=dup(B, Acc-1),
+	<< B/binary,  B2/binary >>;
+dup(B,1) ->
+    B.
 
 get_files([File|Rest],T) ->
 	case string:str(File,"log") of
@@ -336,7 +362,8 @@ get_user([UserInfo|Rest]) ->
 								case get_user(Rest) of
 									[] ->
 										get_user(Rest);
-									_ -> "|"++get_user(Rest)
+									_ ->
+										UserInfo++"|"++get_user(Rest)
 								end
 					end
 			end;
@@ -355,7 +382,8 @@ get_user([UserInfo|Rest]) ->
 					case get_user(Rest) of
 						[] ->
 							get_user(Rest);
-						_ -> "|"++get_user(Rest)
+						_ ->
+							User++"|"++get_user(Rest)
 					end
 
 			end
