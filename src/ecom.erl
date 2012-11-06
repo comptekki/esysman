@@ -126,6 +126,14 @@ process_msg(Box, Com, Args) ->
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
+				<<"aptdistupgrade">> ->
+					case ?PLATFORM of
+						"x" ->
+							os:cmd("/usr/bin/apt-get update >/tmp/uploads/aptu_log.txt;/usr/bin/apt-get -y dist-upgrade >>/tmp/uploads/aptu_log.txt"),
+							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":aptupdate -> done..."))/binary>>);
+						_ ->
+							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
+					end;
 				<<"aptulog">> ->
 					case ?PLATFORM of
 						"x" ->
