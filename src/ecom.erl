@@ -118,7 +118,7 @@ process_msg(Box, Com, Args) ->
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
-				<<"aptupdate">> ->
+				<<"aptupgrade">> ->
 					case ?PLATFORM of
 						"x" ->
 							os:cmd("/usr/bin/apt-get update >/tmp/uploads/aptu_log.txt;/usr/bin/apt-get -y upgrade >>/tmp/uploads/aptu_log.txt"),
