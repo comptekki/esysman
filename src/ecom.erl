@@ -373,6 +373,8 @@ get_user([UserInfo|Rest]) ->
 					[Usert,_,_,_] ->
 						Usert;
 					[Usert,_,_,_,_] ->
+						Usert;
+					[Usert,_,_,_,_,_] ->
 						Usert
 				end,
 			case Rest of
