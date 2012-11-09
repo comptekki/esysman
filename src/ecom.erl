@@ -121,7 +121,7 @@ process_msg(Box, Com, Args) ->
 				<<"aptupgrade">> ->
 					case ?PLATFORM of
 						"x" ->
-							os:cmd("/usr/bin/apt-get update >/tmp/uploads/aptu_log.txt;/usr/bin/apt-get -y upgrade >>/tmp/uploads/aptu_log.txt"),
+							os:cmd("/usr/bin/apt-get update >"++?UPLOADS_DIR++"aptu_log.txt;/usr/bin/apt-get -y upgrade >>"++?UPLOADS_DIR++"aptu_log.txt"),
 							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":aptupdate -> done..."))/binary>>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
@@ -129,7 +129,7 @@ process_msg(Box, Com, Args) ->
 				<<"aptdistupgrade">> ->
 					case ?PLATFORM of
 						"x" ->
-							os:cmd("/usr/bin/apt-get update >/tmp/uploads/aptu_log.txt;/usr/bin/apt-get -y dist-upgrade >>/tmp/uploads/aptu_log.txt"),
+							os:cmd("/usr/bin/apt-get update >"++?UPLOADS_DIR++"aptu_log.txt;/usr/bin/apt-get -y dist-upgrade >>"++?UPLOADS_DIR++"aptu_log.txt"),
 							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":aptupdate -> done..."))/binary>>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
@@ -397,8 +397,9 @@ get_user([UserInfo|Rest]) ->
 					end
 
 			end
-	end.
-
+	end;
+get_user([]) ->
+	"".
 
 comp_name() ->
 	case ?PLATFORM of
