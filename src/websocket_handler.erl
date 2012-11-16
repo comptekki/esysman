@@ -1297,12 +1297,12 @@ comButtons([{Wk,FQDN,MacAddr,_Os}|Wks],Rm,RowCnt,ColCnt) ->
 
 	$('#net_restart_",Wk/binary,"').click(function(){
 		send('",FQDN/binary,":net_restart:0');
-		message(true,'Restarting win service on ",Wk/binary,"...')
+		message(true,'Restarting service on ",Wk/binary,"...')
 	});
 
 	$('#net_stop_",Wk/binary,"').click(function(){
 		send('",FQDN/binary,":net_stop:0');
-		message(true,'Stopping win service on ",Wk/binary,"...')
+		message(true,'Stopping service on ",Wk/binary,"...')
 	});
 
 
