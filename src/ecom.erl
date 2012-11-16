@@ -118,6 +118,15 @@ process_msg(Box, Com, Args) ->
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
+				<<"aptcheck">> ->
+					case ?PLATFORM of
+						"x" ->
+							Res = os:cmd("/usr/lib/update-notifier/apt-check --human-readable"),
+							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":aptcheck -> done..."))/binary, (fix_txt(Res))/binary>>);
+%							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":aptcheck -> done..."))/binary>>);
+						_ ->
+							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
+					end;
 				<<"aptupgrade">> ->
 					case ?PLATFORM of
 						"x" ->
@@ -328,6 +337,11 @@ get_files([File|Rest],T) ->
 	end;
 get_files([],_T) ->
 	<<>>.
+
+fix_txt(Txt) ->
+	<<"<br>----------------------------------------<br>",
+	  (binary:replace(list_to_binary(Txt),<<"\n">>,<<"<br>">>))/binary,
+	  "<br>----------------------------------------<br><br>">>.
 
 fix_log(Log) ->
 	<<"<br>----------------------------------------<br>",
