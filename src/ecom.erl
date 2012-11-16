@@ -118,14 +118,29 @@ process_msg(Box, Com, Args) ->
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
+				<<"unamea">> ->
+					case ?PLATFORM of
+						"x" ->
+							Res = os:cmd("/bin/uname -a"),
+							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":unamea -> done..."))/binary, (fix_log(Res))/binary>>);
+						_ ->
+							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
+					end;
+				<<"ubuntuver">> ->
+					case ?PLATFORM of
+						"x" ->
+							Res = os:cmd("/usr/bin/lsb_release -a"),
+							send_msg(?SERVERS, <<Box/binary,":ubuntuver -> done...", (fix_log(Res))/binary>>);
+						_ ->
+							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
+					end;
 				<<"aptcheck">> ->
 					case ?PLATFORM of
 						"x" ->
 							Res = os:cmd("/usr/lib/update-notifier/apt-check --human-readable"),
-							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":aptcheck -> done..."))/binary, (fix_txt(Res))/binary>>);
-%							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":aptcheck -> done..."))/binary>>);
+							send_msg(?SERVERS, <<Box/binary, ":aptcheck -> done...", (fix_log(Res))/binary>>);
 						_ ->
-							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
+							send_msg(?SERVERS, <<Box/binary, ":error - no function on this platform...">>)
 					end;
 				<<"aptupgrade">> ->
 					case ?PLATFORM of
@@ -338,15 +353,16 @@ get_files([File|Rest],T) ->
 get_files([],_T) ->
 	<<>>.
 
-fix_txt(Txt) ->
-	<<"<br>----------------------------------------<br>",
-	  (binary:replace(list_to_binary(Txt),<<"\n">>,<<"<br>">>))/binary,
-	  "<br>----------------------------------------<br><br>">>.
-
-fix_log(Log) ->
-	<<"<br>----------------------------------------<br>",
-	  (binary:replace(binary:replace(binary:replace(Log,<<":">>,<<"-">>,[global]),<<"\n">>,<<"<br>">>,[global]),<<"\r">>,<<"">>,[global]))/binary,
-	  "<br>----------------------------------------<br><br>">>.
+fix_log(PreLog) ->
+	PostLog = case is_binary(PreLog) of
+			  false ->
+				  list_to_binary(PreLog);
+			  _ ->
+				  PreLog
+		  end,
+	<<"<br><br>----------------------------------------<br>",
+	  (binary:replace(binary:replace(binary:replace(PostLog, <<":">>, <<"-">>, [global]), <<"\n">>, <<"<br>">>, [global]), <<"\r">>, <<"">>, [global]))/binary,
+	  "<br>----------------------------------------<br>">>.
 
 get_date() ->
 	{Year,Month,Day}=date(),
