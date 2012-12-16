@@ -99,7 +99,7 @@ process_msg(Box, Com, Args) ->
 					case ?PLATFORM of
 						"w" ->
 							Date=get_date(),
-							os:cmd("c:/erl/uploads/NiniteOne.exe /updateonly /exclude Python  /disableshortcuts /silent "++?UPLOADS_DIR++"ninite_"++Date++"_log.txt"),
+							os:cmd(?UPLOADS_DIR++"NiniteOne.exe /updateonly /exclude Python  /disableshortcuts /silent "++?UPLOADS_DIR++"ninite_"++Date++"_log.txt"),
 							send_msg(?SERVERS, <<Box/binary, (list_to_binary(":ninite date -> "++Date))/binary>>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
@@ -198,7 +198,7 @@ process_msg(Box, Com, Args) ->
 					case ?PLATFORM of
 						"w" ->
 							Date=get_date(),
-							os:cmd("c:/erl/uploads/wuinstall.exe /install /criteria \"IsInstalled=0 and Type='Software'\" >"++?UPLOADS_DIR++"wui_"++Date++"_log.txt"),
+							os:cmd(?UPLOADS_DIR++"wuinstall.exe /install /criteria \"IsInstalled=0 and Type='Software'\" >"++?UPLOADS_DIR++"wui_"++Date++"_log.txt"),
 							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":wuinstall date -> "++Date))/binary>>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
@@ -235,7 +235,7 @@ process_msg(Box, Com, Args) ->
 			{FileName, Data} = Args,
 			case FileName of
 				<<"ecom.beam">> ->
-					{ok, File} = file:open(<<?ERL_DIR/binary,FileName/binary>>, [write]); 
+					{ok, File} = file:open(<<(list_to_binary(?ERL_DIR))/binary,FileName/binary>>, [write]); 
 				_ ->
 					{ok, File} = file:open(<<(list_to_binary(?UPLOADS_DIR))/binary,FileName/binary>>, [write])
 			end,
@@ -261,7 +261,7 @@ process_msg(Box, Com, Args) ->
         <<"dfstatus">> ->
 			case ?PLATFORM of
 				"w" ->
-					Output=os:cmd("C:/erl/df-status.cmd"),
+					Output=os:cmd(?ERL_DIR++"df-status.cmd"),
 					send_msg(?SERVERS, <<Box/binary,(list_to_binary(":dfstatus:"++string:left(Output,length(Output)-2)))/binary>>);
 				_ ->
 					send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
