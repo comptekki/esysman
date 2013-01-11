@@ -1,6 +1,6 @@
-Erlang Computer Systems Management Console
+Erlang Systems Manager
 [ ESysMan ]
-Version 1.0
+Version 2.0
 
 ESysMan is an Erlang based client/server computer systems 
 management console in which a web browser (with websockets
@@ -19,11 +19,11 @@ System functions:
 - Reboot
 - Shutdown
 - Ping
-- Wake-on-lan
+- Wake-on-lan (PC only)
 - Restart/stop windows service
 - Show logged on users
 
-Faronics Deep Freeze functions:
+Faronics Deep Freeze functions (for PC):
 (When Faronics Deep Freeze is available)
 
 - Freeze
@@ -56,11 +56,9 @@ Todo list:
 
 - Get client OS, applications and hardware inventory
 - Create better comments/specs for functions
-- Add configurations for mac and linux (partially done)
 - Create layout via web app, not just edit text file
 - Move .hrl vars to .conf
-- Add muli-server message send (clients send response to more
-  than one server)
+
 --------
 
 Basic setup
@@ -128,6 +126,15 @@ Client/Server Setup
 
 Versions
 --------
+
+2.0
+
+-Update for cowboy master (20130110)
+-Add basic linux/mac support
+
+
+--------
+
 1.0
 
 -Move code to Cowboy 
