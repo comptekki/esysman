@@ -28,32 +28,44 @@
 %%
 
 -module(websocket_handler).
--behaviour(cowboy_http_handler).
--behaviour(cowboy_http_websocket_handler).
--export([init/3, handle/2, terminate/2]).
--export([websocket_init/3, websocket_handle/3,
-	websocket_info/3, websocket_terminate/3]).
+-export([
+		 init/3,
+		 handle/2,
+		 terminate/2
+		]).
+-export([
+		 websocket_init/3,
+		 websocket_handle/3,
+		 websocket_info/3,
+		 websocket_terminate/3
+		]).
 
--include("deps/cowboy/include/http.hrl").
+%im().
+%ii(websocket_handler).
+%iaa([init]).
+
 -include("esysman.hrl").
 
-init({_Any, http}, Req, []) ->
-	case cowboy_http_req:header('Upgrade', Req) of
-		{undefined, Req2} -> {ok, Req2, undefined};
-		{<<"websocket">>, _Req2} -> {upgrade, protocol, cowboy_http_websocket};
-		{<<"WebSocket">>, _Req2} -> {upgrade, protocol, cowboy_http_websocket}
+init(_Transport, Req, []) ->
+	case cowboy_req:header(<<"upgrade">>, Req) of
+		{undefined, Req2} ->
+			{ok, Req2, undefined};
+		{<<"websocket">>, _Req2} ->
+			{upgrade, protocol, cowboy_websocket};
+		{<<"WebSocket">>, _Req2} ->
+			{upgrade, protocol, cowboy_websocket}
 	end.
 
 terminate(_Req, _State) ->
 	ok.
 
 websocket_init(_Any, Req, []) ->
-	case lists:member(hanwebs,registered()) of
+	case lists:member(hanwebs, registered()) of
 		true -> ok;
 		false ->
-			register(hanwebs,self())
+			register(hanwebs, self())
 	end,
-	Req2 = cowboy_http_req:compact(Req),
+	Req2 = cowboy_req:compact(Req),
 	{ok, Req2, undefined, hibernate}.
 
 websocket_handle({text, <<"close">>}, Req, State) ->
@@ -154,27 +166,28 @@ websocket_info(PreMsg, Req, State) ->
 websocket_terminate(_Reason, _Req, _State) ->
 	ok.
 
-%%
-
-fire_wall(Req) ->
-	{PeerAddress, _Req}=cowboy_http_req:peer_addr(Req),
-	{ok, [_,{FireWallOnOff,IPAddresses},_,_,_]}=file:consult(?CONF),
+fire_wall(Req) ->	
+	{PeerAddress, _Req}=cowboy_req:peer_addr(Req),
+	{ok, [_,{FireWallOnOff,IPAddresses},_,_]}=file:consult(?CONF),
 	case FireWallOnOff of
 		on ->
 			case lists:member(PeerAddress,IPAddresses) of
-				true -> allow;
-				false -> deny
-		    end;
+				true ->
+					allow;
+				false ->
+					deny
+			end;
 		off -> allow
-	end.	
+	end.
 
-%%
+%
 
 fwDenyMessage(Req, State) ->
-	{ok, Req2} = cowboy_http_req:reply(200, [{'Content-Type', <<"text/html">>}],
-<<"<html>
+	{ok, Req2} =
+		cowboy_req:reply(200, [{<<"Content-Type">>, <<"text/html">>}],
+			  <<"<html>
 <head> 
-<title>ESysMan Login</title>
+<title>", ?TITLE, "</title>
 <style>
 body {background-color:black; color:yellow}
 </style>
@@ -183,12 +196,13 @@ body {background-color:black; color:yellow}
 Access Denied!
 </body>
 </html>">>, Req),
-	{ok, Req2, State}.
+    {ok, Req2, State}.
+
 
 %%
 
 login_is() ->
-	{ok, [_,_,{UPOnOff,UnamePasswds},_,_]}=file:consult(?CONF),
+	{ok, [_,_,{UPOnOff,UnamePasswds},_]}=file:consult(?CONF),
 	case UPOnOff of
 		on -> UnamePasswds;
 		off -> off
@@ -197,59 +211,80 @@ login_is() ->
 %%
 
 checkCreds(UnamePasswds, Req, _State) ->
-	{C,_Req} = cowboy_http_req:cookie(<<"esysman_logged_in">>,Req),
-    case C of
-		undefined ->
-			checkPost(UnamePasswds,Req);
-		<<"true">> ->
-			{pass,Req}
+	[{Uname,_}] = UnamePasswds,
+	{C, Req1} = cowboy_req:cookie(Uname, Req),
+    case (C == undefined) or (C == <<>>) of
+		true ->
+			checkPost(UnamePasswds, Req1);
+		false  ->
+			CookieVal = get_cookie_val(), 
+			Req2 = cowboy_req:set_resp_cookie(Uname, CookieVal, [{max_age, ?MAXAGE}, {path, "/"}, {secure, true}, {http_only, true}], Req1),
+			{pass, Req2}
 	end.
 
+%
+
+checkCreds([{Uname,Passwd}|UnamePasswds], Uarg, Parg, Req) ->
+    case Uname of
+		Uarg ->
+			case Passwd of
+				Parg ->
+					CookieVal = get_cookie_val(), 
+					Req0 = cowboy_req:set_resp_cookie(Uname, CookieVal, [{max_age, ?MAXAGE}, {path, "/"}, {secure, true}, {http_only, true}], Req),
+					{pass, Req0};
+				_ ->
+					checkCreds(UnamePasswds,Uarg,Parg,Req)
+			end;
+		_ ->
+			checkCreds(UnamePasswds, Uarg, Parg, Req)
+	end;
+checkCreds([], _Uarg, _Parg, Req) ->
+	{fail, Req}.
+
+%
+
 checkPost(UnamePasswds,Req) ->
-	case Req#http_req.method of
-		'POST' ->
-			{FormData, Req0}=cowboy_http_req:body_qs(Req),
+	case cowboy_req:method(Req) of
+		{<<"POST">>, Req0} ->
+			{ok, FormData, Req1} = cowboy_req:body_qs(Req0),
 			case FormData of
-				[{_UnameVar,UnameVal},{_PasswdVar,PasswdVal},_Login] ->	
-					checkCreds(UnamePasswds,UnameVal,PasswdVal,Req0);
+				[{_UnameVar,UnameVal},{_PasswdVar,PasswdVal},_Login] ->
+					checkCreds(UnamePasswds,UnameVal,PasswdVal,Req1);
 				_ ->
 					{fail,Req}
 			end;
 		_ ->
 			{fail,Req}
 	end.
-	
 
-checkCreds([{Uname,Passwd}|UnamePasswds],Uarg,Parg,Req) ->
-    case Uname of
-		Uarg ->
-			case Passwd of
-				Parg ->
-					{ok, [_,_,_,{MaxAge},_]}=file:consult(?CONF),
-					{ok,Req0}=cowboy_http_req:set_resp_cookie(<<"esysman_logged_in">>,<<"true">>,[{max_age,MaxAge},{path,"/"}],Req),
-					{pass,Req0};
-				_ ->
-					checkCreds(UnamePasswds,Uarg,Parg,Req)
-			end;
-		_ ->
-			checkCreds(UnamePasswds,Uarg,Parg,Req)
-	end;
-checkCreds([],_Uarg,_Parg,Req) ->
-	{fail,Req}.
+%
 
-%%
+get_cookie_val() ->
+	list_to_binary(
+	  integer_to_list(
+		calendar:datetime_to_gregorian_seconds({date(), time()})
+	   )).
 
-app_login(Req, State) ->	
+%
+
+app_login(Req, State) ->
 	case fire_wall(Req) of
 		allow ->
 			case is_list(login_is()) of
 				true ->
-					{ok, Req2} = cowboy_http_req:reply(200, [{'Content-Type', <<"text/html">>}],
+					{ok, Req2} = cowboy_req:reply(200, [{<<"Content-Type">>, <<"text/html">>}],
 <<"<html>
 <head> 
-<title>ESysMan Login</title>
-<link href='/static/esysman.css' media='screen' rel='stylesheet' type='text/css' />
-<script type='text/javascript' src='/static/jquery-1.7.1.min.js'></script>
+<title>", ?TITLE, "</title>
+
+<meta Http-Equiv='Cache-Control' Content='no-cache'>
+<meta Http-Equiv='Pragma' Content='no-cache'>
+<meta Http-Equiv='Expires' Content='0'>
+<META HTTP-EQUIV='EXPIRES' CONTENT='Mon, 30 Apr 2012 00:00:01 GMT'>
+
+<link rel='icon' href='/static/favicon.ico' type='image/x-icon' />
+<link rel=\"stylesheet\" href=\"", ?CSS, "?", (now_bin())/binary, "\" type=\"text/css\" media=\"screen\" />
+<script type='text/javascript' src='", ?JQUERY, "'></script>
 <script>
 $(document).ready(function(){
 
@@ -261,7 +296,7 @@ $('#uname').focus();
 <body>
 <form action='/esysman' method='post'>
 <div>
-  <h3>Erlang Computer Management Console Login</h3>
+  <h3>", ?TITLE, " Login</h3>
 </div>
 <div class='unamed'>
   <div class='unamed-t'>Username: </div><div><input id='uname' type='text' name='uname'></div>
@@ -274,31 +309,32 @@ $('#uname').focus();
 </div>
 </form>
 </body>
-</html>">>, Req),
-	{ok, Req2, State};
+</html>">>, Req);
                 false ->
-					{ok, Req2} = cowboy_http_req:reply(200, [{'Content-Type', <<"text/html">>}],
+					{ok, Req2} = cowboy_req:reply(200, [{<<"Content-Type">>, <<"text/html">>}],
 <<"<html>
 <head> 
-<title>ESysMan Login</title>
+<title>", ?TITLE, " Login</title>
 </head>
 <body>
 hi
 </body>
-</html>">>, Req),
-	{ok, Req2, State}
-            end;
+</html>">>, Req)
+            end,
+    {ok, Req2, State};
         deny ->
             fwDenyMessage(Req, State)
     end.
 
+%
+
 handle(Req, State) ->
-	case fire_wall(Req) of
+case fire_wall(Req) of
 		allow ->
 			Creds=login_is(),
 			case is_list(Creds) of
 				true ->
-					{Cred,Req0}=checkCreds(Creds, Req, State),
+					{Cred, Req0} = checkCreds(Creds, Req, State),
 					case Cred of
 						fail ->
 							app_login(Req0, State);
@@ -317,31 +353,37 @@ handle(Req, State) ->
 			fwDenyMessage(Req, State)
 	end.
 
+%
+
 app_front_end(Req, State) ->
 	Is_SSL=
-		case Req#http_req.transport of
-			cowboy_ssl_transport ->
+		case cowboy_req:get([socket, transport], Req) of
+			[_Socket, ranch_ssl] ->
 				<<"true">>;
-			_ ->
+			[_Socket, _] ->
 				<<"false">>
 		end,
-	Host=
-		case Req#http_req.host of
-			[Host1] ->
-				Host1;
-			[IP_p1,IP_p2,IP_p3,IP_p4] ->
-				<<IP_p1/binary,".",IP_p2/binary,".",IP_p3/binary,".",IP_p4/binary>>
-		end,
-	Port=list_to_binary(integer_to_list(Req#http_req.port)),
-	io:format("~n host: ~p port: ~p~n",[Host,Port]),
-	Get_rms=get_rms_keys(?ROOMS,49),
-	{ok, [_,_,_,_,{Ref_cons_time}]}=file:consult(?CONF),
-	{ok, Req2} = cowboy_http_req:reply(200, [{'Content-Type', <<"text/html">>}],
+	{Host, Req2} = cowboy_req:host(Req),
+
+	{PortInt, Req3} = cowboy_req:port(Req2),
+	Port = list_to_binary(integer_to_list(PortInt)),
+	io:format("~n host: ~p port: ~p~n", [Host, Port]),
+	Get_rms = get_rms_keys(?ROOMS, 49),
+	{ok, [_, _, _, {Ref_cons_time}]} = file:consult(?CONF),
+	{ok, Req4} = cowboy_req:reply(200, [{<<"Content-Type">>, <<"text/html">>}],
 <<"<html>
 <head> 
-<title>ESysMan</title> 
-<link href='/static/esysman.css' media='screen' rel='stylesheet' type='text/css' />
-<script type='text/javascript' src='/static/jquery-1.7.1.min.js'></script>
+<title>", ?TITLE, "</title>
+
+<meta Http-Equiv='Cache-Control' Content='no-cache'>
+<meta Http-Equiv='Pragma' Content='no-cache'>
+<meta Http-Equiv='Expires' Content='0'>
+<META HTTP-EQUIV='EXPIRES' CONTENT='Mon, 30 Apr 2012 00:00:01 GMT'>
+
+<link rel='icon' href='/static/favicon.ico' type='image/x-icon' />
+<link rel=\"stylesheet\" href=\"", ?CSS, "?", (now_bin())/binary, "\" type=\"text/css\" media=\"screen\" />
+<script type='text/javascript' src='", ?JQUERY, "'></script>
+
 <script>
 
 $(document).ready(function(){
@@ -715,8 +757,8 @@ Is_SSL/binary,
 </div>
 
 </body> 
-</html>">>, Req),
-	{ok, Req2, State}. % main_page()
+</html>">>, Req3),
+	{ok, Req4, State}. % main_page()
 
  %%
 
@@ -1600,3 +1642,9 @@ jsrefcons_row([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm) ->
 	end;
 jsrefcons_row([],_Rm) ->
 	<<>>.
+
+%
+
+now_bin() ->
+	{N1,N2,N3}=now(),
+	list_to_binary(integer_to_list(N1)++integer_to_list(N2)++integer_to_list(N3)).
