@@ -1,6 +1,6 @@
 {application, esysman, [
-	{description, "Erlang Systems Management Console"},
-	{vsn, "0.1.0"},
+	{description, "Erlang Systems Manager"},
+	{vsn, "2.0"},
 	{modules, []},
 	{registered, [esysman_sup]},
 	{applications, [
