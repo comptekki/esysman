@@ -28,16 +28,18 @@
 %%
 
 -module(redirect_handler).
--behaviour(cowboy_http_handler).
 -export([init/3, handle/2, terminate/2]).
 
-init({_Any, http}, Req, []) ->
+-include("esysman.hrl").
+
+init(_Transport, Req, []) ->
 	{ok, Req, undefined}.
 
 handle(Req, State) ->
-	{ok,Req2}=cowboy_http_req:set_resp_cookie(<<"esysman_logged_in">>,<<"">>,[{max_age,-3600},{path,"/"}],Req),
-	{ok,Req3}=cowboy_http_req:set_resp_header('Location',<<"/esysman">>,Req2),
-	{ok, Req4} = cowboy_http_req:reply(307, [],<<>>, Req3),
+	{ok, [_, _, {_, [{Uname, _}]}, _]} = file:consult(?CONF),
+	Req2 = cowboy_req:set_resp_cookie(Uname, <<"">>, [{path, "/"}], Req),
+	Req3 = cowboy_req:set_resp_header(<<"Location">>, <<"/esysman">>, Req2),
+	{ok, Req4} = cowboy_req:reply(307, [], <<>>, Req3),
 	{ok, Req4, State}.
 
 terminate(_Req, _State) ->
