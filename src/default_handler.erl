@@ -31,12 +31,12 @@
 -behaviour(cowboy_http_handler).
 -export([init/3, handle/2, terminate/2]).
 
-init({_Any, http}, Req, []) ->
+init(_Transport, Req, []) ->
 	{ok, Req, undefined}.
 
 handle(Req, State) ->
-	{ok,Req2}=cowboy_http_req:set_resp_header('Location',<<"/esysman">>,Req),
-	{ok, Req3} = cowboy_http_req:reply(307, [],<<>>, Req2),
+	Req2 = cowboy_req:set_resp_header(<<"Location">>, <<"/esysman">>, Req),
+	{ok, Req3} = cowboy_req:reply(307, [], <<>>, Req2),
 	{ok, Req3, State}.
 
 terminate(_Req, _State) ->
