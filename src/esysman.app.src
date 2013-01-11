@@ -1,16 +1,15 @@
 {application, esysman, [
-	{description, "Erlang Compter Management Console"},
+	{description, "Erlang Systems Management Console"},
 	{vsn, "0.1.0"},
 	{modules, []},
 	{registered, [esysman_sup]},
 	{applications, [
 		kernel,
 		stdlib,
-		crypto,
 		public_key,
 		ssl,
 		cowboy
 	]},
-	{mod, {esysman, []}},
+	{mod, {esysman_app, []}},
 	{env, []}
 ]}.
