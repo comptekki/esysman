@@ -28,42 +28,12 @@
 %%
 
 -module(esysman).
--behaviour(application).
--export([start/0, start/2, stop/1]).
+-export([start/0]).
 
 start() ->
 	application:start(crypto),
 	application:start(public_key),
 	application:start(ssl),
+	application:start(ranch),
 	application:start(cowboy),
 	application:start(esysman).
-
-start(_Type, Args) ->
-	[HTTP_Port,HTTPS_Port]=
-		case Args of
-			[] -> [8080,8443];
-			Any -> Any
-		end,
-	Dispatch = [
-		{'_', [
-			{[<<"esysman">>], websocket_handler, []},
-			{[<<"esysman">>,<<"logout">>], redirect_handler, []},
-			{[<<"static">>,'...'],cowboy_http_static,[{directory, "static/"}]},
-			{[<<"/">>,'...'],cowboy_http_static,[{directory, "slash/"}]},
-			{'_', default_handler, []}
-		]}
-	],
-	cowboy:start_listener(my_http_listener, 100,
-		cowboy_tcp_transport, [{port, HTTP_Port}],
-		cowboy_http_protocol, [{dispatch, Dispatch}]
-	),
-	cowboy:start_listener(my_https_listener, 100,
-		cowboy_ssl_transport, [
-			{port, HTTPS_Port}, {certfile, "priv/ssl/cert.pem"},
-			{keyfile, "priv/ssl/key.pem"}, {password, "cowboy"}],
-		cowboy_http_protocol, [{dispatch, Dispatch}]
-	),
-	esysman_sup:start_link().
-
-stop(_State) ->
-	ok.
