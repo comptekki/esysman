@@ -401,7 +401,7 @@ get_user([UserInfo|Rest]) ->
 									[] ->
 										get_user(Rest);
 									_ ->
-										UserInfo++"|"++get_user(Rest)
+										"|"++get_user(Rest)
 								end
 					end
 			end;
@@ -419,11 +419,12 @@ get_user([UserInfo|Rest]) ->
 				[] ->
 					User;
 				_ ->
+					User++
 					case get_user(Rest) of
 						[] ->
 							get_user(Rest);
 						_ ->
-							User++"|"++get_user(Rest)
+							"|"++get_user(Rest)
 					end
 
 			end
