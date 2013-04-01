@@ -5,6 +5,8 @@ all: app
 app: get-deps
 	@./rebar compile
 	@./mkcert.sh
+	@erlc do_compile_rel.erl
+	@./chkrel.bsh
 
 get-deps:
 	@./rebar get-deps
