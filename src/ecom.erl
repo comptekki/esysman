@@ -65,7 +65,7 @@ send_msg([], _Msg) ->
 	[].
 
 process_msg(Box, Com, Args) ->
-    case Com of
+	case Com of
 		<<"com">> ->
 			send_msg(?SERVERS, <<Box/binary,":com <- ",Args/binary>>),
 			case Args of
@@ -220,7 +220,7 @@ process_msg(Box, Com, Args) ->
 				<<?WOLNAME>> ->
 					case ?PLATFORM of
 						"x" ->
-							% list of mac addresses in different subnet
+												% list of mac addresses in different subnet
 							wol(?WOLLIST),
 							io:format("~n done wol - ~p ~n",[Box]),
 							send_msg(?SERVERS, <<Box/binary,":wolbnr360 -> ">>);
@@ -241,8 +241,8 @@ process_msg(Box, Com, Args) ->
 			end,
 			file:write(File,Data), 
 			file:close(File),
-            send_msg(?SERVERS, <<Box/binary,":copied ",FileName/binary>>);
-        <<"dffreeze">> ->
+			send_msg(?SERVERS, <<Box/binary,":copied ",FileName/binary>>);
+		<<"dffreeze">> ->
 			case ?PLATFORM of
 				"w" ->
 					send_msg(?SERVERS, <<Box/binary,":dffreeze">>),
@@ -250,7 +250,7 @@ process_msg(Box, Com, Args) ->
 				_ ->
 					send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 			end;
-        <<"dfthaw">> ->
+		<<"dfthaw">> ->
 			case ?PLATFORM of
 				"w" ->
 					send_msg(?SERVERS, <<Box/binary,":dfthaw">>),
@@ -258,7 +258,7 @@ process_msg(Box, Com, Args) ->
 				_ ->
 					send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 			end;
-        <<"dfstatus">> ->
+		<<"dfstatus">> ->
 			case ?PLATFORM of
 				"w" ->
 					Output=os:cmd(?ERL_DIR++"df-status.cmd"),
@@ -266,7 +266,7 @@ process_msg(Box, Com, Args) ->
 				_ ->
 					send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 			end;
-        <<"ping">> ->
+		<<"ping">> ->
 			send_msg(?SERVERS, <<Box/binary,":pong">>);
 		<<"net_stop">> ->
 			init:stop(),
@@ -274,25 +274,25 @@ process_msg(Box, Com, Args) ->
 		<<"net_restart">> ->
 			init:restart(),
 			send_msg(?SERVERS, <<Box/binary,":net_restart">>);
-        <<"reboot">> ->
+		<<"reboot">> ->
+			send_msg(?SERVERS, <<Box/binary, ":reboot">>),
 			case ?PLATFORM of
 				"w" ->
 					os:cmd("shutdown -r -t 0");
 				_ -> 
 					os:cmd("shutdown -r now")
-			end,
-			send_msg(?SERVERS, <<Box/binary, ":reboot">>);
+			end;
 		<<"shutdown">> ->
+			send_msg(?SERVERS, <<Box/binary,":shutdown">>),
 			case ?PLATFORM of
 				"w" ->
 					os:cmd("shutdown -s -t 0");
 				_ ->
 					os:cmd("shutdown -h now")
-			end,
-		    send_msg(?SERVERS, <<Box/binary,":shutdown">>);
-        _ ->
+			end;
+		_ ->
 			send_msg(?SERVERS, <<"Unknown command: '",Com/binary,"'">>)
-    end.
+	end.
 
 wol([MacAddr|Macs]) ->
 	MacAddrBin= <<<<(list_to_integer(X, 16))>> || X <- string:tokens(MacAddr,"-")>>,
