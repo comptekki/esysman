@@ -657,6 +657,20 @@ Is_SSL/binary,
         $('#big_msg').html($('#msg').html());
         $('#big_msg').toggle();
 	});
+
+    $('#sacs').click(function(){
+        if($(':checkbox:lt(1)').is(':checked')){
+//            $(':checkbox:lt(10)').removeAttr('checked');
+//            $('#tinputs:checkbox:lt(2)').removeAttr('checked');
+          $(':checkbox').removeAttr('checked');
+        }
+        else {
+//            $(':checkbox:lt(10)').attr('checked', 'checked');
+//            $('#tinputs:checkbox:lt(2)').attr('checked', 'checked');
+          $(':checkbox').attr('checked', 'checked');  
+      }
+  
+    });
 });
 
 </script>
@@ -694,7 +708,9 @@ Is_SSL/binary,
 	 false -> <<"">>
  end)/binary,
 "
- <a href=# id='disconnect' class='button' />Disconnect</a><br>
+<a href=# id='disconnect' class='button' />Disconnect</a>
+<a href=# id='sacs' class='button lbar' />S/UnS All Coms</a>
+<div class='brk'></div>
 ",
 ( mkAllRoomsComs([
 				 {<<"ping">>,<<"Ping All">>},
