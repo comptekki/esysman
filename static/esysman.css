@@ -169,3 +169,10 @@ a.mbig {text-decoration:none;}
 	overflow:scroll;
 	display:none;
 }
+
+.lbar {
+	border-left: 4px solid #555555;
+	margin-left: 5px;
+	padding-left: 10px;
+	height: 20px;
+}
