@@ -7,4 +7,4 @@
 % compile rel file
 
 start() ->
-	systools:make_script("esysman_ssl-16b").
+	systools:make_script("esysman_ssl").
