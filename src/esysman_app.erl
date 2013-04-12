@@ -42,15 +42,15 @@ start(_Type, Args) ->
 			[] -> [8080,8443];
 			Any -> Any
 		end,
-	Dispatch = [
+	Dispatch = cowboy_router:compile([
 		{'_', [
-			{[<<"esysman">>], websocket_handler, []},
-			{[<<"esysman">>,<<"logout">>], redirect_handler, []},
-			{[<<"static">>,'...'], cowboy_static,[{directory, "static/"}]},
-			{[<<"/">>,'...'], cowboy_static,[{directory, "slash/"}]},
+			{"/esysman", websocket_handler, []},
+			{"/esysman/logout", redirect_handler, []},
+			{"/static/[...]", cowboy_static, [{directory, "static/"}]},
+			{"/favicon.ico", cowboy_static, [{file, "favicon.ico"}]},
 			{'_', default_handler, []}
 		]}
-	],
+	]),
 	{ok, _} = 
 		cowboy:start_http(
 		  http,
