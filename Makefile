@@ -13,6 +13,7 @@ get-deps:
 
 clean:
 	@./rebar clean
-	rm -f erl_crash.dump
+	@rm -f erl_crash.dump
+	@rm -f do_compile_rel.beam
 
 dist-clean: clean
