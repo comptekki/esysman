@@ -31,7 +31,7 @@
 -export([
 		 init/3,
 		 handle/2,
-		 terminate/2
+		 terminate/3
 		]).
 -export([
 		 websocket_init/3,
@@ -56,7 +56,7 @@ init(_Transport, Req, []) ->
 			{upgrade, protocol, cowboy_websocket}
 	end.
 
-terminate(_Req, _State) ->
+terminate(_Reason, _Req, _State) ->
 	ok.
 
 websocket_init(_Any, Req, []) ->
