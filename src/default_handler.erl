@@ -28,8 +28,7 @@
 %%
 
 -module(default_handler).
--behaviour(cowboy_http_handler).
--export([init/3, handle/2, terminate/2]).
+-export([init/3, handle/2, terminate/3]).
 
 init(_Transport, Req, []) ->
 	{ok, Req, undefined}.
@@ -39,5 +38,5 @@ handle(Req, State) ->
 	{ok, Req3} = cowboy_req:reply(307, [], <<>>, Req2),
 	{ok, Req3, State}.
 
-terminate(_Req, _State) ->
+terminate(_Reason, _Req, _State) ->
 	ok.
