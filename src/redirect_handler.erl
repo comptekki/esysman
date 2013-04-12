@@ -28,7 +28,7 @@
 %%
 
 -module(redirect_handler).
--export([init/3, handle/2, terminate/2]).
+-export([init/3, handle/2, terminate/3]).
 
 -include("esysman.hrl").
 
@@ -42,5 +42,5 @@ handle(Req, State) ->
 	{ok, Req4} = cowboy_req:reply(307, [], <<>>, Req3),
 	{ok, Req4, State}.
 
-terminate(_Req, _State) ->
+terminate(_Reason, _Req, _State) ->
 	ok.
