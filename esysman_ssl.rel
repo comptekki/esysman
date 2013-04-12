@@ -1,0 +1,16 @@
+%% release file for esysman
+{release, 
+		  {"OTP  APN 181 01","R16B"},
+		  {erts, "5.10.1"},
+      	  [
+		  {kernel,"2.16.1"},
+      	  {stdlib,"1.19.1"},
+      	  {crypto, "2.3"},
+      	  {public_key, "0.18"},
+      	  {ssl, "5.2.1"},
+%		  {sasl, "2.3.1"},
+		  {ranch, "0.8.0"},
+		  {cowboy, "0.8.3"},
+		  {esysman, "2.0"}
+		  ]
+}.
