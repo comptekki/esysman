@@ -39,7 +39,7 @@
 start(_Type, Args) ->
 	[HTTP_Port,HTTPS_Port]=
 		case Args of
-			[] -> [8080,8443];
+			[] -> [10080,10443];
 			Any -> Any
 		end,
 	Dispatch = [
