@@ -47,7 +47,7 @@ start(_Type, Args) ->
 			{"/esysman", websocket_handler, []},
 			{"/esysman/logout", redirect_handler, []},
 			{"/static/[...]", cowboy_static, [{directory, "static/"}]},
-			{"/favicon.ico", cowboy_static, [{file, "favicon.ico"}]},
+			{"/favicon.ico", cowboy_static, [{directory, {priv_dir, esysman_app, []}}, {file, "favicon.ico"}]},
 			{'_', default_handler, []}
 		]}
 	]),
