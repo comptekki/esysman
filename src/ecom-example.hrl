@@ -1,8 +1,13 @@
 -define(DOMAIN,".domain").
 -define(DFC_DIR, "C:/Windows/SysWOW64/dfc.exe").
 -define(DFC_PASSWD, "dfpassword").
--define(ERL_DIR, <<"c:/erl/">>).
--define(UPLOADS_DIR, "c:/erl/uploads/").
+-define(ERL_DIR, <<"c:/windows/erl/">>).
+-define(UPLOADS_DIR, "c:/windows/erl/uploads/").
 -define(USERS_DIR, <<"c:/users">>).
 -define(USERS, ["Public","desktop.ini","Default","Default User","All Users"]).
--define(NODE_AT_HOST,'ecom@server_host_name').
+-define(SERVERS,['ecom@host']).
+-define(NODE_NAME, "ecom@").
+-define(PLATFORM, "w").
+-define(WOLNAME, "wolname-command-name-in-esysman-hrl").
+-define(WOLLIST, []).
+-define(BROADCAST_ADDR, {192,168,0,255}).
