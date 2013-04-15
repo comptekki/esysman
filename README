@@ -1,6 +1,6 @@
 Erlang Systems Manager
 [ ESysMan ]
-Version 2.0
+Version 1.1
 
 ESysMan is an Erlang based client/server computer systems 
 management console in which a web browser (with websockets
@@ -20,9 +20,16 @@ System functions:
 - Shutdown
 - Ping
 - Wake-on-lan (PC only)
+- Wake-on-lan (via service in different subnet that doesn't bridge wol packets)
 - Restart/stop windows service
 - Show logged on users
+- Copy - copy file to workstation
+- Com - run command on workstation
 
+- Copy All - does copy to all selected workstations
+- Com All - does command on all selected workstations
+(see General functions below)
+ 
 Faronics Deep Freeze functions (for PC):
 (When Faronics Deep Freeze is available)
 
@@ -36,7 +43,7 @@ Run ninite update or run script
 
 General functions:
 
-- Copy a file (script) to client and run command on client
+- Copy a file or script to client and run on client
 - When the "All" command check box is selected, then only
   the checked workstations will have that command done on them
 - Restrict access based on IP address and username/password
@@ -67,9 +74,8 @@ Prerequisites:
 1. Erlang (on server and client)
 		http://erlang.org
 
-2. Cowboy and Proper (downloaded and compiled when 'make' is run)
+2. Cowboy 0.8.3 (downloaded and compiled when 'make' is run)
 	  https://github.com/extend/cowboy.git
-	  http://git://github.com/manopapad/proper.git
 
 3. OpenSSL for creating selfsigned certificates
 
@@ -108,7 +114,7 @@ Client/Server Setup
       c. install erlang as a service
    	     i. per http://www.erlang.org/doc/man/erlsrv.html something like this:
 
-	     erlsrv add "0ecom" -name ecom@host -w "C:/erl" -args "-setcookie my_cookie_string -s ecom"
+	     see install-ssl.cmd sample file
 
       e. start service
       f. set firewall to allow erl.exe to allow traffic from server IP above
@@ -127,10 +133,11 @@ Client/Server Setup
 Versions
 --------
 
-2.0
+1.1
 
--Update for cowboy master (20130110)
+-Update for cowboy 0.8.3
 -Add basic linux/mac support
+-Add S/UnS All Coms to select everything - commands and workstations
 
 
 --------
