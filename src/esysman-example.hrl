@@ -1,6 +1,12 @@
 -define(BROADCAST_ADDR, {192,168,0,255}).
--define(SERVER, 'node@host').
--define(NODE_NAME, <<"node@">>).
+-define(APPS, [<<"">>,<<"any.cmd">>,<<"any.exe">>,<<"any.msi">>,<<"any.msp">>,<<"any.reg">>,<<"ecom.beam">>,<<"NiniteOne.exe">>,<<"ninite.cmd">>,<<"WUInstall.exe">>]).
+-define(COMS, [<<"">>,<<"anycmd">>,<<"listupfls">>,<<"mkuploads">>,<<"ninite">>,<<"ninitecmd">>,<<"ninitelog">>,<<"wuinstall">>]).
+-define(CONF,"/path/to/esysman.conf").
+-define(UPLOADS,<<"/path/to/uploads/">>).
+-define(MAXAGE, 500).
+-define(TITLE, "ESysMan").
+-define(CSS, "/static/esysman.css").
+-define(JQUERY, "/static/jquery-1.9.1.min.js").
 -define(ROOMS,
 [
  ["room1",
@@ -14,7 +20,3 @@
    [{<<"room2-04">>,<<"fqdn">>,<<"00-00-00-00-00-00>>"},{<<".">>,<<"">>,<<"">>,<<">>"},{<<"room2-05">>,<<"fqdn">>,<<"00-00-00-00-00-00,">>"}]
  ],
 ]).
--define(APPS, [<<"">>,<<"any.cmd">>,<<"any.exe">>,<<"any.msi">>,<<"any.msp">>,<<"any.reg">>,<<"ecom.beam">>,<<"NiniteOne.exe">>,<<"ninite.cmd">>,<<"WUInstall.exe">>]).
--define(COMS, [<<"">>,<<"anycmd">>,<<"listupfls">>,<<"mkuploads">>,<<"ninite">>,<<"ninitecmd">>,<<"ninitelog">>,<<"wuinstall">>]).
--define(CONF,"/path/to/esysman.conf").
--define(UPLOADS,<<"/path/to/uploads/">>).
