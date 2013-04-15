@@ -188,6 +188,7 @@ fwDenyMessage(Req, State) ->
 			  <<"<html>
 <head> 
 <title>", ?TITLE, "</title>
+<link rel='icon' href='/static/favicon.ico' type='image/x-icon' />
 <style>
 body {background-color:black; color:yellow}
 </style>
@@ -315,6 +316,7 @@ $('#uname').focus();
 <<"<html>
 <head> 
 <title>", ?TITLE, " Login</title>
+<link rel='icon' href='/static/favicon.ico' type='image/x-icon' />
 </head>
 <body>
 hi
