@@ -629,7 +629,7 @@ Is_SSL/binary,
     });
 
     $('#cmclear').click(function(){
-        $('#msgcl;').html('');
+        $('#msgcl').html('');
     });
 
     $('#duclear').click(function(){
@@ -770,7 +770,7 @@ Is_SSL/binary,
  </div>
 
  <div id='tmsgscl' class='tmsgsc'>
-   <div id='mtopcl' class='mtopc'><a href='#' id='cmclear' class='clr'>C</a.lient Messages (most recent at top): <div id='cnt'>0KB</div></div>
+   <div id='mtopcl' class='mtopc'><a href='#' id='cmclear' class='clr'>C</a>lient Messages (most recent at top): <div id='cnt'>0KB</div></div>
 	 <div id='msg-divcl'>
 	   <div id='msgcl' class='msgc'></div>
      </div>
