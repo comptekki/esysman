@@ -630,6 +630,8 @@ Is_SSL/binary,
 
     $('#cmclear').click(function(){
         $('#msgcl').html('');
+        $('#msg').html('');
+        $('#cnt').html('0');
     });
 
     $('#duclear').click(function(){
