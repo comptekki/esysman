@@ -65,8 +65,6 @@ Todo list:
 - Create better comments/specs for functions
 - Create layout via web app, not just edit text file
 - Move .hrl vars to .conf
-- Limit size of client messages box
-
 --------
 
 Basic setup
