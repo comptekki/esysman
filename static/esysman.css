@@ -145,7 +145,7 @@ input[type=checkbox] {/*width:50px;*/ height:10px;}
 }
 
 
-a.cols {text-decoration:none;}
+a.cols, a.mbig, a.clr {text-decoration:none;}
 
 .mbig {
 	background-color:#aaaaaa;
@@ -153,8 +153,6 @@ a.cols {text-decoration:none;}
 	padding:0 5px 0 5px;
 	font-weight:bold;
 }
-
-a.mbig {text-decoration:none;}
 
 #big_msg {
 	position:absolute;
