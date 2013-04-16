@@ -589,8 +589,15 @@ Is_SSL/binary,
 		if (isNaN(msg)) {
             if(sepcol)
 			    $('#msg').html(now+':'+msg+'<br>'+$('#msg').html())
-            else
-			    $('#msgcl').html(now+':'+msg+'<br>'+$('#msgcl').html())
+            else {
+			    $('#msgcl').html(now+':'+msg+'<br>'+$('#msgcl').html());
+                mcnt = $('#msgcl').html().length;
+                kb = 1024;
+                mb = 1048576;
+                lines=$('#msgcl br').length;
+                mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
+                $('#cnt').html(mcnt)
+            }
         }
 		else
 			$('#msg').html(now+':'+socket_status(msg)+'<br>'+$('#msg').html())
@@ -745,10 +752,10 @@ Is_SSL/binary,
  </div>
 
  <div id='tmsgscl' class='tmsgsc'>
-   <div id='mtopcl' class='mtopc'>Client Messages (most recent at top):</div>
+   <div id='mtopcl' class='mtopc'>Client Messages (most recent at top): <div id='cnt'>0KB</div></div>
 	 <div id='msg-divcl'>
-	 <div id='msgcl' class='msgc'></div>
-   </div>
+	   <div id='msgcl' class='msgc'></div>
+     </div>
  </div>
 
  <div id='tmsgsdup' class='tmsgsc'>
@@ -1096,7 +1103,7 @@ mkARComsComs(Rm,[{Com,ComText}|Coms]) ->
 
  <div class='fl'>
  <input id='",Com/binary,"All",Rm/binary,"check' type='checkbox' class='checkbox' /></a>
-  <a href=# id='",Com/binary,"All",Rm/binary,"' class='button'/>",ComText/binary,"</a>
+  <a href='#' id='",Com/binary,"All",Rm/binary,"' class='button'/>",ComText/binary,"</a>
  </div>
  <div class='brk'></div>
 
@@ -1127,7 +1134,7 @@ mkARComsComsInput(Rm,{Com,ComText}) ->
 
  <div class='fl'>
  <input id='",Com/binary,"All",Rm/binary,"check' type='checkbox' class='checkbox' /></a>
-  <a href=# id='",Com/binary,"All",Rm/binary,"' class='button' />",ComText/binary,"</a>
+  <a href='#' id='",Com/binary,"All",Rm/binary,"' class='button' />",ComText/binary,"</a>
  <div class='brk'></div>
 
  <select id='",Com/binary,"AllSelect",Rm/binary,"' class='fl'>
@@ -1165,9 +1172,9 @@ mkAllRoomsSelectUnselectToggleAll([Room|Rooms]) ->
 
 mkselunseltogAll(Rm) ->
 	<<"
-  <a href=# id='selectAll",Rm/binary,"' class='button' />Select All</a><br>
-  <a href=# id='unselectAll",Rm/binary,"' class='button' />UnSelect All</a><br>
-  <a href=# id='toggleAll",Rm/binary,"' class='button' />Toggle All</a><br>
+  <a href='#' id='selectAll",Rm/binary,"' class='button' />Select All</a><br>
+  <a href='#' id='unselectAll",Rm/binary,"' class='button' />UnSelect All</a><br>
+  <a href='#' id='toggleAll",Rm/binary,"' class='button' />Toggle All</a><br>
 ">>.
 
  %%
@@ -1238,21 +1245,21 @@ divc({Wk,_FQDN,_MacAddr,_Os}) ->
 <div id='",Wk/binary,"_ccell'>
 
 <div class=\"lc\">
- <a href=# id='ping_",Wk/binary,"' class='button' />P</a>
- <a href=# id='reboot_",Wk/binary,"' class='button' />R</a>
- <a href=# id='shutdown_",Wk/binary,"' class='button' />S</a>
- <a href=# id='wake_",Wk/binary,"' class='button' />WOL</a>
- <a href=# id='dffreeze_",Wk/binary,"' class='button' />DFF</a>
- <a href=# id='dfthaw_",Wk/binary,"' class='button' />DFT</a>
- <a href=# id='dfstatus_",Wk/binary,"' class='button' />DFS</a>
- <a href=# id='net_restart_",Wk/binary,"' class='button' />ReS</a>
- <a href=# id='net_stop_",Wk/binary,"' class='button' />StS</a>
- <a href=# id='loggedon_",Wk/binary,"' class='button' />L</a>
- <a href=# id='",Wk/binary,"_col' class='cols'>C</a>
+ <a href='#' id='ping_",Wk/binary,"' class='button' />P</a>
+ <a href='#' id='reboot_",Wk/binary,"' class='button' />R</a>
+ <a href='#' id='shutdown_",Wk/binary,"' class='button' />S</a>
+ <a href='#' id='wake_",Wk/binary,"' class='button' />WOL</a>
+ <a href='#' id='dffreeze_",Wk/binary,"' class='button' />DFF</a>
+ <a href='#' id='dfthaw_",Wk/binary,"' class='button' />DFT</a>
+ <a href='#' id='dfstatus_",Wk/binary,"' class='button' />DFS</a>
+ <a href='#' id='net_restart_",Wk/binary,"' class='button' />ReS</a>
+ <a href='#' id='net_stop_",Wk/binary,"' class='button' />StS</a>
+ <a href='#' id='loggedon_",Wk/binary,"' class='button' />L</a>
+ <a href='#' id='",Wk/binary,"_col' class='cols'>C</a>
 </div>
 <div class='brk'></div>
 <div>
- <a href=# id='copy_",Wk/binary,"' class='button' />Copy</a><br>
+ <a href='#' id='copy_",Wk/binary,"' class='button' />Copy</a><br>
 
  <input id='copyfn_",Wk/binary,"' type='text'/>
 
@@ -1266,7 +1273,7 @@ divc({Wk,_FQDN,_MacAddr,_Os}) ->
 
 <div>
 
-<a href=# id='com_",Wk/binary,"' class='button' />Com</a><br>
+<a href='#' id='com_",Wk/binary,"' class='button' />Com</a><br>
 
 <input id='comstr_",Wk/binary,"' type='text'/>
 
@@ -1617,7 +1624,7 @@ switcher([]) ->
 
 switcher_rm([Rm|_Rows]) ->
 	<<"
-<a href=# id='",Rm/binary,"toggle' class='button1' />[0]-",Rm/binary,"</a>
+<a href='#' id='",Rm/binary,"toggle' class='button1' />[0]-",Rm/binary,"</a>
 ">>.
 
 %
