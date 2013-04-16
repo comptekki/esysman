@@ -147,7 +147,7 @@ input[type=checkbox] {/*width:50px;*/ height:10px;}
 
 a.cols, a.mbig, a.clr {text-decoration:none;}
 
-.mbig {
+.mbig, a.clr {
 	background-color:#aaaaaa;
 	color:111;
 	padding:0 5px 0 5px;
