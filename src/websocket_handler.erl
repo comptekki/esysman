@@ -595,8 +595,14 @@ Is_SSL/binary,
                 kb = 1024;
                 mb = 1048576;
                 lines=$('#msgcl br').length;
-                mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
-                $('#cnt').html(mcnt)
+                if (lines > 10000) {
+                    $('#msg').html('');
+                    $('#cnt').html('0');
+                }
+                else {
+                    mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
+                    $('#cnt').html(mcnt);
+                }
             }
         }
 		else
@@ -617,6 +623,18 @@ Is_SSL/binary,
 	$('#disconnect').click(function(){
         send('close')
 	});
+
+    $('#smclear').click(function(){
+        $('#msg').html('');
+    });
+
+    $('#cmclear').click(function(){
+        $('#msgcl;').html('');
+    });
+
+    $('#duclear').click(function(){
+        $('#msgdup').html('');
+    });
 
 ",
 (jsAll(?ROOMS,<<"ping">>))/binary,
@@ -745,21 +763,21 @@ Is_SSL/binary,
  </div>
 
  <div id='tmsgs' class='tmsgsc'>
-   <div id='mtop' class='mtopc'> <a href='#' id='smbig' class='mbig'/>+</a> Server Messages (most recent at top):</div>
+   <div id='mtop' class='mtopc'> <a href='#' id='smbig' class='mbig'/>+</a> <a href='#' id='smclear' class='clr'>S</a>erver Messages (most recent at top):</div>
 	 <div id='msg-div'>
 	 <div id='msg' class='msgc'></div>
    </div>
  </div>
 
  <div id='tmsgscl' class='tmsgsc'>
-   <div id='mtopcl' class='mtopc'>Client Messages (most recent at top): <div id='cnt'>0KB</div></div>
+   <div id='mtopcl' class='mtopc'><a href='#' id='cmclear' class='clr'>C</a.lient Messages (most recent at top): <div id='cnt'>0KB</div></div>
 	 <div id='msg-divcl'>
 	   <div id='msgcl' class='msgc'></div>
      </div>
  </div>
 
  <div id='tmsgsdup' class='tmsgsc'>
-   <div id='mtopdup' class='mtopcd'>Duplicate Users (most recent at top):</div>
+   <div id='mtopdup' class='mtopcd'><a href='#' id='duclear' class='clr'>D</a>uplicate Users (most recent at top):</div>
 	 <div id='msg-div-dup'>
 	 <div id='msgdup' class='msgcd'></div>
    </div>
