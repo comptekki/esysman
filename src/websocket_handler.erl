@@ -45,6 +45,7 @@
 %iaa([init]).
 
 -include("esysman.hrl").
+-include("db.hrl").
 
 init(_Transport, Req, []) ->
 	case cowboy_req:header(<<"upgrade">>, Req) of
@@ -161,6 +162,18 @@ websocket_info(PreMsg, Req, State) ->
 			true -> Msg;
 			false -> list_to_binary(Msg)
 		end,
+	case binary:split(Msg3, <<"/">>, [global]) of
+		[B1, _, B2] -> "";
+		[B1, B2] -> ""
+	end,
+	case B2 of
+		<<"pong">> -> "";
+		<<>> -> "";
+		_ ->
+			{{Year, Month, Day}, {Hour, Min, _}} = calendar:local_time(),
+			DateTimeVal = list_to_binary(io_lib:format("~p/~p/~p-~p:~p", [Year, Month, Day, Hour, Min])),
+			do_insert(DateTimeVal, <<B1/binary, "-", B2/binary>>)
+	end,
 	{reply, {text, Msg3}, Req, State, hibernate}.
 
 websocket_terminate(_Reason, _Req, _State) ->
@@ -1693,3 +1706,19 @@ jsrefcons_row([],_Rm) ->
 now_bin() ->
 	{N1,N2,N3}=now(),
 	list_to_binary(integer_to_list(N1)++integer_to_list(N2)++integer_to_list(N3)).
+
+do_insert(DateTimeVal, BoxUserVal) ->
+	S = <<"insert into esysman (datetime, boxuser) values ('", DateTimeVal/binary, "', '", BoxUserVal/binary, "')">>,
+	case pgsql:connect(?DBHOST, ?USERNAME, ?PASSWORD, [{database, ?DB}, {port, ?PORT}]) of
+		{error,_} ->
+			{S, error};
+		{ok, Db} -> 
+			case pgsql:squery(Db, S) of
+				{error,Error} ->
+					io:format("insert error: ~p~n", [Error]),
+					{S, error};
+				{_,Res} ->
+					pgsql:close(Db),
+					{S, Res}
+			end
+	end.
