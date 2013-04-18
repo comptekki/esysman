@@ -595,7 +595,7 @@ Is_SSL/binary,
                 kb = 1024;
                 mb = 1048576;
                 lines=$('#msgcl br').length;
-                if (lines > 10000) {
+                if (lines > ", ?LINES, ") {
                     $('#msgcl').html('');
                     $('#cnt').html('0');
                 }
