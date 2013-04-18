@@ -7,6 +7,7 @@
 -define(TITLE, "ESysMan").
 -define(CSS, "/static/esysman.css").
 -define(JQUERY, "/static/jquery-1.9.1.min.js").
+-define(LINES, "20000").
 -define(ROOMS,
 [
  ["room1",
