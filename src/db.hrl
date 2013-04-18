@@ -1,0 +1,6 @@
+-define(DBHOST, "localhost").
+-define(DB, <<"esysman">>).
+-define(USERNAME, "postgres").
+-define(PASSWORD, "pguser").
+-define(PORT, 5432).
+-define(TABLE, 	[<<"timedate">>, <<"boxuser">>]).
