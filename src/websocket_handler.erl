@@ -163,16 +163,18 @@ websocket_info(PreMsg, Req, State) ->
 			false -> list_to_binary(Msg)
 		end,
 	case binary:split(Msg3, <<"/">>, [global]) of
-		[B1, _, B2] -> "";
-		[B1, B2] -> ""
+		[B1, _, B2] -> C1 = true;
+		[B1, B2] -> C1 = false;
+		[B2] -> 
+			B1 = "",
+			C1 = false	 
 	end,
-	case B2 of
-		<<"pong">> -> "";
-		<<>> -> "";
-		_ ->
+	case C1 of
+		true ->
 			{{Year, Month, Day}, {Hour, Min, _}} = calendar:local_time(),
 			DateTimeVal = list_to_binary(io_lib:format("~p/~p/~p-~p:~p", [Year, Month, Day, Hour, Min])),
-			do_insert(DateTimeVal, <<B1/binary, "-", B2/binary>>)
+			do_insert(DateTimeVal, <<B1/binary, "-", B2/binary>>);
+		_ -> ""
 	end,
 	{reply, {text, Msg3}, Req, State, hibernate}.
 
