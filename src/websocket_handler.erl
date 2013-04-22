@@ -177,8 +177,8 @@ websocket_info(PreMsg, Req, State) ->
 	case C1 of
 		true ->
 			{{Year, Month, Day}, {Hour, Min, _}} = calendar:local_time(),
-			DateTimeVal = list_to_binary(io_lib:format("~p/~2..0B/~2..0B-~2..0B:~2..0B", [Year, Month, Day, Hour, Min])),
-			do_insert(DateTimeVal, <<B1/binary, "-", B2/binary>>);
+			TimeStamp = list_to_binary(io_lib:format("~p-~2..0B-~2..0B ~2..0B:~2..0B", [Year, Month, Day, Hour, Min])),
+			do_insert(TimeStamp, B1, B2);
 		_ -> ""
 	end,
 	{reply, {text, Msg3}, Req, State, hibernate}.
@@ -1714,8 +1714,8 @@ now_bin() ->
 	{N1,N2,N3}=now(),
 	list_to_binary(integer_to_list(N1)++integer_to_list(N2)++integer_to_list(N3)).
 
-do_insert(DateTimeVal, BoxUserVal) ->
-	S = <<"insert into esysman (datetime, boxuser) values ('", DateTimeVal/binary, "', '", BoxUserVal/binary, "')">>,
+do_insert(TimeStamp, Box, User) ->
+	S = <<"insert into esysman (atimestamp, abox, auser) values ('", TimeStamp/binary, "', '", Box/binary, "', '", User/binary, "')">>,
 	case pgsql:connect(?DBHOST, ?USERNAME, ?PASSWORD, [{database, ?DB}, {port, ?PORT}]) of
 		{error,_} ->
 			{S, error};
