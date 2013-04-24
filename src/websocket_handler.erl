@@ -162,26 +162,16 @@ websocket_info(PreMsg, Req, State) ->
 			true -> Msg;
 			false -> list_to_binary(Msg)
 		end,
-	case binary:split(Msg3, <<"/">>, [global]) of
-		[B1, _, <<>>] ->
-			B2 = "",
-			C1 = false;
-		[B1, _, B2] -> C1 = true;
-		[B1, <<"pong">>] ->
-			B2 = "",
-			C1 = false;
-		[B2] -> 
-			B1 = "",
-			C1 = false	 
-	end,
-	case C1 of
-		true ->
-			{{Year, Month, Day}, {Hour, Min, _}} = calendar:local_time(),
-			TimeStamp = list_to_binary(io_lib:format("~p-~2..0B-~2..0B ~2..0B:~2..0B", [Year, Month, Day, Hour, Min])),
-			do_insert(TimeStamp, B1, B2);
-		_ -> ""
-	end,
+	chk_insert(binary:split(Msg3, <<"/">>, [global])),
 	{reply, {text, Msg3}, Req, State, hibernate}.
+
+chk_insert([_]) -> ok;
+chk_insert([_, <<"pong">>]) -> ok;
+chk_insert([_, _, <<>>]) ->	ok;
+chk_insert([B1, _, B2]) ->
+	{{Year, Month, Day}, {Hour, Min, _}} = calendar:local_time(),
+	TimeStamp = list_to_binary(io_lib:format("~p-~2..0B-~2..0B ~2..0B:~2..0B", [Year, Month, Day, Hour, Min])),
+	do_insert(TimeStamp, B1, B2).
 
 websocket_terminate(_Reason, _Req, _State) ->
 	ok.
