@@ -165,6 +165,7 @@ websocket_info(PreMsg, Req, State) ->
 	chk_insert(binary:split(Msg3, <<"/">>, [global])),
 	{reply, {text, Msg3}, Req, State, hibernate}.
 
+chk_insert(_Data) when length(_Data) > 3 -> ok;
 chk_insert([_]) -> ok;
 chk_insert([_, <<"pong">>]) -> ok;
 chk_insert([_, _, <<>>]) ->	ok;
