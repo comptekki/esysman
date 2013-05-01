@@ -69,7 +69,7 @@ input {width:100px;}
 
 #workstations { width:100%; margin:0 auto;}
 
-#cnt {float:right; padding-right:20px;}
+#cntsm, #cntcl, #cntdup {float:right; padding-right:20px;}
 
 .brk { clear:both; }
 
