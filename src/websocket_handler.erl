@@ -165,14 +165,14 @@ websocket_info(PreMsg, Req, State) ->
 	chk_insert(binary:split(Msg3, <<"/">>, [global])),
 	{reply, {text, Msg3}, Req, State, hibernate}.
 
-chk_insert(_Data) when length(_Data) > 3 -> ok;
 chk_insert([_]) -> ok;
 chk_insert([_, <<"pong">>]) -> ok;
 chk_insert([_, _, <<>>]) ->	ok;
 chk_insert([B1, _, B2]) ->
 	{{Year, Month, Day}, {Hour, Min, _}} = calendar:local_time(),
 	TimeStamp = list_to_binary(io_lib:format("~p-~2..0B-~2..0B ~2..0B:~2..0B", [Year, Month, Day, Hour, Min])),
-	do_insert(TimeStamp, B1, B2).
+	do_insert(TimeStamp, B1, B2);
+chk_insert(_Data) when length(_Data) >= 2 -> ok.
 
 websocket_terminate(_Reason, _Req, _State) ->
 	ok.
@@ -398,6 +398,15 @@ app_front_end(Req, State) ->
 <script type='text/javascript' src='", ?JQUERY, "'></script>
 
 <script>
+// src='/static/closure/goog/base.js'>
+</script>
+
+<script>
+//goog.require('goog.Disposable');
+</script>
+
+<script>
+//goog.Disposable.MONITORING_MODE=goog.Disposable.MonitoringMode.INTERACTIVE;
 
 $(document).ready(function(){
 	if ('MozWebSocket' in window) {
@@ -581,7 +590,7 @@ Is_SSL/binary,
 		}
 	}
 
-	function message(sepcol,msg){
+    function getnow() {
         var jsnow = new Date();
         var month=jsnow.getMonth()+1;
         var day=jsnow.getDate();
@@ -595,11 +604,29 @@ Is_SSL/binary,
         (mins<10)?mins='0'+mins:mins;
         (seconds<10)?seconds='0'+seconds:seconds;
 
-        now = month+'/'+day+'/'+jsnow.getFullYear()+'-'+hour+':'+mins+':'+seconds;
+        return month+'/'+day+'/'+jsnow.getFullYear()+'-'+hour+':'+mins+':'+seconds;
+    }
+
+	function message(sepcol,msg){
         
+        now = getnow();
 		if (isNaN(msg)) {
-            if(sepcol)
-			    $('#msg').html(now+':'+msg+'<br>'+$('#msg').html())
+            if(sepcol){
+			    $('#msgsm').html(now+':'+msg+'<br>'+$('#msgsm').html());
+                mcnt = $('#msgsm').html().length;
+                kb = 1024;
+                mb = 1048576;
+                lines=$('#msgsm br').length;
+                if (lines > ", ?LINES, ") {
+                      window.location.href='/esysman';
+//                    $('#msgsm').html('');
+//                    $('#cntsm').html('0K/0L');
+                }
+                else {
+                    mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
+                    $('#cntsm').html(mcnt);
+                }
+            }
             else {
 			    $('#msgcl').html(now+':'+msg+'<br>'+$('#msgcl').html());
                 mcnt = $('#msgcl').html().length;
@@ -607,17 +634,33 @@ Is_SSL/binary,
                 mb = 1048576;
                 lines=$('#msgcl br').length;
                 if (lines > ", ?LINES, ") {
-                    $('#msgcl').html('');
-                    $('#cnt').html('0');
+                      window.location.href='/esysman';
+//                    $('#msgcl').html('');
+//                    $('#cntcl').html('0K/0L');
                 }
                 else {
                     mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
-                    $('#cnt').html(mcnt);
+                    $('#cntcl').html(mcnt);
                 }
             }
         }
-		else
-			$('#msg').html(now+':'+socket_status(msg)+'<br>'+$('#msg').html())
+		else {
+			$('#msgsm').html(now+':'+socket_status(msg)+'<br>'+$('#msgsm').html());
+                mcnt = $('#msgsm').html().length;
+                kb = 1024;
+                mb = 1048576;
+                lines=$('#msgsm br').length;
+                if (lines > ", ?LINES, ") {
+                    window.location.href='/esysman';
+//                    $('#msgsm').html('');
+//                    $('#cntsm').html('0K/0L');
+                }
+                else {
+                    mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
+                    $('#cntsm').html(mcnt);
+                }
+
+        }
 	}
 
 	function socket_status(readyState){
@@ -636,17 +679,18 @@ Is_SSL/binary,
 	});
 
     $('#smclear').click(function(){
-        $('#msg').html('');
+        $('#msgsm').html('');
+        $('#cntsm').html('0K/L');
     });
 
     $('#cmclear').click(function(){
         $('#msgcl').html('');
-        $('#msg').html('');
-        $('#cnt').html('0');
+        $('#cntcl').html('0K/0L');
     });
 
     $('#duclear').click(function(){
         $('#msgdup').html('');
+        $('#cntdup').html('0K/0L');
     });
 
 ",
@@ -776,21 +820,21 @@ Is_SSL/binary,
  </div>
 
  <div id='tmsgs' class='tmsgsc'>
-   <div id='mtop' class='mtopc'> <a href='#' id='smbig' class='mbig'/>+</a> <a href='#' id='smclear' class='clr'>S</a>erver Messages (most recent at top):</div>
+   <div id='mtop' class='mtopc'> <a href='#' id='smbig' class='mbig'/>+</a> <a href='#' id='smclear' class='clr'>S</a>erver Messages (most recent at top): <div id='cntsm'>0KB/0L</div></div>
 	 <div id='msg-div'>
-	 <div id='msg' class='msgc'></div>
+	 <div id='msgsm' class='msgc'></div>
    </div>
  </div>
 
  <div id='tmsgscl' class='tmsgsc'>
-   <div id='mtopcl' class='mtopc'><a href='#' id='cmclear' class='clr'>C</a>lient Messages (most recent at top): <div id='cnt'>0KB</div></div>
+   <div id='mtopcl' class='mtopc'><a href='#' id='cmclear' class='clr'>C</a>lient Messages (most recent at top): <div id='cntcl'>0KB/0L</div></div>
 	 <div id='msg-divcl'>
 	   <div id='msgcl' class='msgc'></div>
      </div>
  </div>
 
  <div id='tmsgsdup' class='tmsgsc'>
-   <div id='mtopdup' class='mtopcd'><a href='#' id='duclear' class='clr'>D</a>uplicate Users (most recent at top):</div>
+   <div id='mtopdup' class='mtopcd'><a href='#' id='duclear' class='clr'>D</a>uplicate Users (most recent at top): <div id='cntdup'>0KB/0L</div></div>
 	 <div id='msg-div-dup'>
 	 <div id='msgdup' class='msgcd'></div>
    </div>
@@ -1609,10 +1653,25 @@ function chk_dupe_users_",Rm/binary,"(){
 ",
 (jschkduRows(Rows,Rm))/binary,
 "
-
+    now = getnow();
     for (var key in hash_",Rm/binary,"){
-        if (hash_",Rm/binary,".hasOwnProperty(key) && hash_",Rm/binary,"[key].length > 1)
-            $('#msgdup').html(key+':['+hash_",Rm/binary,"[key]+']<br>'+$('#msgdup').html())
+        if (hash_",Rm/binary,".hasOwnProperty(key) && hash_",Rm/binary,"[key].length > 1) {
+            $('#msgdup').html(now+':'+key+':['+hash_",Rm/binary,"[key]+']<br>'+$('#msgdup').html())
+                mcnt = $('#msgdup').html().length;
+                kb = 1024;
+                mb = 1048576;
+                lines=$('#msgdup br').length;
+                if (lines > ", ?LINES, ") {
+//                      window.location.href='/esysman';
+                    $('#msgdup').html('');
+                    $('#cntdup').html('0K/0L');
+                }
+                else {
+                    mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
+                    $('#cntdup').html(mcnt);
+                }
+
+        }
     }
 
     $('#",Rm/binary,"toggle').html('['+((",Rm/binary,"cnt>0)?",Rm/binary,"cnt:0).toString()+']-",Rm/binary,"');
