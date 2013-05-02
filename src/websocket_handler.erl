@@ -741,11 +741,15 @@ Is_SSL/binary,
           if ($('.msgcsm').height() == 220) {
               $('.msgcsm').height(1024);
               $('.msgcsm').width(1024);
+              $('.msgcsm').css('position', 'absolute');
+              $('.msgcsm').css('z-index', parseInt($('.msgc').css('z-index')) + 1);
           }
           else {
               $('.msgcsm').height(220);
               $('.msgcsm').width(550);
+              $('.msgc').css('position', 'relative');
           }
+
 //        $('#big_msg').html($('#msg').html());
 //        $('#big_msg').toggle();
 	});
@@ -754,10 +758,13 @@ Is_SSL/binary,
           if ($('.msgc').height() == 220) {
               $('.msgc').height(1024);
               $('.msgc').width(1024);
+              $('.msgc').css('position', 'absolute');
+              $('.msgc').css('z-index', parseInt($('.msgcsm').css('z-index')) + 1);
           }
           else {
               $('.msgc').height(220);
               $('.msgc').width(550);
+              $('.msgc').css('position', 'relative');
           }
 	});
 
@@ -772,7 +779,6 @@ Is_SSL/binary,
 //            $('#tinputs:checkbox:lt(2)').attr('checked', 'checked');
           $(':checkbox').attr('checked', 'checked');  
       }
-  
     });
 });
 
