@@ -1,5 +1,5 @@
 %% Copyright (c) 2012, Wes James <comptekki@gmail.com>
-%% All rights reserved.
+%% All rights reserve.
 %% 
 %% Redistribution and use in source and binary forms, with or without
 %% modification, are permitted provided that the following conditions are met:
@@ -738,8 +738,27 @@ Is_SSL/binary,
 }//End else - has websockets
 
 	$('#smbig').click(function(){
-        $('#big_msg').html($('#msg').html());
-        $('#big_msg').toggle();
+          if ($('.msgcsm').height() == 220) {
+              $('.msgcsm').height(1024);
+              $('.msgcsm').width(1024);
+          }
+          else {
+              $('.msgcsm').height(220);
+              $('.msgcsm').width(550);
+          }
+//        $('#big_msg').html($('#msg').html());
+//        $('#big_msg').toggle();
+	});
+
+	$('#clbig').click(function(){
+          if ($('.msgc').height() == 220) {
+              $('.msgc').height(1024);
+              $('.msgc').width(1024);
+          }
+          else {
+              $('.msgc').height(220);
+              $('.msgc').width(550);
+          }
 	});
 
     $('#sacs').click(function(){
@@ -822,12 +841,12 @@ Is_SSL/binary,
  <div id='tmsgs' class='tmsgsc'>
    <div id='mtop' class='mtopc'> <a href='#' id='smbig' class='mbig'/>+</a> <a href='#' id='smclear' class='clr'>S</a>erver Messages (most recent at top): <div id='cntsm'>0KB/0L</div></div>
 	 <div id='msg-div'>
-	 <div id='msgsm' class='msgc'></div>
+	 <div id='msgsm' class='msgcsm'></div>
    </div>
  </div>
 
  <div id='tmsgscl' class='tmsgsc'>
-   <div id='mtopcl' class='mtopc'><a href='#' id='cmclear' class='clr'>C</a>lient Messages (most recent at top): <div id='cntcl'>0KB/0L</div></div>
+   <div id='mtopcl' class='mtopc'> <a href='#' id='clbig' class='mbig'/>+</a> <a href='#' id='cmclear' class='clr'>C</a>lient Messages (most recent at top): <div id='cntcl'>0KB/0L</div></div>
 	 <div id='msg-divcl'>
 	   <div id='msgcl' class='msgc'></div>
      </div>
