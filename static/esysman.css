@@ -62,7 +62,7 @@ input {width:100px;}
 */
 .tmsgsc { float:left;  width: 550px; padding:0 0 0 3px;}
 .mtopc { background-color:#666; width:550px; font-weight:bold; padding:3px 0 3px 3px;}
-.msgc { overflow:scroll; width:550px; height:220px; color:yellow; background-color:black; padding:0 0 0 3px; }
+.msgc, .msgcsm { overflow:scroll; width:550px; height:220px; color:yellow; background-color:black; padding:0 0 0 3px; }
 
 .mtopcd { background-color:#666; width:550px; font-weight:bold; padding:3px 0 3px 3px;}
 .msgcd { overflow:scroll; width:550px; height:220px; color:yellow; background-color:black; padding:0 0 0 3px; }
