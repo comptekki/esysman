@@ -146,7 +146,7 @@ process_msg(Box, Com, Args) ->
 					case ?PLATFORM of
 						"x" ->
 							os:cmd("/usr/bin/apt-get update >"++?UPLOADS_DIR++"aptu_log.txt;/usr/bin/apt-get -y upgrade >>"++?UPLOADS_DIR++"aptu_log.txt"),
-							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":aptupdate -> done..."))/binary>>);
+							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":aptupgrade -> done..."))/binary>>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
@@ -154,7 +154,23 @@ process_msg(Box, Com, Args) ->
 					case ?PLATFORM of
 						"x" ->
 							os:cmd("/usr/bin/apt-get update >"++?UPLOADS_DIR++"aptu_log.txt;/usr/bin/apt-get -y dist-upgrade >>"++?UPLOADS_DIR++"aptu_log.txt"),
-							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":aptupdate -> done..."))/binary>>);
+							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":aptdistupgrade -> done..."))/binary>>);
+						_ ->
+							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
+					end;
+				<<"aptupgrade-list">> ->
+					case ?PLATFORM of
+						"x" ->
+							os:cmd("/usr/bin/apt-get update >"++?UPLOADS_DIR++"aptu_log.txt;/usr/bin/apt-get -s upgrade >>"++?UPLOADS_DIR++"aptu_log.txt"),
+							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":aptupgrade-list -> done..."))/binary>>);
+						_ ->
+							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
+					end;
+				<<"aptdistupgrade-list">> ->
+					case ?PLATFORM of
+						"x" ->
+							os:cmd("/usr/bin/apt-get update >"++?UPLOADS_DIR++"aptu_log.txt;/usr/bin/apt-get -s dist-upgrade >>"++?UPLOADS_DIR++"aptu_log.txt"),
+							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":aptdistupgrade-list -> done..."))/binary>>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
