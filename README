@@ -78,6 +78,9 @@ Prerequisites:
 
 3. OpenSSL for creating selfsigned certificates
 
+4. PostgreSQL for logging
+   a. epgsql is downloaded during make
+
 --------
 
 Client/Server Setup
@@ -96,6 +99,10 @@ Client/Server Setup
 
    	  iv. run Make from a shell command prompt
 
+      v. set up PostgreSQL, run createdb esysman then run "psql -U postgres esysman"
+         in esysman repo then run  \i esysman.sql to setup esysman table and then
+         set access in src/db.hrl
+
    b. to run, execute the following command from a shell command prompt:
 
    	  ./start.sh (non ssl connections between server and client)
@@ -106,6 +113,8 @@ Client/Server Setup
 	  use browser to access http://localhost:8080
 	  
 	  use browser to access https://localhost:8443
+
+
 
 2. Clent Setup 
    i. Windows setup
