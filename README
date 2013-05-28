@@ -113,12 +113,14 @@ Client/Server Setup
       a. copy ecom.beam to something like c:\erl on a windows system (erlang must also be installed on windows system)
       b. set windows system environment variable "Path" to include erlang (location of erl.exe)
       c. install erlang as a service
-   	     i. per http://www.erlang.org/doc/man/erlsrv.html something like this:
+   	     per http://www.erlang.org/doc/man/erlsrv.html something like this:
 
 	     see install-ssl.cmd sample file
 
-      e. start service
-      f. set firewall to allow erl.exe to allow traffic from server IP above
+		 Also create a .erlang.cookie file in c:\windows and make sure it is set to readonly.
+
+      d. start service
+      e. set firewall to allow erl.exe to allow traffic from server IP above
 
    ii. Linux/Mac setup
 
