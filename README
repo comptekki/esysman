@@ -98,14 +98,16 @@ Client/Server Setup
 
    b. to run, execute the following command from a shell command prompt:
 
-   	  ./start.sh
+   	  ./start.sh (non ssl connections between server and client)
+
+      ./start-ssl.sh (ssl connections between server and client - more secure)
 
    c.
 	  use browser to access http://localhost:8080
 	  
 	  use browser to access https://localhost:8443
 
-2. 
+2. Clent Setup 
    i. Windows setup
 
       a. copy ecom.beam to something like c:\erl on a windows system (erlang must also be installed on windows system)
