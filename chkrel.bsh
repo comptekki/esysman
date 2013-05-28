@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ -f "esysman_ssl.rel" ] ;
+then
+    if [ ! -f "esysman_ssl.boot" ] || [ "esysman_ssl.rel" -nt "esysman_ssl.boot" ]
+    then
+        erl -pa ebin -pa deps/*/ebin -s do_compile_rel -run init stop -noshell
+	    echo "==> start_ssl.rel (compile)"
+    fi
+else
+	echo
+    echo "no esysman_ssl.rel..."
+fi
