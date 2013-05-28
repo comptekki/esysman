@@ -1,9 +1,9 @@
 -define(DOMAIN,".domain").
 -define(DFC_DIR, "C:/Windows/SysWOW64/dfc.exe").
 -define(DFC_PASSWD, "dfpassword").
--define(ERL_DIR, <<"c:/windows/erl/">>).
+-define(ERL_DIR, "c:/windows/erl/").
 -define(UPLOADS_DIR, "c:/windows/erl/uploads/").
--define(USERS_DIR, <<"c:/users">>).
+-define(USERS_DIR, "c:/users").
 -define(USERS, ["Public","desktop.ini","Default","Default User","All Users"]).
 -define(SERVERS,['ecom@host']).
 -define(NODE_NAME, "ecom@").
