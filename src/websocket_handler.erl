@@ -178,7 +178,7 @@ websocket_terminate(_Reason, _Req, _State) ->
 	ok.
 
 fire_wall(Req) ->	
-	{PeerAddress, _Req}=cowboy_req:peer_addr(Req),
+	{{PeerAddress, _Port}, _Req}=cowboy_req:peer(Req),
 	{ok, [_,{FireWallOnOff,IPAddresses},_,_]}=file:consult(?CONF),
 	case FireWallOnOff of
 		on ->
