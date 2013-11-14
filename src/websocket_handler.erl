@@ -169,9 +169,14 @@ chk_insert([_]) -> ok;
 chk_insert([_, <<"pong">>]) -> ok;
 chk_insert([_, _, <<>>]) ->	ok;
 chk_insert([B1, _, B2]) ->
-	{{Year, Month, Day}, {Hour, Min, _}} = calendar:local_time(),
-	TimeStamp = list_to_binary(io_lib:format("~p-~2..0B-~2..0B ~2..0B:~2..0B", [Year, Month, Day, Hour, Min])),
-	do_insert(TimeStamp, B1, B2);
+	case binary:split(B2, <<" ">>) of
+		[_, _] ->
+			[];
+		_ ->		
+			{{Year, Month, Day}, {Hour, Min, _}} = calendar:local_time(),
+			TimeStamp = list_to_binary(io_lib:format("~p-~2..0B-~2..0B ~2..0B:~2..0B", [Year, Month, Day, Hour, Min])),
+			do_insert(TimeStamp, B1, B2)
+	end;
 chk_insert(_Data) when length(_Data) >= 2 -> ok.
 
 websocket_terminate(_Reason, _Req, _State) ->
