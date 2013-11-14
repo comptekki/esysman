@@ -7,8 +7,8 @@
 		kernel,
 		stdlib,
 		public_key,
-		ssl,
-		cowboy
+		cowboy,
+		ssl
 	]},
 	{mod, {esysman_app, []}},
 	{env, []}
