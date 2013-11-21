@@ -1,0 +1,28 @@
+## Name of the node
+-name ecom@hostname
+
+## Cookie for distributed erlang
+-setcookie some-cookie-here
+
+
+## Heartbeat management; auto-restarts VM if it dies or becomes unresponsive
+## (Disabled by default..use with caution!)
+-heart
+
+## Enable kernel poll and a few async threads
++K true
+##+A 5
+
+## Increase number of concurrent ports/sockets
+##-env ERL_MAX_PORTS 4096
+
+## Tweak GC to run more often
+##-env ERL_FULLSWEEP_AFTER 10
+
+-smp
+
+-proto_dist inet_tls
+
+-ssl_dist_opt server_certfile "/path/to/esysman/priv/ssl/cert.pem"
+-ssl_dist_opt server_keyfile "/path/to/esysman/priv/ssl/key.pem"
+-ssl_dist_opt server_secure_renegotiate true client_secure_renegotiate true
