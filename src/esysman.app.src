@@ -1,14 +1,16 @@
 {application, esysman, [
 	{description, "Erlang Systems Manager"},
-	{vsn, "2.0"},
+	{vsn, "1.2"},
 	{modules, []},
 	{registered, [esysman_sup]},
 	{applications, [
 		kernel,
 		stdlib,
+		crypto,
 		public_key,
+		ssl,
 		cowboy,
-		ssl
+		epgsql
 	]},
 	{mod, {esysman_app, []}},
 	{env, []}
