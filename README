@@ -1,6 +1,6 @@
 Erlang Systems Manager
 [ ESysMan ]
-Version 1.1
+Version 1.2
 
 ESysMan is an Erlang based client/server computer systems 
 management console in which a web browser (with websockets
@@ -65,6 +65,7 @@ Todo list:
 - Create better comments/specs for functions
 - Create layout via web app, not just edit text file
 - Move .hrl vars to .conf
+
 --------
 
 Basic setup
@@ -73,7 +74,7 @@ Prerequisites:
 1. Erlang (on server and client)
 		http://erlang.org
 
-2. Cowboy 0.8.3 (downloaded and compiled when 'make' is run)
+2. Cowboy 0.9.0 (downloaded and compiled when 'make' is run)
 	  https://github.com/extend/cowboy.git
 
 3. OpenSSL for creating selfsigned certificates
@@ -89,31 +90,28 @@ Client/Server Setup
    a. file setup
 
    	  i. esysman.hrl file set up as follow:
-         (see esysman-example.hrl in repo)
+         (see esysman-example.hrl in src diretory)
 
 	  ii. ecom.hrl setup (for deepfreeze and windows 7)
          (see ecom-example.hrl in repo)
 
 	 iii. create esysman.conf
-         (see esysman-example.conf in repo)
+         (see esysman-example.conf in src directory)
 
    	  iv. run Make from a shell command prompt
 
       v. set up PostgreSQL, run createdb esysman then run "psql -U postgres esysman"
-         in esysman repo then run  \i esysman.sql to setup esysman table and then
+         then in esysman/init, run \i esysman.sql to setup esysman table and then
          set access in src/db.hrl
 
-   b. to run, execute the following command from a shell command prompt:
+   b. to run, execute the following command from a shell command prompt in the esysman repo:
 
-   	  ./start.sh (non ssl connections between server and client)
-
-      ./start-ssl.sh (ssl connections between server and client - more secure)
+   	  ./_rel/bin/esysman console
 
    c.
 	  use browser to access http://localhost:8080
 	  
 	  use browser to access https://localhost:8443
-
 
 
 2. Clent Setup 
@@ -124,7 +122,7 @@ Client/Server Setup
       c. install erlang as a service
    	     per http://www.erlang.org/doc/man/erlsrv.html something like this:
 
-	     see install-ssl.cmd sample file
+	     see init/install-ssl.cmd sample file
 
 		 Also create a .erlang.cookie file in c:\windows and make sure it is set to readonly.
 
@@ -134,7 +132,7 @@ Client/Server Setup
    ii. Linux/Mac setup
 
       a. copy ecom.beam to something like /usr/local/lib/ebin
-      b. run script to start ecom:
+      b. run script (see init directory for sample) to start ecom:
 
          ./start-ecom.sh
 
@@ -143,6 +141,15 @@ Client/Server Setup
 --------
 
 Versions
+--------
+
+1.2
+
+-Update for cowboy 0.9.0
+-Add basic centos support
+-Move to release format
+
+
 --------
 
 1.1
