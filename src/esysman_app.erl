@@ -46,7 +46,7 @@ start(_Type, Args) ->
 		{'_', [
 			{"/esysman", websocket_handler, []},
 			{"/esysman/logout", redirect_handler, []},
-			{"/static/[...]", cowboy_static, [{directory, "static/"}]},
+			{"/static/[...]", cowboy_static, {priv_dir, esysman, "static"}},
 			{'_', default_handler, []}
 		]}
 	]),
@@ -57,13 +57,14 @@ start(_Type, Args) ->
 		  [{port, HTTP_Port}],
 		  [{env, [{dispatch, Dispatch}]}]
 		 ),
+	PrivDir = code:priv_dir(esysman),
 	{ok, _} = 
 		cowboy:start_https(
 		  https,
 		  100,
 		  [{port, HTTPS_Port},
-		   {certfile, "priv/ssl/cert.pem"},
-		   {keyfile, "priv/ssl/key.pem"},
+		   {certfile, PrivDir ++ "/ssl/cert.pem"},
+		   {keyfile, PrivDir ++ "/ssl/key.pem"},
 		   {password, ""}],
 		  [{env, [{dispatch, Dispatch}]}]
 		 ),
