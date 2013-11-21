@@ -78,53 +78,63 @@ websocket_handle({text, Msg}, Req, State) ->
 	io:format("~nLdata: ~p~n",[Ldata]),
 	[Box,Com,Args]=Ldata,
 	Rec_Node=binary_to_atom(<<Box/binary>>,latin1),
+	Data3 =
 	case Com of
 		<<"com">> ->
 			{rec_com, Rec_Node} ! {Box,Com,Args},
 			Data2= <<"com -> ",Args/binary,"  <- sent to: ",Box/binary>>,
-			io:format("~n done com: ~p - args: ~p~n",[Box,Args]);
+			io:format("~n done com: ~p - args: ~p~n",[Box,Args]),
+			Data2;
 		<<"loggedon">> ->
 			{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 			Data2= <<"loggedon sent to: ",Box/binary>>,
-			io:format("~n done loggedon ~p - data2: ~p ~n",[Box, Data2]);
+			io:format("~n done loggedon ~p - data2: ~p ~n",[Box, Data2]),
+			Data2;
 		<<"copy">> ->
 			case file:read_file(<<?UPLOADS/binary,Args/binary>>) of
 				{ok, DataBin} ->
 					{rec_com, Rec_Node} ! {Box,Com,{Args,DataBin}},
-					Data2= <<"copy sent to: ",Box/binary>>,
-					io:format("~n done copy - ~p ~n",[Box]);
+					io:format("~n done copy - ~p ~n",[Box]),
+					<<"copy sent to: ",Box/binary>>;
 				{error, Reason} ->
-					Data2= <<Box/binary,":copy error-",(atom_to_binary(Reason,latin1))/binary>>,
-					io:format("~n done copy - ~p - error: ~p~n",[Box, Reason])
+					io:format("~n done copy - ~p - error: ~p~n",[Box, Reason]),
+					<<Box/binary,":copy error-",(atom_to_binary(Reason,latin1))/binary>>
 			end;
 		<<"dffreeze">> ->
 			{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 			Data2= <<Box/binary,":dffreeze">>,
-			io:format("~n done dffreeze ~p - data2: ~p ~n",[Box, Data2]);
+			io:format("~n done dffreeze ~p - data2: ~p ~n",[Box, Data2]),
+			Data2;
 		<<"dfthaw">> ->
 			{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 			Data2= <<Box/binary,":dfthaw">>,
-			io:format("~n done dfthaw ~p - data2: ~p ~n",[Box, Data2]);
+			io:format("~n done dfthaw ~p - data2: ~p ~n",[Box, Data2]),
+			Data2;
 		<<"dfstatus">> ->
 			{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 			Data2= <<"dfstatus sent to: ",Box/binary>>,
-			io:format("~n done dfstatus ~p - data2: ~p ~n",[Box, Data2]);
+			io:format("~n done dfstatus ~p - data2: ~p ~n",[Box, Data2]),
+			Data2;
 		<<"net_restart">> ->
 			{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 			Data2= <<"net_restart sent to: ",Box/binary>>,
-			io:format("~n done net_restart ~p - data2: ~p ~n",[Box, Data2]);
+			io:format("~n done net_restart ~p - data2: ~p ~n",[Box, Data2]),
+			Data2;
 		<<"net_stop">> ->
 			{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 			Data2= <<"net_stop sent to: ",Box/binary>>,
-			io:format("~n done net_stop ~p - data2: ~p ~n",[Box, Data2]);
+			io:format("~n done net_stop ~p - data2: ~p ~n",[Box, Data2]),
+			Data2;
 		<<"reboot">> ->
 			{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 			Data2= <<"reboot sent to: ",Box/binary>>,
-			io:format("~n done reboot ~p - data2: ~p ~n",[Box, Data2]);
+			io:format("~n done reboot ~p - data2: ~p ~n",[Box, Data2]),
+			Data2;
 		<<"shutdown">> ->
 			{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 			Data2= <<"shutdown sent to: ",Box/binary>>,
-			io:format("~n done shutdown ~p - data2: ~p ~n",[Box, Data2]);
+			io:format("~n done shutdown ~p - data2: ~p ~n",[Box, Data2]),
+			Data2;
 		<<"wol">> ->
 			MacAddr=binary_to_list(Args),
 			MacAddrBin= <<<<(list_to_integer(X, 16))>> || X <- string:tokens(MacAddr,"-")>>,
@@ -133,15 +143,17 @@ websocket_handle({text, Msg}, Req, State) ->
 			gen_udp:send(S, ?BROADCAST_ADDR, 9, MagicPacket),
 			gen_udp:close(S),
 			Data2= <<"done wol: ",Box/binary,"....!">>,
-			io:format("~n done wol - ~p ~n",[Box]);
+			io:format("~n done wol - ~p ~n",[Box]),
+			Data2;
 		  <<"ping">> ->
 			{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 			Data2= <<"ping sent to: ",Box/binary>>,
-			io:format("~n done ping ~p - data2: ~p ~n",[Box, Data2]);
+			io:format("~n done ping ~p - data2: ~p ~n",[Box, Data2]),
+			Data2;
 		_ ->
-			Data2= <<"unsupported command">>
+			<<"unsupported command">>
 	end,
-	{reply, {text, Data2}, Req, State, hibernate};
+	{reply, {text, Data3}, Req, State, hibernate};
 websocket_handle(_Any, Req, State) ->
 	{ok, Req, State}.
 
@@ -287,9 +299,10 @@ get_cookie_val() ->
 app_login(Req, State) ->
 	case fire_wall(Req) of
 		allow ->
-			case is_list(login_is()) of
-				true ->
-					{ok, Req2} = cowboy_req:reply(200, [{<<"Content-Type">>, <<"text/html">>}],
+			{ok, Req2} =
+				case is_list(login_is()) of
+					true ->
+						cowboy_req:reply(200, [{<<"Content-Type">>, <<"text/html">>}],
 <<"<html>
 <head> 
 <title>", ?TITLE, "</title>
@@ -327,8 +340,8 @@ $('#uname').focus();
 </form>
 </body>
 </html>">>, Req);
-                false ->
-					{ok, Req2} = cowboy_req:reply(200, [{<<"Content-Type">>, <<"text/html">>}],
+					false ->
+						cowboy_req:reply(200, [{<<"Content-Type">>, <<"text/html">>}],
 <<"<html>
 <head> 
 <title>", ?TITLE, " Login</title>
@@ -374,13 +387,6 @@ case fire_wall(Req) of
 %
 
 app_front_end(Req, State) ->
-	Is_SSL=
-		case cowboy_req:get([socket, transport], Req) of
-			[_Socket, ranch_ssl] ->
-				<<"true">>;
-			[_Socket, _] ->
-				<<"false">>
-		end,
 	{Host, Req2} = cowboy_req:host(Req),
 
 	{PortInt, Req3} = cowboy_req:port(Req2),
@@ -431,10 +437,8 @@ Host/binary,
         var port='",
 Port/binary,
 "';
-        var is_ssl=",
-Is_SSL/binary,
-";
-    if(is_ssl)
+
+	if(window.location.protocol == 'https:')
         var ws_str='wss://'+host+':'+port+'/esysman';
     else 
         var ws_str='ws://'+host+':'+port+'/esysman';
