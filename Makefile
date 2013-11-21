@@ -1,19 +1,8 @@
-# Feel free to use, reuse and abuse the code in this file.
+PROJECT = esysman
 
-all: app
+DEPS = cowboy epgsql
+dep_cowboy = pkg://cowboy 0.9.0
+dep_epgsql = git://github.com/wg/epgsql.git master
 
-app: get-deps
-	@./rebar compile
-	@./mkcert.sh
-	@erlc do_compile_rel.erl
-	@./chkrel.bsh
-
-get-deps:
-	@./rebar get-deps
-
-clean:
-	@./rebar clean
-	@rm -f erl_crash.dump
-	@rm -f do_compile_rel.beam
-
-dist-clean: clean
+include erlang.mk
+include extra.mk
