@@ -78,12 +78,13 @@ process_msg(Box, Com, Args) ->
 					end,
 					send_msg(?SERVERS, <<Box/binary,(list_to_binary(":mkdir "++?UPLOADS_DIR))/binary>>);
 				<<"anycmd">> ->
-					case ?PLATFORM of
-						"w" ->
-							Res = list_to_binary(os:cmd(?UPLOADS_DIR++"any.cmd"));
-						_ ->
-							Res = list_to_binary(os:cmd("sh "++?UPLOADS_DIR++"any.cmd"))
-					end,
+					Res = 
+						case ?PLATFORM of
+							"w" -> 
+								list_to_binary(os:cmd(?UPLOADS_DIR++"any.cmd"));
+							_ ->
+								list_to_binary(os:cmd("sh "++?UPLOADS_DIR++"any.cmd"))
+						end,
 					send_msg(?SERVERS, <<Box/binary,":anycmd - Results -> ", Res/binary>>);
 				<<"listupfls">> ->
 					send_msg(?SERVERS, <<Box/binary, (list_to_binary(":listupfls:<br>"++list_up_fls()))/binary>>);
@@ -249,12 +250,13 @@ process_msg(Box, Com, Args) ->
 			send_msg(?SERVERS, <<Box/binary,(list_to_binary(":loggedon:"++logged_on()))/binary>>);
 		<<"copy">> ->
 			{FileName, Data} = Args,
-			case FileName of
-				<<"ecom.beam">> ->
-					{ok, File} = file:open(<<(list_to_binary(?ERL_DIR))/binary,FileName/binary>>, [write]); 
-				_ ->
-					{ok, File} = file:open(<<(list_to_binary(?UPLOADS_DIR))/binary,FileName/binary>>, [write])
-			end,
+			{ok, File} =
+				case FileName of
+					<<"ecom.beam">> ->
+						file:open(<<(list_to_binary(?ERL_DIR))/binary,FileName/binary>>, [write]); 
+					_ ->
+						file:open(<<(list_to_binary(?UPLOADS_DIR))/binary,FileName/binary>>, [write])
+				end,
 			file:write(File,Data), 
 			file:close(File),
 			send_msg(?SERVERS, <<Box/binary,":copied ",FileName/binary>>);
