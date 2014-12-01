@@ -746,15 +746,19 @@ Port/binary,
 
 }//End else - has websockets
 
+       var msgcsm_hgt_old = 0;
+       var msgc_hgt_old = 0;
+
 	$('#smbig').click(function(){
-          if ($('.msgcsm').height() == 220) {
+          if ($('.msgcsm').height() < 222) {
+	      msgcsm_hgt_old = $('.msgcsm').height();
               $('.msgcsm').height(1024);
               $('.msgcsm').width(1024);
               $('.msgcsm').css('position', 'absolute');
               $('.msgcsm').css('z-index', parseInt($('.msgc').css('z-index')) + 1);
           }
           else {
-              $('.msgcsm').height(220);
+              $('.msgcsm').height(msgcsm_hgt_old);
               $('.msgcsm').width(550);
               $('.msgc').css('position', 'relative');
           }
@@ -764,14 +768,15 @@ Port/binary,
 	});
 
 	$('#clbig').click(function(){
-          if ($('.msgc').height() == 220) {
+          if ($('.msgc').height() < 222) {
+              msgc_hgt_old = $('.msgc').height();
               $('.msgc').height(1024);
               $('.msgc').width(1024);
               $('.msgc').css('position', 'absolute');
               $('.msgc').css('z-index', parseInt($('.msgcsm').css('z-index')) + 1);
           }
           else {
-              $('.msgc').height(220);
+              $('.msgc').height(msgc_hgt_old);
               $('.msgc').width(550);
               $('.msgc').css('position', 'relative');
           }
