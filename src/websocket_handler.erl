@@ -73,21 +73,10 @@ websocket_handle({text, <<"close">>}, Req, State) ->
 			{shutdown, Req, State};
 websocket_handle({text, <<"client-connected">>}, Req, State) ->
 			{reply, {text, <<"client-connected">> }, Req, State, hibernate};
-%websocket_handle({text, <<"shutdown sent to:shutdown:0">>}, Req, State) ->
-%			io:format("~nempty shutdown to....~n"),
-%			{reply, {text, <<"shutdown">> }, Req, State, hibernate};
 websocket_handle({text, Msg}, Req, State) ->
-%	io:format("~nmsg: ~p~n",[Msg]),
 	Ldata=binary:split(Msg,<<":">>,[global]),
 	io:format("~nLdata: ~p~n",[Ldata]),
 	[Box,Com,Args]=Ldata,
-%	RetVal =
-%		case Box of
-%			<<"shutdown sent to">> ->
-%	io:format("~ngot in to dead shutdown binary.... ~n"),
-%	{ok, Req, State};
-%%				{reply, {text, <<"shutdown">> }, Req, State, hibernate};
-%			_ ->
 	Rec_Node=binary_to_atom(<<Box/binary>>,latin1),
 	Data3 =
 		case Com of
@@ -165,10 +154,7 @@ websocket_handle({text, Msg}, Req, State) ->
 				<<"unsupported command">>
 					
 				end,
-				{reply, {text, Data3}, Req, State, hibernate}
-%		end,
-%	RetVal
-;
+				{reply, {text, Data3}, Req, State, hibernate};
 
 websocket_handle(_Any, Req, State) ->
 	{ok, Req, State}.
