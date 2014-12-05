@@ -73,87 +73,103 @@ websocket_handle({text, <<"close">>}, Req, State) ->
 			{shutdown, Req, State};
 websocket_handle({text, <<"client-connected">>}, Req, State) ->
 			{reply, {text, <<"client-connected">> }, Req, State, hibernate};
+%websocket_handle({text, <<"shutdown sent to:shutdown:0">>}, Req, State) ->
+%			io:format("~nempty shutdown to....~n"),
+%			{reply, {text, <<"shutdown">> }, Req, State, hibernate};
 websocket_handle({text, Msg}, Req, State) ->
+%	io:format("~nmsg: ~p~n",[Msg]),
 	Ldata=binary:split(Msg,<<":">>,[global]),
 	io:format("~nLdata: ~p~n",[Ldata]),
 	[Box,Com,Args]=Ldata,
+%	RetVal =
+%		case Box of
+%			<<"shutdown sent to">> ->
+%	io:format("~ngot in to dead shutdown binary.... ~n"),
+%	{ok, Req, State};
+%%				{reply, {text, <<"shutdown">> }, Req, State, hibernate};
+%			_ ->
 	Rec_Node=binary_to_atom(<<Box/binary>>,latin1),
 	Data3 =
-	case Com of
-		<<"com">> ->
-			{rec_com, Rec_Node} ! {Box,Com,Args},
-			Data2= <<"com -> ",Args/binary,"  <- sent to: ",Box/binary>>,
-			io:format("~n done com: ~p - args: ~p~n",[Box,Args]),
-			Data2;
-		<<"loggedon">> ->
-			{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-			Data2= <<"loggedon sent to: ",Box/binary>>,
-			io:format("~n done loggedon ~p - data2: ~p ~n",[Box, Data2]),
-			Data2;
-		<<"copy">> ->
-			case file:read_file(<<?UPLOADS/binary,Args/binary>>) of
-				{ok, DataBin} ->
-					{rec_com, Rec_Node} ! {Box,Com,{Args,DataBin}},
-					io:format("~n done copy - ~p ~n",[Box]),
-					<<"copy sent to: ",Box/binary>>;
-				{error, Reason} ->
-					io:format("~n done copy - ~p - error: ~p~n",[Box, Reason]),
-					<<Box/binary,":copy error-",(atom_to_binary(Reason,latin1))/binary>>
-			end;
-		<<"dffreeze">> ->
-			{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-			Data2= <<Box/binary,":dffreeze">>,
-			io:format("~n done dffreeze ~p - data2: ~p ~n",[Box, Data2]),
-			Data2;
-		<<"dfthaw">> ->
-			{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-			Data2= <<Box/binary,":dfthaw">>,
-			io:format("~n done dfthaw ~p - data2: ~p ~n",[Box, Data2]),
-			Data2;
-		<<"dfstatus">> ->
-			{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-			Data2= <<"dfstatus sent to: ",Box/binary>>,
-			io:format("~n done dfstatus ~p - data2: ~p ~n",[Box, Data2]),
-			Data2;
-		<<"net_restart">> ->
-			{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-			Data2= <<"net_restart sent to: ",Box/binary>>,
-			io:format("~n done net_restart ~p - data2: ~p ~n",[Box, Data2]),
-			Data2;
-		<<"net_stop">> ->
-			{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-			Data2= <<"net_stop sent to: ",Box/binary>>,
-			io:format("~n done net_stop ~p - data2: ~p ~n",[Box, Data2]),
-			Data2;
-		<<"reboot">> ->
-			{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-			Data2= <<"reboot sent to: ",Box/binary>>,
-			io:format("~n done reboot ~p - data2: ~p ~n",[Box, Data2]),
-			Data2;
-		<<"shutdown">> ->
-			{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-			Data2= <<"shutdown sent to: ",Box/binary>>,
-			io:format("~n done shutdown ~p - data2: ~p ~n",[Box, Data2]),
-			Data2;
-		<<"wol">> ->
-			MacAddr=binary_to_list(Args),
-			MacAddrBin= <<<<(list_to_integer(X, 16))>> || X <- string:tokens(MacAddr,"-")>>,
-			MagicPacket= << (dup(<<16#FF>>, 6))/binary, (dup(MacAddrBin, 16))/binary >>,
-			{ok,S} = gen_udp:open(0, [{broadcast, true}]),
-			gen_udp:send(S, ?BROADCAST_ADDR, 9, MagicPacket),
-			gen_udp:close(S),
-			Data2= <<"done wol: ",Box/binary,"....!">>,
-			io:format("~n done wol - ~p ~n",[Box]),
-			Data2;
-		  <<"ping">> ->
-			{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-			Data2= <<"ping sent to: ",Box/binary>>,
-			io:format("~n done ping ~p - data2: ~p ~n",[Box, Data2]),
-			Data2;
-		_ ->
-			<<"unsupported command">>
-	end,
-	{reply, {text, Data3}, Req, State, hibernate};
+		case Com of
+			<<"com">> ->
+				{rec_com, Rec_Node} ! {Box,Com,Args},
+				Data2= <<"com -> ",Args/binary,"  <- sent to: ",Box/binary>>,
+				io:format("~n done com: ~p - args: ~p~n",[Box,Args]),
+				Data2;
+			<<"loggedon">> ->
+				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
+				Data2= <<"loggedon sent to: ",Box/binary>>,
+				io:format("~n done loggedon ~p - data2: ~p ~n",[Box, Data2]),
+				Data2;
+			<<"copy">> ->
+				case file:read_file(<<?UPLOADS/binary,Args/binary>>) of
+					{ok, DataBin} ->
+						{rec_com, Rec_Node} ! {Box,Com,{Args,DataBin}},
+						io:format("~n done copy - ~p ~n",[Box]),
+						<<"copy sent to: ",Box/binary>>;
+					{error, Reason} ->
+						io:format("~n done copy - ~p - error: ~p~n",[Box, Reason]),
+						<<Box/binary,":copy error-",(atom_to_binary(Reason,latin1))/binary>>
+							end;
+			<<"dffreeze">> ->
+				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
+				Data2= <<Box/binary,":dffreeze">>,
+				io:format("~n done dffreeze ~p - data2: ~p ~n",[Box, Data2]),
+				Data2;
+			<<"dfthaw">> ->
+				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
+				Data2= <<Box/binary,":dfthaw">>,
+				io:format("~n done dfthaw ~p - data2: ~p ~n",[Box, Data2]),
+				Data2;
+			<<"dfstatus">> ->
+				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
+				Data2= <<"dfstatus sent to: ",Box/binary>>,
+				io:format("~n done dfstatus ~p - data2: ~p ~n",[Box, Data2]),
+				Data2;
+			<<"net_restart">> ->
+				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
+				Data2= <<"net_restart sent to: ",Box/binary>>,
+				io:format("~n done net_restart ~p - data2: ~p ~n",[Box, Data2]),
+				Data2;
+			<<"net_stop">> ->
+				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
+				Data2= <<"net_stop sent to: ",Box/binary>>,
+				io:format("~n done net_stop ~p - data2: ~p ~n",[Box, Data2]),
+				Data2;
+			<<"reboot">> ->
+				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
+				Data2= <<"reboot sent to: ",Box/binary>>,
+				io:format("~n done reboot ~p - data2: ~p ~n",[Box, Data2]),
+				Data2;
+			<<"shutdown">> ->
+				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
+				Data2= <<"done - shutdown sent to: ",Box/binary>>,
+				io:format("~n done shutdown ~p - data2: ~p ~n",[Box, Data2]),
+				Data2;
+			<<"wol">> ->
+				MacAddr=binary_to_list(Args),
+				MacAddrBin= <<<<(list_to_integer(X, 16))>> || X <- string:tokens(MacAddr,"-")>>,
+				MagicPacket= << (dup(<<16#FF>>, 6))/binary, (dup(MacAddrBin, 16))/binary >>,
+				{ok,S} = gen_udp:open(0, [{broadcast, true}]),
+				gen_udp:send(S, ?BROADCAST_ADDR, 9, MagicPacket),
+				gen_udp:close(S),
+				Data2= <<"done wol: ",Box/binary,"....!">>,
+				io:format("~n done wol - ~p ~n",[Box]),
+				Data2;
+			  <<"ping">> ->
+				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
+				Data2= <<"ping sent to: ",Box/binary>>,
+				io:format("~n done ping ~p - data2: ~p ~n",[Box, Data2]),
+				Data2;
+			_ ->
+				<<"unsupported command">>
+					
+				end,
+				{reply, {text, Data3}, Req, State, hibernate}
+%		end,
+%	RetVal
+;
+
 websocket_handle(_Any, Req, State) ->
 	{ok, Req, State}.
 
@@ -447,6 +463,7 @@ Port/binary,
 	var rall=false;
 	var first=true;
     var tot_cnt=0;
+	var shutbox='';
 
 	try{
         var socket = new WebSocket(ws_str);
@@ -454,7 +471,7 @@ Port/binary,
 		message(true, socket.readyState);
 
 		socket.onopen = function(){
-			console.log('onopen called');
+		//	console.log('onopen called');
 			send('client-connected');
 			message(true, socket.readyState);
 
@@ -465,7 +482,7 @@ Port/binary,
 		}
 
 		socket.onmessage = function(m){
-			console.log('onmessage called');
+//			console.log('onmessage called');
 			if (m.data)
 				if(m.data.indexOf(':'>0) || m.data.indexOf('/')>0){
 					if(m.data.indexOf(':')>0) {
@@ -476,9 +493,11 @@ Port/binary,
 					   boxCom=m.data.split('/');
 					   sepcol=false;
 					}
-					box=boxCom[0].substr(0,boxCom[0].indexOf('.'));
+
+					box=boxCom[0].substr(0,boxCom[0].indexOf('.'));					
+
 					if (box.indexOf('@')>0)
-					   box=box.substr(box.indexOf('@')+1, box.length-1);
+					   box= box.split('@')[1]; //box.substr(box.indexOf('@')+1, box.length-1);
 					switch(boxCom[1]) {
 						case 'loggedon':
 							message(sepcol,boxCom[0] + ': ' + boxCom[2]);
@@ -487,12 +506,12 @@ Port/binary,
 								     $('#'+box+'status').html(boxCom[2]);
 							     else
 							         $('#'+box+'status').html('Up');
-                            }
-                            else {
-                                $('#'+box+'status').html('.');
-							    $('#'+box+'status').css('color','red');
-							    $('#'+box+'status').css('background-color','#550000');
-                            }
+                            				}
+                            				else {
+                                			     $('#'+box+'status').html('.');
+							     $('#'+box+'status').css('color','red');
+							     $('#'+box+'status').css('background-color','#550000');
+                            				}
 							break;
 						case 'pong':
 							$('#'+box+'status').css('color','green');
@@ -509,14 +528,14 @@ Port/binary,
 						case 'reboot':
 							$('#'+box+'status').css('color','red');
 							$('#'+box+'status').css('background-color','#550000');
-                            $('#'+box+'status').html('.');
+                            				$('#'+box+'status').html('.');
 							$('#'+box+'_hltd').css('background-color','#000000');
 							$('#'+box+'_ltd').css('background-color','#000000');
 							break;
 					    case 'shutdown':
 							$('#'+box+'status').css('color','red');
 							$('#'+box+'status').css('background-color','#550000');
-                            $('#'+box+'status').html('.');
+                            				$('#'+box+'status').html('.');
 							$('#'+box+'_hltd').css('background-color','#000000');
 							$('#'+box+'_ltd').css('background-color','#000000');
 							break;
@@ -525,7 +544,7 @@ Port/binary,
 							$('#'+box+'dfstatus').css('background-color','#006666');
 							$('#'+box+'status').css('color','red');
 							$('#'+box+'status').css('background-color','#550000');
-                            $('#'+box+'status').html('.');
+                            				$('#'+box+'status').html('.');
 							$('#'+box+'_hltd').css('background-color','#000000');
 							$('#'+box+'_ltd').css('background-color','#000000');
 							break;
@@ -534,7 +553,7 @@ Port/binary,
 							$('#'+box+'dfstatus').css('background-color','#006600');
 							$('#'+box+'status').css('color','red');
 							$('#'+box+'status').css('background-color','#550000');
-                            $('#'+box+'status').html('.');
+                            				$('#'+box+'status').html('.');
 							$('#'+box+'_hltd').css('background-color','#000000');
 							$('#'+box+'_ltd').css('background-color','#000000');
 							break;
@@ -561,20 +580,40 @@ Port/binary,
 							message(sepcol,boxCom[0] + ': ' + 'com');
 							break;
 					    default:
-                            if(boxCom[2])
-							    message(sepcol,boxCom[0] + ': ' + boxCom[1] + ' ' + boxCom[2])
-                            else
-                                if(boxCom[1] == undefined)
-							        message(sepcol,boxCom[0])
-                                else
-							        message(sepcol,boxCom[0] + ': ' + boxCom[1])
+						if(boxCom[2])
+						    message(sepcol,boxCom[0] + ': ' + boxCom[1] + ' ' + boxCom[2])
+                            			else
+						    if(boxCom[1] == undefined)
+						        message(sepcol,boxCom[0])
+                                		else
+						        message(sepcol,boxCom[0] + ': ' + boxCom[1])
+					} // end switch
+
+//					if (box.indexOf('",?IGNORESHUTDOWN,"') > -1) {
+					if (box.indexOf('",?IGNORESHUTDOWN,"') < 0 && box.length > 0) {
+						if($('#shutdownTimerSwitch').val() == '1') {
+						    var jsnow = new Date();
+				    	    var h=jsnow.getHours();
+   				    	    //var m=jsnow.getMinutes();
+						    //(h<10)?s='0'+h:h;
+						    //(m<10)?m='0'+m:m;    
+
+						    if (h >= Number($('#shutdownTimeH').val()) || h <= Number($('#shutdownTimeH2').val())) { //&& $('#shutdownTimeM').val() == m) {
+                                if (shutbox != box) {
+						    	    send(boxCom[0]+':shutdown:0');
+                                    shutbox = box;
+                                }
+						    }
+						}
 					}
+
+
 				}
 				else message(true,m.data)
 		}
 
 		socket.onclose = function(){
-			console.log('onclose called')
+//			console.log('onclose called')
 		    message(true,'Socket status: 3 (Closed)');
 		}
 
@@ -587,7 +626,7 @@ Port/binary,
 	}
 
 	function send(msg){
-		console.log('send called');
+//		console.log('send called');
 		if(msg == null || msg.length == 0){
 			message(true,'No data....');
 			return
@@ -626,6 +665,9 @@ Port/binary,
                 kb = 1024;
                 mb = 1048576;
                 lines=$('#msgsm br').length;
+		if (msg.indexOf('done') > -1 || msg.indexOf('_') > -1 || msg.indexOf('OK') > -1) {
+		   $('#cntr').html(Number($('#cntr').html()) + 1);
+		}
                 if (lines > ", ?LINES, ") {
                       window.location.href='/esysman';
 //                    $('#msgsm').html('');
@@ -701,6 +743,11 @@ Port/binary,
         $('#msgdup').html('');
         $('#cntdup').html('0K/0L');
     });
+
+    $('#cntrst').click(function(){
+        $('#cntr').html('0');
+    });
+
 
 ",
 (jsAll(?ROOMS,<<"ping">>))/binary,
@@ -817,13 +864,20 @@ Port/binary,
 
 </div>
 
- <div class='brk'></div>
+<div class='brk'></div>
 
- <div id='commands'>
+<div id='commands'>
 
- <div id='com_title'>
- Commands
- </div>
+<div id='com_title'>
+ Commands -- Auto Wks Shutdown Time: 
+ <input style='width:20px;' id='shutdownTimeH'  type='text' name='shutdownTimeH' maxlength=2 value='22'/> <->
+ <input style='width:20px;' id='shutdownTimeH2'  type='text' name='shutdownTimeH2' maxlength=2 value='06'/>
+ <select id='shutdownTimerSwitch' name='shutdownTimerSwitch'>
+   <option value='1'>On</option>
+   <option value='0'>Off</option>
+ </select>
+ ( <span id='cntr'>0</span> ) <input style='width:75px;' type=button id=cntrst value=Reset>
+</div>
 
  <div id='tcoms'>",
 (case is_list(login_is()) of
