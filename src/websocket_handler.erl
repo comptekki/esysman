@@ -817,13 +817,9 @@ Port/binary,
 
     $('#sacs').click(function(){
         if($(':checkbox:lt(1)').is(':checked')){
-//            $(':checkbox:lt(10)').removeAttr('checked');
-//            $('#tinputs:checkbox:lt(2)').removeAttr('checked');
           $(':checkbox').removeAttr('checked');
         }
         else {
-//            $(':checkbox:lt(10)').attr('checked', 'checked');
-//            $('#tinputs:checkbox:lt(2)').attr('checked', 'checked');
           $(':checkbox').attr('checked', 'checked');  
       }
     });
@@ -1233,7 +1229,7 @@ mkjsToggleAllChk([Room|Rooms]) ->
 	<<"
  $('#toggleAll",Rm/binary,"').click(function(){
      $('#",Rm/binary," input:checkbox').each(function() {
-         $(this).attr('checked',!$(this).attr('checked'));
+         this.checked = !this.checked;
      });
  });
 
@@ -1474,13 +1470,13 @@ comButtons([{Wk,FQDN,MacAddr,_Os}|Wks],Rm,RowCnt,ColCnt) ->
 
     $('#",Wk/binary,"_col').click(function(){
         $('.",Rm/binary,"_col_",(list_to_binary(integer_to_list(ColCnt)))/binary," input:checkbox').each(function() {
-           $(this).attr('checked',!$(this).attr('checked'));
+           this.checked = !this.checked;
        });
 	});
 
     $('#",Wk/binary,"status').click(function(){
         $('#",Rm/binary,"_row_",(list_to_binary(integer_to_list(RowCnt)))/binary," input:checkbox').each(function() {
-           $(this).attr('checked',!$(this).attr('checked'));
+           this.checked = !this.checked;
        });
 	});
 
