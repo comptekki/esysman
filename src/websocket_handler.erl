@@ -575,16 +575,9 @@ Port/binary,
 						        message(sepcol,boxCom[0] + ': ' + boxCom[1])
 					} // end switch
 
-//					if (box.indexOf('",?IGNORESHUTDOWN,"') > -1) {
 					if (box.indexOf('",?IGNORESHUTDOWN,"') < 0 && box.length > 0) {
 						if($('#shutdownTimerSwitch').val() == '1') {
-						    var jsnow = new Date();
-				    	    var h=jsnow.getHours();
-   				    	    //var m=jsnow.getMinutes();
-						    //(h<10)?s='0'+h:h;
-						    //(m<10)?m='0'+m:m;    
-
-						    if (h >= Number($('#shutdownTimeH').val()) || h <= Number($('#shutdownTimeH2').val())) { //&& $('#shutdownTimeM').val() == m) {
+                            if (hdiff(Number($('#shutdownTimeH').val()), Number($('#shutdownTimeH2').val()))) {
                                 if (shutbox != box) {
 						    	    send(boxCom[0]+':shutdown:0');
                                     shutbox = box;
@@ -592,24 +585,42 @@ Port/binary,
 						    }
 						}
 					}
-
-
 				}
 				else message(true,m.data)
 		}
 
-		socket.onclose = function(){
+		socket.onclose = function() {
 //			console.log('onclose called')
 		    message(true,'Socket status: 3 (Closed)');
 		}
 
-		socket.onerror = function(e){
+		socket.onerror = function(e) {
 			message(true,'Socket Status: '+e.data)
 		}
 
-	} catch(exception){
+	} catch(exception) {
 	   message(true,'Error'+exception)
 	}
+
+    function hdiff(start, end) {
+	  var jsnow = new Date();
+	  var h=jsnow.getHours();
+
+      if (end < start) {
+        if ((h >= start && h <= 23) || (h >= 0 && h <= end)) {
+          return true;
+        }
+      } else {
+        if (start == end) {
+          return false;
+        }
+        if (h >= start && h <= end) {
+          return true;
+        }
+      }
+
+      return false;
+    }
 
 	function send(msg){
 //		console.log('send called');
@@ -651,7 +662,7 @@ Port/binary,
                 kb = 1024;
                 mb = 1048576;
                 lines=$('#msgsm br').length;
-		if (msg.indexOf('done') > -1 || msg.indexOf('_') > -1 || msg.indexOf('OK') > -1) {
+		if (msg.indexOf('done') > -1 || msg.indexOf('_') > -1 || msg.indexOf('reboot sent to') > -1 || msg.indexOf('dfstatus sent to') > -1 || msg.indexOf('pong') > -1 || msg.indexOf('OK') > -1 || msg.indexOf('Results') > -1 || msg.indexOf('Thawing') > -1 || msg.indexOf('Freezing') > -1 || msg.indexOf('copied') > -1) {
 		   $('#cntr').html(Number($('#cntr').html()) + 1);
 		}
                 if (lines > ", ?LINES, ") {
