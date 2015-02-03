@@ -611,9 +611,6 @@ Port/binary,
           return true;
         }
       } else {
-        if (start == end) {
-          return true;
-        }
         if (h >= start && h <= end) {
           return true;
         }
