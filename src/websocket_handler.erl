@@ -612,7 +612,7 @@ Port/binary,
         }
       } else {
         if (start == end) {
-          return false;
+          return true;
         }
         if (h >= start && h <= end) {
           return true;
