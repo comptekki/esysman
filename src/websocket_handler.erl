@@ -863,7 +863,7 @@ Port/binary,
  <input style='width:20px;' id='shutdownTimeH'  type='text' name='shutdownTimeH' maxlength=2 value='22'/> <->
  <input style='width:20px;' id='shutdownTimeH2'  type='text' name='shutdownTimeH2' maxlength=2 value='06'/>
  <select id='shutdownTimerSwitch' name='shutdownTimerSwitch'>
-   <option value='1'>On</option>
+   <option selected value='1'>On</option>
    <option value='0'>Off</option>
  </select>
  ( <span id='cntr'>0</span> ) <input style='width:75px;' type=button id=cntrst value=Reset>
@@ -1844,7 +1844,7 @@ jsrefcons_row([],_Rm) ->
 %
 
 now_bin() ->
-	{N1,N2,N3}=now(),
+	{N1,N2,N3}=erlang:timestamp(), %now(),
 	list_to_binary(integer_to_list(N1)++integer_to_list(N2)++integer_to_list(N3)).
 
 do_insert(TimeStamp, Box, User) ->
