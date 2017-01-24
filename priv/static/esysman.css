@@ -32,7 +32,7 @@ th.oth {font-size:18pt; text-align:center; border:1px solid #555555;}
 table { border-collapse:collapse;}
 input {width:100px;}
 
-#wrapper { width:2070px; margin:0 auto; /* border:1px solid #333333;*/}
+#wrapper { width:2720px; margin:0 auto; /* border:1px solid #333333;*/}
 
 #menu { width:99%; background-color:#888; font-weight:bold;  margin: 3px 3px 0 3px;}
 
@@ -57,16 +57,19 @@ input {width:100px;}
 #tinputs { float:left; height:235px; background-color:#111;  margin: 3px 0 0 0; padding: 5px 5px 0 5px;}
 
 /*#tmsgs { width: 100px; }
-#tmsgscl { width: 100px; }
+
 #tmsgsdup { width: 100px; }
 */
+
+#tmsgscl { border-left:1px solid #fff; margin-left:2px; border-right:1px solid #fff; margin-right:2px; }
+
 .tmsgsc { float:left;  width: 550px; padding:0 0 0 3px;}
 .mtopc { background-color:#666; width:550px; font-weight:bold; padding:3px 0 3px 3px;}
 .msgc { overflow:scroll; width:550px; height:220px; color:yellow; background-color:black; padding:0 0 0 3px; z-index:20;}
 .msgcsm { overflow:scroll; width:550px; height:220px; color:yellow; background-color:black; padding:0 0 0 3px; z-index:10;}
 
 .mtopcd { background-color:#666; width:550px; font-weight:bold; padding:3px 0 3px 3px;}
-.msgcd { overflow:scroll; width:550px; height:220px; color:yellow; background-color:black; padding:0 0 0 3px; }
+.msgcd { overflow:scroll; width:550px; height:220px; color:yellow; background-color:black; padding:0 0 0 3px;}
 
 #workstations { width:100%; margin:0 auto;}
 
@@ -85,6 +88,10 @@ input {width:100px;}
 	-webkit-border-radius: 15px;
 }
 
+a:link, a:visited { color:#fff; background-color:#000;}
+
+.button1 { text-decoration:none; }
+
 .ltd {
 	float:left;
 	width:320px;
@@ -99,7 +106,7 @@ input {width:100px;}
 .logged_on { color:green; background-color:#333; width:265px; text-align:center; margin:0 auto; }
 
 .line2 { float:left; width:257px; background-color:#333; padding:0px 5px 0px 5px; margin:0 auto;}
-.status { float:left; width:97%; color:red; background-color:#333; text-align:center; padding:0 5px 0 5px; margin:0 auto;}
+.status { float:left; width:80%; color:red; background-color:#333; text-align:center; padding:0 5px 0 5px; margin:0 auto;}
 .macaddr { float:left; width:56%; background-color:#454545;  padding:0 5px 0 5px;}
 .dfstatus { float:left; width:40.5%; color:aquamarine; background-color:#333; text-align:center; }
 
