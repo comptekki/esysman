@@ -69,13 +69,18 @@ websocket_init(_Any, Req, []) ->
 	Req2 = cowboy_req:compact(Req),
 	{ok, Req2, undefined, hibernate}.
 
+
+
 websocket_handle({text, <<"close">>}, Req, State) ->
 			{shutdown, Req, State};
 websocket_handle({text, <<"client-connected">>}, Req, State) ->
 			{reply, {text, <<"client-connected">> }, Req, State, hibernate};
 websocket_handle({text, Msg}, Req, State) ->
 	Ldata=binary:split(Msg,<<":">>,[global]),
-	io:format("~nLdata: ~p~n",[Ldata]),
+
+	{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
+	Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
+
 	[Box,Com,Args]=Ldata,
 	Rec_Node=binary_to_atom(<<Box/binary>>,latin1),
 	Data3 =
@@ -83,12 +88,11 @@ websocket_handle({text, Msg}, Req, State) ->
 			<<"com">> ->
 				{rec_com, Rec_Node} ! {Box,Com,Args},
 				Data2= <<"com -> ",Args/binary,"  <- sent to: ",Box/binary>>,
-				io:format("~n done com: ~p - args: ~p~n",[Box,Args]),
 				Data2;
 			<<"loggedon">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"loggedon sent to: ",Box/binary>>,
-				io:format("~n done loggedon ~p - data2: ~p ~n",[Box, Data2]),
+				io:format("~ndate: ~p -> done loggedon ~p - data2: ~p ~n",[Date, Box, Data2]),
 				Data2;
 			<<"copy">> ->
 				case file:read_file(<<?UPLOADS/binary,Args/binary>>) of
@@ -103,17 +107,17 @@ websocket_handle({text, Msg}, Req, State) ->
 			<<"dffreeze">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<Box/binary,":dffreeze">>,
-				io:format("~n done dffreeze ~p - data2: ~p ~n",[Box, Data2]),
+				io:format("~ndate: ~p -> done dffreeze ~p - data2: ~p ~n",[Date, Box, Data2]),
 				Data2;
 			<<"dfthaw">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<Box/binary,":dfthaw">>,
-				io:format("~n done dfthaw ~p - data2: ~p ~n",[Box, Data2]),
+				io:format("~ndate: ~p -> done dfthaw ~p - data2: ~p ~n",[Date, Box, Data2]),
 				Data2;
 			<<"dfstatus">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"dfstatus sent to: ",Box/binary>>,
-				io:format("~n done dfstatus ~p - data2: ~p ~n",[Box, Data2]),
+				io:format("~ndate: ~p -> done dfstatus ~p - data2: ~p ~n",[Date, Box, Data2]),
 				Data2;
 			<<"net_restart">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
@@ -128,12 +132,12 @@ websocket_handle({text, Msg}, Req, State) ->
 			<<"reboot">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"reboot sent to: ",Box/binary>>,
-				io:format("~n done reboot ~p - data2: ~p ~n",[Box, Data2]),
+				io:format("~ndate: ~p -> done reboot ~p - data2: ~p ~n",[Date, Box, Data2]),
 				Data2;
 			<<"shutdown">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"done - shutdown sent to: ",Box/binary>>,
-				io:format("~n done shutdown ~p - data2: ~p ~n",[Box, Data2]),
+				io:format("~ndate: ~p -> done shutdown ~p - data2: ~p ~n",[Date, Box, Data2]),
 				Data2;
 			<<"wol">> ->
 				MacAddr=binary_to_list(Args),
@@ -176,6 +180,7 @@ websocket_info(PreMsg, Req, State) ->
 			true -> Msg;
 			false -> list_to_binary(Msg)
 		end,
+%	io:format("~n~p~n",[binary:split(Msg3, <<"/">>, [global])]),
 	chk_insert(binary:split(Msg3, <<"/">>, [global])),
 	{reply, {text, Msg3}, Req, State, hibernate}.
 
@@ -183,13 +188,30 @@ chk_insert([_]) -> ok;
 chk_insert([_, <<"pong">>]) -> ok;
 chk_insert([_, _, <<>>]) ->	ok;
 chk_insert([B1, _, B2]) ->
+%io:format("~nb1:~p~n~p~n",[B1,B2]),
 	case binary:split(B2, <<" ">>) of
 		[_, _] ->
 			[];
 		_ ->		
-			{{Year, Month, Day}, {Hour, Min, _}} = calendar:local_time(),
-			TimeStamp = list_to_binary(io_lib:format("~p-~2..0B-~2..0B ~2..0B:~2..0B", [Year, Month, Day, Hour, Min])),
-			do_insert(TimeStamp, B1, B2)
+            case binary:match(B2,binary:split(?IGNOREUSERS2,<<":">>,[global]), []) of
+				nomatch ->
+%io:format("~nnomatch~n"),
+					{{Year, Month, Day}, {Hour, Min, _}} = calendar:local_time(),
+					TimeStamp = list_to_binary(io_lib:format("~p-~2..0B-~2..0B ~2..0B:~2..0B", [Year, Month, Day, Hour, Min])),
+					[_,H1]=binary:split(B1,<<"@">>,[global]),
+					[H2|_]=binary:split(H1,<<".">>,[global]),
+%					io:format("~nb1:~p~n~p~n~p~n",[H1,H2,binary:match(H2,[<<?IGNORESHOWUSERS>>], [])]),
+					case binary:match(H2,[<<?IGNORESHOWUSERS>>], []) of
+						nomatch ->
+							do_insert(TimeStamp, B1, B2);
+						_ ->
+%							io:format("~ngot here...~n"),
+							do_insert(TimeStamp, B1, <<"">>)
+					end;
+				_  -> 
+%	               io:format("~nmatch~n"),
+	               ok
+			end
 	end;
 chk_insert(_Data) when length(_Data) >= 2 -> ok.
 
@@ -393,7 +415,9 @@ app_front_end(Req, State) ->
 
 	{PortInt, Req3} = cowboy_req:port(Req2),
 	Port = list_to_binary(integer_to_list(PortInt)),
-	io:format("~n host: ~p port: ~p~n", [Host, Port]),
+	{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
+	Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
+	io:format("~ndate: ~p -> host: ~p : ~p~n", [Date, Host, Port]),
 	Get_rms = get_rms_keys(?ROOMS, 49),
 	{ok, [_, _, _, {Ref_cons_time}]} = file:consult(?CONF),
 	{ok, Req4} = cowboy_req:reply(200, [{<<"Content-Type">>, <<"text/html">>}],
@@ -450,6 +474,7 @@ Port/binary,
 	var first=true;
     var tot_cnt=0;
 	var shutbox='';
+    var retUsers='';
 
 	try{
         var socket = new WebSocket(ws_str);
@@ -486,18 +511,35 @@ Port/binary,
 					   box= box.split('@')[1]; //box.substr(box.indexOf('@')+1, box.length-1);
 					switch(boxCom[1]) {
 						case 'loggedon':
-							message(sepcol,boxCom[0] + ': ' + boxCom[2]);
-							if (boxCom[2].indexOf('command not')<0) {
-								 if(boxCom[2].length)
-								     $('#'+box+'status').html(boxCom[2]);
+							if(box.indexOf('", ?IGNORESHOWUSERS, "')<0) {
+								message(sepcol,boxCom[0] + ': ' + boxCom[2]);
+							   }
+							if (boxCom[2].indexOf('command not')<0)
+                            {
+								 if(boxCom[2].length>0)
+                                 {
+                                   if(chk_users('", ?IGNOREUSERS, "',boxCom[2]))
+                                   {
+									 if(box.indexOf('", ?IGNORESHOWUSERS, "')<0) {
+										 $('#'+box+'status').html(retUsers);									
+									 }
+                                     else {
+									   $('#'+box+'status').html('Up');									
+                                     }
+                                   }
+                                   else
+                                   {
+                                     $('#'+box+'status').html('Up');
+                                   }
+                                 }
 							     else
 							         $('#'+box+'status').html('Up');
-                            				}
-                            				else {
-                                			     $('#'+box+'status').html('.');
+                              }
+                              else {
+                                 $('#'+box+'status').html('.');
 							     $('#'+box+'status').css('color','red');
 							     $('#'+box+'status').css('background-color','#550000');
-                            				}
+                               }
 							break;
 						case 'pong':
 							$('#'+box+'status').css('color','green');
@@ -566,24 +608,43 @@ Port/binary,
 							message(sepcol,boxCom[0] + ': ' + 'com');
 							break;
 					    default:
+
 						if(boxCom[2])
-						    message(sepcol,boxCom[0] + ': ' + boxCom[1] + ' ' + boxCom[2])
-                            			else
+						    message(sepcol,boxCom[0] + ': ' + boxCom[1] + ' ' + boxCom[2] + m.data)
+               			else
 						    if(boxCom[1] == undefined)
 						        message(sepcol,boxCom[0])
-                                		else
+                   		else
 						        message(sepcol,boxCom[0] + ': ' + boxCom[1])
 					} // end switch
 
-					if (box.indexOf('",?IGNORESHUTDOWN,"') < 0 && box.length > 0) {
-						if($('#shutdownTimerSwitch').val() == '1') {
-                            if (hdiff(Number($('#shutdownTimeH').val()), Number($('#shutdownTimeH2').val()))) {
-                                if (shutbox != box) {
-						    	    send(boxCom[0]+':shutdown:0');
-                                    shutbox = box;
-                                }
-						    }
-						}
+		            var ignore_sd = '",?IGNORESHUTDOWN,"';
+                    var ignore_rb = '",?IGNOREREBOOT,"';
+                    var ignoreu1 = '",?IGNOREU1,"';
+                    var ignoreu2 = '",?IGNOREU2,"';
+                    var ignoreu3 = '",?IGNOREU3,"';
+                    var ignoreu4 = '",?IGNOREU4,"';
+                    
+                    if (boxCom[2].indexOf('|') > -1 && boxCom[2].indexOf(ignoreu1) < 0 && 
+                        boxCom[2].indexOf(ignoreu2) < 0 && boxCom[2].indexOf(ignoreu3) < 0 &&
+                        boxCom[2].indexOf(ignoreu4) < 0
+                    )
+                    {
+ 			           if (ignore_rb.indexOf(box) < 0 && box.length > 0) {
+                      		send(boxCom[0]+':reboot:0');
+			           }
+                    }
+
+   					if (ignore_sd.indexOf(box) < 0 && box.length > 0)
+                    {
+					  if($('#shutdownTimerSwitch').val() == '1') {
+                        if (hdiff(Number($('#shutdownTimeH').val()), Number($('#shutdownTimeH2').val()))) {
+                          if (shutbox != box) {
+	        			    send(boxCom[0]+':shutdown:0');
+                            shutbox = box;
+                          }
+                        }
+					  }
 					}
 				}
 				else message(true,m.data)
@@ -601,6 +662,35 @@ Port/binary,
 	} catch(exception) {
 	   message(true,'Error'+exception)
 	}
+
+    function chk_users(ignore,users) {
+       retUsers='';
+       cnt=0;
+       userArr=users.split('|');
+
+       for (var i=0; i<userArr.length; i++) {
+          if (ignore.indexOf(userArr[i]) < 0) {
+            if (cnt==0) {
+              cnt++;
+              retUsers=userArr[i];
+            }
+            else {
+              if (userArr.length > 1) {
+                if (userArr[i].indexOf('touch') < 0) {
+                   retUsers=retUsers + '|' + userArr[i];
+                 }
+              }
+              else
+                retUsers=userArr[i];
+            }
+          }
+       }
+
+       if (retUsers.length == 0)
+           return false;
+ 
+      return true;
+    }
 
     function hdiff(start, end) {
 	  var jsnow = new Date();
@@ -649,8 +739,7 @@ Port/binary,
         return month+'/'+day+'/'+jsnow.getFullYear()+'-'+hour+':'+mins+':'+seconds;
     }
 
-	function message(sepcol,msg){
-        
+	function message(sepcol,msg){        
         now = getnow();
 		if (isNaN(msg)) {
             if(sepcol){
@@ -860,11 +949,11 @@ Port/binary,
 
 <div id='com_title'>
  Commands -- Auto Wks Shutdown Time: 
- <input style='width:20px;' id='shutdownTimeH'  type='text' name='shutdownTimeH' maxlength=2 value='22'/> <->
- <input style='width:20px;' id='shutdownTimeH2'  type='text' name='shutdownTimeH2' maxlength=2 value='06'/>
+ <input style='width:20px;' id='shutdownTimeH'  type='text' name='shutdownTimeH' maxlength=2 value='",?SHUTDOWNSTART,"'/> <->
+ <input style='width:20px;' id='shutdownTimeH2'  type='text' name='shutdownTimeH2' maxlength=2 value='",?SHUTDOWNEND,"'/>
  <select id='shutdownTimerSwitch' name='shutdownTimerSwitch'>
-   <option selected value='1'>On</option>
-   <option value='0'>Off</option>
+   <option ",?SELECTEDON," value='1'>On</option>
+   <option ",?SELECTEDOFF," value='0'>Off</option>
  </select>
  ( <span id='cntr'>0</span> ) <input style='width:75px;' type=button id=cntrst value=Reset>
 </div>
@@ -1372,6 +1461,7 @@ divhc(Rm,[{Wk,FQDN,MacAddr,_Os}|Wks],ColCnt) ->
 	<<(case Wk of
 		 <<".">> ->	<<"<div class='hltd'>.</div>">>;
 			_ ->
+%<div id='",Wk/binary,"status' class='status'>.</div><div id='",Wk/binary,"_major class=fl>M</div><div id='",Wk/binary,"_classes class=fl>C</div>
 			   <<"
 
 <div id='",Wk/binary,"_hltd' class='hltd ",Rm/binary,"_col_",(list_to_binary(integer_to_list(ColCnt)))/binary,"'>
@@ -1739,13 +1829,12 @@ function chk_dupe_users_",Rm/binary,"(){
     now = getnow();
     for (var key in hash_",Rm/binary,"){
         if (hash_",Rm/binary,".hasOwnProperty(key) && hash_",Rm/binary,"[key].length > 1) {
-            $('#msgdup').html(now+':'+key+':['+hash_",Rm/binary,"[key]+']<br>'+$('#msgdup').html())
+            $('#msgdup').html(now+':'+key+':['+hash_",Rm/binary,"[key]+']<br>'+$('#msgdup').html());
                 mcnt = $('#msgdup').html().length;
                 kb = 1024;
                 mb = 1048576;
                 lines=$('#msgdup br').length;
                 if (lines > ", ?LINES, ") {
-//                      window.location.href='/esysman';
                     $('#msgdup').html('');
                     $('#cntdup').html('0K/0L');
                 }
@@ -1774,10 +1863,14 @@ jschkduRow([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm) ->
 		   _ ->
 <<"
 
-    if ($('#",Wk/binary,"status').html()!='.'){
+    var ignore_box = '",?IGNORESHUTDOWN,"';
+    var ignore_box2 = '",?IGNOREDUPES,"';
+//alert('",Wk/binary,"');
+    if ($('#",Wk/binary,"status').html()!='.' && ignore_box.indexOf('",Wk/binary,"') < 0 && ignore_box2.indexOf('",Wk/binary,"') < 0){
         dupe_",Rm/binary,".push($('#",Wk/binary,"status').html().toLowerCase());
         if (typeof hash_",Rm/binary,"[dupe_",Rm/binary,"[dupe_",Rm/binary,".length-1]] === 'undefined')
             hash_",Rm/binary,"[dupe_",Rm/binary,"[dupe_",Rm/binary,".length-1]] = [];
+    
         hash_",Rm/binary,"[dupe_",Rm/binary,"[dupe_",Rm/binary,".length-1]].push('",Wk/binary,"');
         ",Rm/binary,"cnt++;
         tot_cnt++;
@@ -1844,7 +1937,7 @@ jsrefcons_row([],_Rm) ->
 %
 
 now_bin() ->
-	{N1,N2,N3}=erlang:timestamp(), %now(),
+	{N1,N2,N3}=erlang:timestamp(), %now()
 	list_to_binary(integer_to_list(N1)++integer_to_list(N2)++integer_to_list(N3)).
 
 do_insert(TimeStamp, Box, User) ->
@@ -1862,3 +1955,5 @@ do_insert(TimeStamp, Box, User) ->
 					{S, Res}
 			end
 	end.
+
+
