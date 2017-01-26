@@ -65,6 +65,7 @@ send_msg([], _Msg) ->
 	[].
 
 process_msg(Box, Com, Args) ->
+				io:format("~nBox: ~p -> Com: ~p -> args: ~p ~n",[Box, Com, Args]),
 	case Com of
 		<<"com">> ->
 			send_msg(?SERVERS, <<Box/binary,":com <- ",Args/binary>>),
@@ -136,7 +137,7 @@ process_msg(Box, Com, Args) ->
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
-				<<"lsbver">> ->
+				<<"lsbra">> ->
 					case ?PLATFORM of
 						"x" ->
 							Res = os:cmd("/usr/bin/lsb_release -a"),
