@@ -88,6 +88,7 @@ websocket_handle({text, Msg}, Req, State) ->
 			<<"com">> ->
 				{rec_com, Rec_Node} ! {Box,Com,Args},
 				Data2= <<"com -> ",Args/binary,"  <- sent to: ",Box/binary>>,
+				io:format("~ndate: ~p -> done sent com ~p - data2: ~p ~n",[Date, Box, Data2]),
 				Data2;
 			<<"loggedon">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
