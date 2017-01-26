@@ -136,7 +136,7 @@ process_msg(Box, Com, Args) ->
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
-				<<"ubuntuver">> ->
+				<<"lsbver">> ->
 					case ?PLATFORM of
 						"x" ->
 							Res = os:cmd("/usr/bin/lsb_release -a"),
