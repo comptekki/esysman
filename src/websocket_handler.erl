@@ -507,13 +507,18 @@ Port/binary,
 					}
 
 					box=boxCom[0].substr(0,boxCom[0].indexOf('.'));					
+					users='", ?IGNORESHOWUSERS, "';
+
 
 					if (box.indexOf('@')>0)
 					   box= box.split('@')[1]; //box.substr(box.indexOf('@')+1, box.length-1);
 					switch(boxCom[1]) {
 						case 'loggedon':
-							if(box.indexOf('", ?IGNORESHOWUSERS, "')<0) {
+							if(users.indexOf(box)<0 && users.indexOf(boxCom[2])<0) {
 								message(sepcol,boxCom[0] + ': ' + boxCom[2]);
+							}
+							  else {
+								message(sepcol,boxCom[0] + ':');
 							   }
 							if (boxCom[2].indexOf('command not')<0)
                             {
@@ -521,7 +526,7 @@ Port/binary,
                                  {
                                    if(chk_users('", ?IGNOREUSERS, "',boxCom[2]))
                                    {
-									 if(box.indexOf('", ?IGNORESHOWUSERS, "')<0) {
+									 if(users.indexOf(box)<0) {
 										 $('#'+box+'status').html(retUsers);									
 									 }
                                      else {
