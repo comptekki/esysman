@@ -155,6 +155,10 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data2= <<"ping sent to: ",Box/binary>>,
 				io:format("~n done ping ~p - data2: ~p ~n",[Box, Data2]),
 				Data2;
+			<<"list_ups_dir">> ->
+				Data2= <<Box/binary,":list_ups_dir:",(list_up_fls())/binary>>,
+				io:format("~n done list_ups_dir ~p - data2: ~p ~n",[Box, Data2]),
+				Data2;
 			_ ->
 				<<"unsupported command">>
 					
@@ -608,8 +612,11 @@ Port/binary,
 							$('#'+box+'status').css('background-color','#006600');
 							message(sepcol,boxCom[0] + ': ' + 'copy');
 							break;
+                        case 'list_ups_dir':
+						  $('#mngscrbox').html(boxCom[2]);
+                           break;
 					    case 'com':
-							$('#'+box+'status').css('color','#00cc00');
+						    $('#'+box+'status').css('color','#00cc00');
 							$('#'+box+'status').css('background-color','#006600');
 							message(sepcol,boxCom[0] + ': ' + 'com');
 							break;
@@ -746,6 +753,7 @@ Port/binary,
     }
 
 	function message(sepcol,msg){        
+//alert('message... - ' + sepcol + ' - ' + msg);
         now = getnow();
 		if (isNaN(msg)) {
             if(sepcol){
@@ -881,6 +889,20 @@ Port/binary,
     interval_chk_dupes=setInterval(chk_dupe_users,60000);
 
 }//End else - has websockets
+    var showmngscrbox = false
+
+    $('#mngscripts').click(function(){
+          if (!showmngscrbox) {
+              $('#mngscrbox').show();
+              showmngscrbox = true;
+              send('localhost@domain:list_ups_dir:0');
+          }
+          else {
+              $('#mngscrbox').hide();
+              showmngscrbox = false;
+          }
+	});
+
 
        var msgcsm_hgt_old = 0;
        var msgc_hgt_old = 0;
@@ -1425,6 +1447,7 @@ mkAllRoomsSelectUnselectToggleAll([Room|Rooms]) ->
 
 mkselunseltogAll(Rm) ->
 	<<"
+  <a href='#' id='mngscripts'",Rm/binary,"' class='button' />Manage Scripts</a><div id='mngscrbox'></div><br><br>
   <a href='#' id='selectAll",Rm/binary,"' class='button' />Select All</a><br>
   <a href='#' id='unselectAll",Rm/binary,"' class='button' />UnSelect All</a><br>
   <a href='#' id='toggleAll",Rm/binary,"' class='button' />Toggle All</a><br>
@@ -1963,3 +1986,9 @@ do_insert(TimeStamp, Box, User) ->
 	end.
 
 
+list_up_fls() ->
+	{ok, Files}=file:list_dir(?UPLOADS),
+    Head = <<"<table><tr><td>file</td><td>function</td><tr>">>,
+	Mid = <<(erlang:list_to_binary([ "<tr><td><input id='checkz' type='checkbox' class='checkbox' /></a><a href=# class=button>" ++ X ++ "</a></td><td>*</td><tr>" || X <- Files]))/binary>>,
+	Tail = <<"</table>">>,
+	<<Head/binary,Mid/binary,Tail/binary>>.
