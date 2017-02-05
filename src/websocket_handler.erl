@@ -157,7 +157,7 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data2;
 			<<"list_ups_dir">> ->
 				Data2= <<Box/binary,":list_ups_dir:",(list_up_fls())/binary>>,
-				io:format("~n done list_ups_dir ~p - data2: ~p ~n",[Box, Data2]),
+				io:format("~n done list_ups_dir ~p ~n",[Box]),
 				Data2;
 			_ ->
 				<<"unsupported command">>
@@ -1985,10 +1985,21 @@ do_insert(TimeStamp, Box, User) ->
 			end
 	end.
 
-
 list_up_fls() ->
-	{ok, Files}=file:list_dir(?UPLOADS),
-    Head = <<"<table><tr><td>file</td><td>function</td><tr>">>,
-	Mid = <<(erlang:list_to_binary([ "<tr><td><input id='checkz' type='checkbox' class='checkbox' /></a><a href=# class=button>" ++ X ++ "</a></td><td>*</td><tr>" || X <- Files]))/binary>>,
+%	{ok, [_,{FireWallOnOff,IPAddresses},_,_]}=file:consult(?CONF),
+
+	{ok, Files0}=file:list_dir(?UPLOADS),
+    Files=lists:sort(Files0),
+    Head = <<"<table><tr><th><a href=# class=button>Add</a></th><th>File Name</th><th>Description</th></tr>">>,
+	Mid = <<(erlang:list_to_binary([ "<tr class='r'><td><a href=# class=button>Del</a><a href=# class=button>Ren</a><a href=# class=button>Edit</a><a href=# class=button>ln</a></td><td><a href=# class=button>" ++ X ++ "</a></td><td>" ++ mng_file_info(X) ++ "</td></tr>" || X <- Files]))/binary>>,
 	Tail = <<"</table>">>,
 	<<Head/binary,Mid/binary,Tail/binary>>.
+
+mng_file_info(File) ->
+%	io:format("zz: ~p~n",[<<(?UPLOADS)/binary,"info/",(erlang:list_to_binary(File))/binary,".info">>]),
+	
+	{ok, [Info]}=file:consult(<<(?UPLOADS)/binary,"info/",(erlang:list_to_binary(File))/binary,".info">>),
+%	io:format("blah= ~p~n",[Blah]),
+	
+	Info.
+%File.
