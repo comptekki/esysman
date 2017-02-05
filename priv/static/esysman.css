@@ -165,9 +165,9 @@ a.cols, a.mbig, a.clr {text-decoration:none;}
 #mngscrbox {
 	position:absolute;
 	left:400px;
-	top:100px;
-	width:1024px;
-	height:1024px;
+	top:200px;
+	width:600px;
+	height:600px;
 	padding:10px 10px 10px 10px;
 	border:10px solid #888;
 	-moz-border-radius:15px;
@@ -176,6 +176,14 @@ a.cols, a.mbig, a.clr {text-decoration:none;}
 	background-color:black;
 	overflow:scroll;
 	display:none;	
+}
+
+table, th, td {
+	border:1px solid #888;
+}
+
+tr.r:hover {
+	background-color: #555;
 }
 
 #big_msg {
