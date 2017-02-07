@@ -153,6 +153,14 @@ process_msg(Box, Com, Args) ->
 						_ ->
 							send_msg(?SERVERS, <<Box/binary, ":error - no function on this platform...">>)
 					end;
+				<<"aptlistupgradable">> ->
+					case ?PLATFORM of
+						"x" ->
+							Res = os:cmd("/usr/bin/apt update; /usr/bin/apt list --upgradale"),
+							send_msg(?SERVERS, <<Box/binary, ":aptlistupgradable -> done...", (fix_log(Res))/binary>>);
+						_ ->
+							send_msg(?SERVERS, <<Box/binary, ":error - no function on this platform...">>)
+					end;
 				<<"aptupgrade">> ->
 					case ?PLATFORM of
 						"x" ->
