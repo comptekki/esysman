@@ -148,7 +148,7 @@ process_msg(Box, Com, Args) ->
 				<<"aptcheck">> ->
 					case ?PLATFORM of
 						"x" ->
-							Res = os:cmd("/usr/lib/update-notifier/apt-check --human-readable"),
+							Res = os:cmd("/usr/bin/apt update; /usr/lib/update-notifier/apt-check --human-readable"),
 							send_msg(?SERVERS, <<Box/binary, ":aptcheck -> done...", (fix_log(Res))/binary>>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary, ":error - no function on this platform...">>)
