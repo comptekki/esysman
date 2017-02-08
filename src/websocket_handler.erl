@@ -1990,10 +1990,30 @@ list_up_fls() ->
 
 	{ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
-    Head = <<"<table><tr><th><a href=# class=button>Add</a></th><th>File Name</th><th>Description</th></tr>">>,
-	Mid = <<(erlang:list_to_binary([ "<tr class='r'><td><a href=# class=button>Del</a><a href=# class=button>Ren</a><a href=# class=button>Edit</a><a href=# class=button>ln</a></td><td><a href=# class=button>" ++ X ++ "</a></td><td>" ++ mng_file_info(X) ++ "</td></tr>" || X <- Files]))/binary>>,
+    Head = <<"<table><tr><th><a href=# class=button>Add</a></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
+	Mid = <<(erlang:list_to_binary([ mng_file(File) || File <- Files]))/binary>>,
 	Tail = <<"</table>">>,
 	<<Head/binary,Mid/binary,Tail/binary>>.
+
+mng_file(File) ->
+	{Res, LnFile} = file:read_link(binary_to_list(?UPLOADS) ++ "/" ++ File),
+	case File of
+		"any.cmd" -> tr1(File, Res, LnFile);
+		"any.exe" -> tr1(File, Res, LnFile);
+		"any.msi" -> tr1(File, Res, LnFile);
+		_ -> tr(File)	 
+	end.
+
+tr1(File, Res, LnFile) ->
+	case Res of
+		ok ->
+			"<tr class='r'><td></td><td><a href=# class=button>" ++ File ++ "</a></td><td>" ++ LnFile ++ "</td><td>" ++ mng_file_info(File) ++ "</td></tr>";
+		 _ ->
+			"<tr class='r'><td></td><td><a href=# class=button>" ++ File ++ "</a></td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>"
+		end.
+
+tr(File) ->
+	"<tr class='r'><td><a href=# class=button>Del</a><a href=# class=button>Ren</a><a href=# class=button>Edit</a><a href=# class=button>ln</a></td><td><a href=# class=button>" ++ File ++ "</a></td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>".
 
 mng_file_info(File) ->
 %	io:format("zz: ~p~n",[<<(?UPLOADS)/binary,"info/",(erlang:list_to_binary(File))/binary,".info">>]),
