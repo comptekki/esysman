@@ -2015,10 +2015,10 @@ tr(File) ->
 	"<tr class='r'><td><a href=# class=button>Del</a><a href=# class=button>Ren</a><a href=# class=button>Edit</a><a href=# class=button>ln</a></td><td><a href=# class=button>" ++ File ++ "</a></td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>".
 
 mng_file_info(File) ->
-%	io:format("zz: ~p~n",[<<(?UPLOADS)/binary,"info/",(erlang:list_to_binary(File))/binary,".info">>]),
-	
-	{ok, [Info]}=file:consult(<<(?UPLOADS)/binary,"info/",(erlang:list_to_binary(File))/binary,".info">>),
-%	io:format("blah= ~p~n",[Blah]),
-	
-	Info.
-%File.
+        Info = case file:consult(<<(?UPLOADS)/binary,"info/",(erlang:list_to_binary(File))/binary,".info">>) of
+           {ok, [Terms]} ->
+					   Terms;
+           {error, Reason} ->
+					   io_lib:format("~p",[Reason])
+        end,
+        Info.
