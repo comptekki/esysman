@@ -500,6 +500,7 @@ Port/binary,
 		socket.onmessage = function(m){
 //			console.log('onmessage called');
 			if (m.data)
+
 				if(m.data.indexOf(':'>0) || m.data.indexOf('/')>0){
 					if(m.data.indexOf(':')>0) {
 					   boxCom=m.data.split(':');
@@ -513,7 +514,6 @@ Port/binary,
 					box=boxCom[0].substr(0,boxCom[0].indexOf('.'));					
 					users='", ?IGNORESHOWUSERS, "';
 
-
 					if (box.indexOf('@')>0)
 					   box= box.split('@')[1]; //box.substr(box.indexOf('@')+1, box.length-1);
 					switch(boxCom[1]) {
@@ -521,9 +521,10 @@ Port/binary,
 							if(users.indexOf(box)<0 && users.indexOf(boxCom[2])<0) {
 								message(sepcol,boxCom[0] + ': ' + boxCom[2]);
 							}
-							  else {
-								message(sepcol,boxCom[0] + ':');
-							   }
+							else {
+							  message(sepcol,boxCom[0] + ':');
+						    }
+
 							if (boxCom[2].indexOf('command not')<0)
                             {
 								 if(boxCom[2].length>0)
@@ -621,13 +622,11 @@ Port/binary,
 							message(sepcol,boxCom[0] + ': ' + 'com');
 							break;
 					    default:
-
-						if(boxCom[2])
-						    message(sepcol,boxCom[0] + ': ' + boxCom[1] + ' ' + boxCom[2] + m.data)
-               			else
-						    if(boxCom[1] == undefined)
+						    if(boxCom[2] != undefined)
+						        message(sepcol,boxCom[0] + ': ' + boxCom[1] + ' ' + boxCom[2] + m.data)
+               			    else if(boxCom[1] == undefined)
 						        message(sepcol,boxCom[0])
-                   		else
+                   		    else
 						        message(sepcol,boxCom[0] + ': ' + boxCom[1])
 					} // end switch
 
@@ -638,7 +637,7 @@ Port/binary,
                     var ignoreu3 = '",?IGNOREU3,"';
                     var ignoreu4 = '",?IGNOREU4,"';
                     
-                    if (boxCom[2].indexOf('|') > -1 && boxCom[2].indexOf(ignoreu1) < 0 && 
+                    if (boxCom.lingth > 1 && boxCom[2].indexOf('|') > -1 && boxCom[2].indexOf(ignoreu1) < 0 && 
                         boxCom[2].indexOf(ignoreu2) < 0 && boxCom[2].indexOf(ignoreu3) < 0 &&
                         boxCom[2].indexOf(ignoreu4) < 0
                     )
