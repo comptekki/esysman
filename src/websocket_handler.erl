@@ -637,7 +637,7 @@ Port/binary,
                     var ignoreu3 = '",?IGNOREU3,"';
                     var ignoreu4 = '",?IGNOREU4,"';
                     
-                    if (boxCom.lingth > 1 && boxCom[2].indexOf('|') > -1 && boxCom[2].indexOf(ignoreu1) < 0 && 
+                    if (boxCom.length > 1 && boxCom[2].indexOf('|') > -1 && boxCom[2].indexOf(ignoreu1) < 0 && 
                         boxCom[2].indexOf(ignoreu2) < 0 && boxCom[2].indexOf(ignoreu3) < 0 &&
                         boxCom[2].indexOf(ignoreu4) < 0
                     )
