@@ -636,16 +636,18 @@ Port/binary,
                     var ignoreu2 = '",?IGNOREU2,"';
                     var ignoreu3 = '",?IGNOREU3,"';
                     var ignoreu4 = '",?IGNOREU4,"';
-                    
-                    if (boxCom.length > 1 && boxCom[2].indexOf('|') > -1 && boxCom[2].indexOf(ignoreu1) < 0 && 
-                        boxCom[2].indexOf(ignoreu2) < 0 && boxCom[2].indexOf(ignoreu3) < 0 &&
-                        boxCom[2].indexOf(ignoreu4) < 0
-                    )
-                    {
- 			           if (ignore_rb.indexOf(box) < 0 && box.length > 0) {
-                      		send(boxCom[0]+':reboot:0');
-			           }
-                    }
+
+                    if (boxCom.length > 2) {
+						 if(boxCom[2].indexOf('|') > -1 && boxCom[2].indexOf(ignoreu1) < 0 && 
+								boxCom[2].indexOf(ignoreu2) < 0 && boxCom[2].indexOf(ignoreu3) < 0 &&
+								boxCom[2].indexOf(ignoreu4) < 0
+						   )
+						   {
+							  if (ignore_rb.indexOf(box) < 0 && box.length > 0) {
+							     send(boxCom[0]+':reboot:0');
+							  }
+						   }
+				    }
 
    					if (ignore_sd.indexOf(box) < 0 && box.length > 0)
                     {
@@ -892,6 +894,7 @@ Port/binary,
 
     $('#mngscripts').click(function(){
           if (!showmngscrbox) {
+              $('#mngscrbox').css('z-index', 100);
               $('#mngscrbox').show();
               showmngscrbox = true;
               send('localhost@domain:list_ups_dir:0');
@@ -1985,8 +1988,6 @@ do_insert(TimeStamp, Box, User) ->
 	end.
 
 list_up_fls() ->
-%	{ok, [_,{FireWallOnOff,IPAddresses},_,_]}=file:consult(?CONF),
-
 	{ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
     Head = <<"<table><tr><th><a href=# class=button>Add</a></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
@@ -1996,23 +1997,30 @@ list_up_fls() ->
 
 mng_file(File) ->
 	{Res, LnFile} = file:read_link(binary_to_list(?UPLOADS) ++ "/" ++ File),
-	case File of
-		"any.cmd" -> tr1(File, Res, LnFile);
-		"any.exe" -> tr1(File, Res, LnFile);
-		"any.msi" -> tr1(File, Res, LnFile);
-		_ -> tr(File)	 
+
+	{ok, {_,_,Ftype,_,_,_,_,_,_,_,_,_,_,_}} = file:read_file_info(binary_to_list(?UPLOADS) ++ "/" ++ File),
+	case Ftype of
+		directory -> 
+			"";
+		_ ->
+			case File of
+				"any.cmd" -> tr1(File, Res, LnFile);
+				"any.exe" -> tr1(File, Res, LnFile);
+				"any.msi" -> tr1(File, Res, LnFile);
+				_ -> tr(File)	 
+			end
 	end.
 
 tr1(File, Res, LnFile) ->
 	case Res of
 		ok ->
-			"<tr class='r'><td></td><td><a href=# class=button>" ++ File ++ "</a></td><td>" ++ LnFile ++ "</td><td>" ++ mng_file_info(File) ++ "</td></tr>";
+			"<tr class='r'><td></td><td>" ++ File ++ "</td><td>" ++ LnFile ++ "</td><td>" ++ mng_file_info(File) ++ "</td></tr>";
 		 _ ->
-			"<tr class='r'><td></td><td><a href=# class=button>" ++ File ++ "</a></td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>"
+			"<tr class='r'><td></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>"
 		end.
 
 tr(File) ->
-	"<tr class='r'><td><a href=# class=button>Del</a><a href=# class=button>Ren</a><a href=# class=button>Edit</a><a href=# class=button>ln</a></td><td><a href=# class=button>" ++ File ++ "</a></td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>".
+	"<tr class='r'><td><a href=# class=button>Del</a><a href=# class=button>Ren</a><a href=# class=button>Edit</a><a href=# class=button>ln</a></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>".
 
 mng_file_info(File) ->
         Info = case file:consult(<<(?UPLOADS)/binary,"info/",(erlang:list_to_binary(File))/binary,".info">>) of
