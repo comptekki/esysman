@@ -159,6 +159,13 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data2= <<Box/binary,":list_ups_dir:",(list_up_fls())/binary>>,
 				io:format("~n done list_ups_dir ~p ~n",[Box]),
 				Data2;
+			<<"delscrfile">> ->
+				_ = file:delete(<<(?UPLOADS)/binary,Args/binary>>),
+				_ = file:delete(<<(?UPLOADS)/binary, "info/", Args/binary, ".info">>),
+
+				io:format("~n done deleting script file: ~p ~n",[Args]),
+				Data2= <<"done deleting script file: ", Args/binary, "....!">>,
+				Data2;
 			_ ->
 				<<"unsupported command">>
 					
@@ -846,6 +853,14 @@ Port/binary,
         $('#cntr').html('0');
     });
 
+	$(document).on('click', 'a.button.dbut', function(){
+        console.log($(this).parent().next('td').html());
+        send('0:delscrfile:' + $(this).parent().next('td').html());
+	});
+
+//    $('body').bind('click mousedown', function(e) {
+//        console.log(e);
+//    });
 
 ",
 (jsAll(?ROOMS,<<"ping">>))/binary,
@@ -2020,7 +2035,7 @@ tr1(File, Res, LnFile) ->
 		end.
 
 tr(File) ->
-	"<tr class='r'><td><a href=# class=button>Del</a><a href=# class=button>Ren</a><a href=# class=button>Edit</a><a href=# class=button>ln</a></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>".
+	"<tr class='r'><td><a href=# class='button dbut'>Del</a><a href=# class=button>Ren</a><a href=# class=button>Edit</a><a href=# class=button>ln</a></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>".
 
 mng_file_info(File) ->
         Info = case file:consult(<<(?UPLOADS)/binary,"info/",(erlang:list_to_binary(File))/binary,".info">>) of
