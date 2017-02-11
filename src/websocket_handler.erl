@@ -166,6 +166,26 @@ websocket_handle({text, Msg}, Req, State) ->
 				io:format("~n done deleting script file: ~p ~n",[Args]),
 				Data2= <<"done deleting script file: ", Args/binary, "....!">>,
 				Data2;
+			<<"lnscrfile">> ->
+				[F1,F2] = binary:split(Args, <<"+">>, [global]),
+				case file:make_symlink(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary,F2/binary>>) of
+					ok ->
+						"";
+					{error, eexist} ->
+						case binary:split(F1, <<".">>, [global]) of
+							[_, <<"cmd">>] ->
+								file:delete(<<(?UPLOADS)/binary, "any.cmd">>);
+							[_, <<"exe">>] ->
+								file:delete(<<(?UPLOADS)/binary, "any.exe">>);
+							[_, <<"msi">>] ->
+								file:delete(<<(?UPLOADS)/binary, "any.msi">>)
+						end,
+						file:make_symlink(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary,F2/binary>>)
+				end,
+
+				io:format("~n done linking script file: ~p -> ~p ~n",[F1,F2]),
+				Data2= <<"done linking script file: ", F1/binary, "->", F2/binary, "....!">>,
+				Data2;
 			_ ->
 				<<"unsupported command">>
 					
@@ -192,7 +212,7 @@ websocket_info(PreMsg, Req, State) ->
 			true -> Msg;
 			false -> list_to_binary(Msg)
 		end,
-%	io:format("~n~p~n",[binary:split(Msg3, <<"/">>, [global])]),
+
 	chk_insert(binary:split(Msg3, <<"/">>, [global])),
 	{reply, {text, Msg3}, Req, State, hibernate}.
 
@@ -200,28 +220,24 @@ chk_insert([_]) -> ok;
 chk_insert([_, <<"pong">>]) -> ok;
 chk_insert([_, _, <<>>]) ->	ok;
 chk_insert([B1, _, B2]) ->
-%io:format("~nb1:~p~n~p~n",[B1,B2]),
+
 	case binary:split(B2, <<" ">>) of
 		[_, _] ->
 			[];
 		_ ->		
             case binary:match(B2,binary:split(?IGNOREUSERS2,<<":">>,[global]), []) of
 				nomatch ->
-%io:format("~nnomatch~n"),
 					{{Year, Month, Day}, {Hour, Min, _}} = calendar:local_time(),
 					TimeStamp = list_to_binary(io_lib:format("~p-~2..0B-~2..0B ~2..0B:~2..0B", [Year, Month, Day, Hour, Min])),
 					[_,H1]=binary:split(B1,<<"@">>,[global]),
 					[H2|_]=binary:split(H1,<<".">>,[global]),
-%					io:format("~nb1:~p~n~p~n~p~n",[H1,H2,binary:match(H2,[<<?IGNORESHOWUSERS>>], [])]),
 					case binary:match(H2,[<<?IGNORESHOWUSERS>>], []) of
 						nomatch ->
 							do_insert(TimeStamp, B1, B2);
 						_ ->
-%							io:format("~ngot here...~n"),
 							do_insert(TimeStamp, B1, <<"">>)
 					end;
 				_  -> 
-%	               io:format("~nmatch~n"),
 	               ok
 			end
 	end;
@@ -854,13 +870,44 @@ Port/binary,
     });
 
 	$(document).on('click', 'a.button.dbut', function(){
-        console.log($(this).parent().next('td').html());
+        if ($(this).parent().next('td').html() == $('#lncmddiv').html()) {
+            //console.log($('#lncmddiv').html());
+            $('#lncmddiv').html('')
+        }
+        else if ($(this).parent().next('td').html() == $('#lnexediv').html()) {
+            //console.log($('#lnexediv').html());
+            $('#lnexediv').html('')
+        }
+        else if ($(this).parent().next('td').html() == $('#lnmsidiv').html()) {
+            //console.log($('#lnmsidiv').html());
+            $('#lnmsidiv').html('')
+        }
+
+        //console.log($(this).parent().next('td').html());
+
+        $(this).closest('tr').remove();
         send('0:delscrfile:' + $(this).parent().next('td').html());
 	});
 
-//    $('body').bind('click mousedown', function(e) {
-//        console.log(e);
-//    });
+	$(document).on('click', 'a.button.lbut', function(){
+        if ($(this).parent().next('td').html().indexOf('.cmd')>0) {
+          $('#lncmddiv').html($(this).parent().next('td').html());
+          send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.cmd');
+        }
+        else if ($(this).parent().next('td').html().indexOf('.exe')>0) {
+          $('#lnexediv').html($(this).parent().next('td').html());
+          send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.exe');
+        }
+        else if ($(this).parent().next('td').html().indexOf('.msi')>0) {
+          $('#lnmsidiv').html($(this).parent().next('td').html());
+          send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.msi');
+        }
+
+	});
+
+//    $('body').bind('click mousedown mouseover', function(e) {
+  //      console.log(e);
+    //});
 
 ",
 (jsAll(?ROOMS,<<"ping">>))/binary,
@@ -2013,29 +2060,45 @@ list_up_fls() ->
 mng_file(File) ->
 	{Res, LnFile} = file:read_link(binary_to_list(?UPLOADS) ++ "/" ++ File),
 
-	{ok, {_,_,Ftype,_,_,_,_,_,_,_,_,_,_,_}} = file:read_file_info(binary_to_list(?UPLOADS) ++ "/" ++ File),
-	case Ftype of
-		directory -> 
-			"";
+	case file:read_file_info(binary_to_list(?UPLOADS) ++ "/" ++ File) of
+		{ok, {_,_,Ftype,_,_,_,_,_,_,_,_,_,_,_}} ->
+			case Ftype of
+				directory -> 
+					"";
+				_ ->
+					case File of
+						"any.cmd" -> 
+							ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
+							tr1(File, Res, "cmddiv", "lncmddiv", ShortLnf);
+						"any.exe" -> 
+							ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
+							tr1(File, Res, "exediv", "lnexediv", ShortLnf);
+						"any.msi" -> 
+							ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
+							tr1(File, Res, "msidiv", "lnmsidiv", ShortLnf);
+						_ -> 
+							tr(File)	 
+					end
+			end;
 		_ ->
 			case File of
-				"any.cmd" -> tr1(File, Res, LnFile);
-				"any.exe" -> tr1(File, Res, LnFile);
-				"any.msi" -> tr1(File, Res, LnFile);
+				"any.cmd" -> tr1(File, Res, "cmddiv", "lncmddiv", "");
+				"any.exe" -> tr1(File, Res, "exediv", "lnexediv", "");
+				"any.msi" -> tr1(File, Res, "msidiv", "lnmsidiv", "");
 				_ -> tr(File)	 
 			end
 	end.
 
-tr1(File, Res, LnFile) ->
+tr1(File, Res, Fdiv, Ldiv, LnFile) ->
 	case Res of
 		ok ->
-			"<tr class='r'><td></td><td>" ++ File ++ "</td><td>" ++ LnFile ++ "</td><td>" ++ mng_file_info(File) ++ "</td></tr>";
+			"<tr class='r'><td></td><td><div id='" ++ Fdiv ++"'>" ++ File ++ "</div></td><td><div id='" ++ Ldiv ++ "'>" ++ LnFile ++ "</div></td><td>" ++ mng_file_info(File) ++ "</td></tr>";
 		 _ ->
 			"<tr class='r'><td></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>"
 		end.
 
 tr(File) ->
-	"<tr class='r'><td><a href=# class='button dbut'>Del</a><a href=# class=button>Ren</a><a href=# class=button>Edit</a><a href=# class=button>ln</a></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>".
+	"<tr class='r'><td><a href=# class='button dbut'>Del</a><a href=# class=button>Ren</a><a href=# class=button>Edit</a><a href=# class='button lbut'>ln</a></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>".
 
 mng_file_info(File) ->
         Info = case file:consult(<<(?UPLOADS)/binary,"info/",(erlang:list_to_binary(File))/binary,".info">>) of
