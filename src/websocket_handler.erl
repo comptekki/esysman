@@ -905,6 +905,22 @@ Port/binary,
 
 	});
 
+	$(document).on('click', 'a.button.rbut', function(){
+//        if ($(this).parent().next('td').html().indexOf('.cmd')>0) {
+  //        $('#lncmddiv').html($(this).parent().next('td').html());
+    //      send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.cmd');
+      //  }
+//        else if ($(this).parent().next('td').html().indexOf('.exe')>0) {
+  //        $('#lnexediv').html($(this).parent().next('td').html());
+    //      send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.exe');
+      //  }
+//        else if ($(this).parent().next('td').html().indexOf('.msi')>0) {
+  //        $('#lnmsidiv').html($(this).parent().next('td').html());
+    //      send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.msi');
+      //  }
+
+	});
+
 //    $('body').bind('click mousedown mouseover', function(e) {
   //      console.log(e);
     //});
@@ -956,8 +972,10 @@ Port/binary,
 
     $('#mngscripts').click(function(){
           if (!showmngscrbox) {
-              $('#mngscrbox').css('z-index', 100);
+//              $('#mngscrbox').css('z-index', 1000);
               $('#mngscrbox').show();
+              $('#mngscrbox').css('position', 'absolute');
+              $('#mngscrbox').css('z-index', parseInt($('#tinputs').css('z-index')) + 1);
               showmngscrbox = true;
               send('localhost@domain:list_ups_dir:0');
           }
@@ -1511,7 +1529,7 @@ mkAllRoomsSelectUnselectToggleAll([Room|Rooms]) ->
 
 mkselunseltogAll(Rm) ->
 	<<"
-  <a href='#' id='mngscripts'",Rm/binary,"' class='button' />Manage Scripts</a><div id='mngscrbox'></div><br><br>
+  <a href='#' id='mngscripts' class='button' />Manage Scripts</a><div id='mngscrbox'></div><br><br>
   <a href='#' id='selectAll",Rm/binary,"' class='button' />Select All</a><br>
   <a href='#' id='unselectAll",Rm/binary,"' class='button' />UnSelect All</a><br>
   <a href='#' id='toggleAll",Rm/binary,"' class='button' />Toggle All</a><br>
@@ -2077,7 +2095,14 @@ mng_file(File) ->
 							ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
 							tr1(File, Res, "msidiv", "lnmsidiv", ShortLnf);
 						_ -> 
-							tr(File)	 
+							case lists:last(binary:split(erlang:list_to_binary(File), <<".">>)) of
+								<<"exe">> ->
+									tr(File, 1);
+								<<"msi">> ->
+									tr(File, 1);
+								_ ->
+									tr(File, 0)
+							end
 					end
 			end;
 		_ ->
@@ -2085,7 +2110,15 @@ mng_file(File) ->
 				"any.cmd" -> tr1(File, Res, "cmddiv", "lncmddiv", "");
 				"any.exe" -> tr1(File, Res, "exediv", "lnexediv", "");
 				"any.msi" -> tr1(File, Res, "msidiv", "lnmsidiv", "");
-				_ -> tr(File)	 
+				_ -> 
+					case lists:last(binary:split(erlang:list_to_binary(File), <<".">>)) of
+						<<"exe">> ->
+							tr(File, 1);
+						<<"msi">> ->
+							tr(File, 1);
+						_ ->
+							tr(File, 0)
+					end
 			end
 	end.
 
@@ -2097,8 +2130,11 @@ tr1(File, Res, Fdiv, Ldiv, LnFile) ->
 			"<tr class='r'><td></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>"
 		end.
 
-tr(File) ->
-	"<tr class='r'><td><a href=# class='button dbut'>Del</a><a href=# class=button>Ren</a><a href=# class=button>Edit</a><a href=# class='button lbut'>ln</a></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>".
+tr(File, 0) ->
+	"<tr class='r'><td><a href=# class='button dbut'>Del</a><a href=# class='button rbut'>Ren</a><a href=# class='button lbut'>ln</a><a href=# class='button ebut'>Edit</a></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>";
+
+tr(File, 1) ->
+	"<tr class='r'><td><a href=# class='button dbut'>Del</a><a href=# class='button rbut'>Ren</a><a href=# class='button lbut'>ln</a></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>".
 
 mng_file_info(File) ->
         Info = case file:consult(<<(?UPLOADS)/binary,"info/",(erlang:list_to_binary(File))/binary,".info">>) of
