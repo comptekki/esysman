@@ -163,8 +163,8 @@ websocket_handle({text, Msg}, Req, State) ->
 				_ = file:delete(<<(?UPLOADS)/binary,Args/binary>>),
 				_ = file:delete(<<(?UPLOADS)/binary, "info/", Args/binary, ".info">>),
 
-				io:format("~n done deleting script file: ~p ~n",[Args]),
-				Data2= <<"done deleting script file: ", Args/binary, "....!">>,
+				io:format("~n done deleting file/script file: ~p ~n",[Args]),
+				Data2= <<"done deleting file/script file: ", Args/binary, "....!">>,
 				Data2;
 			<<"lnscrfile">> ->
 				[F1,F2] = binary:split(Args, <<"+">>, [global]),
@@ -182,10 +182,24 @@ websocket_handle({text, Msg}, Req, State) ->
 						end,
 						file:make_symlink(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary,F2/binary>>)
 				end,
-
-				io:format("~n done linking script file: ~p -> ~p ~n",[F1,F2]),
-				Data2= <<"done linking script file: ", F1/binary, "->", F2/binary, "....!">>,
+				io:format("~n done linking file/script file: ~p -> ~p~n",[F1,F2]),
+				Data2= <<"done linking file/script file: ", F1/binary, "->", F2/binary, "....!">>,
 				Data2;
+			<<"renscrfile">> ->
+				[F1,F2] = binary:split(Args, <<"+">>, [global]),
+				Data2 = file:rename(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary,F2/binary>>),
+%				Data2 = case file:rename(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary,F2/binary>>) of
+%					ok ->
+%						<<"">>;
+%					{error, eexist} ->
+%						<<" -> error: eexist">>;
+%				  	_ -> 
+%		   				<<"">>
+%				end,
+					
+				io:format("~n done renaming file/script file: ~p -> ~p ~p~n",[F1,F2,Data2]),
+				Data4= <<"done renaming file/script file: ", F1/binary, "->", F2/binary, "....!">>,
+				Data4;
 			_ ->
 				<<"unsupported command">>
 					
@@ -905,19 +919,27 @@ Port/binary,
 
 	});
 
+
 	$(document).on('click', 'a.button.rbut', function(){
-//        if ($(this).parent().next('td').html().indexOf('.cmd')>0) {
-  //        $('#lncmddiv').html($(this).parent().next('td').html());
-    //      send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.cmd');
-      //  }
-//        else if ($(this).parent().next('td').html().indexOf('.exe')>0) {
-  //        $('#lnexediv').html($(this).parent().next('td').html());
-    //      send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.exe');
-      //  }
-//        else if ($(this).parent().next('td').html().indexOf('.msi')>0) {
-  //        $('#lnmsidiv').html($(this).parent().next('td').html());
-    //      send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.msi');
-      //  }
+      var fnameo = $(this).parent().next('td').html();
+      fname = fnameo.split('.');
+      var ok = true;
+      while (ok) {
+        var fnamex=prompt('Rename file',fname[0]);
+        if (fnamex == null) {
+          ok = false;
+        } else if (fnamex.length > 0){
+          var regex=/^[a-zA-Z0-9]+$/;
+          if (!fnamex.match(regex)) {
+            ok = true;
+          } else {
+            ok = false;
+            $(this).parent().next('td').html(fnamex + '.' + fname[1]);
+            send('0:renscrfile:' + fnameo + '+' + fnamex + '.' + fname[1]);
+          }
+        }
+    }
+     
 
 	});
 
