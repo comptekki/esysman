@@ -188,17 +188,17 @@ websocket_handle({text, Msg}, Req, State) ->
 			<<"renscrfile">> ->
 				[F1,F2] = binary:split(Args, <<"+">>, [global]),
 				Data2 = file:rename(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary,F2/binary>>),
-%				Data2 = case file:rename(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary,F2/binary>>) of
-%					ok ->
-%						<<"">>;
-%					{error, eexist} ->
-%						<<" -> error: eexist">>;
-%				  	_ -> 
-%		   				<<"">>
-%				end,
-					
+				file:rename(<<(?UPLOADS)/binary,"info/",F1/binary,".info">>, <<(?UPLOADS)/binary,"info/",F2/binary,".info">>),
+
 				io:format("~n done renaming file/script file: ~p -> ~p ~p~n",[F1,F2,Data2]),
 				Data4= <<"done renaming file/script file: ", F1/binary, "->", F2/binary, "....!">>,
+				Data4;
+			<<"editscrfile">> ->
+				Dataf = file:read_file(<<(?UPLOADS)/binary,Args/binary>>),
+				Datafi = file:read_file(<<(?UPLOADS)/binary,"info/",Args/binary,".info">>),
+
+				io:format("~n done edit script file: ~p -> info: ~p~n",[Dataf,Datafi]),
+				Data4= <<"done edit script file... ">>,
 				Data4;
 			_ ->
 				<<"unsupported command">>
@@ -920,7 +920,7 @@ Port/binary,
 	});
 
 
-	$(document).on('click', 'a.button.rbut', function(){
+	$(document).on('click', 'a.button.rbut', function(){     
       var fnameo = $(this).parent().next('td').html();
       fname = fnameo.split('.');
       var ok = true;
@@ -939,8 +939,10 @@ Port/binary,
           }
         }
     }
-     
+	});
 
+	$(document).on('click', 'a.button.ebut', function(){     
+          send('0:editscrfile:' + $(this).parent().next('td').html());
 	});
 
 //    $('body').bind('click mousedown mouseover', function(e) {
