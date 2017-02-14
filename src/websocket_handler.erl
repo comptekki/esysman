@@ -677,7 +677,7 @@ Port/binary,
 						  $('#mngscrbox').html(boxCom[2]);
                            break;
                         case 'editscrfile':
-						  $('#scripttext').text(boxCom[2]);
+						  $('#scripttext').val(boxCom[2]);
 						  $('#scrdesc').val(boxCom[3].substring(1, boxCom[3].length-2));
                            break;
 					    case 'com':
@@ -968,9 +968,13 @@ Port/binary,
     }
 	});
 
+    var finfo;
+
 	$(document).on('click', 'a.button.ebut', function(){     
           $('#scrslist').hide();
           $('#editscr').show();
+          finfo = $(this);
+
           $('#scrname').html($(this).parent().next('td').html());
           send('0:editscrfile:' + $(this).parent().next('td').html());
 	});
@@ -981,9 +985,11 @@ Port/binary,
 	});
 
 	$(document).on('click', '#scrsave', function(){     
-          send('0:savescrfile:' + $('#scrname').html() + '+' + $('#scripttext').val() + '+' + $('#scrdesc').val());
-          $('#editscr').hide();
-          $('#scrslist').show();
+      $(finfo).parent().next().next().next('td').html($('#scrdesc').val());
+      send('0:savescrfile:' + $('#scrname').html() + '+' + $('#scripttext').val() + '+' + $('#scrdesc').val());
+      $('#scripttext').val('');
+      $('#editscr').hide();
+      $('#scrslist').show();
 	});
 
 
