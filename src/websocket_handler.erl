@@ -910,6 +910,14 @@ Port/binary,
         $('#cntr').html('0');
     });
 
+	$(document).on('click', 'a.button.addscrf', function(){
+      var row = '<tr class=r><td></td><td></td><td></td><td></td></tr>';
+      $(this).closest('tr').after(row);
+
+      //send('0:delscrfile:' + $(this).parent().next('td').html());
+	});
+
+
 	$(document).on('click', 'a.button.dbut', function(){
         if ($(this).parent().next('td').html() == $('#lncmddiv').html()) {
             //console.log($('#lncmddiv').html());
@@ -2142,7 +2150,7 @@ do_insert(TimeStamp, Box, User) ->
 list_up_fls() ->
 	{ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
-    Head = <<"<div id='scrslist'><table><tr><th><a href=# class=button>Add</a></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
+    Head = <<"<div id='scrslist'><table><tr><th><a href=# class='button addscrf'>Add</a></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
 	Mid = <<(erlang:list_to_binary([ mng_file(File) || File <- Files]))/binary>>,
 	Tail = <<"</table></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
 	<<Head/binary,Mid/binary,Tail/binary>>.
