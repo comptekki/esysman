@@ -208,3 +208,11 @@ tr.r:hover {
 	padding-left: 10px;
 	height: 20px;
 }
+
+#editscr {
+	display: none;
+}
+
+#scrdesc {
+	width:400px;
+}
