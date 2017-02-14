@@ -194,12 +194,35 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data4= <<"done renaming file/script file: ", F1/binary, "->", F2/binary, "....!">>,
 				Data4;
 			<<"editscrfile">> ->
-				Dataf = file:read_file(<<(?UPLOADS)/binary,Args/binary>>),
-				Datafi = file:read_file(<<(?UPLOADS)/binary,"info/",Args/binary,".info">>),
+				{ok, Dataf} = file:read_file(<<(?UPLOADS)/binary,Args/binary>>),
+				{ok, Datafi} = file:read_file(<<(?UPLOADS)/binary,"info/",Args/binary,".info">>),
 
 				io:format("~n done edit script file: ~p -> info: ~p~n",[Dataf,Datafi]),
-				Data4= <<"done edit script file... ">>,
-				Data4;
+				Data2= <<"done edit script file...:editscrfile:",Dataf/binary,":",Datafi/binary>>,
+				Data2;
+			<<"savescrfile">> ->
+				[Fname,Dataf,Datafi] = binary:split(Args, <<"+">>, [global]),
+				Fnres = 
+					case file:write_file(<<(?UPLOADS)/binary,Fname/binary>>, Dataf) of
+						ok ->
+							Res = <<"ok">>,
+							Res;
+						{error, Res} ->
+							Res
+					end,
+
+				Finres = 
+					case file:write_file(<<(?UPLOADS)/binary,"info/",Fname/binary,".info">>, <<"\"",Datafi/binary,"\".">>) of
+						ok ->
+							Res2 = <<"ok">>,
+							Res2;
+						{error, Res2} ->
+							Res2
+					end,
+
+				io:format("~n done save script file: ~p -> scr: ~p -> info: ~p~n",[Fname,Dataf,Datafi]),
+				Data2= <<"done save script file...: ",Fname/binary, " - fnres -> ",Fnres/binary, " - finres -> ",Finres/binary >>,
+				Data2;
 			_ ->
 				<<"unsupported command">>
 					
@@ -653,6 +676,10 @@ Port/binary,
                         case 'list_ups_dir':
 						  $('#mngscrbox').html(boxCom[2]);
                            break;
+                        case 'editscrfile':
+						  $('#scripttext').text(boxCom[2]);
+						  $('#scrdesc').val(boxCom[3].substring(1, boxCom[3].length-2));
+                           break;
 					    case 'com':
 						    $('#'+box+'status').css('color','#00cc00');
 							$('#'+box+'status').css('background-color','#006600');
@@ -942,8 +969,23 @@ Port/binary,
 	});
 
 	$(document).on('click', 'a.button.ebut', function(){     
+          $('#scrslist').hide();
+          $('#editscr').show();
+          $('#scrname').html($(this).parent().next('td').html());
           send('0:editscrfile:' + $(this).parent().next('td').html());
 	});
+
+	$(document).on('click', '#scredcancel', function(){     
+          $('#editscr').hide();
+          $('#scrslist').show();
+	});
+
+	$(document).on('click', '#scrsave', function(){     
+          send('0:savescrfile:' + $('#scrname').html() + '+' + $('#scripttext').val() + '+' + $('#scrdesc').val());
+          $('#editscr').hide();
+          $('#scrslist').show();
+	});
+
 
 //    $('body').bind('click mousedown mouseover', function(e) {
   //      console.log(e);
@@ -2094,9 +2136,9 @@ do_insert(TimeStamp, Box, User) ->
 list_up_fls() ->
 	{ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
-    Head = <<"<table><tr><th><a href=# class=button>Add</a></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
+    Head = <<"<div id='scrslist'><table><tr><th><a href=# class=button>Add</a></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
 	Mid = <<(erlang:list_to_binary([ mng_file(File) || File <- Files]))/binary>>,
-	Tail = <<"</table>">>,
+	Tail = <<"</table></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
 	<<Head/binary,Mid/binary,Tail/binary>>.
 
 mng_file(File) ->
