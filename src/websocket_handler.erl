@@ -167,7 +167,7 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data2= <<"done deleting file/script file: ", Args/binary, "....!">>,
 				Data2;
 			<<"lnscrfile">> ->
-				[F1,F2] = binary:split(Args, <<"+">>, [global]),
+				[F1,F2] = binary:split(Args, <<":">>, [global]),
 				case file:make_symlink(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary,F2/binary>>) of
 					ok ->
 						"";
@@ -186,7 +186,7 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data2= <<"done linking file/script file: ", F1/binary, "->", F2/binary, "....!">>,
 				Data2;
 			<<"renscrfile">> ->
-				[F1,F2] = binary:split(Args, <<"+">>, [global]),
+				[F1,F2] = binary:split(Args, <<":">>, [global]),
 				Data2 = file:rename(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary,F2/binary>>),
 				file:rename(<<(?UPLOADS)/binary,"info/",F1/binary,".info">>, <<(?UPLOADS)/binary,"info/",F2/binary,".info">>),
 
@@ -205,10 +205,10 @@ websocket_handle({text, Msg}, Req, State) ->
 				end,
 
 				io:format("~n done edit script file: ...~n"),
-				Data2= <<"done edit script file...:editscrfile:",Dataf/binary,":",Datafi/binary>>,
+				Data2= <<"done edit script file...:editscrfile:^",Dataf/binary,"^:",Datafi/binary>>,
 				Data2;
 			<<"savescrfile">> ->
-				[Fname,Dataf,Datafi] = binary:split(Args, <<"+">>, [global]),
+				[Fname,Dataf,Datafi] = binary:split(Args, <<"^">>, [global]),
 				[_,T] = binary:split(Fname, <<".">>, [global]),
 				Fnres = 
 					case T of
@@ -576,8 +576,15 @@ Port/binary,
 
 				if(m.data.indexOf(':'>0) || m.data.indexOf('/')>0){
 					if(m.data.indexOf(':')>0) {
-					   boxCom=m.data.split(':');
-					   sepcol=true;
+						if(m.data.indexOf('^')>0) {
+							boxCom2=m.data.split('^');
+							boxCom = boxCom2[0].split(':');
+							boxCom[2] = boxCom2[1];
+							boxCom.push(boxCom2[2].slice(1));
+						} else {
+							boxCom=m.data.split(':');
+						}
+						sepcol=true;
 					}
 					else {
 					   boxCom=m.data.split('/');
@@ -1006,7 +1013,7 @@ Port/binary,
 
 	$(document).on('click', '#scrsave', function(){
       if ($('#scripttext').val().length > 0 && $('#scrdesc').val().length > 0) { 
-        send('0:savescrfile:' + $('#scrname').html() + '+' + $('#scripttext').val() + '+' + $('#scrdesc').val());
+        send('0:savescrfile:' + $('#scrname').html() + '^' + $('#scripttext').val() + '^' + $('#scrdesc').val());
         $('#scripttext').val('');
         $('#editscr').hide();
         //$('#scrslist').show();
