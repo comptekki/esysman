@@ -910,14 +910,6 @@ Port/binary,
         $('#cntr').html('0');
     });
 
-	$(document).on('click', 'a.button.addscrf', function(){
-      var row = '<tr class=r><td></td><td></td><td></td><td></td></tr>';
-      $(this).closest('tr').after(row);
-
-      //send('0:delscrfile:' + $(this).parent().next('td').html());
-	});
-
-
 	$(document).on('click', 'a.button.dbut', function(){
         if ($(this).parent().next('td').html() == $('#lncmddiv').html()) {
             //console.log($('#lncmddiv').html());
@@ -954,7 +946,6 @@ Port/binary,
 
 	});
 
-
 	$(document).on('click', 'a.button.rbut', function(){     
       var fnameo = $(this).parent().next('td').html();
       fname = fnameo.split('.');
@@ -979,6 +970,7 @@ Port/binary,
     var finfo;
 
 	$(document).on('click', 'a.button.ebut', function(){     
+          addscrf = false;
           $('#scrslist').hide();
           $('#editscr').show();
           finfo = $(this);
@@ -992,13 +984,37 @@ Port/binary,
           $('#scrslist').show();
 	});
 
-	$(document).on('click', '#scrsave', function(){     
-      $(finfo).parent().next().next().next('td').html($('#scrdesc').val());
-      send('0:savescrfile:' + $('#scrname').html() + '+' + $('#scripttext').val() + '+' + $('#scrdesc').val());
-      $('#scripttext').val('');
-      $('#editscr').hide();
-      $('#scrslist').show();
+	$(document).on('click', '#scrsave', function(){
+      if ($('#scripttext').val().length > 0 && $('#scrdesc').val().length > 0) { 
+        //if (!addscrf) {
+        //  $(finfo).parent().next().next().next('td').html($('#scrdesc').val());
+        //}
+        send('0:savescrfile:' + $('#scrname').html() + '+' + $('#scripttext').val() + '+' + $('#scrdesc').val());
+        $('#scripttext').val('');
+        $('#editscr').hide();
+        //$('#scrslist').show();
+        showmngscrbox = false;
+        $('#mngscripts').click();
+      } else {
+        alert('Script text and script descrption must not be blank!');
+      }
 	});
+
+    var addscrf = false;
+
+	$(document).on('click', 'a.button.addscrf', function(){     
+      addscrf = true;
+      $('#scripttext').val('');
+      $('#scrdesc').val('')
+      $('#scrslist').hide();
+      $('#editscr').show();
+      $('#scrname').html('temp.cmd');
+	});
+
+    $(document).on('click', 'a.button.closescrslist', function(){
+      showmngscrbox = true;
+      $('#mngscripts').click();
+    });
 
 
 //    $('body').bind('click mousedown mouseover', function(e) {
@@ -1064,7 +1080,6 @@ Port/binary,
               showmngscrbox = false;
           }
 	});
-
 
        var msgcsm_hgt_old = 0;
        var msgc_hgt_old = 0;
@@ -2150,9 +2165,9 @@ do_insert(TimeStamp, Box, User) ->
 list_up_fls() ->
 	{ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
-    Head = <<"<div id='scrslist'><table><tr><th><a href=# class='button addscrf'>Add</a></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
+    Head = <<"<div id='scrslist'><a href=# class='button closescrslist'>[Close]</a><br><table><tr><th><a href=# class='button addscrf'>Add</a></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
 	Mid = <<(erlang:list_to_binary([ mng_file(File) || File <- Files]))/binary>>,
-	Tail = <<"</table></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
+	Tail = <<"</table><a href=# class='button closescrslist'>[Close]</a></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
 	<<Head/binary,Mid/binary,Tail/binary>>.
 
 mng_file(File) ->
