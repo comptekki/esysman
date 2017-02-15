@@ -77,8 +77,7 @@ websocket_handle({text, <<"client-connected">>}, Req, State) ->
 			{reply, {text, <<"client-connected">> }, Req, State, hibernate};
 websocket_handle({text, Msg}, Req, State) ->
 	Ldatacrt = binary:split(Msg,<<"^">>,[global]),
-%<<"0:savescrfile:pc-appname-appversions.cmd">>,
-%           <<"@echo off
+
 	Ldata = 
 		case erlang:length(Ldatacrt) > 1 of
 			true ->
