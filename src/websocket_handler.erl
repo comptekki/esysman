@@ -195,7 +195,14 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data4;
 			<<"editscrfile">> ->
 				{ok, Dataf} = file:read_file(<<(?UPLOADS)/binary,Args/binary>>),
-				{ok, Datafi} = file:read_file(<<(?UPLOADS)/binary,"info/",Args/binary,".info">>),
+				Datafi = case file:read_file(<<(?UPLOADS)/binary,"info/",Args/binary,".info">>) of
+					{ok, Data} ->
+								 Data;
+					{reason, _} ->
+								 <<"">>; %erlang:atom_to_binary(Res,latin1);
+					{error, _} ->
+								 <<"">>
+				end,
 
 				io:format("~n done edit script file: ~p -> info: ~p~n",[Dataf,Datafi]),
 				Data2= <<"done edit script file...:editscrfile:",Dataf/binary,":",Datafi/binary>>,
