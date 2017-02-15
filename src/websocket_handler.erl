@@ -209,13 +209,19 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data2;
 			<<"savescrfile">> ->
 				[Fname,Dataf,Datafi] = binary:split(Args, <<"+">>, [global]),
+				[_,T] = binary:split(Fname, <<".">>, [global]),
 				Fnres = 
-					case file:write_file(<<(?UPLOADS)/binary,Fname/binary>>, Dataf) of
-						ok ->
-							Res = <<"ok">>,
-							Res;
-						{error, Res} ->
-							Res
+					case T of
+						<<"cmd">> ->
+							case file:write_file(<<(?UPLOADS)/binary,Fname/binary>>, Dataf) of
+								ok ->
+									Res = <<"ok">>,
+									Res;
+								{error, Res} ->
+									Res
+							end;
+						_ ->
+							<<"">>
 					end,
 
 				Finres = 
@@ -227,7 +233,7 @@ websocket_handle({text, Msg}, Req, State) ->
 							Res2
 					end,
 
-				io:format("~n done save script file: ~p -> scr: ~p -> info: ~p~n",[Fname,Dataf,Datafi]),
+				io:format("~n done save script file: ~p...~n",[Fname]), %,Dataf,Datafi]),
 				Data2= <<"done save script file...: ",Fname/binary, " - fnres -> ",Fnres/binary, " - finres -> ",Finres/binary >>,
 				Data2;
 			_ ->
@@ -684,7 +690,12 @@ Port/binary,
 						  $('#mngscrbox').html(boxCom[2]);
                            break;
                         case 'editscrfile':
-						  $('#scripttext').val(boxCom[2]);
+                          var fname = $('#scrname').html().split('.');
+                          if (fname[1] == 'cmd') {
+						    $('#scripttext').val(boxCom[2]);
+                          } else {
+                            $('#scrtxtbox').hide();
+                          }
 						  $('#scrdesc').val(boxCom[3].substring(1, boxCom[3].length-2));
                            break;
 					    case 'com':
@@ -980,7 +991,6 @@ Port/binary,
     var finfo;
 
 	$(document).on('click', 'a.button.ebut', function(){     
-          addscrf = false;
           $('#scrslist').hide();
           $('#editscr').show();
           finfo = $(this);
@@ -996,9 +1006,6 @@ Port/binary,
 
 	$(document).on('click', '#scrsave', function(){
       if ($('#scripttext').val().length > 0 && $('#scrdesc').val().length > 0) { 
-        //if (!addscrf) {
-        //  $(finfo).parent().next().next().next('td').html($('#scrdesc').val());
-        //}
         send('0:savescrfile:' + $('#scrname').html() + '+' + $('#scripttext').val() + '+' + $('#scrdesc').val());
         $('#scripttext').val('');
         $('#editscr').hide();
@@ -1013,7 +1020,6 @@ Port/binary,
     var addscrf = false;
 
 	$(document).on('click', 'a.button.addscrf', function(){     
-      addscrf = true;
       $('#scripttext').val('');
       $('#scrdesc').val('')
       $('#scrslist').hide();
@@ -2177,7 +2183,7 @@ list_up_fls() ->
     Files=lists:sort(Files0),
     Head = <<"<div id='scrslist'><a href=# class='button closescrslist'>[Close]</a><br><table><tr><th><a href=# class='button addscrf'>Add</a></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
 	Mid = <<(erlang:list_to_binary([ mng_file(File) || File <- Files]))/binary>>,
-	Tail = <<"</table><a href=# class='button closescrslist'>[Close]</a></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
+	Tail = <<"</table><a href=# class='button closescrslist'>[Close]</a></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div><div id='scrtxtbox'>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br></div>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
 	<<Head/binary,Mid/binary,Tail/binary>>.
 
 mng_file(File) ->
@@ -2200,14 +2206,14 @@ mng_file(File) ->
 							ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
 							tr1(File, Res, "msidiv", "lnmsidiv", ShortLnf);
 						_ -> 
-							case lists:last(binary:split(erlang:list_to_binary(File), <<".">>)) of
-								<<"exe">> ->
-									tr(File, 1);
-								<<"msi">> ->
-									tr(File, 1);
-								_ ->
+%							case lists:last(binary:split(erlang:list_to_binary(File), <<".">>)) of
+%								<<"exe">> ->
+%									tr(File, 1);
+%								<<"msi">> ->
+%									tr(File, 1);
+%								_ ->
 									tr(File, 0)
-							end
+%							end
 					end
 			end;
 		_ ->
@@ -2216,14 +2222,14 @@ mng_file(File) ->
 				"any.exe" -> tr1(File, Res, "exediv", "lnexediv", "");
 				"any.msi" -> tr1(File, Res, "msidiv", "lnmsidiv", "");
 				_ -> 
-					case lists:last(binary:split(erlang:list_to_binary(File), <<".">>)) of
-						<<"exe">> ->
-							tr(File, 1);
-						<<"msi">> ->
-							tr(File, 1);
-						_ ->
+%					case lists:last(binary:split(erlang:list_to_binary(File), <<".">>)) of
+%						<<"exe">> ->
+%							tr(File, 1);
+%						<<"msi">> ->
+%							tr(File, 1);
+%						_ ->
 							tr(File, 0)
-					end
+%					end
 			end
 	end.
 
