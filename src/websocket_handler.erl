@@ -918,6 +918,8 @@ Port/binary,
     });
 
 	$(document).on('click', 'a.button.dbut', function(){
+      var res = confirm('Really want to delete script/file: [ ' + $(this).parent().next('td').html() + ' ]?');
+      if (res == true) {
         if ($(this).parent().next('td').html() == $('#lncmddiv').html()) {
             //console.log($('#lncmddiv').html());
             $('#lncmddiv').html('')
@@ -935,6 +937,7 @@ Port/binary,
 
         $(this).closest('tr').remove();
         send('0:delscrfile:' + $(this).parent().next('td').html());
+      }
 	});
 
 	$(document).on('click', 'a.button.lbut', function(){
