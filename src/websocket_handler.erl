@@ -76,7 +76,18 @@ websocket_handle({text, <<"close">>}, Req, State) ->
 websocket_handle({text, <<"client-connected">>}, Req, State) ->
 			{reply, {text, <<"client-connected">> }, Req, State, hibernate};
 websocket_handle({text, Msg}, Req, State) ->
-	Ldata=binary:split(Msg,<<":">>,[global]),
+	Ldatacrt = binary:split(Msg,<<"^">>,[global]),
+%<<"0:savescrfile:pc-appname-appversions.cmd">>,
+%           <<"@echo off
+	Ldata = 
+		case erlang:length(Ldatacrt) > 1 of
+			true ->
+				[C1, C2, C3] = Ldatacrt,
+				[B1, B2, B3] = binary:split(C1,<<":">>,[global]),
+				[B1,B2,<<B3/binary,"^",C2/binary,"^",C3/binary>>];
+			_  ->
+				binary:split(Msg,<<":">>,[global])
+		end,
 
 	{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
 	Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
