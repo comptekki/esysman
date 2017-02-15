@@ -205,7 +205,7 @@ websocket_handle({text, Msg}, Req, State) ->
 				end,
 
 				io:format("~n done edit script file: ~p -> info: ~p~n",[Dataf,Datafi]),
-				Data2= <<"done edit script file...:editscrfile:",Dataf/binary,":",Datafi/binary>>,
+				Data2= <<"done edit script file...:editscrfile:">>, %,Dataf/binary,":",Datafi/binary>>,
 				Data2;
 			<<"savescrfile">> ->
 				[Fname,Dataf,Datafi] = binary:split(Args, <<"+">>, [global]),
