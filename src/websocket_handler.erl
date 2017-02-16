@@ -521,6 +521,7 @@ app_front_end(Req, State) ->
 <link rel='icon' href='/static/favicon.ico' type='image/x-icon' />
 <link rel=\"stylesheet\" href=\"", ?CSS, "?", (now_bin())/binary, "\" type=\"text/css\" media=\"screen\" />
 <script type='text/javascript' src='", ?JQUERY, "'></script>
+<script type='text/javascript' src='/static/jquery.html5uploader.js'></script>
 
 <script>
 // src='/static/closure/goog/base.js'>
@@ -1049,6 +1050,12 @@ Port/binary,
       $('#mngscripts').click();
     });
 
+    $(function() {
+      $('#dropbox, #multiple').html5Uploader({
+        name: 'foo',
+        postUrl: 'bar.aspx' 
+      });
+    });
 
 //    $('body').bind('click mousedown mouseover', function(e) {
   //      console.log(e);
@@ -2198,7 +2205,7 @@ do_insert(TimeStamp, Box, User) ->
 list_up_fls() ->
 	{ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
-    Head = <<"<div id='scrslist'><a href=# class='button closescrslist'>[Close]</a><br><table><tr><th><a href=# class='button addscrf'>Add</a></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
+    Head = <<"<div id='scrslist'><a href=# class='button closescrslist'>[Close]</a><a href=# class='button addscrf'>[Add Script]</a><div id='dropbox'></div><input id='multiple' type='file' multiple><br><table><tr><th></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
 	Mid = <<(erlang:list_to_binary([ mng_file(File) || File <- Files]))/binary>>,
 	Tail = <<"</table><a href=# class='button closescrslist'>[Close]</a></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div><div id='scrtxtbox'>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br></div>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
 	<<Head/binary,Mid/binary,Tail/binary>>.
