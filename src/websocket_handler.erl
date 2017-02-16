@@ -427,7 +427,7 @@ app_login(Req, State) ->
 <link rel='icon' href='/static/favicon.ico' type='image/x-icon' />
 <link rel=\"stylesheet\" href=\"", ?CSS, "?", (now_bin())/binary, "\" type=\"text/css\" media=\"screen\" />
 <script type='text/javascript' src='", ?JQUERY, "'></script>
-<script type='text/javascript' src='/static/jquery.html5uploader.js'></script>
+
 <script>
 $(document).ready(function(){
 
@@ -522,6 +522,7 @@ app_front_end(Req, State) ->
 <link rel='icon' href='/static/favicon.ico' type='image/x-icon' />
 <link rel=\"stylesheet\" href=\"", ?CSS, "?", (now_bin())/binary, "\" type=\"text/css\" media=\"screen\" />
 <script type='text/javascript' src='", ?JQUERY, "'></script>
+<script src='/static/jquery.html5uploader.js'></script>
 
 <script>
 // src='/static/closure/goog/base.js'>
@@ -1050,12 +1051,24 @@ Port/binary,
       $('#mngscripts').click();
     });
 
-$(function() {
-    $('#dropbox, #multiple').html5Uploader({
-        name: 'foo',
-        postUrl: '/upload' 
-    });
-});
+    $('form').submit(function(evt){
+	  evt.preventDefault();
+	  var formData = new FormData($(this)[0]);
+	  $.ajax({
+	    url: '/upload',
+	    type: 'POST',
+	    data: formData,
+	    async: false,
+	    cache: false,
+	    contentType: false,
+	    enctype: 'multipart/form-data',
+	    processData: false,
+	    success: function (response) {
+	      alert(response);
+	    }
+	  });
+	  return false;
+	});
 
 //    $('body').bind('click mousedown mouseover', function(e) {
   //      console.log(e);
@@ -2205,7 +2218,7 @@ do_insert(TimeStamp, Box, User) ->
 list_up_fls() ->
 	{ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
-    Head = <<"<div id='scrslist'><a href=# class='button closescrslist'>[Close]</a><a href=# class='button addscrf'>[Add Script]</a><div id='dropbox'></div><input id='multiple' type='file' class='button' multiple><table><tr><th></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
+    Head = <<"<div id='scrslist'><a href=# class='button closescrslist'>[Close]</a><a href=# class='button addscrf'>[Add Script]</a><form id='mypost' method='post' enctype='multipart/form-data' action='/upload'><br><input type='file' name='inputfile' value='No File Selected yet!' class='isize' /><br><input type='submit' value='Upload'/></form><table><tr><th></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
 	Mid = <<(erlang:list_to_binary([ mng_file(File) || File <- Files]))/binary>>,
 	Tail = <<"</table><a href=# class='button closescrslist'>[Close]</a></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div><div id='scrtxtbox'>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br></div>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
 	<<Head/binary,Mid/binary,Tail/binary>>.
