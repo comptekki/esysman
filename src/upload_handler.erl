@@ -1,15 +1,33 @@
 %% @doc Upload handler.
-%% https://github.com/ninenines/cowboy/blob/master/examples/upload/src/upload_handler.erl
+%% https://github.com/ninenines/cowboy/ 1.1.2 /examples/upload/src/upload_handler.erl
 -module(upload_handler).
+-behaviour(cowboy_http_handler).
 
--export([init/2]).
+-export([init/3]).
+-export([handle/2]).
+-export([terminate/3]).
 
-init(Req, Opts) ->
-	
-	{ok, Headers, Req2} = cowboy_req:read_part(Req),
-	{ok, Data, Req3} = cowboy_req:read_part_body(Req2),
+-include("esysman.hrl").
+
+init(_, Req, _Opts) ->
+	{ok, Req, undefined}.
+
+handle(Req, State) ->
+	{ok, Headers, Req2} = cowboy_req:part(Req),
+	{ok, Data, Req3} = cowboy_req:part_body(Req2),
 	{file, <<"inputfile">>, Filename, ContentType, _TE}
 		= cow_multipart:form_data(Headers),
 %	io:format("Received file ~p of content-type ~p as follow:~n~p~n~n", [Filename, ContentType, Data]),
-	io:format("Received file ~p of content-type ~p~n", [Filename, ContentType]),
-	{ok, Req3, Opts}.
+	io:format("Received file ~p of content-type ~p~n~n", [Filename, ContentType]),
+	case file:write_file(<<(?UPLOADS)/binary,Filename/binary>>, Data) of
+		ok ->
+			Res = <<"ok">>,
+			Res;
+		{error, Res} ->
+			Res
+	end,
+
+	{ok, Req3, State}.
+
+terminate(_Reason, _Req, _State) ->
+	ok.
