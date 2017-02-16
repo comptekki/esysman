@@ -47,8 +47,7 @@ start(_Type, Args) ->
 			 {"/esysman", websocket_handler, []},
 			 {"/esysman/logout", redirect_handler, []},
 			 {"/static/[...]", cowboy_static, {priv_dir, esysman, "static"}},
-			 {"/", cowboy_static, {priv_file, upload, "index.html"}},
-			 {"/upload", upload_handler, []}
+			 {"/upload", upload_handler, []},
 			 {'_', default_handler, []}
 		]}
 	]),
@@ -68,7 +67,7 @@ start(_Type, Args) ->
 		   {certfile, PrivDir ++ "/ssl/cert.pem"},
 		   {keyfile, PrivDir ++ "/ssl/key.pem"},
 		   {password, ""}],
-		  [{env, [{dispatch, Dispatch}]}]
+		   [{env, [{dispatch, Dispatch}]}]
 		 ),
 	esysman_sup:start_link().
 
