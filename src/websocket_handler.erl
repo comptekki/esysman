@@ -177,7 +177,7 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data2= <<"done deleting file/script file: ", Args/binary, "....!">>,
 				Data2;
 			<<"lnscrfile">> ->
-				[F1,F2] = binary:split(Args, <<":">>, [global]),
+				[F1,F2] = binary:split(Args, <<"+">>, [global]),
 				case file:make_symlink(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary,F2/binary>>) of
 					ok ->
 						"";
