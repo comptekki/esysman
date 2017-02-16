@@ -427,6 +427,7 @@ app_login(Req, State) ->
 <link rel='icon' href='/static/favicon.ico' type='image/x-icon' />
 <link rel=\"stylesheet\" href=\"", ?CSS, "?", (now_bin())/binary, "\" type=\"text/css\" media=\"screen\" />
 <script type='text/javascript' src='", ?JQUERY, "'></script>
+<script type='text/javascript' src='/static/jquery.html5uploader.js'></script>
 <script>
 $(document).ready(function(){
 
@@ -521,7 +522,6 @@ app_front_end(Req, State) ->
 <link rel='icon' href='/static/favicon.ico' type='image/x-icon' />
 <link rel=\"stylesheet\" href=\"", ?CSS, "?", (now_bin())/binary, "\" type=\"text/css\" media=\"screen\" />
 <script type='text/javascript' src='", ?JQUERY, "'></script>
-<script type='text/javascript' src='/static/jquery.html5uploader.js'></script>
 
 <script>
 // src='/static/closure/goog/base.js'>
@@ -1050,12 +1050,12 @@ Port/binary,
       $('#mngscripts').click();
     });
 
-    $(function() {
-      $('#dropbox, #multiple').html5Uploader({
+$(function() {
+    $('#dropbox, #multiple').html5Uploader({
         name: 'foo',
-        postUrl: 'bar.aspx' 
-      });
+        postUrl: '/upload' 
     });
+});
 
 //    $('body').bind('click mousedown mouseover', function(e) {
   //      console.log(e);
@@ -2205,7 +2205,7 @@ do_insert(TimeStamp, Box, User) ->
 list_up_fls() ->
 	{ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
-    Head = <<"<div id='scrslist'><a href=# class='button closescrslist'>[Close]</a><a href=# class='button addscrf'>[Add Script]</a><div id='dropbox'></div><input id='multiple' type='file' multiple><br><table><tr><th></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
+    Head = <<"<div id='scrslist'><a href=# class='button closescrslist'>[Close]</a><a href=# class='button addscrf'>[Add Script]</a><div id='dropbox'></div><input id='multiple' type='file' class='button' multiple><table><tr><th></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
 	Mid = <<(erlang:list_to_binary([ mng_file(File) || File <- Files]))/binary>>,
 	Tail = <<"</table><a href=# class='button closescrslist'>[Close]</a></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div><div id='scrtxtbox'>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br></div>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
 	<<Head/binary,Mid/binary,Tail/binary>>.
@@ -2230,14 +2230,7 @@ mng_file(File) ->
 							ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
 							tr1(File, Res, "msidiv", "lnmsidiv", ShortLnf);
 						_ -> 
-%							case lists:last(binary:split(erlang:list_to_binary(File), <<".">>)) of
-%								<<"exe">> ->
-%									tr(File, 1);
-%								<<"msi">> ->
-%									tr(File, 1);
-%								_ ->
-									tr(File, 0)
-%							end
+							tr(File, 0)
 					end
 			end;
 		_ ->
@@ -2246,14 +2239,8 @@ mng_file(File) ->
 				"any.exe" -> tr1(File, Res, "exediv", "lnexediv", "");
 				"any.msi" -> tr1(File, Res, "msidiv", "lnmsidiv", "");
 				_ -> 
-%					case lists:last(binary:split(erlang:list_to_binary(File), <<".">>)) of
-%						<<"exe">> ->
-%							tr(File, 1);
-%						<<"msi">> ->
-%							tr(File, 1);
-%						_ ->
-							tr(File, 0)
-%					end
+					tr(File, 0)
+
 			end
 	end.
 
