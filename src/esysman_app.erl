@@ -43,11 +43,13 @@ start(_Type, Args) ->
 			Any -> Any
 		end,
 	Dispatch = cowboy_router:compile([
-		{'_', [
-			{"/esysman", websocket_handler, []},
-			{"/esysman/logout", redirect_handler, []},
-			{"/static/[...]", cowboy_static, {priv_dir, esysman, "static"}},
-			{'_', default_handler, []}
+      {'_', [
+			 {"/esysman", websocket_handler, []},
+			 {"/esysman/logout", redirect_handler, []},
+			 {"/static/[...]", cowboy_static, {priv_dir, esysman, "static"}},
+			 {"/", cowboy_static, {priv_file, upload, "index.html"}},
+			 {"/upload", upload_handler, []}
+			 {'_', default_handler, []}
 		]}
 	]),
 	{ok, _} = 
