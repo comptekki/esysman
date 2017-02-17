@@ -522,7 +522,6 @@ app_front_end(Req, State) ->
 <link rel='icon' href='/static/favicon.ico' type='image/x-icon' />
 <link rel=\"stylesheet\" href=\"", ?CSS, "?", (now_bin())/binary, "\" type=\"text/css\" media=\"screen\" />
 <script type='text/javascript' src='", ?JQUERY, "'></script>
-<script src='/static/jquery.html5uploader.js'></script>
 
 <script>
 // src='/static/closure/goog/base.js'>
@@ -1051,9 +1050,13 @@ Port/binary,
       $('#mngscripts').click();
     });
 
-    $('form').submit(function(evt){
+// from http://stackoverflow.com/questions/2320069/jquery-ajax-file-upload
+
+    $('form').on('submit', function(evt){
 	  evt.preventDefault();
 	  var formData = new FormData($(this)[0]);
+      var res;
+console.log('blah');
 	  $.ajax({
 	    url: '/upload',
 	    type: 'POST',
@@ -1064,9 +1067,13 @@ Port/binary,
 	    enctype: 'multipart/form-data',
 	    processData: false,
 	    success: function (response) {
-	      alert(response);
+	      res = response;
+      console.log(res);
+console.log('z');
 	    }
 	  });
+      console.log(res);
+console.log('z2');
 	  return false;
 	});
 
@@ -2218,7 +2225,7 @@ do_insert(TimeStamp, Box, User) ->
 list_up_fls() ->
 	{ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
-    Head = <<"<div id='scrslist'><a href=# class='button closescrslist'>[Close]</a><a href=# class='button addscrf'>[Add Script]</a><form id='mypost' method='post' enctype='multipart/form-data' action='/upload'><br><input type='file' name='inputfile' value='No File Selected yet!' class='isize' /><br><input type='submit' value='Upload'/></form><table><tr><th></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
+    Head = <<"<div id='scrslist'><a href=# class='button closescrslist'>[Close]</a><a href=# class='button addscrf'>[Add Script]</a><form id='mypost' method='post' enctype='multipart/form-data' action='/upload'><br><input type='submit' value='Upload'/><input type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form><table><tr><th></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
 	Mid = <<(erlang:list_to_binary([ mng_file(File) || File <- Files]))/binary>>,
 	Tail = <<"</table><a href=# class='button closescrslist'>[Close]</a></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div><div id='scrtxtbox'>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br></div>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
 	<<Head/binary,Mid/binary,Tail/binary>>.
