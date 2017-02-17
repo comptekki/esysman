@@ -524,15 +524,6 @@ app_front_end(Req, State) ->
 <script type='text/javascript' src='", ?JQUERY, "'></script>
 
 <script>
-// src='/static/closure/goog/base.js'>
-</script>
-
-<script>
-//goog.require('goog.Disposable');
-</script>
-
-<script>
-//goog.Disposable.MONITORING_MODE=goog.Disposable.MonitoringMode.INTERACTIVE;
 
 $(document).ready(function(){
 	if ('MozWebSocket' in window) {
