@@ -1040,6 +1040,22 @@ Port/binary,
       $('#mngscripts').click();
     });
 
+    $(document).on('change', '#selfile', function(evt){
+      max = $(this)[0].files[0].size
+
+      fSize = max; 
+      i=0;
+      while(fSize>900){
+        fSize/=1024;
+        i++;
+      }
+
+      var fSExt = new Array('Bytes', 'KB', 'MB', 'GB');
+      var bitsStr = Math.round(fSize*100)/100 + ' ' + fSExt[i];
+
+      $('#upprog').html('0% Uploaded.... of ' + bitsStr);
+    });
+
     $(document).on('submit', '#mypost', function(evt){
 //	  evt.preventDefault();
 	  var formData = new FormData($(this)[0]);
@@ -1073,27 +1089,32 @@ Port/binary,
 function progress(e){
 
     if(e.lengthComputable){
-        var max = e.total;
-        var current = e.loaded;
+      var max = e.total;
+      var current = e.loaded;
+      
+// http://stackoverflow.com/questions/7497404/get-file-size-before-uploading
 
-        var perc = parseInt((current * 100)/max);
-        $('#upprog').html('%' + perc + ' Uploaded....');
+      var fSExt = new Array('Bytes', 'KB', 'MB', 'GB');
+      fSize = max; 
+      i=0;
+      while(fSize>900){
+        fSize/=1024;
+        i++;
+      }
+
+      var bitsStr = Math.round(fSize*100)/100 + ' ' + fSExt[i];
+
+      var perc = parseInt((current * 100)/max);
+      $('#upprog').html(perc + '% Uploaded.... of ' + bitsStr);
 //        console.log(Percentage);
 
-        if(perc >= 100)
-        {
-           // process completed  
-          showmngscrbox = false;
-          $('#mngscripts').click();
-          fupload = true;
-        }
+      if(perc >= 100){
+       // process completed  
+        showmngscrbox = false;
+        $('#mngscripts').click();
+      }
     }  
  }
-
-//    $(document).on('click', '#fupload', function(){
-//       console.log('posty');
-//    });
-  
 
 //    $('body').bind('click mousedown mouseover', function(e) {
 //        console.log(e);
@@ -1143,15 +1164,9 @@ function progress(e){
 
 }//End else - has websockets
     var showmngscrbox = false
-    var fupload = false;
 
     $('#mngscripts').click(function(){
           if (!showmngscrbox) {
-             if (fupload) {
-               $('#upprog').html('Done uploading....');
-             } else {
-               $('#upprog').html('');
-             }
 //              $('#mngscrbox').css('z-index', 1000);
               $('#mngscrbox').show();
               $('#mngscrbox').css('position', 'absolute');
@@ -2249,7 +2264,7 @@ do_insert(TimeStamp, Box, User) ->
 list_up_fls() ->
 	{ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
-    Head = <<"<div id='scrslist'><a href=# class='button closescrslist'>[Close]</a><a href=# class='button addscrf'>[Add Script]</a><br><div id='upprog'>0% Uploaded....</div><form id='mypost' method='post' enctype='multipart/form-data' action='/upload'><br><input id='fupload' type='submit' value='Upload'/><input type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form><table><tr><th></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
+    Head = <<"<div id='scrslist'><a href=# class='button closescrslist'>[Close]</a><a href=# class='button addscrf'>[Add Script]</a><br><div id='upprog'></div><form id='mypost' method='post' enctype='multipart/form-data' action='/upload'><br><input id='fupload' type='submit' value='Upload'/><input id='selfile' type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form><table><tr><th></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
 	Mid = <<(erlang:list_to_binary([ mng_file(File) || File <- Files]))/binary>>,
 	Tail = <<"</table><a href=# class='button closescrslist'>[Close]</a></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div><div id='scrtxtbox'>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br></div>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
 	<<Head/binary,Mid/binary,Tail/binary>>.
