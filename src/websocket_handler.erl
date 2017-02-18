@@ -173,7 +173,7 @@ websocket_handle({text, Msg}, Req, State) ->
 				_ = file:delete(<<(?UPLOADS)/binary,Args/binary>>),
 				_ = file:delete(<<(?UPLOADS)/binary, "info/", Args/binary, ".info">>),
 
-				io:format("~n done deleting file/script file: ~p ~n",[Args]),
+				io:format("~ndate: ~p ->  done deleting file/script file: ~p ~n",[Date,Args]),
 				Data2= <<"done deleting file/script file: ", Args/binary, "....!">>,
 				Data2;
 			<<"lnscrfile">> ->
@@ -192,7 +192,7 @@ websocket_handle({text, Msg}, Req, State) ->
 						end,
 						file:make_symlink(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary,F2/binary>>)
 				end,
-				io:format("~n done linking file/script file: ~p -> ~p~n",[F1,F2]),
+				io:format("~ndate: ~p ->  done linking file/script file: ~p -> ~p~n",[Date,F1,F2]),
 				Data2= <<"done linking file/script file: ", F1/binary, "->", F2/binary, "....!">>,
 				Data2;
 			<<"renscrfile">> ->
@@ -200,7 +200,7 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data2 = file:rename(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary,F2/binary>>),
 				file:rename(<<(?UPLOADS)/binary,"info/",F1/binary,".info">>, <<(?UPLOADS)/binary,"info/",F2/binary,".info">>),
 
-				io:format("~n done renaming file/script file: ~p -> ~p ~p~n",[F1,F2,Data2]),
+				io:format("~ndate: ~p ->  done renaming file/script file: ~p -> ~p ~p~n",[Date,F1,F2,Data2]),
 				Data4= <<"done renaming file/script file: ", F1/binary, "->", F2/binary, "....!">>,
 				Data4;
 			<<"editscrfile">> ->
@@ -214,7 +214,7 @@ websocket_handle({text, Msg}, Req, State) ->
 								 <<"">>
 				end,
 
-				io:format("~n done edit script file: ...~n"),
+				io:format("~ndate: ~p ->  done edit script file: ...~n",[Date]),
 				Data2= <<"done edit script file...:editscrfile:^",Dataf/binary,"^:",Datafi/binary>>,
 				Data2;
 			<<"savescrfile">> ->
@@ -243,7 +243,7 @@ websocket_handle({text, Msg}, Req, State) ->
 							Res2
 					end,
 
-				io:format("~n done save script file: ~p...~n",[Fname]), %,Dataf,Datafi]),
+				io:format("~ndate: ~p ->  done save script file: ~p...~n",[Date,Fname]), %,Dataf,Datafi]),
 				Data2= <<"done save script file...: ",Fname/binary, " - fnres -> ",Fnres/binary, " - finres -> ",Finres/binary >>,
 				Data2;
 			_ ->
@@ -526,21 +526,21 @@ app_front_end(Req, State) ->
 <script>
 
 $(document).ready(function(){
-	if ('MozWebSocket' in window) {
-		WebSocket = MozWebSocket;
-	}
+  if ('MozWebSocket' in window) {
+	WebSocket = MozWebSocket;
+  }
 
-if (!window.WebSocket){
+  if (!window.WebSocket){
 	alert('WebSocket not supported by this browser')
-} else {  //The user has WebSockets
+  } else {  //The user has WebSockets
 
 // websocket code from: http://net.tutsplus.com/tutorials/javascript-ajax/start-using-html5-websockets-today/
 
-		var host=
+  var host=
 '",
 Host/binary,
 "';
-        var port='",
+  var port='",
 Port/binary,
 "';
 
@@ -845,7 +845,6 @@ Port/binary,
     }
 
 	function message(sepcol,msg){        
-//alert('message... - ' + sepcol + ' - ' + msg);
         now = getnow();
 		if (isNaN(msg)) {
             if(sepcol){
@@ -1041,36 +1040,64 @@ Port/binary,
       $('#mngscripts').click();
     });
 
-// from http://stackoverflow.com/questions/2320069/jquery-ajax-file-upload
-
-    $('form').on('submit', function(evt){
-	  evt.preventDefault();
+    $(document).on('submit', '#mypost', function(evt){
+//	  evt.preventDefault();
 	  var formData = new FormData($(this)[0]);
-      var res;
-console.log('blah');
+
 	  $.ajax({
 	    url: '/upload',
 	    type: 'POST',
 	    data: formData,
-	    async: false,
+//	    async: false,
 	    cache: false,
 	    contentType: false,
 	    enctype: 'multipart/form-data',
 	    processData: false,
-	    success: function (response) {
-	      res = response;
-      console.log(res);
-console.log('z');
-	    }
+//        success: function(d) {
+//          console.log('success');
+//        },
+        xhr: function() {
+          var myXhr = $.ajaxSettings.xhr();
+          if(myXhr.upload){
+            myXhr.upload.addEventListener('progress',progress, false);
+          }
+          return myXhr;
+        }
 	  });
-      console.log(res);
-console.log('z2');
-	  return false;
+
+//	  return false;
 	});
 
+//http://stackoverflow.com/questions/23219033/show-a-progress-on-multiple-file-upload-jquery-ajax
+
+function progress(e){
+
+    if(e.lengthComputable){
+        var max = e.total;
+        var current = e.loaded;
+
+        var perc = parseInt((current * 100)/max);
+        $('#upprog').html('%' + perc + ' Uploaded....');
+//        console.log(Percentage);
+
+        if(perc >= 100)
+        {
+           // process completed  
+          showmngscrbox = false;
+          $('#mngscripts').click();
+          fupload = true;
+        }
+    }  
+ }
+
+//    $(document).on('click', '#fupload', function(){
+//       console.log('posty');
+//    });
+  
+
 //    $('body').bind('click mousedown mouseover', function(e) {
-  //      console.log(e);
-    //});
+//        console.log(e);
+//    });
 
 ",
 (jsAll(?ROOMS,<<"ping">>))/binary,
@@ -1116,9 +1143,15 @@ console.log('z2');
 
 }//End else - has websockets
     var showmngscrbox = false
+    var fupload = false;
 
     $('#mngscripts').click(function(){
           if (!showmngscrbox) {
+             if (fupload) {
+               $('#upprog').html('Done uploading....');
+             } else {
+               $('#upprog').html('');
+             }
 //              $('#mngscrbox').css('z-index', 1000);
               $('#mngscrbox').show();
               $('#mngscrbox').css('position', 'absolute');
@@ -2216,7 +2249,7 @@ do_insert(TimeStamp, Box, User) ->
 list_up_fls() ->
 	{ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
-    Head = <<"<div id='scrslist'><a href=# class='button closescrslist'>[Close]</a><a href=# class='button addscrf'>[Add Script]</a><form id='mypost' method='post' enctype='multipart/form-data' action='/upload'><br><input type='submit' value='Upload'/><input type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form><table><tr><th></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
+    Head = <<"<div id='scrslist'><a href=# class='button closescrslist'>[Close]</a><a href=# class='button addscrf'>[Add Script]</a><br><div id='upprog'>0% Uploaded....</div><form id='mypost' method='post' enctype='multipart/form-data' action='/upload'><br><input id='fupload' type='submit' value='Upload'/><input type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form><table><tr><th></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
 	Mid = <<(erlang:list_to_binary([ mng_file(File) || File <- Files]))/binary>>,
 	Tail = <<"</table><a href=# class='button closescrslist'>[Close]</a></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div><div id='scrtxtbox'>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br></div>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
 	<<Head/binary,Mid/binary,Tail/binary>>.
