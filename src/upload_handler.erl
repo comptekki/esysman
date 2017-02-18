@@ -20,7 +20,9 @@ handle(Req, State) ->
 		{error, _} -> ""
 	end,
 	{ok, Req3} = body_to_console(Req2, Filename), 
-	io:format("Received file ~p of content-type ~p~n~n", [Filename, ContentType]),
+	{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
+	Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
+	io:format("date: ~p -> Received file ~p of content-type ~p~n~n", [Date, Filename, ContentType]),
 	{ok, Req3, State}.
 
 body_to_console(Req, Filename) ->
