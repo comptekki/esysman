@@ -1170,7 +1170,7 @@ function progress(e){
 //              $('#mngscrbox').css('z-index', 1000);
               $('#mngscrbox').show();
               $('#mngscrbox').css('position', 'absolute');
-              $('#mngscrbox').css('z-index', parseInt($('#tinputs').css('z-index')) + 1);
+              $('#mngscrbox').css('z-index', parseInt($('.msgc').css('z-index')) + 2);
               showmngscrbox = true;
               send('localhost@domain:list_ups_dir:0');
           }
