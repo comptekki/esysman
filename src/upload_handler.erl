@@ -26,7 +26,7 @@ handle(Req, State) ->
 	{ok, Req3, State}.
 
 body_to_console(Req, Filename) ->
-    case cowboy_req:part_body(Req) of
+    Req3 = case cowboy_req:part_body(Req) of
         {ok, Data, Req2} ->
 			case file:write_file(<<(?UPLOADS)/binary,Filename/binary>>, Data, [append]) of
 				ok ->
@@ -39,14 +39,15 @@ body_to_console(Req, Filename) ->
 		{more, Data, Req2} ->
 			case file:write_file(<<(?UPLOADS)/binary,Filename/binary>>, Data, [append]) of
 				ok ->
+					body_to_console(Req2, Filename),
 					Res = <<"ok">>,
 					Res;
 				{error, Res} ->
 					Res
 			end,
-            body_to_console(Req2, Filename),
             {ok, Req2}
-    end.
+	end,
+	Req3.
 
 terminate(_Reason, _Req, _State) ->
 	ok.
