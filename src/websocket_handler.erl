@@ -1032,7 +1032,7 @@ Port/binary,
       $('#scrdesc').val('')
       $('#scrslist').hide();
       $('#editscr').show();
-      $('#scrname').html('temp.cmd');
+      $('#scrname').html('0temp.cmd');
 	});
 
     $(document).on('click', 'a.button.closescrslist', function(){
