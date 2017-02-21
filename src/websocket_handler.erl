@@ -205,8 +205,8 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data4;
 			<<"editscrfile">> ->
 				Dataf = 
-					case binary:split(Args, <<".">>, [global]) of
-						[_, <<"cmd">>] ->
+					case lists:last(binary:split(Args, <<".">>, [global])) of
+						<<"cmd">> ->
 							{ok, Dataf2} = 
 								file:read_file(<<(?UPLOADS)/binary,Args/binary>>),
 							Dataf2;
