@@ -204,15 +204,27 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data4= <<"done renaming file/script file: ", F1/binary, "->", F2/binary, "....!">>,
 				Data4;
 			<<"editscrfile">> ->
-				{ok, Dataf} = file:read_file(<<(?UPLOADS)/binary,Args/binary>>),
-				Datafi = case file:read_file(<<(?UPLOADS)/binary,"info/",Args/binary,".info">>) of
-					{ok, Data} ->
-								 Data;
-					{reason, _} ->
-								 <<"">>; %erlang:atom_to_binary(Res,latin1);
-					{error, _} ->
-								 <<"">>
-				end,
+				Dataf = 
+					case binary:split(Args, <<".">>, [global]) of
+						[_, <<"cmd">>] ->
+							{ok, Dataf2} = 
+								file:read_file(<<(?UPLOADS)/binary,Args/binary>>),
+							Dataf2;
+						_ ->
+							Dataf2 = 
+								<<"">>,
+							Dataf2
+					end,
+
+				Datafi = 
+					case file:read_file(<<(?UPLOADS)/binary,"info/",Args/binary,".info">>) of
+						{ok, Data} ->
+							Data;
+						{reason, _} ->
+							<<"">>; %erlang:atom_to_binary(Res,latin1);
+						{error, _} ->
+							<<"">>
+					end,
 
 				io:format("~ndate: ~p ->  done edit script file: ...~n",[Date]),
 				Data2= <<"done edit script file...:editscrfile:^",Dataf/binary,"^:",Datafi/binary>>,
@@ -700,9 +712,10 @@ Port/binary,
                            break;
                         case 'editscrfile':
                           var fname = $('#scrname').html().split('.');
-                          if (fname[1] == 'cmd') {
+                          if (fname[fname.length-1] == 'cmd') {
 						    $('#scripttext').val(boxCom[2]);
                           } else {
+                            notcmd = true;
                             $('#scrtxtbox').hide();
                           }
 						  $('#scrdesc').val(boxCom[3].substring(1, boxCom[3].length-2));
@@ -977,31 +990,31 @@ Port/binary,
 
 	$(document).on('click', 'a.button.rbut', function(){     
       var fnameo = $(this).parent().next('td').html();
-      fname = fnameo.split('.');
+//      fname = fnameo.split('.');
       var ok = true;
       while (ok) {
-        var fnamex=prompt('Rename file',fname[0]);
+        var fnamex=prompt('Rename file',fnameo);
         if (fnamex == null) {
           ok = false;
         } else if (fnamex.length > 0){
-          var regex=/^[a-zA-Z0-9-_]+$/;
+          var regex=/^[a-zA-Z0-9-_\.]+$/;
           if (!fnamex.match(regex)) {
             ok = true;
           } else {
             ok = false;
-            $(this).parent().next('td').html(fnamex + '.' + fname[1]);
-            send('0:renscrfile:' + fnameo + '+' + fnamex + '.' + fname[1]);
+            $(this).parent().next('td').html(fnamex);
+            send('0:renscrfile:' + fnameo + '+' + fnamex);
           }
         }
     }
 	});
 
-    var finfo;
+   var notcmd = false;
 
 	$(document).on('click', 'a.button.ebut', function(){     
           $('#scrslist').hide();
           $('#editscr').show();
-          finfo = $(this);
+          notcmd = false;
 
           $('#scrname').html($(this).parent().next('td').html());
           send('0:editscrfile:' + $(this).parent().next('td').html());
@@ -1013,7 +1026,7 @@ Port/binary,
 	});
 
 	$(document).on('click', '#scrsave', function(){
-      if ($('#scripttext').val().length > 0 && $('#scrdesc').val().length > 0) { 
+      if (($('#scripttext').val().length > 0 || notcmd) && $('#scrdesc').val().length > 0) { 
         send('0:savescrfile:' + $('#scrname').html() + '^' + $('#scripttext').val() + '^' + $('#scrdesc').val());
         $('#scripttext').val('');
         $('#editscr').hide();
