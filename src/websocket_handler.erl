@@ -984,7 +984,7 @@ Port/binary,
         if (fnamex == null) {
           ok = false;
         } else if (fnamex.length > 0){
-          var regex=/^[a-zA-Z0-9]+$/;
+          var regex=/^[a-zA-Z0-9-_]+$/;
           if (!fnamex.match(regex)) {
             ok = true;
           } else {
