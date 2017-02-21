@@ -1071,6 +1071,7 @@ Port/binary,
 
     $(document).on('submit', '#mypost', function(evt){
 //	  evt.preventDefault();
+
 	  var formData = new FormData($(this)[0]);
 
 	  $.ajax({
@@ -1094,7 +1095,7 @@ Port/binary,
         }
 	  });
 
-//	  return false;
+	  return false;
 	});
 
 //http://stackoverflow.com/questions/23219033/show-a-progress-on-multiple-file-upload-jquery-ajax
