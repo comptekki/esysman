@@ -870,9 +870,9 @@ Port/binary,
 		   $('#cntr').html(Number($('#cntr').html()) + 1);
 		}
                 if (lines > ", ?LINES, ") {
-                      window.location.href='/esysman';
-//                    $('#msgsm').html('');
-//                    $('#cntsm').html('0K/0L');
+//                     window.location.href='/esysman';
+                    $('#msgsm').html('');
+                    $('#cntsm').html('0K/0L');
                 }
                 else {
                     mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
@@ -886,9 +886,9 @@ Port/binary,
                 mb = 1048576;
                 lines=$('#msgcl br').length;
                 if (lines > ", ?LINES, ") {
-                      window.location.href='/esysman';
-//                    $('#msgcl').html('');
-//                    $('#cntcl').html('0K/0L');
+//                      window.location.href='/esysman';
+                    $('#msgcl').html('');
+                    $('#cntcl').html('0K/0L');
                 }
                 else {
                     mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
