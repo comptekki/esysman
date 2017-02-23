@@ -1,6 +1,6 @@
 Erlang Systems Manager
 [ ESysMan ]
-Version 1.2
+Version 1.3
 
 ESysMan is an Erlang based client/server computer systems 
 management console in which a web browser (with websockets
@@ -143,9 +143,17 @@ Client/Server Setup
 Versions
 --------
 
+1.3
+
+-Update to cowboy 1.1.2
+-Add a script/file manager
+-Add a simple lock screen
+
+--------
+
 1.2
 
--Update for cowboy 0.9.0
+-Update to cowboy 0.9.0
 -Add basic centos support
 -Move to release format
 
@@ -154,7 +162,7 @@ Versions
 
 1.1
 
--Update for cowboy 0.8.3
+-Update to cowboy 0.8.3
 -Add basic linux/mac support
 -Add S/UnS All Coms to select everything - commands and workstations
 
