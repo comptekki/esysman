@@ -1165,7 +1165,7 @@ function progress(e){
         } else if (passwd.length > 0){
           var regex=/^[a-zA-Z0-9-_\.]+$/;
           if (passwd.match(regex)) {
-            if (passwd == '0') {
+            if (passwd == '", ?LOCKSCRPASSWD/binary,"') {
               ok = false;
               $('#lockpane').hide();
               send('0:lockloginok:');
