@@ -262,13 +262,17 @@ websocket_handle({text, Msg}, Req, State) ->
 				io:format("~ndate: ~p ->  done clearing log panel",[Date]),
 				Data2= <<"done clearing log panel:">>,
 				Data2;
+			<<"lockactivate">> ->
+				io:format("~ndate: ~p ->  done lock activate",[Date]),
+				Data2= <<"done lock activate:">>,
+				Data2;
 			<<"lockloginok">> ->
-				io:format("~ndate: ~p ->  done lock login ok",[Date]),
-				Data2= <<"done lock login ok:">>,
+				io:format("~ndate: ~p ->  done login from lock ok",[Date]),
+				Data2= <<"done login from lock ok:">>,
 				Data2;
 			<<"lockloginfailed">> ->
-				io:format("~ndate: ~p ->  done lock login failed",[Date]),
-				Data2= <<"done lock login failed:">>,
+				io:format("~ndate: ~p ->  done login from lock failed",[Date]),
+				Data2= <<"done login from lock failed:">>,
 				Data2;
 			_ ->					
 				<<"unsupported command">>
@@ -1146,6 +1150,7 @@ function progress(e){
 
     $(document).on('click', '#lockscr', function(evt){
       $('#lockpane').show();
+      send('0:lockactivate:');
     });
 
     $(document).on('click', '#unlockscr', function(evt){
