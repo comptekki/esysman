@@ -258,6 +258,10 @@ websocket_handle({text, Msg}, Req, State) ->
 				io:format("~ndate: ~p ->  done save script file: ~p...~n",[Date,Fname]), %,Dataf,Datafi]),
 				Data2= <<"done save script file...: ",Fname/binary, " - fnres -> ",Fnres/binary, " - finres -> ",Finres/binary >>,
 				Data2;
+			<<"clearlog">> ->
+				io:format("~ndate: ~p ->  done clearing log panel",[Date]),
+				Data2= <<"done clearing log panel:">>,
+				Data2;
 			_ ->
 				<<"unsupported command">>
 					
@@ -661,14 +665,14 @@ Port/binary,
 						case 'reboot':
 							$('#'+box+'status').css('color','red');
 							$('#'+box+'status').css('background-color','#550000');
-                            				$('#'+box+'status').html('.');
+                       		$('#'+box+'status').html('.');
 							$('#'+box+'_hltd').css('background-color','#000000');
 							$('#'+box+'_ltd').css('background-color','#000000');
 							break;
 					    case 'shutdown':
 							$('#'+box+'status').css('color','red');
 							$('#'+box+'status').css('background-color','#550000');
-                            				$('#'+box+'status').html('.');
+                       		$('#'+box+'status').html('.');
 							$('#'+box+'_hltd').css('background-color','#000000');
 							$('#'+box+'_ltd').css('background-color','#000000');
 							break;
@@ -866,9 +870,11 @@ Port/binary,
                 kb = 1024;
                 mb = 1048576;
                 lines=$('#msgsm br').length;
-		if (msg.indexOf('done') > -1 || msg.indexOf('_') > -1 || msg.indexOf('reboot sent to') > -1 || msg.indexOf('dfstatus sent to') > -1 || msg.indexOf('pong') > -1 || msg.indexOf('OK') > -1 || msg.indexOf('Results') > -1 || msg.indexOf('Thawing') > -1 || msg.indexOf('Freezing') > -1 || msg.indexOf('copied') > -1) {
-		   $('#cntr').html(Number($('#cntr').html()) + 1);
-		}
+
+         		if (msg.indexOf('done') > -1 || msg.indexOf('_') > -1 || msg.indexOf('reboot sent to') > -1 || msg.indexOf('dfstatus sent to') > -1 || msg.indexOf('pong') > -1 || msg.indexOf('OK') > -1 || msg.indexOf('Results') > -1 || msg.indexOf('Thawing') > -1 || msg.indexOf('Freezing') > -1 || msg.indexOf('copied') > -1) {
+     		        $('#cntr').html(Number($('#cntr').html()) + 1);
+		        }
+
                 if (lines > ", ?LINES, ") {
 //                     window.location.href='/esysman';
                     $('#msgsm').html('');
@@ -889,6 +895,7 @@ Port/binary,
 //                      window.location.href='/esysman';
                     $('#msgcl').html('');
                     $('#cntcl').html('0K/0L');
+                    send('0:clearlog:');
                 }
                 else {
                     mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
@@ -903,9 +910,9 @@ Port/binary,
                 mb = 1048576;
                 lines=$('#msgsm br').length;
                 if (lines > ", ?LINES, ") {
-                    window.location.href='/esysman';
-//                    $('#msgsm').html('');
-//                    $('#cntsm').html('0K/0L');
+//                    window.location.href='/esysman';
+                    $('#msgsm').html('');
+                    $('#cntsm').html('0K/0L');
                 }
                 else {
                     mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
@@ -1130,6 +1137,15 @@ function progress(e){
     }  
  }
 
+    $(document).on('click', '#lockscr', function(evt){
+      $('#lockpane').show();
+    });
+
+    $(document).on('click', '#unlockscr', function(evt){
+      $('#lockpane').hide();
+    });
+
+
 //    $('body').bind('click mousedown mouseover', function(e) {
 //        console.log(e);
 //    });
@@ -1245,6 +1261,8 @@ function progress(e){
 </head>
 
 <body>
+<div id='lockpane'><input type='button' id='unlockscr' class='button' value='Unlock'></div>
+
 <div id='wrapper'>
 
 <div id='menu' class='fl'>
@@ -1273,8 +1291,8 @@ function progress(e){
    <option ",?SELECTEDON," value='1'>On</option>
    <option ",?SELECTEDOFF," value='0'>Off</option>
  </select>
- ( <span id='cntr'>0</span> ) <input style='width:75px;' type=button id=cntrst value=Reset>
-</div>
+ ( <span id='cntr'>0</span> ) <input style='width:75px;' type=button id=cntrst value=Reset> | <input style='width:65px;' type='button' id='lockscr' value='Lock'>
+</div> 
 
  <div id='tcoms'>",
 (case is_list(login_is()) of
