@@ -109,10 +109,10 @@ websocket_handle({text, Msg}, Req, State) ->
 				case file:read_file(<<?UPLOADS/binary,Args/binary>>) of
 					{ok, DataBin} ->
 						{rec_com, Rec_Node} ! {Box,Com,{Args,DataBin}},
-						io:format("~n done copy - ~p ~n",[Box]),
+						io:format("~ndate: ~p -> done copy - ~p ~n",[Date, Box]),
 						<<"copy sent to: ",Box/binary>>;
 					{error, Reason} ->
-						io:format("~n done copy - ~p - error: ~p~n",[Box, Reason]),
+						io:format("~ndate: ~p -> done copy - ~p - error: ~p~n",[Date, Box, Reason]),
 						<<Box/binary,":copy error-",(atom_to_binary(Reason,latin1))/binary>>
 							end;
 			<<"dffreeze">> ->
@@ -133,12 +133,12 @@ websocket_handle({text, Msg}, Req, State) ->
 			<<"net_restart">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"net_restart sent to: ",Box/binary>>,
-				io:format("~n done net_restart ~p - data2: ~p ~n",[Box, Data2]),
+				io:format("~ndate: ~p -> done net_restart ~p - data2: ~p ~n",[Date, Box, Data2]),
 				Data2;
 			<<"net_stop">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"net_stop sent to: ",Box/binary>>,
-				io:format("~n done net_stop ~p - data2: ~p ~n",[Box, Data2]),
+				io:format("~ndate: ~p -> done net_stop ~p - data2: ~p ~n",[Date, Box, Data2]),
 				Data2;
 			<<"reboot">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
@@ -158,22 +158,22 @@ websocket_handle({text, Msg}, Req, State) ->
 				gen_udp:send(S, ?BROADCAST_ADDR, 9, MagicPacket),
 				gen_udp:close(S),
 				Data2= <<"done wol: ",Box/binary,"....!">>,
-				io:format("~n done wol - ~p ~n",[Box]),
+				io:format("~ndate: ~p -> done wol - ~p ~n",[Date, Box]),
 				Data2;
 			  <<"ping">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"ping sent to: ",Box/binary>>,
-				io:format("~n done ping ~p - data2: ~p ~n",[Box, Data2]),
+				io:format("~ndate: ~p -> done ping ~p - data2: ~p ~n",[Date, Box, Data2]),
 				Data2;
 			<<"list_ups_dir">> ->
 				Data2= <<Box/binary,":list_ups_dir:",(list_up_fls())/binary>>,
-				io:format("~n done list_ups_dir ~p ~n",[Box]),
+				io:format("~ndate: ~p -> done list_ups_dir ~p ~n",[Date, Box]),
 				Data2;
 			<<"delscrfile">> ->
 				_ = file:delete(<<(?UPLOADS)/binary,Args/binary>>),
 				_ = file:delete(<<(?UPLOADS)/binary, "info/", Args/binary, ".info">>),
 
-				io:format("~ndate: ~p ->  done deleting file/script file: ~p ~n",[Date,Args]),
+				io:format("~ndate: ~p ->  done deleting file/script file: ~p ~n",[Date, Args]),
 				Data2= <<"done deleting file/script file: ", Args/binary, "....!">>,
 				Data2;
 			<<"lnscrfile">> ->
@@ -190,17 +190,17 @@ websocket_handle({text, Msg}, Req, State) ->
 							[_, <<"msi">>] ->
 								file:delete(<<(?UPLOADS)/binary, "any.msi">>)
 						end,
-						file:make_symlink(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary,F2/binary>>)
+						file:make_symlink(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary, F2/binary>>)
 				end,
-				io:format("~ndate: ~p ->  done linking file/script file: ~p -> ~p~n",[Date,F1,F2]),
+				io:format("~ndate: ~p ->  done linking file/script file: ~p -> ~p~n",[Date, F1, F2]),
 				Data2= <<"done linking file/script file: ", F1/binary, "->", F2/binary, "....!">>,
 				Data2;
 			<<"renscrfile">> ->
 				[F1,F2] = binary:split(Args, <<"+">>, [global]),
-				Data2 = file:rename(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary,F2/binary>>),
+				Data2 = file:rename(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary, F2/binary>>),
 				file:rename(<<(?UPLOADS)/binary,"info/",F1/binary,".info">>, <<(?UPLOADS)/binary,"info/",F2/binary,".info">>),
 
-				io:format("~ndate: ~p ->  done renaming file/script file: ~p -> ~p ~p~n",[Date,F1,F2,Data2]),
+				io:format("~ndate: ~p ->  done renaming file/script file: ~p -> ~p ~p~n",[Date, F1, F2, Data2]),
 				Data4= <<"done renaming file/script file: ", F1/binary, "->", F2/binary, "....!">>,
 				Data4;
 			<<"editscrfile">> ->
@@ -255,7 +255,7 @@ websocket_handle({text, Msg}, Req, State) ->
 							Res2
 					end,
 
-				io:format("~ndate: ~p ->  done save script file: ~p...~n",[Date,Fname]), %,Dataf,Datafi]),
+				io:format("~ndate: ~p ->  done save script file: ~p...~n",[Date, Fname]),
 				Data2= <<"done save script file...: ",Fname/binary, " - fnres -> ",Fnres/binary, " - finres -> ",Finres/binary >>,
 				Data2;
 			<<"clearlog">> ->
