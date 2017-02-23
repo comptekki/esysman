@@ -197,7 +197,7 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data2;
 			<<"renscrfile">> ->
 				[F1,F2] = binary:split(Args, <<"+">>, [global]),
-				Data2 = file:rename(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary, F2/binary>>),
+				file:rename(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary, F2/binary>>),
 				file:rename(<<(?UPLOADS)/binary,"info/",F1/binary,".info">>, <<(?UPLOADS)/binary,"info/",F2/binary,".info">>),
 
 				io:format("~ndate: ~p -> done renaming file/script file: ~p -> ~p~n",[Date, F1, F2]),
