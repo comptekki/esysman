@@ -1025,6 +1025,8 @@ Port/binary,
             ok = false;
             $(this).parent().next('td').html(fnamex);
             send('0:renscrfile:' + fnameo + '+' + fnamex);
+            showmngscrbox = false;
+            $('#mngscripts').click();
           }
         }
     }
