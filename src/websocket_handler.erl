@@ -749,7 +749,7 @@ Port/binary,
                			    else if(boxCom[1] == undefined)
 						        message(sepcol,boxCom[0])
                    		    else
-						        message(sepcol,boxCom[0] + ': ' + boxCom[1])
+						        message(sepcol,boxCom[0] + ': ' + boxCom[1].replace(/\\n|\\r\\n|\\r/g, '<br/>'))
 					} // end switch
 
 		            var ignore_sd = '",?IGNORESHUTDOWN,"';
