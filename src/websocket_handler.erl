@@ -192,7 +192,7 @@ websocket_handle({text, Msg}, Req, State) ->
 						end,
 						file:make_symlink(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary, F2/binary>>)
 				end,
-				io:format("~ndate: ~p ->  done linking file/script file: ~p -> ~p~n",[Date, F1, F2]),
+				io:format("~ndate: ~p -> done linking file/script file: ~p -> ~p~n",[Date, F1, F2]),
 				Data2= <<"done linking file/script file: ", F1/binary, "->", F2/binary, "....!">>,
 				Data2;
 			<<"renscrfile">> ->
@@ -200,7 +200,7 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data2 = file:rename(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary, F2/binary>>),
 				file:rename(<<(?UPLOADS)/binary,"info/",F1/binary,".info">>, <<(?UPLOADS)/binary,"info/",F2/binary,".info">>),
 
-				io:format("~ndate: ~p ->  done renaming file/script file: ~p -> ~p ~p~n",[Date, F1, F2, Data2]),
+				io:format("~ndate: ~p -> done renaming file/script file: ~p -> ~p ~p~n",[Date, F1, F2, Data2]),
 				Data4= <<"done renaming file/script file: ", F1/binary, "->", F2/binary, "....!">>,
 				Data4;
 			<<"editscrfile">> ->
@@ -226,7 +226,7 @@ websocket_handle({text, Msg}, Req, State) ->
 							<<"">>
 					end,
 
-				io:format("~ndate: ~p ->  done edit script file: ...~n",[Date]),
+				io:format("~ndate: ~p -> done edit script file: ...~n",[Date]),
 				Data2= <<"done edit script file...:editscrfile:^",Dataf/binary,"^:",Datafi/binary>>,
 				Data2;
 			<<"savescrfile">> ->
@@ -255,23 +255,23 @@ websocket_handle({text, Msg}, Req, State) ->
 							Res2
 					end,
 
-				io:format("~ndate: ~p ->  done save script file: ~p...~n",[Date, Fname]),
+				io:format("~ndate: ~p -> done save script file: ~p...~n",[Date, Fname]),
 				Data2= <<"done save script file...: ",Fname/binary, " - fnres -> ",Fnres/binary, " - finres -> ",Finres/binary >>,
 				Data2;
 			<<"clearlog">> ->
-				io:format("~ndate: ~p ->  done clearing log panel",[Date]),
+				io:format("~ndate: ~p -> done clearing log panel",[Date]),
 				Data2= <<"done clearing log panel:">>,
 				Data2;
 			<<"lockactivate">> ->
-				io:format("~ndate: ~p ->  done lock activate",[Date]),
+				io:format("~ndate: ~p -> done lock activate",[Date]),
 				Data2= <<"done lock activate:">>,
 				Data2;
 			<<"lockloginok">> ->
-				io:format("~ndate: ~p ->  done login from lock ok",[Date]),
+				io:format("~ndate: ~p -> done login from lock ok",[Date]),
 				Data2= <<"done login from lock ok:">>,
 				Data2;
 			<<"lockloginfailed">> ->
-				io:format("~ndate: ~p ->  done login from lock failed",[Date]),
+				io:format("~ndate: ~p -> done login from lock failed",[Date]),
 				Data2= <<"done login from lock failed:">>,
 				Data2;
 			_ ->					
