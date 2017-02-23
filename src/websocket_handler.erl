@@ -262,9 +262,16 @@ websocket_handle({text, Msg}, Req, State) ->
 				io:format("~ndate: ~p ->  done clearing log panel",[Date]),
 				Data2= <<"done clearing log panel:">>,
 				Data2;
-			_ ->
+			<<"lockloginok">> ->
+				io:format("~ndate: ~p ->  done lock login ok",[Date]),
+				Data2= <<"done lock login ok:">>,
+				Data2;
+			<<"lockloginfailed">> ->
+				io:format("~ndate: ~p ->  done lock login failed",[Date]),
+				Data2= <<"done lock login failed:">>,
+				Data2;
+			_ ->					
 				<<"unsupported command">>
-					
 				end,
 				{reply, {text, Data3}, Req, State, hibernate};
 
@@ -1142,7 +1149,26 @@ function progress(e){
     });
 
     $(document).on('click', '#unlockscr', function(evt){
-      $('#lockpane').hide();
+      var ok = true;
+      while (ok) {
+        var passwd=prompt('Enter password');
+        if (passwd == null) {
+          ok = false;
+        } else if (passwd.length > 0){
+          var regex=/^[a-zA-Z0-9-_\.]+$/;
+          if (passwd.match(regex)) {
+            if (passwd == '0') {
+              ok = false;
+              $('#lockpane').hide();
+              send('0:lockloginok:');
+            } else {
+              send('0:lockloginfailed:');
+            }
+          }
+        }
+      }
+
+
     });
 
 
