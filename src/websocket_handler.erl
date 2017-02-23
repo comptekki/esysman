@@ -553,6 +553,7 @@ app_front_end(Req, State) ->
 <script>
 
 $(document).ready(function(){
+
   if ('MozWebSocket' in window) {
 	WebSocket = MozWebSocket;
   }
@@ -592,6 +593,8 @@ Port/binary,
 		//	console.log('onopen called');
 			send('client-connected');
 			message(true, socket.readyState);
+  $('#lockscr').click();
+
 
 ",
 (init_open(?ROOMS))/binary,
