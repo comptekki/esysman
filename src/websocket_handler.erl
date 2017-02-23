@@ -1069,6 +1069,7 @@ Port/binary,
       $('#scrslist').hide();
       $('#editscr').show();
       $('#scrname').html('0temp.cmd');
+      $('#scripttext').focus();
 	});
 
     $(document).on('click', 'a.button.closescrslist', function(){
