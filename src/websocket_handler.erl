@@ -118,37 +118,37 @@ websocket_handle({text, Msg}, Req, State) ->
 			<<"dffreeze">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<Box/binary,":dffreeze">>,
-				io:format("~ndate: ~p -> done dffreeze ~p - data2: ~p ~n",[Date, Box, Data2]),
+				io:format("~ndate: ~p -> done dffreeze ~p~n",[Date, Box]),
 				Data2;
 			<<"dfthaw">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<Box/binary,":dfthaw">>,
-				io:format("~ndate: ~p -> done dfthaw ~p - data2: ~p ~n",[Date, Box, Data2]),
+				io:format("~ndate: ~p -> done dfthaw ~p~n",[Date, Box]),
 				Data2;
 			<<"dfstatus">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"dfstatus sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done dfstatus ~p - data2: ~p ~n",[Date, Box, Data2]),
+				io:format("~ndate: ~p -> done dfstatus ~p~n",[Date, Box]),
 				Data2;
 			<<"net_restart">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"net_restart sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done net_restart ~p - data2: ~p ~n",[Date, Box, Data2]),
+				io:format("~ndate: ~p -> done net_restart ~p~n",[Date, Box]),
 				Data2;
 			<<"net_stop">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"net_stop sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done net_stop ~p - data2: ~p ~n",[Date, Box, Data2]),
+				io:format("~ndate: ~p -> done net_stop ~p~n",[Date, Box]),
 				Data2;
 			<<"reboot">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"reboot sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done reboot ~p - data2: ~p ~n",[Date, Box, Data2]),
+				io:format("~ndate: ~p -> done reboot ~p~n",[Date, Box]),
 				Data2;
 			<<"shutdown">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"done - shutdown sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done shutdown ~p - data2: ~p ~n",[Date, Box, Data2]),
+				io:format("~ndate: ~p -> done shutdown ~p~n",[Date, Box]),
 				Data2;
 			<<"wol">> ->
 				MacAddr=binary_to_list(Args),
@@ -163,7 +163,7 @@ websocket_handle({text, Msg}, Req, State) ->
 			  <<"ping">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"ping sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done ping ~p - data2: ~p ~n",[Date, Box, Data2]),
+				io:format("~ndate: ~p -> done ping ~p~n",[Date, Box]),
 				Data2;
 			<<"list_ups_dir">> ->
 				Data2= <<Box/binary,":list_ups_dir:",(list_up_fls())/binary>>,
@@ -200,7 +200,7 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data2 = file:rename(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary, F2/binary>>),
 				file:rename(<<(?UPLOADS)/binary,"info/",F1/binary,".info">>, <<(?UPLOADS)/binary,"info/",F2/binary,".info">>),
 
-				io:format("~ndate: ~p -> done renaming file/script file: ~p -> ~p ~p~n",[Date, F1, F2, Data2]),
+				io:format("~ndate: ~p -> done renaming file/script file: ~p -> ~p~n",[Date, F1, F2]),
 				Data4= <<"done renaming file/script file: ", F1/binary, "->", F2/binary, "....!">>,
 				Data4;
 			<<"editscrfile">> ->
