@@ -221,3 +221,18 @@ tr.r:hover {
 .isize {
 	width:600px;
 }
+
+#lockpane {
+	position:absolute;
+	width:100%;
+	height:100%;
+	background-color:#444;
+	display:none;
+	z-index:5000;
+	opacity:0.95;
+}
+
+#unlockscr {
+	display: block;
+	margin : 0 auto;
+}
