@@ -1159,11 +1159,34 @@ function progress(e){
     }  
  }
 
+
     $(document).on('click', '#lockscr', function(evt){
+//      $('div').each( function() { $(this).attr('tabindex', -1); });
       $('#lockpane').show();
+      $('#lockpane').attr('tabindex', 1);
+      $('#unlockscr').attr('tabindex', 0);
       $('#unlockscr').focus();
+
       send('0:lockactivate:');
     });
+
+/*
+$('#unlockscr input').bind('keyup mouseup',
+                        function(e){
+                            if (e.which == 9) {
+                                // focus from tab
+                              console.log('e is 9');
+                            }
+                            else if (e.which == 1) {
+                                // focus from click
+                              console.log('e is 1');
+                                return false;
+                            }
+                            else {
+                              console.log('e is something');
+                            }
+                        });
+*/
 
     $(document).on('click', '#unlockscr', function(evt){
       var ok = true;
@@ -1177,6 +1200,7 @@ function progress(e){
             if (passwd == '", ?LOCKSCRPASSWD/binary,"') {
               ok = false;
               $('#lockpane').hide();
+//              $('div').each( function() { $(this).prop('tabindex', 3); });
               send('0:lockloginok:');
             } else {
               send('0:lockloginfailed:');
@@ -1424,7 +1448,7 @@ function progress(e){
 					  $('#",Rm/binary,"_selunseltogall').show();
 
                       $('#",Rm/binary,"toggle').click();
-					  $('#",Rm/binary,"toggle').focus();
+//					  $('#",Rm/binary,"toggle').focus();
 
 ">>.
 
