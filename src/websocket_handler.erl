@@ -1170,8 +1170,8 @@ function progress(e){
     });
 
     $(document).keydown(function(objEvent) {
-      if (objEvent.keyCode == 9) {  //tab pressed
-        objEvent.preventDefault(); // stop action
+      if (objEvent.keyCode == 9) { //tab 
+        objEvent.preventDefault(); 
       }
     });
 
