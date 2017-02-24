@@ -230,9 +230,10 @@ tr.r:hover {
 	display:none;
 	z-index:5000;
 	opacity:0.95;
+	overflow-x: hidden;
 }
 
-#unlockscr {
+/*#unlockscr {
 	display: block;
 	margin : 0 auto;
-}
+}*/
