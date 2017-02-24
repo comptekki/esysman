@@ -1161,32 +1161,19 @@ function progress(e){
 
 
     $(document).on('click', '#lockscr', function(evt){
-//      $('div').each( function() { $(this).attr('tabindex', -1); });
       $('#lockpane').show();
       $('#lockpane').attr('tabindex', 1);
-      $('#unlockscr').attr('tabindex', 0);
+      $('#unlockscr').attr('tabindex', -1);
       $('#unlockscr').focus();
 
       send('0:lockactivate:');
     });
 
-/*
-$('#unlockscr input').bind('keyup mouseup',
-                        function(e){
-                            if (e.which == 9) {
-                                // focus from tab
-                              console.log('e is 9');
-                            }
-                            else if (e.which == 1) {
-                                // focus from click
-                              console.log('e is 1');
-                                return false;
-                            }
-                            else {
-                              console.log('e is something');
-                            }
-                        });
-*/
+    $(document).keydown(function(objEvent) {
+      if (objEvent.keyCode == 9) {  //tab pressed
+        objEvent.preventDefault(); // stop action
+      }
+    });
 
     $(document).on('click', '#unlockscr', function(evt){
       var ok = true;
@@ -1200,7 +1187,6 @@ $('#unlockscr input').bind('keyup mouseup',
             if (passwd == '", ?LOCKSCRPASSWD/binary,"') {
               ok = false;
               $('#lockpane').hide();
-//              $('div').each( function() { $(this).prop('tabindex', 3); });
               send('0:lockloginok:');
             } else {
               send('0:lockloginfailed:');
