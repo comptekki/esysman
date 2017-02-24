@@ -745,11 +745,16 @@ Port/binary,
 							break;
 					    default:
 						    if(boxCom[2] != undefined)
-						        message(sepcol,boxCom[0] + ': ' + boxCom[1] + ' ' + boxCom[2] + m.data)
+						        message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1] + ' ' + boxCom[2] + m.data)
                			    else if(boxCom[1] == undefined)
 						        message(sepcol,boxCom[0])
-                   		    else
-						        message(sepcol,boxCom[0] + ': ' + boxCom[1].replace(/\\n|\\r\\n|\\r/g, '<br/>'))
+                   		    else {
+                                if (boxCom[1].indexOf('<br>') > 0) {
+                                  message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1])
+                                } else {
+						          message(sepcol,boxCom[0] + ': ' + boxCom[1].replace(/\\n|\\r\\n|\\r/g, '<br>'))
+                                }
+                            }
 					} // end switch
 
 		            var ignore_sd = '",?IGNORESHUTDOWN,"';
@@ -1156,6 +1161,7 @@ function progress(e){
 
     $(document).on('click', '#lockscr', function(evt){
       $('#lockpane').show();
+      $('#unlockscr').focus();
       send('0:lockactivate:');
     });
 
