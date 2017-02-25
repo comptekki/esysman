@@ -1181,14 +1181,19 @@ function progress(e){
       $('#unlockscrpasswd').focus();
     });
 
-    $(document).on('keyup', '#unlockscrpasswd',function(e) {
+    $(document).on('keydown', '#unlockscrpasswd',function(e) {
       if(e.which == 13) {
         var ok = true;
+        var passwd=$('#unlockscrpasswd').val();
+        if (passwd.length == 0) {
+          $('#unlockscr').show();
+          $('#unlockscr').focus();
+          $('#unlockscrpasswd').val('');
+          $('#unlockscrpasswd').hide();
+          e.preventDefault(); 
+        } else 
         while (ok) {
-          var passwd=$('#unlockscrpasswd').val();
-          if (passwd == '') {
-            ok = false;
-          } else if (passwd.length > 0){
+          if (passwd.length > 0){
             var regex=/^[a-zA-Z0-9-_\.]+$/;
             if (passwd.match(regex)) {
               if (passwd == '", ?LOCKSCRPASSWD/binary,"') {
