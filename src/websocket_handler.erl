@@ -1164,7 +1164,11 @@ function progress(e){
       $('#lockpane').show();
       $('#lockpane').attr('tabindex', 1);
       $('#unlockscr').attr('tabindex', -1);
+
+      $('#unlockscr').show();
       $('#unlockscr').focus();
+      $('#unlockscrpasswd').val('');
+      $('#unlockscrpasswd').hide();
 
       send('0:lockactivate:');
     });
