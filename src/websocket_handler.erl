@@ -593,8 +593,8 @@ Port/binary,
 		//	console.log('onopen called');
 			send('client-connected');
 			message(true, socket.readyState);
-  $('#lockscr').click();
 
+      $('#lockscr').click();
 
 ",
 (init_open(?ROOMS))/binary,
@@ -1176,26 +1176,43 @@ function progress(e){
     });
 
     $(document).on('click', '#unlockscr', function(evt){
-      var ok = true;
-      while (ok) {
-        var passwd=prompt('Enter password');
-        if (passwd == null) {
-          ok = false;
-        } else if (passwd.length > 0){
-          var regex=/^[a-zA-Z0-9-_\.]+$/;
-          if (passwd.match(regex)) {
-            if (passwd == '", ?LOCKSCRPASSWD/binary,"') {
-              ok = false;
-              $('#lockpane').hide();
-              send('0:lockloginok:');
-            } else {
-              send('0:lockloginfailed:');
+      $('#unlockscr').hide();
+      $('#unlockscrpasswd').show();
+      $('#unlockscrpasswd').focus();
+    });
+
+    $(document).on('keyup', '#unlockscrpasswd',function(e) {
+      if(e.which == 13) {
+        var ok = true;
+        while (ok) {
+          var passwd=$('#unlockscrpasswd').val();
+          if (passwd == '') {
+            ok = false;
+          } else if (passwd.length > 0){
+            var regex=/^[a-zA-Z0-9-_\.]+$/;
+            if (passwd.match(regex)) {
+              if (passwd == '", ?LOCKSCRPASSWD/binary,"') {
+                ok = false;
+
+                $('#unlockscr').show();
+                $('#unlockscr').focus();
+                $('#unlockscrpasswd').val('');
+                $('#unlockscrpasswd').hide();
+
+                $('#lockpane').hide();
+                send('0:lockloginok:');
+              } else {
+                send('0:lockloginfailed:');
+              }
             }
           }
         }
+      } else if (e.which == 27) {
+        $('#unlockscr').show();
+        $('#unlockscr').focus();
+        $('#unlockscrpasswd').val('');
+        $('#unlockscrpasswd').hide();
       }
-
-
     });
 
 
@@ -1314,7 +1331,10 @@ function progress(e){
 </head>
 
 <body>
-<div id='lockpane'><input type='button' id='unlockscr' class='button' value='Unlock'></div>
+<div id='lockpane'>
+<input type='button' id='unlockscr' class='button' value='Unlock'>
+<input type='password' id='unlockscrpasswd'>
+</div>
 
 <div id='wrapper'>
 
