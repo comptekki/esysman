@@ -744,10 +744,12 @@ Port/binary,
 							message(sepcol,boxCom[0] + ': ' + 'com');
 							break;
 					    default:
-						    if(boxCom[2] != undefined)
-						        message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1] + ' ' + boxCom[2] + m.data)
-               			    else if(boxCom[1] == undefined)
-						        message(sepcol,boxCom[0])
+						    if(boxCom[2] != undefined) {
+						        message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1] + ' ' + boxCom[2] + m.data.replace(/\\n|\\r\\n|\\r/g, '<br>'))
+                            }
+               			    else if(boxCom[1] == undefined) {
+						        message(sepcol,boxCom[0]);
+                            }
                    		    else {
                                 if (boxCom[1].indexOf('<br>') > 0) {
                                   message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1])
@@ -1161,6 +1163,7 @@ function progress(e){
 
 
     $(document).on('click', '#lockscr', function(evt){
+return;
       $('#lockpane').show();
       $('#lockpane').attr('tabindex', 1);
       $('#unlockscr').attr('tabindex', -1);
