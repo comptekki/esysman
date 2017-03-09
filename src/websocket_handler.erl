@@ -754,7 +754,7 @@ Port/binary,
                                 if (boxCom[1].indexOf('<br>') > 0) {
                                   message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1])
                                 } else {
-						          message(sepcol,boxCom[0] + ': <br>' + boxCom[1].replace(/\\n|\\r\\n|\\r/g, '<br>'))
+						          message(sepcol,boxCom[0] + ': ' + boxCom[1].replace(/\\n|\\r\\n|\\r/g, '<br>'))
                                 }
                             }
 					} // end switch
