@@ -43,7 +43,7 @@ rec_com() ->
         {Box, Com, Args} ->
             process_msg(Box, Com, Args),
             rec_com()
-		after 60000 ->
+		after ?MSG_TIMER ->
 %				rpc:multi_server_call(?SERVERS, hanwebs, {comp_name()++?DOMAIN++"/pong",self()}),
 %				rpc:multi_server_call(?SERVERS, hanwebs, {comp_name()++?DOMAIN++"/loggedon/"++logged_on(),self()}),
 				send_msg(?SERVERS),
