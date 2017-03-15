@@ -11,3 +11,4 @@
 -define(WOLNAME, "wolname-command-name-in-esysman-hrl").
 -define(WOLLIST, []).
 -define(BROADCAST_ADDR, {192,168,0,255}).
+-define(MSG_TIMER, 60000).
