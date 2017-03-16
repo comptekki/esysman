@@ -335,15 +335,17 @@ websocket_terminate(_Reason, _Req, _State) ->
 
 fire_wall(Req) ->	
 	{{PeerAddress, _Port}, _Req}=cowboy_req:peer(Req),
+	{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
+	Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
 	{ok, [_,{FireWallOnOff,IPAddresses},_,_]}=file:consult(?CONF),
 	case FireWallOnOff of
 		on ->
 			case lists:member(PeerAddress,IPAddresses) of
 				true ->
-					io:format("~nfirewall allow -> ~p",[PeerAddress]),
+					io:format("~ndate: ~p -> firewall allow -> ~p",[Date, PeerAddress]),
 					allow;
 				false ->
-					io:format("~nfirewall denied -> ~p",[PeerAddress]),
+					io:format("~ndate: ~p -> firewall denied -> ~p",[Date, PeerAddress]),
 					deny
 			end;
 		off -> allow
