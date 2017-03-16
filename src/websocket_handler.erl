@@ -335,14 +335,15 @@ websocket_terminate(_Reason, _Req, _State) ->
 
 fire_wall(Req) ->	
 	{{PeerAddress, _Port}, _Req}=cowboy_req:peer(Req),
-	io:format("~nfirewall log -> ~p",[PeerAddress]),
 	{ok, [_,{FireWallOnOff,IPAddresses},_,_]}=file:consult(?CONF),
 	case FireWallOnOff of
 		on ->
 			case lists:member(PeerAddress,IPAddresses) of
 				true ->
+					io:format("~nfirewall allow -> ~p",[PeerAddress]),
 					allow;
 				false ->
+					io:format("~nfirewall denied -> ~p",[PeerAddress]),
 					deny
 			end;
 		off -> allow
