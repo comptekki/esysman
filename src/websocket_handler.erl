@@ -258,11 +258,11 @@ websocket_handle({text, Msg}, Req, State) ->
 				io:format("~ndate: ~p -> done save script file: ~p...~n",[Date, Fname]),
 				Data2= <<"done save script file...: ",Fname/binary, " - fnres -> ",Fnres/binary, " - finres -> ",Finres/binary >>,
 				Data2;
-			<<"clearlogcm">> ->
+			<<"clearcmsg">> ->
 				io:format("~ndate: ~p -> done clearing client log panel",[Date]),
 				Data2= <<"done clearing client log panel:">>,
 				Data2;
-			<<"clearlogsm">> ->
+			<<"clearsmsg">> ->
 				io:format("~ndate: ~p -> done clearing server log panel",[Date]),
 				Data2= <<"done clearing server log panel:">>,
 				Data2;
@@ -908,7 +908,7 @@ Port/binary,
 //                     window.location.href='/esysman';
                     $('#msgsm').html('');
                     $('#cntsm').html('0K/0L');
-                    send('0:clearlogsm:');
+                    send('0:clearcmsg:');
                 }
                 else {
                     mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
@@ -925,7 +925,7 @@ Port/binary,
 //                      window.location.href='/esysman';
                     $('#msgcl').html('');
                     $('#cntcl').html('0K/0L');
-                    send('0:clearlogcm:');
+                    send('0:clearcsmg:');
                 }
                 else {
                     mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
