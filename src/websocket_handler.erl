@@ -908,7 +908,7 @@ Port/binary,
 //                     window.location.href='/esysman';
                     $('#msgsm').html('');
                     $('#cntsm').html('0K/0L');
-                    send('0:clearcmsg:');
+                    send('0:clearsmsg:');
                 }
                 else {
                     mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
@@ -925,7 +925,7 @@ Port/binary,
 //                      window.location.href='/esysman';
                     $('#msgcl').html('');
                     $('#cntcl').html('0K/0L');
-                    send('0:clearsmsg:');
+                    send('0:clearcmsg:');
                 }
                 else {
                     mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
