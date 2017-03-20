@@ -266,6 +266,10 @@ websocket_handle({text, Msg}, Req, State) ->
 				io:format("~ndate: ~p -> done clearing server message panel",[Date]),
 				Data2= <<"done clearing server message panel:">>,
 				Data2;
+			<<"cleardmsg">> ->
+				io:format("~ndate: ~p -> done clearing duplicates message panel",[Date]),
+				Data2= <<"done clearing duplicates message panel:">>,
+				Data2;
 			<<"lockactivate">> ->
 				io:format("~ndate: ~p -> done lock activate",[Date]),
 				Data2= <<"done lock activate:">>,
@@ -970,16 +974,19 @@ Port/binary,
     $('#smclear').click(function(){
         $('#msgsm').html('');
         $('#cntsm').html('0K/L');
+        send('0:clearsmsg:');
     });
 
     $('#cmclear').click(function(){
         $('#msgcl').html('');
         $('#cntcl').html('0K/0L');
+        send('0:clearcmsg:');
     });
 
     $('#duclear').click(function(){
         $('#msgdup').html('');
         $('#cntdup').html('0K/0L');
+        send('0:cleardmsg:');
     });
 
     $('#cntrst').click(function(){
@@ -2268,6 +2275,7 @@ function chk_dupe_users_",Rm/binary,"(){
                 if (lines > ", ?LINES, ") {
                     $('#msgdup').html('');
                     $('#cntdup').html('0K/0L');
+                    send('0:cleardmsg:');
                 }
                 else {
                     mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
