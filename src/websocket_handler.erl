@@ -263,8 +263,8 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data2= <<"done clearing client message panel:">>,
 				Data2;
 			<<"clearsmsg">> ->
-				io:format("~ndate: ~p -> done clearing server message panel",[Date]),
-				Data2= <<"done clearing server message panel:">>,
+				io:format("~ndate: ~p -> done clearing *server message panel",[Date]),
+				Data2= <<"done clearing *server message panel:">>,
 				Data2;
 			<<"cleardmsg">> ->
 				io:format("~ndate: ~p -> done clearing duplicates message panel",[Date]),
