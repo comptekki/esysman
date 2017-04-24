@@ -270,7 +270,7 @@ process_msg(Box, Com, Args) ->
 												% list of mac addresses in different subnet
 							wol(?WOLLIST),
 							io:format("~n done wol - ~p ~n",[Box]),
-							send_msg(?SERVERS, <<Box/binary,":wolbnr360 -> ">>);
+							send_msg(?SERVERS, <<Box/binary,":wol -> ">>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
