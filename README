@@ -139,7 +139,6 @@ Client/Server Setup
       c. set firewall to allow server to talk to client
 
 --------
-
 Versions
 --------
 
@@ -151,7 +150,6 @@ Versions
 -Add support for four web browser web consoles
 
 --------
-
 1.2
 
 -Update to cowboy 0.9.0
@@ -160,7 +158,6 @@ Versions
 
 
 --------
-
 1.1
 
 -Update to cowboy 0.8.3
@@ -169,7 +166,6 @@ Versions
 
 
 --------
-
 1.0
 
 -Move code to Cowboy 
