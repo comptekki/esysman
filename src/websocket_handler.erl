@@ -62,14 +62,26 @@ terminate(_Reason, _Req, _State) ->
 
 websocket_init(_Any, Req, []) ->
 	case lists:member(hanwebs, registered()) of
-		true -> ok;
+		true -> 
+			case lists:member(hanwebs2, registered()) of
+				true -> 
+					case lists:member(hanwebs3, registered()) of
+						true -> 
+							register(hanwebs4, self()),
+							ok;
+						false ->
+							register(hanwebs3, self())
+					end,
+					ok;
+				false ->
+					register(hanwebs2, self())
+			end,
+			ok;
 		false ->
 			register(hanwebs, self())
 	end,
 	Req2 = cowboy_req:compact(Req),
 	{ok, Req2, undefined, hibernate}.
-
-
 
 websocket_handle({text, <<"close">>}, Req, State) ->
 			{shutdown, Req, State};
@@ -1179,6 +1191,7 @@ function progress(e){
 
 
     $(document).on('click', '#lockscr', function(evt){
+return;
       $('#lockpane').show();
       $('#lockpane').attr('tabindex', 1);
       $('#unlockscr').attr('tabindex', -1);
