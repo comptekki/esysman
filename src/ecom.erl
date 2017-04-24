@@ -51,29 +51,29 @@ rec_com() ->
     end.
 
 send_msg([Server|Rest]) ->
-	msg_to_clients(Server, ?CLIENTS),
+	msg_to_webclients(Server, ?WEBCLIENTS),
 	send_msg(Rest);
 send_msg([]) ->
 	[].
 
-msg_to_clients(Server, [Client|Rest]) ->
-	{Client, Server} ! {comp_name()++?DOMAIN++"/pong",self()},
-	{Client, Server} ! {comp_name()++?DOMAIN++"/loggedon/"++logged_on(),self()},
-	msg_to_clients(Server, Rest);
-msg_to_clients(_Server, []) ->
+msg_to_webclients(Server, [WClient|Rest]) ->
+	{WClient, Server} ! {comp_name()++?DOMAIN++"/pong",self()},
+	{WClient, Server} ! {comp_name()++?DOMAIN++"/loggedon/"++logged_on(),self()},
+	msg_to_webclients(Server, Rest);
+msg_to_webclients(_Server, []) ->
 	[].
 
 send_msg([Server|Rest], Msg) ->
 %	rpc:multi_server_call(?SERVERS, hanwebs, Msg).
-	msg_to_clients(Server, ?CLIENTS, Msg),
+	msg_to_webclients(Server, ?WEBCLIENTS, Msg),
 	send_msg(Rest, Msg);
 send_msg([], _Msg) ->
 	[].
 
-msg_to_clients(Server, [Client|Rest], Msg) ->
-	{Client, Server} ! Msg,
-	msg_to_clients(Server, Rest, Msg);
-msg_to_clients(_Server, [], _Msg) ->
+msg_to_webclients(Server, [WClient|Rest], Msg) ->
+	{WClient, Server} ! Msg,
+	msg_to_webclients(Server, Rest, Msg);
+msg_to_webclients(_Server, [], _Msg) ->
 	[].
 
 process_msg(Box, Com, Args) ->
