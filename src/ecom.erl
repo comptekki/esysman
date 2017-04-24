@@ -51,21 +51,33 @@ rec_com() ->
     end.
 
 send_msg([Server|Rest]) ->
-	{hanwebs, Server} ! {comp_name()++?DOMAIN++"/pong",self()},
-	{hanwebs, Server} ! {comp_name()++?DOMAIN++"/loggedon/"++logged_on(),self()},
+	msg_to_clients(Server, ?CLIENTS),
 	send_msg(Rest);
 send_msg([]) ->
 	[].
 
+msg_to_clients(Server, [Client|Rest]) ->
+	{Client, Server} ! {comp_name()++?DOMAIN++"/pong",self()},
+	{Client, Server} ! {comp_name()++?DOMAIN++"/loggedon/"++logged_on(),self()},
+	msg_to_clients(Server, Rest);
+msg_to_clients(_Server, []) ->
+	[].
+
 send_msg([Server|Rest], Msg) ->
 %	rpc:multi_server_call(?SERVERS, hanwebs, Msg).
-	{hanwebs, Server} ! Msg,
+	msg_to_clients(Server, ?CLIENTS, Msg),
 	send_msg(Rest, Msg);
 send_msg([], _Msg) ->
 	[].
 
+msg_to_clients(Server, [Client|Rest], Msg) ->
+	{Client, Server} ! Msg,
+	msg_to_clients(Server, Rest, Msg);
+msg_to_clients(_Server, [], _Msg) ->
+	[].
+
 process_msg(Box, Com, Args) ->
-				io:format("~nBox: ~p -> Com: ~p -> args: ~p ~n",[Box, Com, Args]),
+	io:format("~nBox: ~p -> Com: ~p -> args: ~p -> pid: ~p~n",[Box, Com, Args, self()]),
 	case Com of
 		<<"com">> ->
 			send_msg(?SERVERS, <<Box/binary,":com <- ",Args/binary>>),
