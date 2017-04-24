@@ -1189,7 +1189,6 @@ function progress(e){
     }  
  }
 
-
     $(document).on('click', '#lockscr', function(evt){
       $('#lockpane').show();
       $('#lockpane').attr('tabindex', 1);
