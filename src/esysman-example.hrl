@@ -14,7 +14,8 @@
 -define(IGNOREU2,"u2").
 -define(IGNOREU3,"u3").
 -define(IGNOREU4,"u4").
--define(LOCKSCRPASSWD,<<"temppass">>).
+-define(LOCKSCRPASSWD,"temppass").
+-define(LOCK, "return;"). % "return" yes,  "" no
 
 -define(SHUTDOWNSTART,"22").
 -define(SHUTDOWNEND,"06").
