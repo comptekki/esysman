@@ -109,22 +109,22 @@ websocket_handle({text, Msg}, Req, State) ->
 		case Com of
 			<<"com">> ->
 				{rec_com, Rec_Node} ! {Box,Com,Args},
-				Data2= <<"com -> ",Args/binary,"  <- sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done sent com ~p - data2: ~p ~n",[Date, Box, Data2]),
+				Data2= <<"done - com -> ",Args/binary,"  <- sent to: ",Box/binary>>,
+				io:format("~ndate: ~p -> done - sent com ~p - data2: ~p ~n",[Date, Box, Data2]),
 				Data2;
 			<<"loggedon">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-				Data2= <<"loggedon sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done loggedon ~p - data2: ~p ~n",[Date, Box, Data2]),
+				Data2= <<"done - loggedon sent to: ",Box/binary>>,
+				io:format("~ndate: ~p -> done - loggedon ~p - data2: ~p ~n",[Date, Box, Data2]),
 				Data2;
 			<<"copy">> ->
 				case file:read_file(<<?UPLOADS/binary,Args/binary>>) of
 					{ok, DataBin} ->
 						{rec_com, Rec_Node} ! {Box,Com,{Args,DataBin}},
-						io:format("~ndate: ~p -> done copy - ~p ~n",[Date, Box]),
-						<<"copy sent to: ",Box/binary>>;
+						io:format("~ndate: ~p -> done - copy - ~p ~n",[Date, Box]),
+						<<"done - copy sent to: ",Box/binary>>;
 					{error, Reason} ->
-						io:format("~ndate: ~p -> done copy - ~p - error: ~p~n",[Date, Box, Reason]),
+						io:format("~ndate: ~p -> done - copy - ~p - error: ~p~n",[Date, Box, Reason]),
 						<<Box/binary,":copy error-",(atom_to_binary(Reason,latin1))/binary>>
 							end;
 			<<"dffreeze">> ->
@@ -135,32 +135,32 @@ websocket_handle({text, Msg}, Req, State) ->
 			<<"dfthaw">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<Box/binary,":dfthaw">>,
-				io:format("~ndate: ~p -> done dfthaw ~p~n",[Date, Box]),
+				io:format("~ndate: ~p -> done - dfthaw ~p~n",[Date, Box]),
 				Data2;
 			<<"dfstatus">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-				Data2= <<"dfstatus sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done dfstatus ~p~n",[Date, Box]),
+				Data2= <<"done - dfstatus sent to: ",Box/binary>>,
+				io:format("~ndate: ~p -> done - dfstatus ~p~n",[Date, Box]),
 				Data2;
 			<<"net_restart">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-				Data2= <<"net_restart sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done net_restart ~p~n",[Date, Box]),
+				Data2= <<"done - net_restart sent to: ",Box/binary>>,
+				io:format("~ndate: ~p -> done - net_restart ~p~n",[Date, Box]),
 				Data2;
 			<<"net_stop">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-				Data2= <<"net_stop sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done net_stop ~p~n",[Date, Box]),
+				Data2= <<"done - net_stop sent to: ",Box/binary>>,
+				io:format("~ndate: ~p -> done - net_stop ~p~n",[Date, Box]),
 				Data2;
 			<<"reboot">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-				Data2= <<"reboot sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done reboot ~p~n",[Date, Box]),
+				Data2= <<"done - reboot sent to: ",Box/binary>>,
+				io:format("~ndate: ~p -> done - reboot ~p~n",[Date, Box]),
 				Data2;
 			<<"shutdown">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"done - shutdown sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done shutdown ~p~n",[Date, Box]),
+				io:format("~ndate: ~p -> done - shutdown ~p~n",[Date, Box]),
 				Data2;
 			<<"wol">> ->
 				MacAddr=binary_to_list(Args),
@@ -169,24 +169,24 @@ websocket_handle({text, Msg}, Req, State) ->
 				{ok,S} = gen_udp:open(0, [{broadcast, true}]),
 				gen_udp:send(S, ?BROADCAST_ADDR, 9, MagicPacket),
 				gen_udp:close(S),
-				Data2= <<"done wol: ",Box/binary,"....!">>,
-				io:format("~ndate: ~p -> done wol - ~p ~n",[Date, Box]),
+				Data2= <<"done - wol: ",Box/binary,"....!">>,
+				io:format("~ndate: ~p -> done - wol - ~p ~n",[Date, Box]),
 				Data2;
 			  <<"ping">> ->
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-				Data2= <<"ping sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done ping ~p~n",[Date, Box]),
+				Data2= <<"done - ping sent to: ",Box/binary>>,
+				io:format("~ndate: ~p -> done - ping ~p~n",[Date, Box]),
 				Data2;
 			<<"list_ups_dir">> ->
 				Data2= <<Box/binary,":list_ups_dir:",(list_up_fls())/binary>>,
-				io:format("~ndate: ~p -> done list_ups_dir ~p ~n",[Date, Box]),
+				io:format("~ndate: ~p -> done - list_ups_dir ~p ~n",[Date, Box]),
 				Data2;
 			<<"delscrfile">> ->
 				_ = file:delete(<<(?UPLOADS)/binary,Args/binary>>),
 				_ = file:delete(<<(?UPLOADS)/binary, "info/", Args/binary, ".info">>),
 
-				io:format("~ndate: ~p ->  done deleting file/script file: ~p ~n",[Date, Args]),
-				Data2= <<"done deleting file/script file: ", Args/binary, "....!">>,
+				io:format("~ndate: ~p ->  done - deleting file/script file: ~p ~n",[Date, Args]),
+				Data2= <<"done - deleting file/script file: ", Args/binary, "....!">>,
 				Data2;
 			<<"lnscrfile">> ->
 				[F1,F2] = binary:split(Args, <<"+">>, [global]),
@@ -204,16 +204,16 @@ websocket_handle({text, Msg}, Req, State) ->
 						end,
 						file:make_symlink(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary, F2/binary>>)
 				end,
-				io:format("~ndate: ~p -> done linking file/script file: ~p -> ~p~n",[Date, F1, F2]),
-				Data2= <<"done linking file/script file: ", F1/binary, "->", F2/binary, "....!">>,
+				io:format("~ndate: ~p -> done - linking file/script file: ~p -> ~p~n",[Date, F1, F2]),
+				Data2= <<"done - linking file/script file: ", F1/binary, "->", F2/binary, "....!">>,
 				Data2;
 			<<"renscrfile">> ->
 				[F1,F2] = binary:split(Args, <<"+">>, [global]),
 				file:rename(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary, F2/binary>>),
 				file:rename(<<(?UPLOADS)/binary,"info/",F1/binary,".info">>, <<(?UPLOADS)/binary,"info/",F2/binary,".info">>),
 
-				io:format("~ndate: ~p -> done renaming file/script file: ~p -> ~p~n",[Date, F1, F2]),
-				Data4= <<"done renaming file/script file: ", F1/binary, "->", F2/binary, "....!">>,
+				io:format("~ndate: ~p -> done - renaming file/script file: ~p -> ~p~n",[Date, F1, F2]),
+				Data4= <<"done - renaming file/script file: ", F1/binary, "->", F2/binary, "....!">>,
 				Data4;
 			<<"editscrfile">> ->
 				Dataf = 
@@ -238,8 +238,8 @@ websocket_handle({text, Msg}, Req, State) ->
 							<<"">>
 					end,
 
-				io:format("~ndate: ~p -> done edit script file: ...~n",[Date]),
-				Data2= <<"done edit script file...:editscrfile:^",Dataf/binary,"^:",Datafi/binary>>,
+				io:format("~ndate: ~p -> done - edit script file: ...~n",[Date]),
+				Data2= <<"done - edit script file...:editscrfile:^",Dataf/binary,"^:",Datafi/binary>>,
 				Data2;
 			<<"savescrfile">> ->
 				[Fname,Dataf,Datafi] = binary:split(Args, <<"^">>, [global]),
@@ -267,32 +267,32 @@ websocket_handle({text, Msg}, Req, State) ->
 							Res2
 					end,
 
-				io:format("~ndate: ~p -> done save script file: ~p...~n",[Date, Fname]),
-				Data2= <<"done save script file...: ",Fname/binary, " - fnres -> ",Fnres/binary, " - finres -> ",Finres/binary >>,
+				io:format("~ndate: ~p -> done - save script file: ~p...~n",[Date, Fname]),
+				Data2= <<"done - save script file...: ",Fname/binary, " - fnres -> ",Fnres/binary, " - finres -> ",Finres/binary >>,
 				Data2;
 			<<"clearcmsg">> ->
-				io:format("~ndate: ~p -> done clearing client message panel",[Date]),
-				Data2= <<"done clearing client message panel:">>,
+				io:format("~ndate: ~p -> done - clearing client message panel",[Date]),
+				Data2= <<"done - clearing client message panel:">>,
 				Data2;
 			<<"clearsmsg">> ->
-				io:format("~ndate: ~p -> done clearing *server message panel",[Date]),
-				Data2= <<"done clearing *server message panel:">>,
+				io:format("~ndate: ~p -> done - clearing *server message panel",[Date]),
+				Data2= <<"done - clearing *server message panel:">>,
 				Data2;
 			<<"cleardmsg">> ->
-				io:format("~ndate: ~p -> done clearing duplicates message panel",[Date]),
-				Data2= <<"done clearing duplicates message panel:">>,
+				io:format("~ndate: ~p -> done - clearing duplicates message panel",[Date]),
+				Data2= <<"done - clearing duplicates message panel:">>,
 				Data2;
 			<<"lockactivate">> ->
-				io:format("~ndate: ~p -> done lock activate",[Date]),
-				Data2= <<"done lock activate:">>,
+				io:format("~ndate: ~p -> done - lock activate",[Date]),
+				Data2= <<"done - lock activate:">>,
 				Data2;
 			<<"lockloginok">> ->
-				io:format("~ndate: ~p -> done login from lock ok",[Date]),
-				Data2= <<"done login from lock ok:">>,
+				io:format("~ndate: ~p -> done - login from lock ok",[Date]),
+				Data2= <<"done - login from lock ok:">>,
 				Data2;
 			<<"lockloginfailed">> ->
-				io:format("~ndate: ~p -> done login from lock failed",[Date]),
-				Data2= <<"done login from lock failed:">>,
+				io:format("~ndate: ~p -> done - login from lock failed",[Date]),
+				Data2= <<"done - login from lock failed:">>,
 				Data2;
 			_ ->					
 				<<"unsupported command">>
@@ -706,6 +706,7 @@ Port/binary,
                        		$('#'+box+'status').html('.');
 							$('#'+box+'_hltd').css('background-color','#000000');
 							$('#'+box+'_ltd').css('background-color','#000000');
+							message(sepcol,boxCom[0] + ': ' + 'reboot');
 							break;
 					    case 'shutdown':
 							$('#'+box+'status').css('color','red');
@@ -713,6 +714,7 @@ Port/binary,
                        		$('#'+box+'status').html('.');
 							$('#'+box+'_hltd').css('background-color','#000000');
 							$('#'+box+'_ltd').css('background-color','#000000');
+							message(sepcol,boxCom[0] + ': ' + 'shutdown');
 							break;
 					    case 'dffreeze':
 							$('#'+box+'dfstatus').css('color','cyan');
