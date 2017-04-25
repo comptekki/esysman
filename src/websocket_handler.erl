@@ -724,6 +724,7 @@ Port/binary,
                             				$('#'+box+'status').html('.');
 							$('#'+box+'_hltd').css('background-color','#000000');
 							$('#'+box+'_ltd').css('background-color','#000000');
+							message(sepcol,boxCom[0] + ': ' + 'dffreeze');
 							break;
 					    case 'dfthaw':
 							$('#'+box+'dfstatus').css('color','green');
@@ -733,6 +734,7 @@ Port/binary,
                             				$('#'+box+'status').html('.');
 							$('#'+box+'_hltd').css('background-color','#000000');
 							$('#'+box+'_ltd').css('background-color','#000000');
+							message(sepcol,boxCom[0] + ': ' + 'dfthaw');
 							break;
 					    case 'dfstatus':
 							if(!(boxCom[2].indexOf('thawed'))){
@@ -745,6 +747,7 @@ Port/binary,
 								$('#'+box+'dfstatus').css('color','cyan');
 								$('#'+box+'dfstatus').css('background-color','#006666');
 							}
+							message(sepcol,boxCom[0] + ': ' + 'dfstatus');
 							break;
 					    case 'copy':
 							$('#'+box+'status').css('color','#00cc00');
@@ -753,6 +756,7 @@ Port/binary,
 							break;
                         case 'list_ups_dir':
 						  $('#mngscrbox').html(boxCom[2]);
+							message(sepcol,boxCom[0] + ': ' + 'list_ups_dir');
                            break;
                         case 'editscrfile':
                           var fname = $('#scrname').html().split('.');
@@ -763,6 +767,7 @@ Port/binary,
                             $('#scrtxtbox').hide();
                           }
 						  $('#scrdesc').val(boxCom[3].substring(1, boxCom[3].length-2));
+							message(sepcol,boxCom[0] + ': ' + 'editscrfile');
                            break;
 					    case 'com':
 						    $('#'+box+'status').css('color','#00cc00');
@@ -1192,6 +1197,9 @@ function progress(e){
  }
 
     $(document).on('click', '#lockscr', function(evt){
+",
+?LOCK,
+"
       $('#lockpane').show();
       $('#lockpane').attr('tabindex', 1);
       $('#unlockscr').attr('tabindex', -1);
@@ -1231,7 +1239,7 @@ function progress(e){
           if (passwd.length > 0){
             var regex=/^[a-zA-Z0-9-_\.]+$/;
             if (passwd.match(regex)) {
-              if (passwd == '", ?LOCKSCRPASSWD/binary,"') {
+              if (passwd == '", ?LOCKSCRPASSWD,"') {
                 ok = false;
 
                 $('#unlockscr').show();
