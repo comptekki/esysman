@@ -169,10 +169,12 @@ websocket_handle({text, Msg}, Req, State) ->
 				{ok,S} = gen_udp:open(0, [{broadcast, true}]),
 				gen_udp:send(S, ?BROADCAST_ADDR, 9, MagicPacket),
 				gen_udp:close(S),
+				send_msg(?SERVERS, <<"wol from ", (pid())/binary>>),
 				Data2= <<"done - wol: ",Box/binary,"....!">>,
 				io:format("~ndate: ~p -> done - wol - ~p ~n",[Date, Box]),
 				Data2;
 			  <<"ping">> ->
+				send_msg(?SERVERS, <<"ping from ", (pid())/binary>>),
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"done - ping sent to: ",Box/binary>>,
 				io:format("~ndate: ~p -> done - ping ~p~n",[Date, Box]),
@@ -307,6 +309,38 @@ dup(B,Acc) when Acc > 1 ->
 	<< B/binary,  B2/binary >>;
 dup(B,1) ->
     B.
+
+send_msg([Server|Rest], Msg) ->
+	msg_to_consoles(Server, ?CONSOLES, Msg),
+	send_msg(Rest, Msg);
+send_msg([], _Msg) ->
+	[].
+
+msg_to_consoles(Server, [Console|Rest], Msg) ->
+	{Console, Server} ! Msg,
+	msg_to_consoles(Server, Rest, Msg);
+msg_to_consoles(_Server, [], _Msg) ->
+	[].
+
+
+pid() ->
+	Apid = self(),
+	case whereis(hanwebs) =:= Apid of
+		true -> 
+			<<"cons1">>;
+		_ ->
+			case whereis(hanwebs2) =:= Apid of
+				true ->
+					<<"cons2">>; 
+				_ ->
+					case whereis(hanwebs3) =:= Apid of
+						true -> 
+							"cons3"; 
+						_ ->
+							"cons4" 
+					end
+			end
+	end.	
 
 websocket_info(PreMsg, Req, State) ->
 	Msg=
@@ -938,6 +972,24 @@ Port/binary,
                     $('#cntsm').html(mcnt);
                 }
             }
+        
+          else if (msg.indexOf('from')>0) {
+
+			$('#msgsm').html(now+':'+msg+'<br>'+$('#msgsm').html());
+                mcnt = $('#msgsm').html().length;
+                kb = 1024;
+                mb = 1048576;
+                lines=$('#msgsm br').length;
+                if (lines > ", ?LINES, ") {
+                    $('#msgsm').html('');
+                    $('#cntsm').html('0K/0L');
+                }
+                else {
+                    mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
+                    $('#cntsm').html(mcnt);
+                }
+
+            } 
             else {
 			    $('#msgcl').html(now+':'+msg+'<br>'+$('#msgcl').html());
                 mcnt = $('#msgcl').html().length;
