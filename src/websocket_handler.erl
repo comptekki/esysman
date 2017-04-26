@@ -673,7 +673,7 @@ Port/binary,
 			send('client-connected');
 			message(true, socket.readyState);
 
-     if (",?LOCK,") {
+     if (",?AUTOLOCK,") {
       $('#lockscr').click();
     }
 ",
