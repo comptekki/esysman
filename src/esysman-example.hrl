@@ -17,7 +17,7 @@
 -define(IGNOREU3,"u3").
 -define(IGNOREU4,"u4").
 -define(LOCKSCRPASSWD,"temppass").
--define(LOCK, "return;"). % "return" yes,  "" no
+-define(LOCK, "false"). % "false" no,  "true" yes 
 
 -define(SHUTDOWNSTART,"22").
 -define(SHUTDOWNEND,"06").
