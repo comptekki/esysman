@@ -108,6 +108,7 @@ websocket_handle({text, Msg}, Req, State) ->
 	Data3 =
 		case Com of
 			<<"com">> ->
+				send_msg(?SERVERS, <<"com - ",Args/binary," - from ", (pid())/binary>>),
 				{rec_com, Rec_Node} ! {Box,Com,Args},
 				Data2= <<"done - com -> ",Args/binary,"  <- sent to: ",Box/binary>>,
 				io:format("~ndate: ~p -> done - sent com ~p - data2: ~p ~n",[Date, Box, Data2]),
@@ -118,6 +119,7 @@ websocket_handle({text, Msg}, Req, State) ->
 				io:format("~ndate: ~p -> done - loggedon ~p - data2: ~p ~n",[Date, Box, Data2]),
 				Data2;
 			<<"copy">> ->
+				send_msg(?SERVERS, <<"copy from ", (pid())/binary>>),
 				case file:read_file(<<?UPLOADS/binary,Args/binary>>) of
 					{ok, DataBin} ->
 						{rec_com, Rec_Node} ! {Box,Com,{Args,DataBin}},
@@ -128,36 +130,43 @@ websocket_handle({text, Msg}, Req, State) ->
 						<<Box/binary,":copy error-",(atom_to_binary(Reason,latin1))/binary>>
 							end;
 			<<"dffreeze">> ->
+				send_msg(?SERVERS, <<"dffreeze from ", (pid())/binary>>),
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<Box/binary,":dffreeze">>,
 				io:format("~ndate: ~p -> done dffreeze ~p~n",[Date, Box]),
 				Data2;
 			<<"dfthaw">> ->
+				send_msg(?SERVERS, <<"dfthaw from ", (pid())/binary>>),
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<Box/binary,":dfthaw">>,
 				io:format("~ndate: ~p -> done - dfthaw ~p~n",[Date, Box]),
 				Data2;
 			<<"dfstatus">> ->
+				send_msg(?SERVERS, <<"dfstatus from ", (pid())/binary>>),
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"done - dfstatus sent to: ",Box/binary>>,
 				io:format("~ndate: ~p -> done - dfstatus ~p~n",[Date, Box]),
 				Data2;
 			<<"net_restart">> ->
+				send_msg(?SERVERS, <<"net_restart from ", (pid())/binary>>),
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"done - net_restart sent to: ",Box/binary>>,
 				io:format("~ndate: ~p -> done - net_restart ~p~n",[Date, Box]),
 				Data2;
 			<<"net_stop">> ->
+				send_msg(?SERVERS, <<"net_stop from ", (pid())/binary>>),
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"done - net_stop sent to: ",Box/binary>>,
 				io:format("~ndate: ~p -> done - net_stop ~p~n",[Date, Box]),
 				Data2;
 			<<"reboot">> ->
+				send_msg(?SERVERS, <<"reboot from ", (pid())/binary>>),
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"done - reboot sent to: ",Box/binary>>,
 				io:format("~ndate: ~p -> done - reboot ~p~n",[Date, Box]),
 				Data2;
 			<<"shutdown">> ->
+				send_msg(?SERVERS, <<"shutdown from ", (pid())/binary>>),
 				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 				Data2= <<"done - shutdown sent to: ",Box/binary>>,
 				io:format("~ndate: ~p -> done - shutdown ~p~n",[Date, Box]),
@@ -180,6 +189,7 @@ websocket_handle({text, Msg}, Req, State) ->
 				io:format("~ndate: ~p -> done - ping ~p~n",[Date, Box]),
 				Data2;
 			<<"list_ups_dir">> ->
+				send_msg(?SERVERS, <<"list_ups_dir from ", (pid())/binary>>),
 				Data2= <<Box/binary,":list_ups_dir:",(list_up_fls())/binary>>,
 				io:format("~ndate: ~p -> done - list_ups_dir ~p ~n",[Date, Box]),
 				Data2;
@@ -191,6 +201,7 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data2= <<"done - deleting file/script file: ", Args/binary, "....!">>,
 				Data2;
 			<<"lnscrfile">> ->
+				send_msg(?SERVERS, <<"lnscrfile from ", (pid())/binary>>),
 				[F1,F2] = binary:split(Args, <<"+">>, [global]),
 				case file:make_symlink(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary,F2/binary>>) of
 					ok ->
@@ -210,6 +221,7 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data2= <<"done - linking file/script file: ", F1/binary, "->", F2/binary, "....!">>,
 				Data2;
 			<<"renscrfile">> ->
+				send_msg(?SERVERS, <<"renscrfile from ", (pid())/binary>>),
 				[F1,F2] = binary:split(Args, <<"+">>, [global]),
 				file:rename(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary, F2/binary>>),
 				file:rename(<<(?UPLOADS)/binary,"info/",F1/binary,".info">>, <<(?UPLOADS)/binary,"info/",F2/binary,".info">>),
@@ -218,6 +230,7 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data4= <<"done - renaming file/script file: ", F1/binary, "->", F2/binary, "....!">>,
 				Data4;
 			<<"editscrfile">> ->
+				send_msg(?SERVERS, <<"editscrfile from ", (pid())/binary>>),
 				Dataf = 
 					case lists:last(binary:split(Args, <<".">>, [global])) of
 						<<"cmd">> ->
@@ -244,6 +257,7 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data2= <<"done - edit script file...:editscrfile:^",Dataf/binary,"^:",Datafi/binary>>,
 				Data2;
 			<<"savescrfile">> ->
+				send_msg(?SERVERS, <<"savescrfile from ", (pid())/binary>>),
 				[Fname,Dataf,Datafi] = binary:split(Args, <<"^">>, [global]),
 				[_,T] = binary:split(Fname, <<".">>, [global]),
 				Fnres = 
@@ -273,30 +287,37 @@ websocket_handle({text, Msg}, Req, State) ->
 				Data2= <<"done - save script file...: ",Fname/binary, " - fnres -> ",Fnres/binary, " - finres -> ",Finres/binary >>,
 				Data2;
 			<<"clearcmsg">> ->
+				send_msg(?SERVERS, <<"clearcmsg from ", (pid())/binary>>),
 				io:format("~ndate: ~p -> done - clearing client message panel",[Date]),
 				Data2= <<"done - clearing client message panel:">>,
 				Data2;
 			<<"clearsmsg">> ->
+				send_msg(?SERVERS, <<"clearsmsg from ", (pid())/binary>>),
 				io:format("~ndate: ~p -> done - clearing *server message panel",[Date]),
 				Data2= <<"done - clearing *server message panel:">>,
 				Data2;
 			<<"cleardmsg">> ->
+				send_msg(?SERVERS, <<"cleardmsg from ", (pid())/binary>>),
 				io:format("~ndate: ~p -> done - clearing duplicates message panel",[Date]),
 				Data2= <<"done - clearing duplicates message panel:">>,
 				Data2;
 			<<"lockactivate">> ->
+				send_msg(?SERVERS, <<"lockactivate from ", (pid())/binary>>),
 				io:format("~ndate: ~p -> done - lock activate",[Date]),
 				Data2= <<"done - lock activate:">>,
 				Data2;
 			<<"lockloginok">> ->
+				send_msg(?SERVERS, <<"lockloginok from ", (pid())/binary>>),
 				io:format("~ndate: ~p -> done - login from lock ok",[Date]),
 				Data2= <<"done - login from lock ok:">>,
 				Data2;
 			<<"lockloginfailed">> ->
+				send_msg(?SERVERS, <<"lockloginfailed from ", (pid())/binary>>),
 				io:format("~ndate: ~p -> done - login from lock failed",[Date]),
 				Data2= <<"done - login from lock failed:">>,
 				Data2;
 			_ ->					
+				send_msg(?SERVERS, <<"unsupported command from ", (pid())/binary>>),
 				<<"unsupported command">>
 				end,
 				{reply, {text, Data3}, Req, State, hibernate};
@@ -652,8 +673,9 @@ Port/binary,
 			send('client-connected');
 			message(true, socket.readyState);
 
+     if (",?LOCK,") {
       $('#lockscr').click();
-
+    }
 ",
 (init_open(?ROOMS))/binary,
 (init2(?ROOMS,Ref_cons_time))/binary,
@@ -1249,9 +1271,6 @@ function progress(e){
  }
 
     $(document).on('click', '#lockscr', function(evt){
-",
-?LOCK,
-"
       $('#lockpane').show();
       $('#lockpane').attr('tabindex', 1);
       $('#unlockscr').attr('tabindex', -1);
@@ -1287,7 +1306,7 @@ function progress(e){
           $('#unlockscrpasswd').hide();
           e.preventDefault(); 
         } else 
-        while (ok) {
+
           if (passwd.length > 0){
             var regex=/^[a-zA-Z0-9-_\.]+$/;
             if (passwd.match(regex)) {
@@ -1302,11 +1321,12 @@ function progress(e){
                 $('#lockpane').hide();
                 send('0:lockloginok:');
               } else {
+                ok = false;
                 send('0:lockloginfailed:');
               }
             }
           }
-        }
+
       } else if (e.which == 27) {
         $('#unlockscr').show();
         $('#unlockscr').focus();
