@@ -356,9 +356,9 @@ pid() ->
 				_ ->
 					case whereis(hanwebs3) =:= Apid of
 						true -> 
-							"cons3"; 
+							<<"cons3">>; 
 						_ ->
-							"cons4" 
+							<<"cons4">> 
 					end
 			end
 	end.	
