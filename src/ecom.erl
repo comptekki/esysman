@@ -222,32 +222,32 @@ process_msg(Box, Com, Args) ->
 				<<"yumcheck">> ->
 					case ?PLATFORM of
 						"x" ->
-							os:cmd("/usr/bin/yum check-update"),
-							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":yumcheck -> "))/binary>>);
+							Res = os:cmd("/usr/bin/yum check-update"),
+							send_msg(?SERVERS, <<Box/binary,":yumcheck -> done...", (fix_log(Res))/binary>>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
 				<<"yumupdate">> ->
 					case ?PLATFORM of
 						"x" ->
-							os:cmd("/usr/bin/yum -y update"),
-							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":yumupdate -> "))/binary>>);
+							Res = os:cmd("/usr/bin/yum -y update"),
+							send_msg(?SERVERS, <<Box/binary,":yumupdate -> done...", (fix_log(Res))/binary>>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
 				<<"dnfcheck">> ->
 					case ?PLATFORM of
 						"x" ->
-							os:cmd("/usr/bin/dnf check-update"),
-							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":dnfcheck -> "))/binary>>);
+							Res = os:cmd("/usr/bin/dnf -y update"),
+							send_msg(?SERVERS, <<Box/binary,":dnfupdate -> done...", (fix_log(Res))/binary>>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
 				<<"dnfupdate">> ->
 					case ?PLATFORM of
 						"x" ->
-							os:cmd("/usr/bin/dnf -y update"),
-							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":dnfupdate -> "))/binary>>);
+							Res = os:cmd("/usr/bin/yum -y update"),
+							send_msg(?SERVERS, <<Box/binary,":dnfupdate -> done...", (fix_log(Res))/binary>>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
