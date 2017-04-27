@@ -221,7 +221,7 @@ process_msg(Box, Com, Args) ->
 					end;
 				<<"yumcheck">> ->
 					case ?PLATFORM of
-						"m" ->
+						"x" ->
 							os:cmd("/usr/bin/yum check-update"),
 							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":yumcheck -> "))/binary>>);
 						_ ->
@@ -229,7 +229,7 @@ process_msg(Box, Com, Args) ->
 					end;
 				<<"yumupdate">> ->
 					case ?PLATFORM of
-						"m" ->
+						"x" ->
 							os:cmd("/usr/bin/yum -y update"),
 							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":yumcheck -> "))/binary>>);
 						_ ->
@@ -237,7 +237,7 @@ process_msg(Box, Com, Args) ->
 					end;
 				<<"dnfcheck">> ->
 					case ?PLATFORM of
-						"m" ->
+						"x" ->
 							os:cmd("/usr/bin/dnf check-update"),
 							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":yumcheck -> "))/binary>>);
 						_ ->
@@ -245,7 +245,7 @@ process_msg(Box, Com, Args) ->
 					end;
 				<<"dnfupdate">> ->
 					case ?PLATFORM of
-						"m" ->
+						"x" ->
 							os:cmd("/usr/bin/dnf -y update"),
 							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":yumcheck -> "))/binary>>);
 						_ ->
