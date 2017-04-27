@@ -36,12 +36,7 @@
 
 %% API.
 
-start(_Type, Args) ->
-	[HTTP_Port,HTTPS_Port]=
-		case Args of
-			[] -> [8080,8443];
-			Any -> Any
-		end,
+start(_Type, _Arags) ->
 	Dispatch = cowboy_router:compile([
       {'_', [
 			 {"/esysman", websocket_handler, []},
@@ -51,19 +46,12 @@ start(_Type, Args) ->
 			 {'_', default_handler, []}
 		]}
 	]),
-	{ok, _} = 
-		cowboy:start_http(
-		  http,
-		  100,
-		  [{port, HTTP_Port}],
-		  [{env, [{dispatch, Dispatch}]}]
-		 ),
 	PrivDir = code:priv_dir(esysman),
 	{ok, _} = 
 		cowboy:start_https(
 		  https,
 		  100,
-		  [{port, HTTPS_Port},
+		  [{port, 8443},
 		   {certfile, PrivDir ++ "/ssl/cert.pem"},
 		   {keyfile, PrivDir ++ "/ssl/key.pem"},
 		   {password, ""}],
