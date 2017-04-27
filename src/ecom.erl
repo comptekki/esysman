@@ -231,7 +231,7 @@ process_msg(Box, Com, Args) ->
 					case ?PLATFORM of
 						"x" ->
 							os:cmd("/usr/bin/yum -y update"),
-							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":yumcheck -> "))/binary>>);
+							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":yumupdate -> "))/binary>>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
@@ -239,7 +239,7 @@ process_msg(Box, Com, Args) ->
 					case ?PLATFORM of
 						"x" ->
 							os:cmd("/usr/bin/dnf check-update"),
-							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":yumcheck -> "))/binary>>);
+							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":dnfcheck -> "))/binary>>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
@@ -247,7 +247,7 @@ process_msg(Box, Com, Args) ->
 					case ?PLATFORM of
 						"x" ->
 							os:cmd("/usr/bin/dnf -y update"),
-							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":yumcheck -> "))/binary>>);
+							send_msg(?SERVERS, <<Box/binary,(list_to_binary(":dnfupdate -> "))/binary>>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
