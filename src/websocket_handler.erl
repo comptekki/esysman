@@ -1506,14 +1506,14 @@ function progress(e){
  ( <span id='cntr'>0</span> ) <input style='width:75px;' type=button id=cntrst value=Reset> | <input style='width:65px;' type='button' id='lockscr' value='Lock'>
 </div> 
 
- <div id='tcoms'>",
+ <div id='tcoms'>
+<a href=# id='wsconnect' class='button' />Connect</a>
+<a href=# id='wsdisconnect' class='button lbar' />Disconnect</a>",
 (case is_list(login_is()) of
-	 true -> <<"<a href='esysman/logout' id='logout' class='button' />Logout</a><br>">>;
+	 true -> <<"<a href='esysman/logout' id='logout' class='button lbar' />Logout</a><br>">>;
 	 false -> <<"">>
  end)/binary,
 "
-<a href=# id='wsconnect' class='button' />Connect</a>
-<a href=# id='wsdisconnect' class='button lbar' />Disconnect</a>
 <div class='brk'></div>
 <a href=# id='sacs' class='button' />Select/UnSelect All Coms</a>
 <div class='brk'></div>
