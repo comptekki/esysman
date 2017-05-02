@@ -651,6 +651,15 @@ Host/binary,
 Port/binary,
 "';
 
+     if (",?AUTOLOCK,") {
+      $('#lockscr').click();
+    }
+",
+(init_open(?ROOMS))/binary,
+(init2(?ROOMS,Ref_cons_time))/binary,
+"
+
+
   var socket = 0;
   var ws_str = '';
 
@@ -683,13 +692,6 @@ Port/binary,
 			send('client-connected');
 			message(true, socket.readyState);
 
-     if (",?AUTOLOCK,") {
-      $('#lockscr').click();
-    }
-",
-(init_open(?ROOMS))/binary,
-(init2(?ROOMS,Ref_cons_time))/binary,
-"
 		}
 
 		socket.onmessage = function(m){
