@@ -656,10 +656,10 @@ Port/binary,
   var socket = 0;
   var ws_str = '';
 
-  wsconnect();
+//  wsconnect();
 
 
-  function wsconnect() {
+//  function wsconnect() {
   
     if (",?AUTOLOCK,") {
       $('#lockscr').click();
@@ -905,7 +905,7 @@ Port/binary,
 	   message(true,'Error'+exception)
 	}
 
-  } // end function connect
+//  } // end function connect
 
     function chk_users(ignore,users) {
        retUsers='';
