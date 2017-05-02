@@ -651,13 +651,6 @@ Host/binary,
 Port/binary,
 "';
 
-     if (",?AUTOLOCK,") {
-      $('#lockscr').click();
-    }
-",
-(init_open(?ROOMS))/binary,
-(init2(?ROOMS,Ref_cons_time))/binary,
-"
 
 
   var socket = 0;
@@ -668,6 +661,9 @@ Port/binary,
 
   function wsconnect() {
   
+    if (",?AUTOLOCK,") {
+      $('#lockscr').click();
+    }
 
 	if(window.location.protocol == 'https:')
         ws_str='wss://'+host+':'+port+'/esysman';
@@ -691,6 +687,10 @@ Port/binary,
 		//	console.log('onopen called');
 			send('client-connected');
 			message(true, socket.readyState);
+",
+(init_open(?ROOMS))/binary,
+(init2(?ROOMS,Ref_cons_time))/binary,
+"
 
 		}
 
