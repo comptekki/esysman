@@ -651,10 +651,19 @@ Host/binary,
 Port/binary,
 "';
 
+  var socket = 0;
+  var ws_str = '';
+
+  wsconnect();
+
+
+  function wsconnect() {
+  
+
 	if(window.location.protocol == 'https:')
-        var ws_str='wss://'+host+':'+port+'/esysman';
+        ws_str='wss://'+host+':'+port+'/esysman';
     else 
-        var ws_str='ws://'+host+':'+port+'/esysman';
+        ws_str='ws://'+host+':'+port+'/esysman';
 
 	var r=false;
 	var rall=false;
@@ -664,8 +673,9 @@ Port/binary,
     var retUsers='';
 
 	try{
-        var socket = new WebSocket(ws_str);
 
+
+        socket = new WebSocket(ws_str);
 		message(true, socket.readyState);
 
 		socket.onopen = function(){
@@ -893,6 +903,8 @@ Port/binary,
 	   message(true,'Error'+exception)
 	}
 
+  } // end function connect
+
     function chk_users(ignore,users) {
        retUsers='';
        cnt=0;
@@ -1049,6 +1061,8 @@ Port/binary,
         }
 	}
 
+
+
 	function socket_status(readyState){
 		if (readyState == 0)
 			return 'Socket status: ' + socket.readyState +' (Connecting)'
@@ -1060,7 +1074,11 @@ Port/binary,
 			return 'Socket status: ' + socket.readyState +' (Closed)'
 	}
 
-	$('#disconnect').click(function(){
+	$('#wsconnect').click(function(){
+        wsconnect();
+	});
+
+	$('#wsdisconnect').click(function(){
         send('close')
 	});
 
@@ -1444,6 +1462,7 @@ function progress(e){
           $(':checkbox').attr('checked', 'checked');  
       }
     });
+
 });
 
 </script>
@@ -1493,8 +1512,10 @@ function progress(e){
 	 false -> <<"">>
  end)/binary,
 "
-<a href=# id='disconnect' class='button' />Disconnect</a>
-<a href=# id='sacs' class='button lbar' />S/UnS All Coms</a>
+<a href=# id='wsconnect' class='button' />Connect</a>
+<a href=# id='wsdisconnect' class='button lbar' />Disconnect</a>
+<div class='brk'></div>
+<a href=# id='sacs' class='button' />Select/UnSelect All Coms</a>
 <div class='brk'></div>
 ",
 ( mkAllRoomsComs([
