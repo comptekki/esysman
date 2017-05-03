@@ -652,14 +652,14 @@ Port/binary,
 "';
 
 
-
+	var rall=false;
   var socket = 0;
   var ws_str = '';
 
-//  wsconnect();
+  wsconnect();
 
 
-//  function wsconnect() {
+  function wsconnect() {
   
     if (",?AUTOLOCK,") {
       $('#lockscr').click();
@@ -671,7 +671,7 @@ Port/binary,
         ws_str='ws://'+host+':'+port+'/esysman';
 
 	var r=false;
-	var rall=false;
+	rall=false;
 	var first=true;
     var tot_cnt=0;
 	var shutbox='';
@@ -905,7 +905,7 @@ Port/binary,
 	   message(true,'Error'+exception)
 	}
 
-//  } // end function connect
+  } // end function connect
 
     function chk_users(ignore,users) {
        retUsers='';
