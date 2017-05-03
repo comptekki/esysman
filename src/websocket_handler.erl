@@ -651,8 +651,7 @@ Host/binary,
 Port/binary,
 "';
 
-
-	var rall=false;
+  var rall=false;
   var socket = 0;
   var ws_str = '';
 
@@ -661,10 +660,6 @@ Port/binary,
 
   function wsconnect() {
   
-    if (",?AUTOLOCK,") {
-      $('#lockscr').click();
-    }
-
 	if(window.location.protocol == 'https:')
         ws_str='wss://'+host+':'+port+'/esysman';
     else 
@@ -678,8 +673,6 @@ Port/binary,
     var retUsers='';
 
 	try{
-
-
         socket = new WebSocket(ws_str);
 		message(true, socket.readyState);
 
@@ -905,7 +898,10 @@ Port/binary,
 	   message(true,'Error'+exception)
 	}
 
+
+
   } // end function connect
+
 
     function chk_users(ignore,users) {
        retUsers='';
@@ -965,6 +961,23 @@ Port/binary,
 			message(true,'Error'+exception)
 		}
 	}
+
+   function lockscr() {
+      $('#lockpane').show();
+      $('#lockpane').attr('tabindex', 1);
+      $('#unlockscr').attr('tabindex', -1);
+
+      $('#unlockscr').show();
+      $('#unlockscr').focus();
+      $('#unlockscrpasswd').val('');
+      $('#unlockscrpasswd').hide();
+
+      send('0:lockactivate:');
+   }
+
+  if (",?AUTOLOCK,") {
+      lockscr();
+  }
 
     function getnow() {
         var jsnow = new Date();
@@ -1291,16 +1304,7 @@ function progress(e){
  }
 
     $(document).on('click', '#lockscr', function(evt){
-      $('#lockpane').show();
-      $('#lockpane').attr('tabindex', 1);
-      $('#unlockscr').attr('tabindex', -1);
-
-      $('#unlockscr').show();
-      $('#unlockscr').focus();
-      $('#unlockscrpasswd').val('');
-      $('#unlockscrpasswd').hide();
-
-      send('0:lockactivate:');
+      lockscr();
     });
 
     $(document).keydown(function(objEvent) {
