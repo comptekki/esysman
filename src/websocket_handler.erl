@@ -655,6 +655,13 @@ Port/binary,
   var socket = 0;
   var ws_str = '';
 
+	var r=false;
+	rall=false;
+	var first=true;
+    var tot_cnt=0;
+	var shutbox='';
+    var retUsers='';
+
 //  wsconnect();
 
 
@@ -887,17 +894,9 @@ Port/binary,
     else 
         ws_str='ws://'+host+':'+port+'/esysman';
 
-	var r=false;
-	rall=false;
-	var first=true;
-    var tot_cnt=0;
-	var shutbox='';
-    var retUsers='';
-
 	try{
 
       wsconnect();
-
 
 	} catch(exception) {
 	   message(true,'Error'+exception)
