@@ -662,8 +662,6 @@ Port/binary,
 	var shutbox='';
     var retUsers='';
 
-//  wsconnect();
-
 
   function wsconnect() {
         socket = new WebSocket(ws_str);
@@ -677,7 +675,6 @@ Port/binary,
 (init_open(?ROOMS))/binary,
 (init2(?ROOMS,Ref_cons_time))/binary,
 "
-
 		}
 
 		socket.onmessage = function(m){
@@ -894,13 +891,15 @@ Port/binary,
     else 
         ws_str='ws://'+host+':'+port+'/esysman';
 
-	try{
+  wsconnect();
 
-      wsconnect();
+//	try{
 
-	} catch(exception) {
-	   message(true,'Error'+exception)
-	}
+//      wsconnect();
+
+//	} catch(exception) {
+//	   message(true,'Error: '+exception)
+//	}
 
 
     function chk_users(ignore,users) {
