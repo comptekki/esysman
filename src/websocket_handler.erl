@@ -662,6 +662,19 @@ Port/binary,
 	var shutbox='';
     var retUsers='';
 
+   function lockscr() {
+      $('#lockpane').show();
+      $('#lockpane').attr('tabindex', 1);
+      $('#unlockscr').attr('tabindex', -1);
+
+      $('#unlockscr').show();
+      $('#unlockscr').focus();
+      $('#unlockscrpasswd').val('');
+      $('#unlockscrpasswd').hide();
+
+      send('0:lockactivate:');
+   }
+
 
   function wsconnect() {
         socket = new WebSocket(ws_str);
@@ -675,7 +688,12 @@ Port/binary,
 (init_open(?ROOMS))/binary,
 (init2(?ROOMS,Ref_cons_time))/binary,
 "
-		}
+
+      if (",?AUTOLOCK,") {
+        lockscr();
+      }
+
+	}
 
 		socket.onmessage = function(m){
 //			console.log('onmessage called');
@@ -885,13 +903,13 @@ Port/binary,
 		}
 
   } // end function wsconnect()
+
   
-  if(window.location.protocol == 'https:')
-    ws_str='wss://'+host+':'+port+'/esysman';
+   if(window.location.protocol == 'https:')
+     ws_str='wss://'+host+':'+port+'/esysman';
    else 
      ws_str='ws://'+host+':'+port+'/esysman';
 
-//    wsconnect();
 
 	try{
 
@@ -957,26 +975,10 @@ Port/binary,
 		try{
 			socket.send(msg)
 		} catch(exception){
-			message(true,'Error'+exception)
+			message(true,'Error: '+exception)
 		}
 	}
 
-   function lockscr() {
-      $('#lockpane').show();
-      $('#lockpane').attr('tabindex', 1);
-      $('#unlockscr').attr('tabindex', -1);
-
-      $('#unlockscr').show();
-      $('#unlockscr').focus();
-      $('#unlockscrpasswd').val('');
-      $('#unlockscrpasswd').hide();
-
-      send('0:lockactivate:');
-   }
-
-  if (",?AUTOLOCK,") {
-      lockscr();
-  }
 
     function getnow() {
         var jsnow = new Date();
