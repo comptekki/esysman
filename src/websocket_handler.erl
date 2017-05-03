@@ -655,24 +655,10 @@ Port/binary,
   var socket = 0;
   var ws_str = '';
 
-  wsconnect();
+//  wsconnect();
 
 
   function wsconnect() {
-  
-	if(window.location.protocol == 'https:')
-        ws_str='wss://'+host+':'+port+'/esysman';
-    else 
-        ws_str='ws://'+host+':'+port+'/esysman';
-
-	var r=false;
-	rall=false;
-	var first=true;
-    var tot_cnt=0;
-	var shutbox='';
-    var retUsers='';
-
-	try{
         socket = new WebSocket(ws_str);
 		message(true, socket.readyState);
 
@@ -894,13 +880,28 @@ Port/binary,
 			message(true,'Socket Status: '+e.data)
 		}
 
+  } // end function wsconnect()
+  
+	if(window.location.protocol == 'https:')
+        ws_str='wss://'+host+':'+port+'/esysman';
+    else 
+        ws_str='ws://'+host+':'+port+'/esysman';
+
+	var r=false;
+	rall=false;
+	var first=true;
+    var tot_cnt=0;
+	var shutbox='';
+    var retUsers='';
+
+	try{
+
+      wsconnect();
+
+
 	} catch(exception) {
 	   message(true,'Error'+exception)
 	}
-
-
-
-  } // end function connect
 
 
     function chk_users(ignore,users) {
