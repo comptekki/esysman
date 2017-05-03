@@ -886,20 +886,20 @@ Port/binary,
 
   } // end function wsconnect()
   
-	if(window.location.protocol == 'https:')
-        ws_str='wss://'+host+':'+port+'/esysman';
-    else 
-        ws_str='ws://'+host+':'+port+'/esysman';
+  if(window.location.protocol == 'https:')
+    ws_str='wss://'+host+':'+port+'/esysman';
+   else 
+     ws_str='ws://'+host+':'+port+'/esysman';
 
-  wsconnect();
+//    wsconnect();
 
-//	try{
+	try{
 
-//      wsconnect();
+      wsconnect();
 
-//	} catch(exception) {
-//	   message(true,'Error: '+exception)
-//	}
+	} catch(exception) {
+	   message(true,'Error: '+exception)
+	}
 
 
     function chk_users(ignore,users) {
