@@ -15,6 +15,9 @@
 
 :next
 
+rem remove rem below to remove service, then close script
+rem @pause
+
 @FOR /F %%s IN ('powershell -command "(get-item env:'computername').Value.ToLower()"') DO @set comp=%%s
 
 @set module=-s ecom
@@ -47,6 +50,7 @@
 @echo.
 @echo setting auto delay to 1 second...
 
+@reg delete HKLM\SYSTEM\CurrentControlSet\Control\AutoStartDelay
 @reg add HKLM\SYSTEM\CurrentControlSet\Control /v AutoStartDelay /t REG_DWORD /d 1
 
 @echo.
