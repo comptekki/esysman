@@ -22,7 +22,7 @@ rem @pause
 
 @set module=-s ecom
 @set onfail=-onfail restart
-@set node=-name ecom@%comp%.nr.usu.edu
+@set node=-name ecom@%comp%.domain
 @rem echo %node%
 @set root=-w "C:/windows/erl"
 @set srvc_name=-i 0ecom
