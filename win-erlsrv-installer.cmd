@@ -38,9 +38,7 @@
 
 @echo set service auto-delay
 @FOR /F "delims=" %%i IN ('sc getkeyname 0ecom') DO set z=%%i
-rem @echo %z%
 @for /f "tokens=3" %%i IN ("%z%") DO set erl_servicedispname=%%i
-rem @echo %erl_servicedispname%
 
 @echo.
 
@@ -51,6 +49,7 @@ rem @echo %erl_servicedispname%
 
 @reg add HKLM\SYSTEM\CurrentControlSet\Control /v AutoStartDelay /t REG_DWORD /d 1
 
+@echo.
 @pause
 
 
