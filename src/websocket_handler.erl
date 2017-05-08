@@ -47,6 +47,8 @@
 -include("esysman.hrl").
 -include("db.hrl").
 
+%%
+
 init(_Transport, Req, []) ->
 	case cowboy_req:header(<<"upgrade">>, Req) of
 		{undefined, Req2} ->
@@ -57,8 +59,12 @@ init(_Transport, Req, []) ->
 			{upgrade, protocol, cowboy_websocket}
 	end.
 
+%%
+
 terminate(_Reason, _Req, _State) ->
 	ok.
+
+%%
 
 websocket_init(_Any, Req, []) ->
 	case lists:member(hanwebs, registered()) of
@@ -82,6 +88,8 @@ websocket_init(_Any, Req, []) ->
 	end,
 	Req2 = cowboy_req:compact(Req),
 	{ok, Req2, undefined, hibernate}.
+
+%%
 
 websocket_handle({text, <<"close">>}, Req, State) ->
 			{shutdown, Req, State};
@@ -321,9 +329,10 @@ websocket_handle({text, Msg}, Req, State) ->
 				<<"unsupported command">>
 				end,
 				{reply, {text, Data3}, Req, State, hibernate};
-
 websocket_handle(_Any, Req, State) ->
 	{ok, Req, State}.
+
+%%
 
 dup(B,Acc) when Acc > 1 ->	
     B2=dup(B, Acc-1),
@@ -331,11 +340,15 @@ dup(B,Acc) when Acc > 1 ->
 dup(B,1) ->
     B.
 
+%%
+
 send_msg([Server|Rest], Msg) ->
 	msg_to_consoles(Server, ?CONSOLES, Msg),
 	send_msg(Rest, Msg);
 send_msg([], _Msg) ->
 	[].
+
+%%
 
 msg_to_consoles(Server, [Console|Rest], Msg) ->
 	{Console, Server} ! Msg,
@@ -343,6 +356,7 @@ msg_to_consoles(Server, [Console|Rest], Msg) ->
 msg_to_consoles(_Server, [], _Msg) ->
 	[].
 
+%%
 
 pid() ->
 	Apid = self(),
@@ -363,6 +377,8 @@ pid() ->
 			end
 	end.	
 
+%%
+
 websocket_info(PreMsg, Req, State) ->
 	Msg=
 		case PreMsg of
@@ -377,6 +393,8 @@ websocket_info(PreMsg, Req, State) ->
 
 	chk_insert(binary:split(Msg3, <<"/">>, [global])),
 	{reply, {text, Msg3}, Req, State, hibernate}.
+
+%%
 
 chk_insert([_]) -> ok;
 chk_insert([_, <<"pong">>]) -> ok;
@@ -405,8 +423,12 @@ chk_insert([B1, _, B2]) ->
 	end;
 chk_insert(_Data) when length(_Data) >= 2 -> ok.
 
+%%
+
 websocket_terminate(_Reason, _Req, _State) ->
 	ok.
+
+%%
 
 fire_wall(Req) ->	
 	{{PeerAddress, _Port}, _Req}=cowboy_req:peer(Req),
@@ -426,7 +448,7 @@ fire_wall(Req) ->
 		off -> allow
 	end.
 
-%
+%%
 
 fwDenyMessage(Req, State) ->
 	{ok, Req2} =
@@ -469,7 +491,7 @@ checkCreds(UnamePasswds, Req, _State) ->
 			{pass, Req2}
 	end.
 
-%
+%%
 
 checkCreds([{Uname,Passwd}|UnamePasswds], Uarg, Parg, Req) ->
     case Uname of
@@ -488,7 +510,7 @@ checkCreds([{Uname,Passwd}|UnamePasswds], Uarg, Parg, Req) ->
 checkCreds([], _Uarg, _Parg, Req) ->
 	{fail, Req}.
 
-%
+%%
 
 checkPost(UnamePasswds,Req) ->
 	case cowboy_req:method(Req) of
@@ -504,7 +526,7 @@ checkPost(UnamePasswds,Req) ->
 			{fail,Req}
 	end.
 
-%
+%%
 
 get_cookie_val() ->
 	list_to_binary(
@@ -512,7 +534,7 @@ get_cookie_val() ->
 		calendar:datetime_to_gregorian_seconds({date(), time()})
 	   )).
 
-%
+%%
 
 app_login(Req, State) ->
 	case fire_wall(Req) of
@@ -576,7 +598,7 @@ hi
             fwDenyMessage(Req, State)
     end.
 
-%
+%%
 
 handle(Req, State) ->
 case fire_wall(Req) of
@@ -603,7 +625,7 @@ case fire_wall(Req) of
 			fwDenyMessage(Req, State)
 	end.
 
-%
+%%
 
 app_front_end(Req, State) ->
 	{Host, Req2} = cowboy_req:host(Req),
@@ -1606,12 +1628,14 @@ function progress(e){
 
 ">>.
 
- %%
+%%
 
 toggles([Room|Rooms]) ->
 	<<(toggles_rm(Room))/binary,(toggles(Rooms))/binary>>;
 toggles([]) ->
 	<<>>.
+
+%%
 
 toggles_rm([Rm|_]) ->
 	<<"
@@ -1622,10 +1646,14 @@ toggles_rm([Rm|_]) ->
 	 });
 ">>.
 
+%%
+
 toggle_items([Room|Rooms],Rm) ->
 	<<(toggle_item(Room,Rm))/binary,(toggle_items(Rooms,Rm))/binary>>;
 toggle_items([],_) ->
 	<<>>.
+
+%%
 
 toggle_item([Room|_],Rm) ->
 	case Room of
@@ -1656,7 +1684,7 @@ toggle_item([Room|_],Rm) ->
 toggle_item([],_) ->
 	<<>>.
 
- %%
+%%
 
 jsAll([Room|Rooms],Com) ->
 	[Rm|_]=Room,
@@ -1674,7 +1702,7 @@ jsAll([Room|Rooms],Com) ->
 jsAll([],_) ->
 	<<>>.
 
- %%
+%%
 
 ifcomcopy(Rm,Com) ->
 <<"
@@ -1690,7 +1718,7 @@ ifcomcopy(Rm,Com) ->
 
 ">>.
 
- %%
+%%
 
 jsAllConfirm([Room|Rooms],Com) ->
 	[Rm|_]=Room,
@@ -1708,7 +1736,7 @@ jsAllConfirm([Room|Rooms],Com) ->
 jsAllConfirm([],_) ->
 	<<>>.
 
- %%
+%%
 
 mkjsAllSelect_copy([Room|Rooms]) ->
 	<<(mkjsAllSelectRm_copy(Room))/binary,(mkjsAllSelect_copy(Rooms))/binary>>;
@@ -1726,10 +1754,14 @@ mkjsAllSelectRm_copy([Room|Rows]) ->
 
  ">>.
 
+%%
+
 jsAllSelectRows_copy(Room,[Row|Rows]) ->
 	<<(jsAllSelect_copy(Room,Row))/binary,(jsAllSelectRows_copy(Room,Rows))/binary>>;
 jsAllSelectRows_copy(_Room,[]) ->
 	<<>>.
+
+%%
 
 jsAllSelect_copy(Rm,[{Wk,_FQDN,_MacAddr,_Os}|Wks]) ->
 	case Wk of
@@ -1747,12 +1779,14 @@ jsAllSelect_copy(Rm,[{Wk,_FQDN,_MacAddr,_Os}|Wks]) ->
 jsAllSelect_copy(_Room,[]) ->
 	<<>>.
 
- %%
+%%
 
 mkjsSelect_copy([Room|Rooms]) ->
 	<<(mkjsSelectRm_copy(Room))/binary,(mkjsSelect_copy(Rooms))/binary>>;
 mkjsSelect_copy([]) ->
 	<<>>.
+
+%%
 
 mkjsSelectRm_copy([_Room|Rows]) ->
 	jsSelectRows_copy(Rows).
@@ -1761,6 +1795,8 @@ jsSelectRows_copy([Row|Rows]) ->
 	<<(jsSelect_copy(Row))/binary,(jsSelectRows_copy(Rows))/binary>>;
 jsSelectRows_copy([]) ->
 	<<>>.
+
+%%
 
 jsSelect_copy([{Wk,_FQDN,_MacAddr,_Os}|Wks]) ->
 	case Wk of
@@ -1777,12 +1813,14 @@ jsSelect_copy([{Wk,_FQDN,_MacAddr,_Os}|Wks]) ->
 jsSelect_copy([]) ->
 	<<>>.
 
- %%
+%%
 
 mkjsAllSelect_com([Room|Rooms]) ->
 	<<(mkjsAllSelectRm_com(Room))/binary,(mkjsAllSelect_com(Rooms))/binary>>;
 mkjsAllSelect_com([]) ->
 	<<>>.
+
+%%
 
 mkjsAllSelectRm_com([Room|Rows]) ->
 	<<"
@@ -1795,10 +1833,14 @@ mkjsAllSelectRm_com([Room|Rows]) ->
 
 ">>.
 
+%%
+
 jsAllSelectRows_com(Room,[Row|Rows]) ->
 	<<(jsAllSelect_com(Room,Row))/binary,(jsAllSelectRows_com(Room,Rows))/binary>>;
 jsAllSelectRows_com(_Room,[]) ->
 	<<>>.
+
+%%
 
 jsAllSelect_com(Rm,[{Wk,_FQDN,_MacAddr,_Os}|Wks]) ->
 	case Wk of
@@ -1823,6 +1865,8 @@ mkjsSelect_com([Room|Rooms]) ->
 mkjsSelect_com([]) ->
 	<<>>.
 
+%%
+
 mkjsSelectRm_com([_Room|Rows]) ->
 	jsSelectRows_com(Rows).
 
@@ -1830,6 +1874,8 @@ jsSelectRows_com([Row|Rows]) ->
 	<<(jsSelect_com(Row))/binary,(jsSelectRows_com(Rows))/binary>>;
 jsSelectRows_com([]) ->
 	<<>>.
+
+%%
 
 jsSelect_com([{Wk,_FQDN,_MacAddr,_Os}|Wks]) ->
 	case Wk of
@@ -1896,11 +1942,15 @@ mkjsToggleAllChk([]) ->
 mkAllRoomsComs(Coms) ->
 	mkARComs(?ROOMS,Coms).
 
+%%
+
 mkARComs([Room|Rooms],Coms) ->
 	[Rm|_]=Room,
 	<<"<div id='",Rm/binary,"_coms' class='room'>",(mkARComsComs(Rm,Coms))/binary,"</div>",(mkARComs(Rooms,Coms))/binary>>;
 mkARComs([],_Coms) ->
 	<<>>.
+
+%%
 
 mkARComsComs(Rm,[{Com,ComText}|Coms]) ->
 	<<"
@@ -1932,6 +1982,8 @@ mkARComsComs(_Rm,[]) ->
 ",(mkARComsInput(Rooms,{Com,ComText}))/binary>>;
 mkARComsInput([],_Com) ->
 	<<>>.
+
+%%
 
 mkARComsComsInput(Rm,{Com,ComText}) ->
 	<<"
@@ -1974,6 +2026,8 @@ mkAllRoomsSelectUnselectToggleAll([Room|Rooms]) ->
  mkAllRoomsSelectUnselectToggleAll([]) ->
 	<<>>.
 
+%%
+
 mkselunseltogAll(Rm) ->
 	<<"
   <a href='#' id='mngscripts' class='button' />Manage Scripts</a><div id='mngscrbox'></div><br><br>
@@ -1982,12 +2036,14 @@ mkselunseltogAll(Rm) ->
   <a href='#' id='toggleAll",Rm/binary,"' class='button' />Toggle All</a><br>
 ">>.
 
- %%
+%%
 
 mkRooms([Room|Rooms]) ->
 	<<(mkRoom(Room))/binary,(mkRooms(Rooms))/binary>>;
 mkRooms([]) ->
 	<<>>.
+
+%%
 
 mkRoom([Room|Rows]) ->
 	<<"
@@ -1998,6 +2054,8 @@ mkRoom([Room|Rows]) ->
  </div>
 
  ">>.
+
+%%
 
 mkRoomRows([Row|Rows],Rm,RowCnt) ->
 	<<"
@@ -2014,6 +2072,8 @@ mkRoomRows([Row|Rows],Rm,RowCnt) ->
 	 ,(mkRoomRows(Rows,Rm,RowCnt+1))/binary>>;
  mkRoomRows([],_Rm,_RowCnt) ->
 	 <<>>.
+
+%%
 
 divhc(Rm,[{Wk,FQDN,MacAddr,_Os}|Wks],ColCnt) ->
 	<<(case Wk of
@@ -2039,10 +2099,9 @@ divhc(Rm,[{Wk,FQDN,MacAddr,_Os}|Wks],ColCnt) ->
 divhc(_Rm,[],_ColCnt) ->
 	<<>>.
 
+%%
+
 divc({Wk,_FQDN,_MacAddr,_Os}) ->
-%	<<"<div class='ltd'>.</div>">>;
-%divc({0,_FQDN,_MacAddr,_Os}) ->
-%Wk= <<".">>,
 	case Wk of
 		<<".">> ->	<<"<div class='ltd'>.</div>">>;
 		   _ ->
@@ -2094,7 +2153,7 @@ divc({Wk,_FQDN,_MacAddr,_Os}) ->
 ">>
 	end.
 
-%
+%%
 
 selections([Com|Coms]) ->
 <<"
@@ -2103,12 +2162,14 @@ selections([Com|Coms]) ->
 selections([]) ->
 <<>>.
 	
-%
+%%
 
 mkcomButtons([Room|Rooms]) ->
 	<<(comButtonsRm(Room))/binary,(mkcomButtons(Rooms))/binary>>;
 mkcomButtons([]) ->
 	<<>>.
+
+%%
 
 comButtonsRm([Room|Rows]) ->
     comButtonsRows(Rows,Room,1).
@@ -2117,6 +2178,8 @@ comButtonsRows([Row|Rows],Rm,RowCnt) ->
 	<<(comButtons(Row,Rm,RowCnt,1))/binary,(comButtonsRows(Rows,Rm,RowCnt+1))/binary>>;
 comButtonsRows([],_Rm,_RowCnt) ->
 	<<>>.
+
+%%
 
 comButtons([{Wk,FQDN,MacAddr,_Os}|Wks],Rm,RowCnt,ColCnt) ->
 	case Wk of
@@ -2246,6 +2309,8 @@ mkjsComAll([Room|Rooms],Com) ->
 mkjsComAll([],_Com) ->
 	<<>>.
 
+%%
+
 mkjsComAllRm([Rm|Rows],Com) ->
 <<"
 
@@ -2256,10 +2321,14 @@ function ",Com/binary,"All",Rm/binary,"(){
 
 ">>.
 
+%%
+
 mkjsComAllRows([Row|Rows],Rm,Com) ->
 	<<(mkjsComAllRow(Row,Rm,Com))/binary,(mkjsComAllRows(Rows,Rm,Com))/binary>>;
 mkjsComAllRows([],_Rm,_Com) ->
     <<>>.
+
+%%
 
 mkjsComAllRow([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm,Com) ->
 	case Wk of
@@ -2299,6 +2368,8 @@ init2([Room|Rooms],Ref_cons_time) ->
 init2([],_) ->
     <<>>.
 
+%%
+
 init2_rm([Rm|_],Ref_cons_time) ->
 <<"
                      interval_",Rm/binary,"_ref_cons=setInterval(refresh_cons_",Rm/binary,",",(list_to_binary(integer_to_list(Ref_cons_time)))/binary,");
@@ -2313,6 +2384,8 @@ get_rms_keys([Room|Rooms],Key) ->
 get_rms_keys([],_) ->
 	[].
 
+%%
+
 rms_keys([{Rm,_}|Rms],Rms_ks) ->
 	<<"
     $('#",Rm/binary,"toggle').keydown(function(event) {
@@ -2325,12 +2398,14 @@ rms_keys([{Rm,_}|Rms],Rms_ks) ->
 rms_keys([],_) ->
 	<<>>.
 
-%
+%%
 
 loop_rms_keys([Rm|Rms]) ->
 	<<(loop_rm_keys(Rm))/binary,(loop_rms_keys(Rms))/binary>>;
 loop_rms_keys([]) ->
 	<<>>.
+
+%%
 
 loop_rm_keys({Rm,Key}) ->
 <<"
@@ -2340,7 +2415,7 @@ loop_rm_keys({Rm,Key}) ->
         }
 ">>.
 
-%
+%%
 
 chk_dupe_usersa(Rooms) ->
 <<"
@@ -2357,18 +2432,22 @@ chk_dupe_users_rms([Room|Rooms]) ->
 chk_dupe_users_rms([]) ->
 	<<>>.
 
+%%
+
 jschkduRma([Rm|_Rows]) ->
 	<<"
     chk_dupe_users_",Rm/binary,"();
 
 ">>.
 
-%
+%%
 
 chk_dupe_users([Room|Rooms]) ->
 	<<(jschkduRm(Room))/binary,(chk_dupe_users(Rooms))/binary>>;
 chk_dupe_users([]) ->
 	<<>>.
+
+%%
 
 jschkduRm([Rm|Rows]) ->
 	<<"
@@ -2411,10 +2490,14 @@ function chk_dupe_users_",Rm/binary,"(){
 
 ">>.
 
+%%
+
 jschkduRows([Row|Rows],Rm) ->
 	<<(jschkduRow(Row,Rm))/binary,(jschkduRows(Rows,Rm))/binary>>;
 jschkduRows([],_Rm) ->
     <<>>.
+
+%%
 
 jschkduRow([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm) ->
 	case Wk of
@@ -2440,24 +2523,28 @@ jschkduRow([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm) ->
 jschkduRow([],_Rm) ->
 	<<>>.
 
-%
+%%
 
 switcher([Room|Rooms]) ->
 	<<(switcher_rm(Room))/binary,(switcher(Rooms))/binary>>;
 switcher([]) ->
 	<<>>.
 
+%%
+
 switcher_rm([Rm|_Rows]) ->
 	<<"
 <a href='#' id='",Rm/binary,"toggle' class='button1' />[0]-",Rm/binary,"</a>
 ">>.
 
-%
+%%
 
 refresh_cons([Room|Rooms]) ->
 	<<(jsrefcons_rm(Room))/binary,(refresh_cons(Rooms))/binary>>;
 refresh_cons([]) ->
 	<<>>.
+
+%%
 
 jsrefcons_rm([Rm|Rows]) ->
 	<<"
@@ -2469,10 +2556,14 @@ function refresh_cons_",Rm/binary,"(){
 }
 ">>.
 
+%%
+
 jsrefcons_rows([Row|Rows],Rm) ->
 	<<(jsrefcons_row(Row,Rm))/binary,(jsrefcons_rows(Rows,Rm))/binary>>;
 jsrefcons_rows([],_Rm) ->
     <<>>.
+
+%%
 
 jsrefcons_row([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm) ->
 	case Wk of
@@ -2523,6 +2614,8 @@ list_up_fls() ->
 	Tail = <<"</table><a href=# class='button closescrslist'>[Close]</a></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div><div id='scrtxtbox'>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br></div>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
 	<<Head/binary,Mid/binary,Tail/binary>>.
 
+%%
+
 mng_file(File) ->
 	{Res, LnFile} = file:read_link(binary_to_list(?UPLOADS) ++ "/" ++ File),
 
@@ -2557,6 +2650,8 @@ mng_file(File) ->
 			end
 	end.
 
+%%
+
 tr1(File, Res, Fdiv, Ldiv, LnFile) ->
 	case Res of
 		ok ->
@@ -2565,11 +2660,15 @@ tr1(File, Res, Fdiv, Ldiv, LnFile) ->
 			"<tr class='r'><td></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>"
 		end.
 
+%%
+
 tr(File, 0) ->
 	"<tr class='r'><td><a href=# class='button dbut'>Del</a><a href=# class='button rbut'>Ren</a><a href=# class='button lbut'>ln</a><a href=# class='button ebut'>Edit</a></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>";
 
 tr(File, 1) ->
 	"<tr class='r'><td><a href=# class='button dbut'>Del</a><a href=# class='button rbut'>Ren</a><a href=# class='button lbut'>ln</a></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>".
+
+%%
 
 mng_file_info(File) ->
         Info = case file:consult(<<(?UPLOADS)/binary,"info/",(erlang:list_to_binary(File))/binary,".info">>) of
