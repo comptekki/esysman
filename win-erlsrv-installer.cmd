@@ -50,8 +50,7 @@ rem @pause
 @echo.
 @echo setting auto delay to 1 second...
 
-@reg delete HKLM\SYSTEM\CurrentControlSet\Control\AutoStartDelay
-@reg add HKLM\SYSTEM\CurrentControlSet\Control /v AutoStartDelay /t REG_DWORD /d 1
+@reg add HKLM\SYSTEM\CurrentControlSet\Control /v AutoStartDelay /t REG_DWORD /d 1 /f
 
 @echo.
 @pause
