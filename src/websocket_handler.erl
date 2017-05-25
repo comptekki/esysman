@@ -1533,6 +1533,7 @@ function progress(e){
    <option ",?SELECTEDOFF," value='0'>Off</option>
  </select>
  ( <span id='cntr'>0</span> ) <input style='width:75px;' type=button id=cntrst value=Reset> | <input style='width:65px;' type='button' id='lockscr' value='Lock'>
+  | <input id='mngscripts' type='button' value='Manage Scripts'><div id='mngscrbox'></div>
 </div> 
 
  <div id='tcoms'>
@@ -2030,7 +2031,6 @@ mkAllRoomsSelectUnselectToggleAll([Room|Rooms]) ->
 
 mkselunseltogAll(Rm) ->
 	<<"
-  <a href='#' id='mngscripts' class='button' />Manage Scripts</a><div id='mngscrbox'></div><br><br>
   <a href='#' id='selectAll",Rm/binary,"' class='button' />Select All</a><br>
   <a href='#' id='unselectAll",Rm/binary,"' class='button' />UnSelect All</a><br>
   <a href='#' id='toggleAll",Rm/binary,"' class='button' />Toggle All</a><br>
