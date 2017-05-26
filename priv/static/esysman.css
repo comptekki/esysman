@@ -1,4 +1,4 @@
-/*
+>/*
 Copyright (c) 2011, Wes James <comptekki@gmail.com>
 All rights reserved.
 
@@ -27,7 +27,11 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
 
-body {background-color:333333; color:yellow;}
+body {
+	background-color:333333 !important;
+	color:yellow !important;
+}
+
 th.oth {font-size:18pt; text-align:center; border:1px solid #555555;}
 table { border-collapse:collapse;}
 input {width:100px;}
@@ -240,4 +244,9 @@ tr.r:hover {
 
 #unlockscrpasswd {
 	display:none;
+}
+
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+    text-align: center;
+    float: none !important;
 }
