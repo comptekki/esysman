@@ -648,8 +648,10 @@ app_front_end(Req, State) ->
 <META HTTP-EQUIV='EXPIRES' CONTENT='Mon, 30 Apr 2012 00:00:01 GMT'>
 
 <link rel='icon' href='/static/favicon.ico' type='image/x-icon' />
+<link rel=\"stylesheet\" href=\"", ?JQUERYUICSS, "?", (now_bin())/binary, "\" type=\"text/css\" media=\"screen\" />
 <link rel=\"stylesheet\" href=\"", ?CSS, "?", (now_bin())/binary, "\" type=\"text/css\" media=\"screen\" />
 <script type='text/javascript' src='", ?JQUERY, "'></script>
+<script type='text/javascript' src='", ?JQUERYUI, "'></script>
 
 <script>
 
@@ -1498,7 +1500,7 @@ function progress(e){
  
 </head>
 
-<body>
+<body bgcolor='#333333' style='color:yellow;'>
 <div id='lockpane'>
 <input type='button' id='unlockscr' class='button' value='Unlock'>
 <input type='password' id='unlockscrpasswd'>
@@ -2150,6 +2152,11 @@ divc({Wk,_FQDN,_MacAddr,_Os}) ->
 </div>
 </div>
 </div>
+
+<div id='dialog' style='display:none;' title=''>
+Click button to <span id=dialogtext style='font-weight:bold;'>thaw</span> system...
+</div>
+
 ">>
 	end.
 
@@ -2200,6 +2207,27 @@ comButtons([{Wk,FQDN,MacAddr,_Os}|Wks],Rm,RowCnt,ColCnt) ->
 	});
 
 	$('#reboot_",Wk/binary,"').click(function(){
+      if (rall==false) {
+        $('#dialogtext').html('reboot');
+        $('#dialog').dialog({
+        title:'Reboot',
+        buttons: [{
+            text: 'Reboot ",Wk/binary,"?',
+            click: function() {
+              send('",FQDN/binary,":reboot:0');
+              message(true,'Rebooting ",Wk/binary,"...');        
+              $( this ).dialog( 'close' );
+            }
+          }]
+        })
+      } else {
+        send('",FQDN/binary,":reboot:0');
+        message(true,'Rebooting ",Wk/binary,"...');        
+      }
+	});
+
+
+	$('#reboot2_",Wk/binary,"').click(function(){
         r=false;
         if (rall==false)
             r=confirm('Reboot ",Wk/binary,"?');
@@ -2211,6 +2239,26 @@ comButtons([{Wk,FQDN,MacAddr,_Os}|Wks],Rm,RowCnt,ColCnt) ->
 	});
 
 	$('#shutdown_",Wk/binary,"').click(function(){
+      if (rall==false) {
+        $('#dialogtext').html('shutdown');
+        $('#dialog').dialog({
+        title:'Shutdown',
+        buttons: [{
+            text: 'Shutdown ",Wk/binary,"?',
+            click: function() {
+              send('",FQDN/binary,":shutdown:0');
+              message(true,'Shutting down ",Wk/binary,"...');        
+              $( this ).dialog( 'close' );
+            }
+          }]
+        })
+      } else {
+        send('",FQDN/binary,":shutdown:0');
+        message(true,'Shutting down ",Wk/binary,"...');        
+      }
+	});
+
+	$('#shutdown2_",Wk/binary,"').click(function(){
         r=false;
         if (rall==false)
             r=confirm('Shutdown ",Wk/binary,"?');
@@ -2241,8 +2289,27 @@ comButtons([{Wk,FQDN,MacAddr,_Os}|Wks],Rm,RowCnt,ColCnt) ->
 		message(true,'Stopping service on ",Wk/binary,"...')
 	});
 
-
 	$('#dffreeze_",Wk/binary,"').click(function(){
+      if (rall==false) {
+        $('#dialogtext').html('DeepFreeze freeze');
+        $('#dialog').dialog({
+        title:'DeepFreeze Freeze',
+        buttons: [{
+            text: 'DeepFreeze Thaw ",Wk/binary,"?',
+            click: function() {
+              send('",FQDN/binary,":dffreeze:0');
+              message(true,'DeepFreeze freezing ",Wk/binary,"...');        
+              $( this ).dialog( 'close' );
+            }
+          }]
+        })
+      } else {
+        send('",FQDN/binary,":dffreeze:0');
+        message(true,'DeepFreeze freezing ",Wk/binary,"...');        
+      }
+	});
+
+	$('#dffreeze2_",Wk/binary,"').click(function(){
         r=false;
         if (rall==false)
             r=confirm('Freeze ",Wk/binary,"?');
@@ -2255,6 +2322,26 @@ comButtons([{Wk,FQDN,MacAddr,_Os}|Wks],Rm,RowCnt,ColCnt) ->
 	});
 
 	$('#dfthaw_",Wk/binary,"').click(function(){
+      if (rall==false) {
+        $('#dialogtext').html('DeepFreeze thaw');
+        $('#dialog').dialog({
+        title:'DeepFreeze Thaw',
+        buttons: [{
+            text: 'DeepFreeze Thaw ",Wk/binary,"?',
+            click: function() {
+              send('",FQDN/binary,":dfthaw:0');
+              message(true,'DeepFreeze Thawing ",Wk/binary,"...');        
+              $( this ).dialog( 'close' );
+            }
+          }]
+        })
+      } else {
+        send('",FQDN/binary,":dfthaw:0');
+        message(true,'DeepFreeze Thawing ",Wk/binary,"...');        
+      }
+	});
+
+	$('#dfthaw2_",Wk/binary,"').click(function(){
         r=false;
         if (rall==false)
             r=confirm('Thaw ",Wk/binary,"?');
