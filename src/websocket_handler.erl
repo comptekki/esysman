@@ -1502,15 +1502,18 @@ function progress(e){
 
 <body bgcolor='#333333' style='color:yellow;'>
 <div id='lockpane'>
+<!--
 <input type='button' id='unlockscr' class='button' value='Unlock'>
-<input type='password' id='unlockscrpasswd'>
+-->
+<button id='unlockscr' class='ui-button ui-widget ui-corner-all'>Unlock</button>
+<input type='password'class='ui-widget' id='unlockscrpasswd'>
 </div>
 
 <div id='wrapper'>
 
 <div id='menu' class='fl'>
 
-<div id='rooms_title' class='fl'>
+<div id='rooms_title' class='fl ui-widget ui-corner-all'>
 [0]-Rooms 
 </div>
 
@@ -1526,16 +1529,21 @@ function progress(e){
 
 <div id='commands'>
 
-<div id='com_title'>
+<div id='com_title' class='ui-widget'>
  Commands -- Auto Wks Shutdown Time: 
  <input style='width:20px;' id='shutdownTimeH'  type='text' name='shutdownTimeH' maxlength=2 value='",?SHUTDOWNSTART,"'/> <->
  <input style='width:20px;' id='shutdownTimeH2'  type='text' name='shutdownTimeH2' maxlength=2 value='",?SHUTDOWNEND,"'/>
- <select id='shutdownTimerSwitch' name='shutdownTimerSwitch'>
+ <select id='shutdownTimerSwitch' class='ui-widget' name='shutdownTimerSwitch'>
    <option ",?SELECTEDON," value='1'>On</option>
    <option ",?SELECTEDOFF," value='0'>Off</option>
  </select>
- ( <span id='cntr'>0</span> ) <input style='width:75px;' type=button id=cntrst value=Reset> | <input style='width:65px;' type='button' id='lockscr' value='Lock'>
-  | <input id='mngscripts' type='button' value='Manage Scripts'><div id='mngscrbox'></div>
+ ( <span id='cntr' class='ui-widget'>0</span> )
+
+<button id='cntrst' class='ui-button ui-widget ui-corner-all'>Reset</button>
+
+<button id='lockscr' class='ui-button ui-widget ui-corner-all'>Lock</button>
+<button id='mngscripts' class='ui-button ui-widget ui-corner-all'>Manage Scripts</button>
+<div id='mngscrbox'></div>
 </div> 
 
  <div id='tcoms'>
@@ -1627,7 +1635,6 @@ function progress(e){
 					  $('#",Rm/binary,"_selunseltogall').show();
 
                       $('#",Rm/binary,"toggle').click();
-//					  $('#",Rm/binary,"toggle').focus();
 
 ">>.
 
@@ -2621,7 +2628,7 @@ switcher([]) ->
 
 switcher_rm([Rm|_Rows]) ->
 	<<"
-<a href='#' id='",Rm/binary,"toggle' class='button1' />[0]-",Rm/binary,"</a>
+<a href='#' id='",Rm/binary,"toggle' class='ui-button ui-widget ui-corner-all button1' />[0]-",Rm/binary,"</a>
 ">>.
 
 %%
