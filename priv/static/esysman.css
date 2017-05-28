@@ -105,7 +105,7 @@ a.ui-button:focus { color:inherit !important; }
 .ltd {
 	float:left;
 	width:320px;
-	height:110px;
+	height:180px;
 	padding:4px;
 	vertical-align:top;
 	border:5px solid #555555;
@@ -137,7 +137,10 @@ a.button:hover { color:#ffffff; }
 a.button { text-decoration:none; padding: 0 2px 0 2px; }
 
 .rc { padding: 0 0 0 5px; border-left: 1px solid #00aaaa;}
-.lc { padding: 0 5px 0 0;}
+.lc {
+	padding: 0 5px 0 0;
+	margin : 0 auto;
+}
 
 .rm_selected { background-color:#444 !important; color:#bbbbbb !important;}
 .rm_not_selected { background-color:#000 !important; color:#00aaaa !important;}
