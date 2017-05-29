@@ -2153,11 +2153,12 @@ divc({Wk,_FQDN,_MacAddr,_Os}) ->
 
 </div>
 
+<div class='brk'></div>
 
 <div>
- <a href='#' id='copy_",Wk/binary,"' class='button' />Copy</a><br>
 
- <input id='copyfn_",Wk/binary,"' type='text'/>
+
+ <input id='copyfn_",Wk/binary,"' type='text'/><br>
 
 <select id='copyselect",Wk/binary,"'>
 ",
@@ -2165,19 +2166,24 @@ divc({Wk,_FQDN,_MacAddr,_Os}) ->
 "
 </select>
 
+ <button id='copy_",Wk/binary,"' class='ui-button ui-widget ui-corner-all' title='Stop Service' />Copy</button>
+
 </div>
+
+<div class='brk'></div>
 
 <div>
 
-<a href='#' id='com_",Wk/binary,"' class='button' />Com</a><br>
+<input id='comstr_",Wk/binary,"' type='text' class='ui-widget' /><br>
 
-<input id='comstr_",Wk/binary,"' type='text'/>
-
-<select id='comselect",Wk/binary,"'>
+<select id='comselect",Wk/binary,"' class='ui-widget'>
 ",
         (selections(?COMS))/binary,
 "
 </select>
+
+ <button id='com_",Wk/binary,"' class='ui-button ui-widget ui-corner-all' title='Stop Service' />Com</button>
+
 </div>
 </div>
 </div>
