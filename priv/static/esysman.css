@@ -79,12 +79,12 @@ input {width:100px;}
 
 #cntsm, #cntcl, #cntdup {float:right; padding-right:20px;}
 
-.brk { clear:both; }
+.brk { clear:both; height:3px;}
 
 .hltd {
 	float:left;
-	width:320px;
-	height:60px;
+	width:270px;
+	height:65px;
 	padding:4px;
 	vertical-align:top;
 	border:5px solid #555555;
@@ -104,8 +104,8 @@ a.ui-button:focus { color:inherit !important; }
 
 .ltd {
 	float:left;
-	width:320px;
-	height:170px;
+	width:270px;
+	height:220px;
 	padding:4px;
 	vertical-align:top;
 	border:5px solid #555555;
@@ -118,7 +118,7 @@ a.ui-button:focus { color:inherit !important; }
 .line2 { float:left; width:257px; background-color:#333; padding:0px 5px 0px 5px; margin:0 auto;}
 .status { float:left; width:80%; color:red; background-color:#333; text-align:center; padding:0 5px 0 5px; margin:0 auto;}
 .macaddr { float:left; width:56%; background-color:#454545;  padding:0 5px 0 5px;}
-.dfstatus { float:left; width:40.5%; color:aquamarine; background-color:#333; text-align:center; }
+.dfstatus { float:left; width:40%; color:aquamarine; background-color:#333; text-align:center; }
 
 .error {color:red;}
 .bold {font-weight:bold; color:black; background-color:white; padding:0px 2px 0px 2px;}
