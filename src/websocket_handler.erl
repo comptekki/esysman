@@ -1514,9 +1514,7 @@ function progress(e){
 <div id='menu' class='fl'>
 
 <div id='rooms_title' class='fl ui-widget ui-corner-all'>
-<div style='vertical-align: middle;'>
 [0]-Rooms
-</div>
 </div>
 
 <div id='switcher'>
@@ -2121,19 +2119,6 @@ divc({Wk,_FQDN,_MacAddr,_Os}) ->
 <div id='",Wk/binary,"_ccell'>
 
 <div class=\"lc\">
-<!--
- <a href='#' id='ping_",Wk/binary,"' class='ui-button ui-widget ui-corner-all button' />P</a>
- <a href='#' id='reboot_",Wk/binary,"' class='button' />R</a>
- <a href='#' id='shutdown_",Wk/binary,"' class='button' />S</a>
- <a href='#' id='wake_",Wk/binary,"' class='button' />WOL</a>
- <a href='#' id='dffreeze_",Wk/binary,"' class='button' />DFF</a>
- <a href='#' id='dfthaw_",Wk/binary,"' class='button' />DFT</a>
- <a href='#' id='dfstatus_",Wk/binary,"' class='button' />DFS</a>
- <a href='#' id='net_restart_",Wk/binary,"' class='button' />ReS</a>
- <a href='#' id='net_stop_",Wk/binary,"' class='button' />StS</a>
- <a href='#' id='loggedon_",Wk/binary,"' class='button' />L</a>
- <a href='#' id='",Wk/binary,"_col' class='cols'>C</a>
--->
 
  <button id='ping_",Wk/binary,"' class='ui-button ui-widget ui-corner-all' title='Ping' />P</button>
  <button id='reboot_",Wk/binary,"' class='ui-button ui-widget ui-corner-all' title='Reboot' />R</button>
@@ -2159,10 +2144,9 @@ divc({Wk,_FQDN,_MacAddr,_Os}) ->
 
 <div>
 
+ <input id='copyfn_",Wk/binary,"' type='text' class='ui-widget' /><br>
 
- <input id='copyfn_",Wk/binary,"' type='text'/><br>
-
-<select id='copyselect",Wk/binary,"'>
+<select id='copyselect",Wk/binary,"' class='ui-widget'>
 ",
        (selections(?APPS))/binary,
 "
