@@ -77,7 +77,7 @@ msg_to_consoles(_Server, [], _Msg) ->
 	[].
 
 process_msg(Box, Com, Args) ->
-	io:format("~nBox: ~p -> Com: ~p -> args: ~p -> pid: ~p~n",[Box, Com, Args, self()]),
+%	io:format("~nBox: ~p -> Com: ~p -> args: ~p -> pid: ~p~n",[Box, Com, Args, self()]),
 	case Com of
 		<<"com">> ->
 			send_msg(?SERVERS, <<Box/binary,":com <- ",Args/binary>>),
