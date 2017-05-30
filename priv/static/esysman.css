@@ -40,12 +40,18 @@ input {width:100px;}
 
 #menu { width:99%; background-color:#888; font-weight:bold;  margin: 3px 3px 0 3px;}
 
-#rooms_title { float:left; background-color:#666; padding: 3px 3px 3px 3px; margin:0 5 0 0;}
+#rooms_title {
+	float:left;
+	background-color:#666;
+	padding: 3px 3px 3px 3px;
+	margin:3 3 3 3;
+	height: 25px;
+}
 
 #switcher { padding: 3px 3px 3px 3px; }
 
 #commands {
-	height:265px;
+	height:285px;
 	width:98.7%;
 	background-color:#444;
 	margin: 3px 0 3px 3px;
@@ -56,7 +62,11 @@ input {width:100px;}
 
 #tcoms { float:left; height:235px; background-color:#111;  margin: 3px 3px 3px 5px; padding: 5px 5px 0 5px;}
 
-#com_title { width:100%; margin:0 0 0 5px; padding: 0 0 3px 5px;}
+#com_title {
+	width:100%;
+	margin:0 0 0 5px;
+	padding: 0 0 3px 5px;
+}
 
 #tinputs { float:left; height:235px; background-color:#111;  margin: 3px 0 0 0; padding: 5px 5px 0 5px;}
 
@@ -145,7 +155,9 @@ a.button { text-decoration:none; padding: 0 2px 0 2px; }
 .rm_selected { background-color:#444 !important; color:#bbbbbb !important;}
 .rm_not_selected { background-color:#000 !important; color:#00aaaa !important;}
 
-.room {display:none;}
+.room {
+	display:none;
+}
 .ttop {width:100%;}
 
 .wkchk { float:left; height:18px; background-color:#454545; padding:3px 0 3px; 0;}
