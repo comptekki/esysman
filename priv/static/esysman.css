@@ -76,16 +76,36 @@ input {width:100px;}
 	padding: 0 0 3px 5px;
 }
 
-#tinputs { float:left; height:235px; background-color:#111;  margin: 3px 0 0 0; padding: 5px 5px 0 5px;}
+#tinputs {
+	float:left;
+	height:255px;
+	background-color:#111;
+	margin: 3px 0 0 0;
+	padding: 5px 5px 0 5px;
+}
 
-/*#tmsgs { width: 100px; }
+#tmsgs {
+	height: 255px;
+}
 
-#tmsgsdup { width: 100px; }
-*/
+#tmsgsdup {
+	height:255px;
+}
 
-#tmsgscl { border-left:1px solid #fff; margin-left:2px; border-right:1px solid #fff; margin-right:2px; }
+#tmsgscl {
+	height:255px;
+	border-left:1px solid #fff;
+	margin-left:2px;
+	border-right:1px solid #fff;
+	margin-right:2px;
+}
 
-.tmsgsc { float:left;  width: 550px; padding:0 0 0 3px;}
+.tmsgsc {
+	float:left;
+	width: 550px;
+	padding:0 0 0 3px;
+}
+
 .mtopc { background-color:#666; width:550px; font-weight:bold; padding:3px 0 3px 3px;}
 .msgc { overflow:scroll; width:550px; height:220px; color:yellow; background-color:black; padding:0 0 0 3px; z-index:20;}
 .msgcsm { overflow:scroll; width:550px; height:220px; color:yellow; background-color:black; padding:0 0 0 3px; z-index:10;}
