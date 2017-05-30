@@ -1514,7 +1514,9 @@ function progress(e){
 <div id='menu' class='fl'>
 
 <div id='rooms_title' class='fl ui-widget ui-corner-all'>
-[0]-Rooms 
+<div style='vertical-align: middle;'>
+[0]-Rooms
+</div>
 </div>
 
 <div id='switcher'>
