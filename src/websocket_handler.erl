@@ -1528,8 +1528,8 @@ function progress(e){
 
 <div id='com_title' class='ui-widget'>
  Commands -- Auto Wks Shutdown Time: 
- <input style='width:20px;' id='shutdownTimeH'  type='text' name='shutdownTimeH' maxlength=2 value='",?SHUTDOWNSTART,"'/> <->
- <input style='width:20px;' id='shutdownTimeH2'  type='text' name='shutdownTimeH2' maxlength=2 value='",?SHUTDOWNEND,"'/>
+ <input style='width:25px;' id='shutdownTimeH'  type='text' name='shutdownTimeH' maxlength=2 value='",?SHUTDOWNSTART,"'/> <->
+ <input style='width:25px;' id='shutdownTimeH2'  type='text' name='shutdownTimeH2' maxlength=2 value='",?SHUTDOWNEND,"'/>
  <select id='shutdownTimerSwitch' class='ui-widget' name='shutdownTimerSwitch'>
    <option ",?SELECTEDON," value='1'>On</option>
    <option ",?SELECTEDOFF," value='0'>Off</option>
