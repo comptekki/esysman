@@ -53,7 +53,7 @@ input {width:100px;}
 #switcher { padding: 3px 3px 3px 3px; }
 
 #commands {
-	height:285px;
+	height:290px;
 	width:98.7%;
 	background-color:#444;
 	margin: 3px 0 3px 3px;
@@ -104,6 +104,17 @@ input {width:100px;}
 	-webkit-border-radius: 15px;
 }
 
+.ltd {
+	float:left;
+	width:270px;
+	height:230px;
+	padding:4px;
+	vertical-align:top;
+	border:5px solid #555555;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+}
+
 //a:link, a:visited { color:#fff; background-color:#000;}
 
 //.button1 { text-decoration:none !important; }
@@ -118,16 +129,6 @@ input {width:100px;}
 
 a.ui-button:focus { color:inherit !important; }
 
-.ltd {
-	float:left;
-	width:270px;
-	height:220px;
-	padding:4px;
-	vertical-align:top;
-	border:5px solid #555555;
-	-moz-border-radius: 15px;
-	-webkit-border-radius: 15px;
-}
 
 .logged_on { color:green; background-color:#333; width:265px; text-align:center; margin:0 auto; }
 
