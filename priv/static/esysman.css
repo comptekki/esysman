@@ -84,6 +84,7 @@ input {width:100px;}
 	padding: 5px 5px 0 5px;
 }
 
+/*
 #tmsgs {
 	height: 255px;
 }
@@ -91,9 +92,9 @@ input {width:100px;}
 #tmsgsdup {
 	height:255px;
 }
+*/
 
 #tmsgscl {
-	height:255px;
 	border-left:1px solid #fff;
 	margin-left:2px;
 	border-right:1px solid #fff;
@@ -107,11 +108,38 @@ input {width:100px;}
 }
 
 .mtopc { background-color:#666; width:550px; font-weight:bold; padding:3px 0 3px 3px;}
-.msgc { overflow:scroll; width:550px; height:220px; color:yellow; background-color:black; padding:0 0 0 3px; z-index:20;}
-.msgcsm { overflow:scroll; width:550px; height:220px; color:yellow; background-color:black; padding:0 0 0 3px; z-index:10;}
+
+.msgc {
+	overflow:scroll;
+	width:550px;
+	height:240px;
+	color:yellow;
+	background-color:black;
+	padding:0 0 0 3px;
+	z-index:20;
+}
+
+.msgcsm {
+	overflow:scroll;
+	width:550px;
+	height:240px;
+	color:yellow;
+	background-color:black;
+	padding:0 0 0 3px;
+	z-index:10;
+}
+
+.msgcd {
+	overflow:scroll;
+	width:550px;
+	height:240px;
+	color:yellow;
+	background-color:black;
+	padding:0 0 0 3px;
+}
 
 .mtopcd { background-color:#666; width:550px; font-weight:bold; padding:3px 0 3px 3px;}
-.msgcd { overflow:scroll; width:550px; height:220px; color:yellow; background-color:black; padding:0 0 0 3px;}
+
 
 #workstations { width:100%; margin:0 auto;}
 
