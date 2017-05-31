@@ -53,7 +53,7 @@ input {width:100px;}
 #switcher { padding: 3px 3px 3px 3px; }
 
 #commands {
-	height:315px;
+	height:335px;
 	width:98.7%;
 	background-color:#444;
 	margin: 3px 0 3px 3px;
@@ -64,7 +64,7 @@ input {width:100px;}
 
 #tcoms {
 	float:left;
-	height:265px;
+	height:285px;
 	background-color:#111;
 	margin: 3px 3px 3px 5px;
 	padding: 5px 5px 0 5px;
@@ -78,7 +78,7 @@ input {width:100px;}
 
 #tinputs {
 	float:left;
-	height:265px;
+	height:285px;
 	background-color:#111;
 	margin: 3px 0 0 0;
 	padding: 5px 5px 0 5px;
