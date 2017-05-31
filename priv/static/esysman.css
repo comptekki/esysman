@@ -64,7 +64,7 @@ input {width:100px;}
 
 #tcoms {
 	float:left;
-	height:255px;
+	height:265px;
 	background-color:#111;
 	margin: 3px 3px 3px 5px;
 	padding: 5px 5px 0 5px;
@@ -78,7 +78,7 @@ input {width:100px;}
 
 #tinputs {
 	float:left;
-	height:255px;
+	height:265px;
 	background-color:#111;
 	margin: 3px 0 0 0;
 	padding: 5px 5px 0 5px;
