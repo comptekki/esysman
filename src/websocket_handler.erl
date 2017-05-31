@@ -1544,10 +1544,10 @@ function progress(e){
 </div> 
 
  <div id='tcoms'>
-<a href=# id='wsconnect' class='button' />Connect</a>
-<a href=# id='wsdisconnect' class='button lbar' />Disconnect</a>",
+<button id='wsconnect' class='ui-button ui-widget ui-corner-all' title='Connect to server...' />Connect</button>
+<button id='wsdisconnect' class='ui-button ui-widget ui-corner-all' title='Disconnect from server...' />Disconnect</button>",
 (case is_list(login_is()) of
-	 true -> <<"<a href='esysman/logout' id='logout' class='button lbar' />Logout</a><br>">>;
+	 true -> <<"<button href='esysman/logout' id='logout' class='ui-button ui-widget ui-corner-all' title='Logout' />Logout</button><br>">>;
 	 false -> <<"">>
  end)/binary,
 "
