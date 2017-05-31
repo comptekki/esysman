@@ -1996,11 +1996,15 @@ mkARComsComsInput(Rm,{Com,ComText}) ->
 	<<"
 
  <div class='fl'>
- <input id='",Com/binary,"All",Rm/binary,"check' type='checkbox' class='checkbox' /></a>
-  <a href='#' id='",Com/binary,"All",Rm/binary,"' class='button' />",ComText/binary,"</a>
+
+<div class='brk'></div>
+
+ <input id='",Com/binary,"All",Rm/binary,"check' type='checkbox' class='checkbox ui-widget' /></a>
+  <button id='",Com/binary,"All",Rm/binary,"' class='ui-button ui-widget ui-corner-all' title='Send to all Workstations...' />",ComText/binary,"</button>
+
  <div class='brk'></div>
 
- <select id='",Com/binary,"AllSelect",Rm/binary,"' class='fl'>
+ <select id='",Com/binary,"AllSelect",Rm/binary,"' class='fl ui-widget'>
 	 ",
 
 	  (case Com of
@@ -2011,8 +2015,10 @@ mkARComsComsInput(Rm,{Com,ComText}) ->
 	   end)/binary,
 "
  </select>
-<br>
-  <input id='",Com/binary,"AllInput",Rm/binary,"' type='text', name='",Com/binary,"AllInput' class='fl'/>
+
+<div class='brk'></div>
+
+  <input id='",Com/binary,"AllInput",Rm/binary,"' type='text', name='",Com/binary,"AllInput' class='fl ui-widget'/>
 
  </div>
  ">>.
@@ -2025,7 +2031,9 @@ mkAllRoomsSelectUnselectToggleAll([Room|Rooms]) ->
  <div class='brk'></div>
 
  <div id='",Rm/binary,"_selunseltogall' class='room'>
-<br>
+
+<div class='brk'></div>
+
 	 ",(mkselunseltogAll(Rm))/binary,"
  </div>
 
@@ -2037,9 +2045,15 @@ mkAllRoomsSelectUnselectToggleAll([Room|Rooms]) ->
 
 mkselunseltogAll(Rm) ->
 	<<"
-  <a href='#' id='selectAll",Rm/binary,"' class='button' />Select All</a><br>
-  <a href='#' id='unselectAll",Rm/binary,"' class='button' />UnSelect All</a><br>
-  <a href='#' id='toggleAll",Rm/binary,"' class='button' />Toggle All</a><br>
+  <button id='selectAll",Rm/binary,"' class='ui-button ui-widget ui-corner-all' title='Select all Workstations...' />Select All</button>
+
+<div class='brk'></div>
+
+  <button id='unselectAll",Rm/binary,"' class='ui-button ui-widget ui-corner-all' title='Unselect all Workstations...' />UnSelect All</button>
+
+<div class='brk'></div>
+
+  <button id='toggleAll",Rm/binary,"' class='ui-button ui-widget ui-corner-all' title='Toggle select/unselect all Workstations...' />Toggle All</button><br>
 ">>.
 
 %%
