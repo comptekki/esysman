@@ -1552,7 +1552,7 @@ function progress(e){
  end)/binary,
 "
 <div class='brk'></div>
-<a href=# id='sacs' class='button' />Select/UnSelect All Coms</a>
+<button id='sacs' class='ui-button ui-widget ui-corner-all' title='Select/Unselect all commands' />Select/UnSelect All Coms</button>
 <div class='brk'></div>
 ",
 ( mkAllRoomsComs([
