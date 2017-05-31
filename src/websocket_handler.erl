@@ -1579,21 +1579,21 @@ function progress(e){
  </div>
 
  <div id='tmsgs' class='tmsgsc'>
-   <div id='mtop' class='mtopc'> <a href='#' id='smbig' class='mbig'/>+</a> <a href='#' id='smclear' class='clr'>S</a>erver Messages (most recent at top): <div id='cntsm'>0KB/0L</div></div>
+   <div id='mtop' class='mtopc'> <button id='smbig' class='mbig ui-button ui-widget ui-corner-all' title='View more lines...'/>+</button> <button id='smclear' class='clr ui-button ui-widget ui-corner-all' title='Clear Server Logs'>C</button> Server Messages (most recent at top) <div id='cntsm'>0KB/0L</div></div>
 	 <div id='msg-div'>
 	 <div id='msgsm' class='msgcsm'></div>
    </div>
  </div>
 
  <div id='tmsgscl' class='tmsgsc'>
-   <div id='mtopcl' class='mtopc'> <a href='#' id='clbig' class='mbig'/>+</a> <a href='#' id='cmclear' class='clr'>C</a>lient Messages (most recent at top): <div id='cntcl'>0KB/0L</div></div>
+   <div id='mtopcl' class='mtopc'> <button id='clbig' class='mbig ui-button ui-widget ui-corner-all' title='View more lines...'/>+</button> <button id='cmclear' class='clr ui-button ui-widget ui-corner-all' title='Clear Server Logs'>C</button> Client Messages (most recent at top) <div id='cntcl'>0KB/0L</div></div>
 	 <div id='msg-divcl'>
 	   <div id='msgcl' class='msgc'></div>
      </div>
  </div>
 
  <div id='tmsgsdup' class='tmsgsc'>
-   <div id='mtopdup' class='mtopcd'><a href='#' id='duclear' class='clr'>D</a>uplicate Users (most recent at top): <div id='cntdup'>0KB/0L</div></div>
+   <div id='mtopdup' class='mtopcd'><button id='duclear' class='clr ui-button ui-widget ui-corner-all' title='Clear Server Logs'>C</button> Duplicate Users (most recent at top) <div id='cntdup'>0KB/0L</div></div>
 	 <div id='msg-div-dup'>
 	 <div id='msgdup' class='msgcd'></div>
    </div>
