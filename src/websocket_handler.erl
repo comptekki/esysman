@@ -1963,10 +1963,11 @@ mkARComsComs(Rm,[{Com,ComText}|Coms]) ->
 	<<"
 
  <div class='fl'>
- <input id='",Com/binary,"All",Rm/binary,"check' type='checkbox' class='checkbox' /></a>
-  <a href='#' id='",Com/binary,"All",Rm/binary,"' class='button'/>",ComText/binary,"</a>
+ <input id='",Com/binary,"All",Rm/binary,"check' type='checkbox' class='checkbox ui-widget' /></a>
+  <button id='",Com/binary,"All",Rm/binary,"' class='ui-button ui-widget ui-corner-all' title='Send to all Workstations...'/>",ComText/binary,"</button>
  </div>
- <div class='brk'></div>
+
+<div class='brk'></div>
 
 ",(mkARComsComs(Rm,Coms))/binary>>;
 mkARComsComs(_Rm,[]) ->
