@@ -1906,7 +1906,7 @@ mkjsSelectAllChk([Room|Rooms]) ->
 	<<"
  $('#selectAll",Rm/binary,"').click(function(){
      $('#",Rm/binary," input:checkbox').each(function() {
-         $(this).attr('checked','checked');
+         $(this).prop('checked', true);
      });
  });
 
@@ -1921,7 +1921,7 @@ mkjsUnSelectAllChk([Room|Rooms]) ->
 	<<"
  $('#unselectAll",Rm/binary,"').click(function(){
      $('#",Rm/binary," input:checkbox').each(function() {
-         $(this).removeAttr('checked');
+         $(this).prop('checked', false);
      });
  });
 
