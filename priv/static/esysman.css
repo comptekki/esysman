@@ -197,6 +197,11 @@ a.ui-button:focus { color:inherit !important; }
 	background-color:#444;
 }
 
+.ui-button:hover {
+	color:black !important;
+	background-color:white !important;
+}
+
 .logged_on { color:green; background-color:#333; width:265px; text-align:center; margin:0 auto; }
 
 .line2 { float:left; width:257px; background-color:#333; padding:0px 5px 0px 5px; margin:0 auto;}
