@@ -192,6 +192,11 @@ input {width:100px;}
 
 a.ui-button:focus { color:inherit !important; }
 
+.ui-button {
+	color: yellow;
+	background-color:#444;
+}
+
 .logged_on { color:green; background-color:#333; width:265px; text-align:center; margin:0 auto; }
 
 .line2 { float:left; width:257px; background-color:#333; padding:0px 5px 0px 5px; margin:0 auto;}
