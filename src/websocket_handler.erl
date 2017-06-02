@@ -1436,7 +1436,7 @@ function progress(e){
 
     $('#mngscripts').click(function(){
           if (!showmngscrbox) {
-//              $('#mngscrbox').css('z-index', 1000);
+              $('#mngscrbox').css('z-index', 2000);
               $('#mngscrbox').show();
               $('#mngscrbox').css('position', 'absolute');
               $('#mngscrbox').css('z-index', parseInt($('.msgc').css('z-index')) + 2);
