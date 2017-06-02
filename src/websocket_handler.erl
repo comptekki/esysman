@@ -1144,7 +1144,7 @@ Port/binary,
         $('#cntr').html('0');
     });
 
-	$(document).on('click', 'a.button.dbut', function(){
+	$(document).on('click', '#dbut', function(){
       var res = confirm('Really want to delete script/file: [ ' + $(this).parent().next('td').html() + ' ]?');
       if (res == true) {
         if ($(this).parent().next('td').html() == $('#lncmddiv').html()) {
@@ -1167,7 +1167,7 @@ Port/binary,
       }
 	});
 
-	$(document).on('click', 'a.button.lbut', function(){
+	$(document).on('click', '#lbut', function(){
         if ($(this).parent().next('td').html().indexOf('.cmd')>0) {
           $('#lncmddiv').html($(this).parent().next('td').html());
           send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.cmd');
@@ -1183,7 +1183,7 @@ Port/binary,
 
 	});
 
-	$(document).on('click', 'a.button.rbut', function(){     
+	$(document).on('click', '#rbut', function(){     
       var fnameo = $(this).parent().next('td').html();
 //      fname = fnameo.split('.');
       var ok = true;
@@ -1208,7 +1208,7 @@ Port/binary,
 
    var notcmd = false;
 
-	$(document).on('click', 'a.button.ebut', function(){     
+	$(document).on('click', '#ebut', function(){     
           $('#scrslist').hide();
           $('#editscr').show();
           notcmd = false;
@@ -1237,7 +1237,7 @@ Port/binary,
 
     var addscrf = false;
 
-	$(document).on('click', 'a.button.addscrf', function(){     
+	$(document).on('click', '#addscrf', function(){     
       $('#scripttext').val('');
       $('#scrdesc').val('')
       $('#scrslist').hide();
@@ -1246,7 +1246,7 @@ Port/binary,
       $('#scripttext').focus();
 	});
 
-    $(document).on('click', 'a.button.closescrslist', function(){
+    $(document).on('click', '#closescrslist', function(){
       showmngscrbox = true;
       $('#mngscripts').click();
     });
@@ -2732,9 +2732,9 @@ do_insert(TimeStamp, Box, User) ->
 list_up_fls() ->
 	{ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
-    Head = <<"<div id='scrslist'><a href=# class='button closescrslist'>[Close]</a><a href=# class='button addscrf'>[Add Script]</a><br><div id='upprog'></div><form id='mypost' method='post' enctype='multipart/form-data' action='/upload'><br><input id='fupload' type='submit' value='Upload'/><input id='selfile' type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form><table><tr><th></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
+    Head = <<"<div id='scrslist'><button id='closescrslist' class='ui-button ui-widget ui-corner-all'>Close</button><button id='addscrf' class='ui-button ui-widget ui-corner-all'>Add Script</button><div class='brk'></div><div id='upprog'></div><form id='mypost' method='post' enctype='multipart/form-data' action='/upload'><br><input id='fupload' type='submit' value='Upload'/><input id='selfile' type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form><table><tr><th></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
 	Mid = <<(erlang:list_to_binary([ mng_file(File) || File <- Files]))/binary>>,
-	Tail = <<"</table><a href=# class='button closescrslist'>[Close]</a></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div><div id='scrtxtbox'>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br></div>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
+	Tail = <<"</table><div class='brk'></div><button id='closescrslist' class='ui-button ui-widget ui-corner-all'>Close</button></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div><div id='scrtxtbox'>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br></div>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
 	<<Head/binary,Mid/binary,Tail/binary>>.
 
 %%
@@ -2786,10 +2786,10 @@ tr1(File, Res, Fdiv, Ldiv, LnFile) ->
 %%
 
 tr(File, 0) ->
-	"<tr class='r'><td><a href=# class='button dbut'>Del</a><a href=# class='button rbut'>Ren</a><a href=# class='button lbut'>ln</a><a href=# class='button ebut'>Edit</a></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>";
+	"<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all'>ln</button><button id='ebut' class='ui-button ui-widget ui-corner-all'>Edit</button></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>";
 
 tr(File, 1) ->
-	"<tr class='r'><td><a href=# class='button dbut'>Del</a><a href=# class='button rbut'>Ren</a><a href=# class='button lbut'>ln</a></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>".
+	"<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all'>ln</button></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>".
 
 %%
 
