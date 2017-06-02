@@ -259,7 +259,6 @@ input[type=checkbox] {/*width:50px;*/ height:10px;}
 	background-color:#aaaaaa; color:000055; padding:0 5px 0 5px; font-weight:bold;
 }
 
-
 a.cols, a.mbig, a.clr {text-decoration:none;}
 
 //.mbig,
@@ -284,7 +283,7 @@ a.clr {
 	color:yellow;
 	background-color:black;
 	overflow:scroll;
-	display:none;	
+	display:none;
 }
 
 table, th, td {
