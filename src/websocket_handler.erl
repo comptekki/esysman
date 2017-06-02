@@ -1491,6 +1491,9 @@ function progress(e){
       }
     });
 
+
+    $('#mngscrbox').draggable().resizable();
+
 });
 
 </script>
@@ -1540,7 +1543,7 @@ function progress(e){
 
 <button id='lockscr' class='ui-button ui-widget ui-corner-all'>Lock</button>
 <button id='mngscripts' class='ui-button ui-widget ui-corner-all'>Manage Scripts</button>
-<div id='mngscrbox'></div>
+<div id='mngscrbox' class='ui-widget-content'></div>
 </div> 
 
  <div id='tcoms'>
