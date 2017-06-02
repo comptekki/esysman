@@ -2657,7 +2657,7 @@ switcher([]) ->
 
 switcher_rm([Rm|_Rows]) ->
 	<<"
-<a href='#' id='",Rm/binary,"toggle' class='ui-button ui-widget ui-corner-all button1' />[0]-",Rm/binary,"</a>
+<button id='",Rm/binary,"toggle' class='ui-button ui-widget ui-corner-all button1' />[0]-",Rm/binary,"</button>
 ">>.
 
 %%
