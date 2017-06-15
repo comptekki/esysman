@@ -118,15 +118,6 @@ process_msg(Box, Com, Args) ->
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
-				<<"adobe-update">> ->
-					case ?PLATFORM of
-						"w" ->
-							Date=get_date(),
-							os:cmd(?UPLOADS_DIR++"remoteupdatemanager.exe"),
-							send_msg(?SERVERS, <<Box/binary, (list_to_binary(":adobe-update date -> "++Date))/binary>>);
-						_ ->
-							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
-					end;
 				<<"ninitelog">> ->
 					case ?PLATFORM of
 						"w" ->
@@ -525,5 +516,3 @@ comp_name() ->
 list_up_fls() ->
 	{ok, Files}=file:list_dir(?UPLOADS_DIR),
 	[ X++"<br>" || X <- Files].
-
-
