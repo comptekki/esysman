@@ -6,7 +6,7 @@
 -define(USERS_DIR, "c:/users").
 -define(USERS, ["Public","desktop.ini","Default","Default User","All Users"]).
 -define(SERVERS,['ecom@host']).
--define(CLIENTS, [hanwebs, hanwebs2, hanwebs3, hanwebs4]).
+-define(CONSOLES, [hanwebs, hanwebs2, hanwebs3, hanwebs4]).
 -define(NODE_NAME, "ecom@").
 -define(PLATFORM, "w").
 -define(WOLNAME, "wolname-command-name-in-esysman-hrl").
