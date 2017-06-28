@@ -44,36 +44,33 @@ rec_com() ->
             process_msg(Box, Com, Args),
             rec_com()
 		after ?MSG_TIMER ->
-%				rpc:multi_server_call(?SERVERS, hanwebs, {comp_name()++?DOMAIN++"/pong",self()}),
-%				rpc:multi_server_call(?SERVERS, hanwebs, {comp_name()++?DOMAIN++"/loggedon/"++logged_on(),self()}),
 				send_msg(?SERVERS),
 				rec_com()
     end.
 
 send_msg([Server|Rest]) ->
-	msg_to_consoles(Server, ?CONSOLES),
+	msg_to_clients(Server, ?CLIENTS),
 	send_msg(Rest);
 send_msg([]) ->
 	[].
 
-msg_to_consoles(Server, [Console|Rest]) ->
-	{Console, Server} ! {comp_name()++?DOMAIN++"/pong",self()},
-	{Console, Server} ! {comp_name()++?DOMAIN++"/loggedon/"++logged_on(),self()},
-	msg_to_consoles(Server, Rest);
-msg_to_consoles(_Server, []) ->
+msg_to_clients(Server, [Client|Rest]) ->
+	{Client, Server} ! {comp_name()++?DOMAIN++"/pong",self()},
+	{Client, Server} ! {comp_name()++?DOMAIN++"/loggedon/"++logged_on(),self()},
+	msg_to_clients(Server, Rest);
+msg_to_clients(_Server, []) ->
 	[].
 
 send_msg([Server|Rest], Msg) ->
-%	rpc:multi_server_call(?SERVERS, hanwebs, Msg).
-	msg_to_consoles(Server, ?CONSOLES, Msg),
+	msg_to_clients(Server, ?CLIENTS, Msg),
 	send_msg(Rest, Msg);
 send_msg([], _Msg) ->
 	[].
 
-msg_to_consoles(Server, [Console|Rest], Msg) ->
-	{Console, Server} ! Msg,
-	msg_to_consoles(Server, Rest, Msg);
-msg_to_consoles(_Server, [], _Msg) ->
+msg_to_clients(Server, [Client|Rest], Msg) ->
+	{Client, Server} ! Msg,
+	msg_to_clients(Server, Rest, Msg);
+msg_to_clients(_Server, [], _Msg) ->
 	[].
 
 process_msg(Box, Com, Args) ->
@@ -115,6 +112,15 @@ process_msg(Box, Com, Args) ->
 							Date=get_date(),
 							os:cmd(?UPLOADS_DIR++"NiniteOne.exe /updateonly /exclude Python  /disableshortcuts /silent "++?UPLOADS_DIR++"ninite_"++Date++"_log.txt"),
 							send_msg(?SERVERS, <<Box/binary, (list_to_binary(":ninite date -> "++Date))/binary>>);
+						_ ->
+							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
+					end;
+				<<"adobe-update">> ->
+					case ?PLATFORM of
+						"w" ->
+							Date=get_date(),
+							os:cmd(?UPLOADS_DIR++"remoteupdatemanager.exe"),
+							send_msg(?SERVERS, <<Box/binary, (list_to_binary(":adobe-update date -> "++Date))/binary>>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
@@ -210,38 +216,6 @@ process_msg(Box, Com, Args) ->
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
-				<<"yumcheck">> ->
-					case ?PLATFORM of
-						"x" ->
-							Res = os:cmd("/usr/bin/yum check-update"),
-							send_msg(?SERVERS, <<Box/binary,":yumcheck -> done...", (fix_log(Res))/binary>>);
-						_ ->
-							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
-					end;
-				<<"yumupdate">> ->
-					case ?PLATFORM of
-						"x" ->
-							Res = os:cmd("/usr/bin/yum -y update"),
-							send_msg(?SERVERS, <<Box/binary,":yumupdate -> done...", (fix_log(Res))/binary>>);
-						_ ->
-							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
-					end;
-				<<"dnfcheck">> ->
-					case ?PLATFORM of
-						"x" ->
-							Res = os:cmd("/usr/bin/dnf -y update"),
-							send_msg(?SERVERS, <<Box/binary,":dnfupdate -> done...", (fix_log(Res))/binary>>);
-						_ ->
-							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
-					end;
-				<<"dnfupdate">> ->
-					case ?PLATFORM of
-						"x" ->
-							Res = os:cmd("/usr/bin/yum -y update"),
-							send_msg(?SERVERS, <<Box/binary,":dnfupdate -> done...", (fix_log(Res))/binary>>);
-						_ ->
-							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
-					end;
 				<<"osxsupdate">> ->
 					case ?PLATFORM of
 						"m" ->
@@ -293,7 +267,7 @@ process_msg(Box, Com, Args) ->
 												% list of mac addresses in different subnet
 							wol(?WOLLIST),
 							io:format("~n done wol - ~p ~n",[Box]),
-							send_msg(?SERVERS, <<Box/binary,":wol -> ">>);
+							send_msg(?SERVERS, <<Box/binary,":wolbnr360 -> ">>);
 						_ ->
 							send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
 					end;
@@ -516,3 +490,5 @@ comp_name() ->
 list_up_fls() ->
 	{ok, Files}=file:list_dir(?UPLOADS_DIR),
 	[ X++"<br>" || X <- Files].
+
+
