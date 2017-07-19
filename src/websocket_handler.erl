@@ -1735,11 +1735,28 @@ jsAllConfirm([Room|Rooms],Com) ->
 	<<"
 
 	 $('#",Com/binary,"All",Rm/binary,"').click(function(){
-		 rall=confirm('",Com/binary," All Systems ",Rm/binary,"?');
-		 if (rall==true)
-			 ",Com/binary,"All",Rm/binary,"()
-		 else
-			 message(true,'",Com/binary," All in ",Rm/binary," aborted...')
+
+//		 rall=confirm('",Com/binary," All Systems ",Rm/binary,"?');
+
+//		 if (rall==true) {
+//			 ",Com/binary,"All",Rm/binary,"()
+
+        $('#dialogtext').html(' ",Com/binary," All ",Rm/binary," systems...');
+        $('#dialog').dialog({
+        title:' ",Com/binary," All ",Rm/binary," Systems...',
+        buttons: [{
+            text: ' ",Com/binary," All ",Rm/binary," systems?',
+            click: function() {
+              rall=true;     
+              ",Com/binary,"All",Rm/binary,"();
+              $( this ).dialog( 'close' );
+            }
+          }]
+        })
+
+//         }
+//		 else
+//			 message(true,'",Com/binary," All in ",Rm/binary," aborted...')
 	 });
 
 ",(jsAllConfirm(Rooms,Com))/binary>>;
@@ -2195,7 +2212,7 @@ divc({Wk,_FQDN,_MacAddr,_Os}) ->
 </div>
 
 <div id='dialog' style='display:none;' title=''>
-Click button to <span id=dialogtext style='font-weight:bold;'>thaw</span> system...
+Click button to <span id=dialogtext style='font-weight:bold;'>thaw</span>...
 </div>
 
 ">>
@@ -2635,7 +2652,7 @@ jschkduRow([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm) ->
 
     var ignore_box = '",?IGNORESHUTDOWN,"';
     var ignore_box2 = '",?IGNOREDUPES,"';
-//alert('",Wk/binary,"');
+
     if ($('#",Wk/binary,"status').html()!='.' && ignore_box.indexOf('",Wk/binary,"') < 0 && ignore_box2.indexOf('",Wk/binary,"') < 0){
         dupe_",Rm/binary,".push($('#",Wk/binary,"status').html().toLowerCase());
         if (typeof hash_",Rm/binary,"[dupe_",Rm/binary,"[dupe_",Rm/binary,".length-1]] === 'undefined')
