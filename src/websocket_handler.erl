@@ -1231,7 +1231,7 @@ Port/binary,
         showmngscrbox = false;
         $('#mngscripts').click();
       } else {
-        alert('Script text and script descrption must not be blank!');
+        alert('Script text and script description must not be blank!');
       }
 	});
 
