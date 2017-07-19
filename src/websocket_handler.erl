@@ -1736,11 +1736,6 @@ jsAllConfirm([Room|Rooms],Com) ->
 
 	 $('#",Com/binary,"All",Rm/binary,"').click(function(){
 
-//		 rall=confirm('",Com/binary," All Systems ",Rm/binary,"?');
-
-//		 if (rall==true) {
-//			 ",Com/binary,"All",Rm/binary,"()
-
         $('#dialogtext').html(' ",Com/binary," All ",Rm/binary," systems...');
         $('#dialog').dialog({
         title:' ",Com/binary," All ",Rm/binary," Systems...',
@@ -1754,9 +1749,6 @@ jsAllConfirm([Room|Rooms],Com) ->
           }]
         })
 
-//         }
-//		 else
-//			 message(true,'",Com/binary," All in ",Rm/binary," aborted...')
 	 });
 
 ",(jsAllConfirm(Rooms,Com))/binary>>;
@@ -2285,17 +2277,6 @@ comButtons([{Wk,FQDN,MacAddr,_Os}|Wks],Rm,RowCnt,ColCnt) ->
 	});
 
 
-	$('#reboot2_",Wk/binary,"').click(function(){
-        r=false;
-        if (rall==false)
-            r=confirm('Reboot ",Wk/binary,"?');
-        if (r==true || rall==true){
-   		    send('",FQDN/binary,":reboot:0');
-		    message(true,'Rebooting ",Wk/binary,"...')
-        } else
-		    message(true,'Reboot of ",Wk/binary," aborted...')
-	});
-
 	$('#shutdown_",Wk/binary,"').click(function(){
       if (rall==false) {
         $('#dialogtext').html('shutdown');
@@ -2314,17 +2295,6 @@ comButtons([{Wk,FQDN,MacAddr,_Os}|Wks],Rm,RowCnt,ColCnt) ->
         send('",FQDN/binary,":shutdown:0');
         message(true,'Shutting down ",Wk/binary,"...');        
       }
-	});
-
-	$('#shutdown2_",Wk/binary,"').click(function(){
-        r=false;
-        if (rall==false)
-            r=confirm('Shutdown ",Wk/binary,"?');
-        if (r==true || rall==true){
-		    send('",FQDN/binary,":shutdown:0');
-		    message(true,'Shutting down ",Wk/binary,"...');
-        } else
-		    message(true,'Shutdown of ",Wk/binary," aborted...')
 	});
 
 	$('#wake_",Wk/binary,"').click(function(){
@@ -2367,18 +2337,6 @@ comButtons([{Wk,FQDN,MacAddr,_Os}|Wks],Rm,RowCnt,ColCnt) ->
       }
 	});
 
-	$('#dffreeze2_",Wk/binary,"').click(function(){
-        r=false;
-        if (rall==false)
-            r=confirm('Freeze ",Wk/binary,"?');
-        if (r==true || rall==true){
-   		    send('",FQDN/binary,":dffreeze:0');
-		    message(true,'Freezing ",Wk/binary,"...')
-            $('#",Wk/binary,"status').html('.');
-        } else
-		    message(true,'Freeze of ",Wk/binary," aborted...')
-	});
-
 	$('#dfthaw_",Wk/binary,"').click(function(){
       if (rall==false) {
         $('#dialogtext').html('DeepFreeze thaw');
@@ -2397,18 +2355,6 @@ comButtons([{Wk,FQDN,MacAddr,_Os}|Wks],Rm,RowCnt,ColCnt) ->
         send('",FQDN/binary,":dfthaw:0');
         message(true,'DeepFreeze Thawing ",Wk/binary,"...');        
       }
-	});
-
-	$('#dfthaw2_",Wk/binary,"').click(function(){
-        r=false;
-        if (rall==false)
-            r=confirm('Thaw ",Wk/binary,"?');
-        if (r==true || rall==true){
-   		    send('",FQDN/binary,":dfthaw:0');
-		    message(true,'Thawing ",Wk/binary,"...')
-            $('#",Wk/binary,"status').html('.');
-        } else
-		    message(true,'Thaw of ",Wk/binary," aborted...')
 	});
 
 	$('#dfstatus_",Wk/binary,"').click(function(){
