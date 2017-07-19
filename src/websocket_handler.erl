@@ -1144,27 +1144,36 @@ Port/binary,
         $('#cntr').html('0');
     });
 
+    var obj = '';
+
 	$(document).on('click', '#dbut', function(){
-      var res = confirm('Really want to delete script/file: [ ' + $(this).parent().next('td').html() + ' ]?');
-      if (res == true) {
-        if ($(this).parent().next('td').html() == $('#lncmddiv').html()) {
-            //console.log($('#lncmddiv').html());
-            $('#lncmddiv').html('')
-        }
-        else if ($(this).parent().next('td').html() == $('#lnexediv').html()) {
-            //console.log($('#lnexediv').html());
-            $('#lnexediv').html('')
-        }
-        else if ($(this).parent().next('td').html() == $('#lnmsidiv').html()) {
-            //console.log($('#lnmsidiv').html());
-            $('#lnmsidiv').html('')
-        }
+        obj = $(this);
 
-        //console.log($(this).parent().next('td').html());
+        $('#dialogtext2').html($(obj).parent().next('td').html());
+        $('#dialog2').dialog({
+        title:' Confirm Delete Script',
+        buttons: [{
+            text: 'Confirm delete script!',
+            click: function() {
 
-        $(this).closest('tr').remove();
-        send('0:delscrfile:' + $(this).parent().next('td').html());
-      }
+              if ($(obj).parent().next('td').html() == $('#lncmddiv').html()) {
+                $('#lncmddiv').html('')
+              }
+              else if ($(obj).parent().next('td').html() == $('#lnexediv').html()) {
+                $('#lnexediv').html('')
+              }
+              else if ($(obj).parent().next('td').html() == $('#lnmsidiv').html()) {
+                $('#lnmsidiv').html('')
+              }
+
+              $(obj).closest('tr').remove();
+              send('0:delscrfile:' + $(obj).parent().next('td').html());
+
+              $( this ).dialog( 'close' );
+            }
+          }]
+        });
+
 	});
 
 	$(document).on('click', '#lbut', function(){
@@ -2204,7 +2213,11 @@ divc({Wk,_FQDN,_MacAddr,_Os}) ->
 </div>
 
 <div id='dialog' style='display:none;' title=''>
-Click button to <span id=dialogtext style='font-weight:bold;'>thaw</span>...
+Click button to <span id=dialogtext style='font-weight:bold;'>temp</span>...
+</div>
+
+<div id='dialog2' style='display:none;' title=''>
+Click button to delete: <br><span id=dialogtext2 style='font-weight:bold;align:center;'>temp</span>...
 </div>
 
 ">>
