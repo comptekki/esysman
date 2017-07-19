@@ -365,3 +365,7 @@ tr.r:hover {
     text-align: center;
     float: none !important;
 }
+
+.ui-front{
+	z-index: 6000 !important;
+}
