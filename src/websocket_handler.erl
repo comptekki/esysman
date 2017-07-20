@@ -40,10 +40,6 @@
 		 websocket_terminate/3
 		]).
 
-%im().
-%ii(websocket_handler).
-%iaa([init]).
-
 -include("esysman.hrl").
 -include("db.hrl").
 
@@ -489,10 +485,7 @@ checkCreds(UnamePasswds, Req, _State) ->
 			CookieVal = get_cookie_val(), 
 			Req2 = cowboy_req:set_resp_cookie(Uname, CookieVal, [{max_age, ?MAXAGE}, {path, "/"}, {secure, true}, {http_only, true}], Req1),
 			{pass, Req2}
-	end.
-
-%%
-
+	end;
 checkCreds([{Uname,Passwd}|UnamePasswds], Uarg, Parg, Req) ->
     case Uname of
 		Uarg ->
@@ -1393,10 +1386,6 @@ function progress(e){
       }
     });
 
-
-//    $('body').bind('click mousedown mouseover', function(e) {
-//        console.log(e);
-//    });
 
 ",
 (jsAll(?ROOMS,<<"ping">>))/binary,
