@@ -485,7 +485,10 @@ checkCreds(UnamePasswds, Req, _State) ->
 			CookieVal = get_cookie_val(), 
 			Req2 = cowboy_req:set_resp_cookie(Uname, CookieVal, [{max_age, ?MAXAGE}, {path, "/"}, {secure, true}, {http_only, true}], Req1),
 			{pass, Req2}
-	end;
+	end.
+
+%%
+
 checkCreds([{Uname,Passwd}|UnamePasswds], Uarg, Parg, Req) ->
     case Uname of
 		Uarg ->
