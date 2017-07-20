@@ -142,12 +142,18 @@ Client/Server Setup
 Versions
 --------
 
+1.4
+
+-jquery ui'd buttons, popups, etc.
+
+-------
 1.3
 
 -Update to cowboy 1.1.2
 -Add a script/file manager
 -Add a simple lock screen
--Add support for four web browser web consoles
+-Add support for four web browser consoles
+
 
 --------
 1.2
