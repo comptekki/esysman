@@ -1,6 +1,6 @@
 {application, esysman, [
 	{description, "Erlang Systems Manager"},
-	{vsn, "1.3"},
+	{vsn, "1.4"},
 	{modules, []},
 	{registered, [esysman_sup]},
 	{applications, [
@@ -9,7 +9,6 @@
 		crypto,
 		public_key,
 		ssl,
-		observer,
 		cowboy,
 		epgsql
 	]},
