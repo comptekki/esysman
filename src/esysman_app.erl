@@ -36,27 +36,28 @@
 
 %% API.
 
-start(_Type, _Arags) ->
+start(_Type, _Args) ->
 	Dispatch = cowboy_router:compile([
       {'_', [
-			 {"/esysman", websocket_handler, []},
+			 {"/esysman", main_handler, []},
+			 {"/websocket", websocket_handler, []},
 			 {"/esysman/logout", redirect_handler, []},
 			 {"/static/[...]", cowboy_static, {priv_dir, esysman, "static"}},
-			 {"/upload", upload_handler, []},
-			 {'_', default_handler, []}
+			 {"/upload", upload_handler, []}
+%			 {'_', cowboy_static, {priv_file, esysman, "index.html"}}
 		]}
 	]),
 	PrivDir = code:priv_dir(esysman),
 	{ok, _} = 
-		cowboy:start_https(
+		cowboy:start_tls(
 		  https,
-		  100,
 		  [{port, 8443},
-		   {certfile, PrivDir ++ "/ssl/cert.pem"},
-		   {keyfile, PrivDir ++ "/ssl/key.pem"},
+		   {cacertfile, PrivDir ++ "/ssl/cowboy-ca.crt"},
+		   {certfile, PrivDir ++ "/ssl/server.crt"},
+		   {keyfile, PrivDir ++ "/ssl/server.key"},
 		   {password, ""}],
-		   [{env, [{dispatch, Dispatch}]}]
-		 ),
+		  #{env => #{dispatch => Dispatch}
+	   }),
 	esysman_sup:start_link().
 
 stop(_State) ->
