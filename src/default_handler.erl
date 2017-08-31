@@ -28,15 +28,14 @@
 %%
 
 -module(default_handler).
--export([init/3, handle/2, terminate/3]).
 
-init(_Transport, Req, []) ->
-	{ok, Req, undefined}.
+-export([init/2]).
+-export([allowed_methods/2]).
 
-handle(Req, State) ->
-	Req2 = cowboy_req:set_resp_header(<<"Location">>, <<"/esysman">>, Req),
-	{ok, Req3} = cowboy_req:reply(307, [], <<>>, Req2),
-	{ok, Req3, State}.
+init(Req1, Opts) ->
+	Req2 = cowboy_req:set_resp_header(<<"Location">>, <<"/esysman">>, Req1),
+	{ok, Req} = cowboy_req:reply(307, #{}, <<>>, Req2),
+	{ok, Req, Opts}.
 
-terminate(_Reason, _Req, _State) ->
-	ok.
+allowed_methods(Req, State) ->
+	{[<<"GET">>], Req, State}.
