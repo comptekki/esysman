@@ -28,19 +28,33 @@
 %%
 
 -module(redirect_handler).
--export([init/3, handle/2, terminate/3]).
+-export([init/2]).
 
 -include("esysman.hrl").
 
-init(_Transport, Req, []) ->
-	{ok, Req, undefined}.
-
-handle(Req, State) ->
+init(Req, Opts) ->
 	{ok, [_, _, {_, [{Uname, _}]}, _]} = file:consult(?CONF),
-	Req2 = cowboy_req:set_resp_cookie(Uname, <<"">>, [{path, "/"}], Req),
-	Req3 = cowboy_req:set_resp_header(<<"Location">>, <<"/esysman">>, Req2),
-	{ok, Req4} = cowboy_req:reply(307, [], <<>>, Req3),
-	{ok, Req4, State}.
 
-terminate(_Reason, _Req, _State) ->
-	ok.
+%	Req2 = cowboy_req:set_resp_cookie(Uname, CookieVal, Req, #{max_age =>  ?MAXAGE, path => "/", secure => true, http_only => true}),
+	Req2 = cowboy_req:set_resp_cookie(Uname, <<"">>, Req, #{ path => "/", max_age => 0 }),
+%	Req3 = cowboy_req:set_resp_header(<<"Location">>, "/esysman", Req2),
+	Req4 = cowboy_req:reply(
+			200,
+			#{ <<"content-type">> => <<"text/html">> },
+
+<<"<html>
+<head>
+<meta Http-Equiv='Cache-Control' Content='no-cache'>
+<meta Http-Equiv='Pragma' Content='no-cache'>
+<meta Http-Equiv='Expires' Content='0'>
+<META HTTP-EQUIV='EXPIRES' CONTENT='Mon, 30 Apr 2012 00:00:01 GMT'>
+
+<meta http-equiv='refresh' content='0; url=/esysman'>
+</head>
+<style>
+body {background-color:black; color:yellow}
+</style>
+<body>
+</body>
+</html>">>, Req2),
+	{ok, Req4, Opts}.
