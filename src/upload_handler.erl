@@ -1,19 +1,41 @@
-%% @doc Upload handler.
-%% https://github.com/ninenines/cowboy/ 1.1.2 /examples/upload/src/upload_handler.erl
+%% Copyright (c) 2012, Wes James <comptekki@gmail.com>
+%% All rights reserve.
+%% 
+%% Redistribution and use in source and binary forms, with or without
+%% modification, are permitted provided that the following conditions are met:
+%% 
+%%     * Redistributions of source code must retain the above copyright
+%%       notice, this list of conditions and the following disclaimer.
+%%     * Redistributions in binary form must reproduce the above copyright
+%%       notice, this list of conditions and the following disclaimer in the
+%%       documentation and/or other materials provided with the distribution.
+%%     * Neither the name of "ESysMan" nor the names of its contributors may be
+%%       used to endorse or promote products derived from this software without
+%%       specific prior written permission.
+%% 
+%% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+%% AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+%% IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+%% ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+%% LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+%% CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+%% SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+%% INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+%% CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+%% ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+%% POSSIBILITY OF SUCH DAMAGE.
+%% 
+%%
+
 -module(upload_handler).
 
--export([init/3]).
--export([handle/2]).
--export([terminate/3]).
+-export([init/2]).
 
 -include("esysman.hrl").
 
-init(_, Req, _Opts) ->
-	{ok, Req, undefined}.
-
-handle(Req, State) ->
-	{ok, Headers, Req2} = cowboy_req:part(Req),
-	{file, <<"inputfile">>, Filename, ContentType, _TE}
+init(Req, Opts) ->
+	{ok, Headers, Req2} = cowboy_req:read_part(Req),
+	{file, <<"inputfile">>, Filename, ContentType}
 		= cow_multipart:form_data(Headers),
 	case file:delete(<<(?UPLOADS)/binary,Filename/binary>>) of
 		ok -> "";
@@ -23,10 +45,10 @@ handle(Req, State) ->
 	{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
 	Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
 	io:format("date: ~p -> Received file ~p of content-type ~p~n~n", [Date, Filename, ContentType]),
-	{ok, Req3, State}.
+	{ok, Req3, Opts}.
 
 body_to_console(Req, Filename) ->
-    Req3 = case cowboy_req:part_body(Req) of
+    case cowboy_req:read_part_body(Req) of
         {ok, Data, Req2} ->
 			case file:write_file(<<(?UPLOADS)/binary,Filename/binary>>, Data, [append]) of
 				ok ->
@@ -46,10 +68,6 @@ body_to_console(Req, Filename) ->
 					Res
 			end,
             {ok, Req2}
-	end,
-	Req3.
-
-terminate(_Reason, _Req, _State) ->
-	ok.
+	end.
 
 
