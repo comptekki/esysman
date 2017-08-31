@@ -141,7 +141,12 @@ Client/Server Setup
 --------
 Versions
 --------
+1.5
 
+-Updated for cowboy 2.0.0-rc.1
+
+
+-------
 1.4
 
 -jQuery ui'd buttons, popups, etc.
