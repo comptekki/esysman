@@ -162,7 +162,7 @@ input {width:100px;}
 .ltd {
 	float:left;
 	width:415px;
-	height:235px;
+	height:250px;
 	padding:4px;
 	vertical-align:top;
 	border:5px solid #555555;
@@ -285,7 +285,7 @@ a.clr {
 	position:absolute;
 	left:400px;
 	top:200px;
-	width:1000px;
+	width:1100px;
 	height:600px;
 	padding:10px 10px 10px 10px;
 	border:10px solid #888;
