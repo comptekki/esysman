@@ -150,8 +150,8 @@ input {width:100px;}
 
 .hltd {
 	float:left;
-	width:270px;
-	height:65px;
+	width:415px;
+	height:80px;
 	padding:4px;
 	vertical-align:top;
 	border:5px solid #555555;
@@ -161,7 +161,7 @@ input {width:100px;}
 
 .ltd {
 	float:left;
-	width:270px;
+	width:415px;
 	height:235px;
 	padding:4px;
 	vertical-align:top;
