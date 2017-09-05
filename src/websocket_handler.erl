@@ -491,7 +491,7 @@ tr1(File, Res, Fdiv, Ldiv, LnFile) ->
 %%
 
 tr(File, 0) ->
-	"<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all'>ln</button><button id='ebut' class='ui-button ui-widget ui-corner-all'>Edit</button></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>";
+	"<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all' title='Delete File'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all' title='Rename File'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all' 'Link file to any(.cmd/.exe/.msi)>ln</button><button id='ebut' class='ui-button ui-widget ui-corner-all' title='Edit Script'>Edit</button><button id='fncbut' class='ui-button ui-widget ui-corner-all' title='Copy file name to clipboard'>Copy</button></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>";
 
 tr(File, 1) ->
 	"<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all'>ln</button></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>".
