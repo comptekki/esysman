@@ -1764,7 +1764,14 @@ divhc(Rm,[{Wk,FQDN,MacAddr,_Os}|Wks],ColCnt) ->
 
 <div id='",Wk/binary,"status' class='status'>.</div>
 
-<div class='wkchk'><input id='",Wk/binary,"check' type='checkbox' class='checkbox' /><span id='",Wk/binary,"Togr'>T</span></div></a><div class='wk'>",FQDN/binary,"</div>
+<div class='wkchk'>
+<input id='",Wk/binary,"check' type='checkbox' class='checkbox' /></div>
+
+<button id='",Wk/binary, "Expr' class='ui-button ui-widget ui-corner-all' title='E' />E</button>
+
+<div class='wk'>",FQDN/binary,"</div>
+
+
 
 <div class='brk'></div>
 
@@ -1905,7 +1912,7 @@ comButtons([{Wk,FQDN,MacAddr,_Os}|Wks],Rm,RowCnt,ColCnt) ->
        });
 	});
 
-    $('#",Wk/binary,"Togr').click(function(){
+    $('#",Wk/binary,"Expr').click(function(){
         $('#",Rm/binary,"_row_",(list_to_binary(integer_to_list(RowCnt)))/binary,"_Coms').slideToggle('slow');
 	});
 
