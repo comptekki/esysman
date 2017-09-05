@@ -886,6 +886,16 @@ Port/binary,
       }
 	});
 
+	$(document).on('click', '#fncbut', function(){     
+      var $temp = $('<input>');
+      $('body').append($temp);
+      $temp.val($(this).parent().next('td').html()).select();
+      document.execCommand('copy');
+      $temp.remove();
+      $('#fncp').finish().show().delay(2000).fadeOut('slow');
+	});
+
+
     var addscrf = false;
 
 	$(document).on('click', '#addscrf', function(){     
@@ -1190,7 +1200,9 @@ function progress(e){
 
 <button id='lockscr' class='ui-button ui-widget ui-corner-all'>Lock</button>
 <button id='mngscripts' class='ui-button ui-widget ui-corner-all'>Manage Scripts</button>
+<span id='fncp' style='display:none'>File name copied to Clipboard!</span>
 <div id='mngscrbox' class='ui-widget-content'></div>
+
 </div> 
 
  <div id='tcoms'>
@@ -1261,8 +1273,7 @@ function progress(e){
  </div>
  </div>
 
-<div id='big_msg'>
-</div>
+<div id='big_msg'></div>
 
 </body>
 </html">>, Req),
@@ -1767,7 +1778,7 @@ divhc(Rm,[{Wk,FQDN,MacAddr,_Os}|Wks],ColCnt) ->
 <div class='wkchk'>
 <input id='",Wk/binary,"check' type='checkbox' class='checkbox' /></div>
 
-<button id='",Wk/binary, "Expr' class='ui-button ui-widget ui-corner-all' title='E' />E</button>
+<button id='",Wk/binary, "Expr' class='ui-button ui-widget ui-corner-all' title='Expand Row' />E</button>
 
 <div class='wk'>",FQDN/binary,"</div>
 
@@ -1847,9 +1858,7 @@ divc({Wk,_FQDN,_MacAddr,_Os}) ->
         (selections(?COMS))/binary,
 "
 </select>
-<input id='comstr_",Wk/binary,"' type='text' class='ui-widget' /><br>
-
-
+<input id='comstr_",Wk/binary,"' type='text' class='ui-widget' />
 
 </div>
 </div>
