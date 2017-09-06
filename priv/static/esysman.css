@@ -150,7 +150,7 @@ input {width:100px;}
 
 .hltd {
 	float:left;
-	width:415px;
+	width:280px;
 	height:80px;
 	padding:4px;
 	vertical-align:top;
@@ -161,7 +161,7 @@ input {width:100px;}
 
 .ltd {
 	float:left;
-	width:415px;
+	width:280px;
 	height:250px;
 	padding:4px;
 	vertical-align:top;
@@ -205,7 +205,7 @@ a.ui-button:focus { color:inherit !important; }
 .logged_on { color:green; background-color:#333; width:265px; text-align:center; margin:0 auto; }
 
 .line2 { float:left; width:257px; background-color:#333; padding:0px 5px 0px 5px; margin:0 auto;}
-.status { float:left; width:80%; color:red; background-color:#333; text-align:center; padding:0 5px 0 5px; margin:0 auto;}
+.status { float:left; width:70%; color:red; background-color:#333; text-align:center; padding:0 5px 0 5px; margin:0 auto;}
 .macaddr { float:left; width:56%; background-color:#454545;  padding:0 5px 0 5px;}
 .dfstatus { float:left; width:40%; color:aquamarine; background-color:#333; text-align:center; }
 
