@@ -52,7 +52,7 @@ start(_Type, _Args) ->
 		cowboy:start_tls(
 		  https,
 		  [{port, 8443},
-		   {cacertfile, PrivDir ++ "/ssl/cowboy-ca.crt"},
+%		   {cacertfile, PrivDir ++ "/ssl/cowboy-ca.crt"},
 		   {certfile, PrivDir ++ "/ssl/server.crt"},
 		   {keyfile, PrivDir ++ "/ssl/server.key"},
 		   {password, ""}],
