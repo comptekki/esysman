@@ -489,6 +489,10 @@ Port/binary,
 							$('#'+box+'status').css('background-color','#006600');
 							message(sepcol,boxCom[0] + ': ' + 'copy');
 							break;
+                        case 'list_dwnlds_dir':
+						  $('#mngdwnldsbox').html(boxCom[2]);
+							message(sepcol,boxCom[0] + ': ' + 'list_dwnlds_dir');
+                           break;
                         case 'list_ups_dir':
 						  $('#mngscrbox').html(boxCom[2]);
 							message(sepcol,boxCom[0] + ': ' + 'list_ups_dir');
@@ -818,6 +822,26 @@ Port/binary,
 
 	});
 
+	$(document).on('click', '#dbutd', function(){
+        obj = $(this);
+
+        $('#dialogtext2d').html($(obj).parent().next('td').html());
+        $('#dialog2d').dialog({
+        title:' Confirm Delete Downloads File',
+        buttons: [{
+            text: 'Confirm delete Downloads File!',
+            click: function() {
+
+              $(obj).closest('tr').remove();
+              send('0:deldwnldsfile:' + $(obj).parent().next('td').html());
+
+              $( this ).dialog( 'close' );
+            }
+          }]
+        });
+
+	});
+
 	$(document).on('click', '#lbut', function(){
         if ($(this).parent().next('td').html().indexOf('.cmd')>0) {
           $('#lncmddiv').html($(this).parent().next('td').html());
@@ -856,6 +880,30 @@ Port/binary,
         }
     }
 	});
+
+	$(document).on('click', '#rbutd', function(){     
+      var fnameo = $(this).parent().next('td').html();
+//      fname = fnameo.split('.');
+      var ok = true;
+      while (ok) {
+        var fnamex=prompt('Rename file',fnameo);
+        if (fnamex == null) {
+          ok = false;
+        } else if (fnamex.length > 0){
+          var regex=/^[a-zA-Z0-9-_\.]+$/;
+          if (!fnamex.match(regex)) {
+            ok = true;
+          } else {
+            ok = false;
+            $(this).parent().next('td').html(fnamex);
+            send('0:rendwnldsfile:' + fnameo + '+' + fnamex);
+            showmngdwnldsbox = false;
+            $('#mngdwnlds').click();
+          }
+        }
+    }
+	});
+
 
    var notcmd = false;
 
@@ -957,6 +1005,52 @@ Port/binary,
 	  return false;
 	});
 
+
+    $(document).on('change', '#selfiled', function(evt){
+      max = $(this)[0].files[0].size
+
+      fSize = max; 
+      i=0;
+      while(fSize>900){
+        fSize/=1024;
+        i++;
+      }
+
+      var fSExt = new Array('Bytes', 'KB', 'MB', 'GB');
+      var bitsStr = Math.round(fSize*100)/100 + ' ' + fSExt[i];
+
+      $('#dprog').html('0% Uploaded.... of ' + bitsStr);
+    });
+
+    $(document).on('submit', '#mypostd', function(evt){
+//	  evt.preventDefault();
+
+	  var formData = new FormData($(this)[0]);
+
+	  $.ajax({
+	    url: '/uptodown',
+	    type: 'POST',
+	    data: formData,
+//	    async: false,
+	    cache: false,
+	    contentType: false,
+	    enctype: 'multipart/form-data',
+	    processData: false,
+//        success: function(d) {
+//          console.log('success');
+//        },
+        xhr: function() {
+          var myXhr = $.ajaxSettings.xhr();
+          if(myXhr.upload){
+            myXhr.upload.addEventListener('progress',progressd, false);
+          }
+          return myXhr;
+        }
+	  });
+
+	  return false;
+	});
+
 //http://stackoverflow.com/questions/23219033/show-a-progress-on-multiple-file-upload-jquery-ajax
 
 function progress(e){
@@ -988,6 +1082,40 @@ function progress(e){
       }
     }  
  }
+
+
+function progressd(e){
+
+    if(e.lengthComputable){
+      var max = e.total;
+      var current = e.loaded;
+      
+      var fSExt = new Array('Bytes', 'KB', 'MB', 'GB');
+      fSize = max; 
+      i=0;
+      while(fSize>900){
+        fSize/=1024;
+        i++;
+      }
+
+      var bitsStr = Math.round(fSize*100)/100 + ' ' + fSExt[i];
+
+      var perc = parseInt((current * 100)/max);
+      $('#dprog').html(perc + '% Uploaded.... of ' + bitsStr);
+//        console.log(Percentage);
+
+      if(perc >= 100){
+       // process completed  
+        showmngdwnldsbox = false;
+        $('#mngdwnlds').click();
+      }
+    }  
+ }
+
+    $(document).on('click', '#closedwnldslist', function(){
+      showmngdwnldsbox = true;
+      $('#mngdwnlds').click();
+    });
 
     $(document).on('click', '#lockscr', function(evt){
       lockscr();
@@ -1106,6 +1234,23 @@ function progress(e){
           }
 	});
 
+    var showmngdwnldsbox = false
+
+    $('#mngdwnlds').click(function(){
+          if (!showmngdwnldsbox) {
+              $('#mngdwnldsbox').css('z-index', 2000);
+              $('#mngdwnldsbox').show();
+              $('#mngdwnldsbox').css('position', 'absolute');
+              $('#mngdwnldsbox').css('z-index', parseInt($('.msgc').css('z-index')) + 2);
+              showmngdwnldsbox = true;
+              send('localhost@domain:list_dwnlds_dir:0');
+          }
+          else {
+              $('#mngdwnldsbox').hide();
+              showmngdwnldsbox = false;
+          }
+	});
+
        var msgcsm_hgt_old = 0;
        var msgc_hgt_old = 0;
 
@@ -1200,8 +1345,10 @@ function progress(e){
 
 <button id='lockscr' class='ui-button ui-widget ui-corner-all'>Lock</button>
 <button id='mngscripts' class='ui-button ui-widget ui-corner-all'>Manage Scripts</button>
+<button id='mngdwnlds' class='ui-button ui-widget ui-corner-all'>Manage Downloads</button>
 <span id='fncp' style='display:none'>File name copied to Clipboard!</span>
 <div id='mngscrbox' class='ui-widget-content'></div>
+<div id='mngdwnldsbox' class='ui-widget-content'></div>
 
 </div> 
 
@@ -1870,6 +2017,10 @@ Click button to <span id=dialogtext style='font-weight:bold;'>temp</span>...
 
 <div id='dialog2' style='display:none;' title=''>
 Click button to delete: <br><span id=dialogtext2 style='font-weight:bold;align:center;'>temp</span>...
+</div>
+
+<div id='dialog2d' style='display:none;' title=''>
+Click button to delete: <br><span id=dialogtext2d style='font-weight:bold;align:center;'>temp</span>...
 </div>
 
 ">>
