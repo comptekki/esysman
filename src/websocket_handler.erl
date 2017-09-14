@@ -178,6 +178,17 @@ websocket_handle({text, Msg}, State) ->
 				Data2= <<"done - ping sent to: ",Box/binary>>,
 				io:format("~ndate: ~p -> done - ping ~p~n",[Date, Box]),
 				Data2;
+			<<"list_dwnlds_dir">> ->
+				send_msg(?SERVERS, <<"list_dwnlds_dir from ", (pid())/binary>>),
+				Data2= <<Box/binary,":list_dwnlds_dir:",(list_dwnld_fls())/binary>>,
+				io:format("~ndate: ~p -> done - list_dwnlds_dir ~p ~n",[Date, Box]),
+				Data2;
+			<<"deldwnldsfile">> ->
+				_ = file:delete(<<(?DOWNLOADS)/binary,Args/binary>>),
+
+				io:format("~ndate: ~p ->  done - deleting file/downloads file: ~p ~n",[Date, Args]),
+				Data2= <<"done - deleting file/downloads file: ", Args/binary, "....!">>,
+				Data2;
 			<<"list_ups_dir">> ->
 				send_msg(?SERVERS, <<"list_ups_dir from ", (pid())/binary>>),
 				Data2= <<Box/binary,":list_ups_dir:",(list_up_fls())/binary>>,
@@ -218,6 +229,14 @@ websocket_handle({text, Msg}, State) ->
 
 				io:format("~ndate: ~p -> done - renaming file/script file: ~p -> ~p~n",[Date, F1, F2]),
 				Data4= <<"done - renaming file/script file: ", F1/binary, "->", F2/binary, "....!">>,
+				Data4;
+			<<"rendwnldsfile">> ->
+				send_msg(?SERVERS, <<"rendwnldsfile from ", (pid())/binary>>),
+				[F1,F2] = binary:split(Args, <<"+">>, [global]),
+				file:rename(<<(?DOWNLOADS)/binary,F1/binary>>, <<(?DOWNLOADS)/binary, F2/binary>>),
+
+				io:format("~ndate: ~p -> done - renaming file/downloads file: ~p -> ~p~n",[Date, F1, F2]),
+				Data4= <<"done - renaming file/downloads file: ", F1/binary, "->", F2/binary, "....!">>,
 				Data4;
 			<<"editscrfile">> ->
 				send_msg(?SERVERS, <<"editscrfile from ", (pid())/binary>>),
@@ -434,6 +453,33 @@ do_insert(TimeStamp, Box, User) ->
 			end
 	end.
 
+%%
+
+list_dwnld_fls() ->
+	{ok, Files0}=file:list_dir(?DOWNLOADS),
+    Files=lists:sort(Files0),
+    Head = <<"<div id='dwnldslist'><button id='closedwnldslist' class='ui-button ui-widget ui-corner-all'>Close</button></div><div id='dprog'></div><form id='mypostd' method='post' enctype='multipart/form-data' action='/uptodown'><br><input id='fdwnload' type='submit' value='Upload'/><input id='selfiled' type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form><table><tr><th></th><th>File Name</th></tr>">>,
+	Mid = <<(erlang:list_to_binary([ mng_dfile(File) || File <- Files]))/binary>>,
+	Tail = <<"</table><div class='brk'></div><button id='closedwnldslist' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
+	<<Head/binary,Mid/binary,Tail/binary>>.
+
+%%
+
+mng_dfile(File) ->
+	case file:read_file_info(binary_to_list(?DOWNLOADS) ++ "/" ++ File) of
+		{ok, {_,_,Ftype,_,_,_,_,_,_,_,_,_,_,_}} ->
+			case Ftype of
+				directory -> 
+					"";
+				_ ->
+					tr(File, 2)
+			end;
+		_ ->
+			tr(File, 2)
+	end.
+
+%%
+
 list_up_fls() ->
 	{ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
@@ -494,7 +540,10 @@ tr(File, 0) ->
 	"<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all' title='Delete File'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all' title='Rename File'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all' 'Link file to any(.cmd/.exe/.msi)>ln</button><button id='ebut' class='ui-button ui-widget ui-corner-all' title='Edit Script'>Edit</button><button id='fncbut' class='ui-button ui-widget ui-corner-all' title='Copy file name to clipboard'>Copy</button></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>";
 
 tr(File, 1) ->
-	"<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all'>ln</button></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>".
+	"<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all'>ln</button></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>";
+
+tr(File, 2) ->
+	"<tr class='r'><td><button id='dbutd' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbutd' class='ui-button ui-widget ui-corner-all'>Ren</button></td><td>" ++ File ++ "</td><td></td></tr>".
 
 %%
 
