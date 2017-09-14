@@ -142,8 +142,9 @@ Versions
 --------
 1.5
 
--Updated for cowboy 2.0.0-rc.2
-
+-Update for cowboy 2.0.0-rc.2
+-Add downloads folder
+-Add upload to downloads interface
 
 -------
 1.4
@@ -159,7 +160,6 @@ Versions
 -Add a simple lock screen
 -Add support for four web browser consoles
 
-
 --------
 1.2
 
@@ -167,14 +167,12 @@ Versions
 -Add basic centos support
 -Move to release format
 
-
 --------
 1.1
 
 -Update to cowboy 0.8.3
 -Add basic linux/mac support
 -Add S/UnS All Coms to select everything - commands and workstations
-
 
 --------
 1.0
