@@ -43,7 +43,7 @@ start(_Type, _Args) ->
 			 {"/websocket", websocket_handler, []},
 			 {"/esysman/logout", redirect_handler, []},
 			 {"/static/[...]", cowboy_static, {priv_dir, esysman, "static"}},
-			 {"/downloads/[...]", cowboy_static, {priv_dir, esysman, "downloads", [{mimetypes, cow_mimetypes, web}]}},
+			 {"/downloads/[...]", cowboy_static, {priv_dir, esysman, "downloads", [{mimetypes, cow_mimetypes, all}]}},
 			 {"/upload", upload_handler, []},
 			 {"/uptodown", uptodown_handler, []}
 %			 {'_', cowboy_static, {priv_file, esysman, "index.html"}}
