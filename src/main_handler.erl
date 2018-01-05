@@ -519,12 +519,15 @@ Port/binary,
                             }
                			    else if(boxCom[1] == undefined) {
 						        message(sepcol,boxCom[0]);
+						        if(boxCom[0].indexOf('clearsmsg') > -1 || boxCom[0].indexOf('clearcmsg') > -1 || boxCom[0].indexOf('cleardmsg') > -1) {
+                                  $('#cntrst').click();
+                                };
                             }
                    		    else {
                                 if (boxCom[1].indexOf('<br>') > 0) {
                                   message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1])
                                 } else {
-						          message(sepcol,boxCom[0] + ': ' + boxCom[1].replace(/\\n|\\r\\n|\\r/g, '<br>'))
+						          message(sepcol,boxCom[0] + ': ' + boxCom[1].replace(/\\n|\\r\\n|\\r/g, '<br>'));
                                 }
                             }
 					} // end switch
@@ -2143,7 +2146,7 @@ comButtons([{Wk,FQDN,MacAddr,_Os}|Wks],Rm,RowCnt,ColCnt) ->
         $('#dialog').dialog({
         title:'DeepFreeze Freeze',
         buttons: [{
-            text: 'DeepFreeze Thaw ",Wk/binary,"?',
+            text: 'DeepFreeze Freeze ",Wk/binary,"?',
             click: function() {
               send('",FQDN/binary,":dffreeze:0');
               message(true,'DeepFreeze freezing ",Wk/binary,"...');        
