@@ -926,7 +926,8 @@ Port/binary,
 
 	$(document).on('click', '#scrsave', function(){
       if (($('#scripttext').val().length > 0 || notcmd) && $('#scrdesc').val().length > 0) { 
-        send('0:savescrfile:' + $('#scrname').html() + '^' + $('#scripttext').val() + '^' + $('#scrdesc').val());
+        scripttxt = $('#scripttext').val().replace('\\n', '\\r\\n');
+        send('0:savescrfile:' + $('#scrname').html() + '^' + scripttxt + '^' + $('#scrdesc').val());
         $('#scripttext').val('');
         $('#editscr').hide();
         //$('#scrslist').show();
