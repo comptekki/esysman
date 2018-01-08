@@ -73,7 +73,7 @@ Prerequisites:
 1. Erlang (on server and client)
 		http://erlang.org
 
-2. Cowboy 2.1.0 (downloaded and compiled when 'make' is run)
+2. Cowboy 2.2.0 (downloaded and compiled when 'make' is run)
 	  https://github.com/extend/cowboy.git
 
 3. OpenSSL for creating selfsigned certificates
