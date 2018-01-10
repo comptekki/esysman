@@ -191,7 +191,7 @@ websocket_handle({text, Msg}, State) ->
 				Data2;
 			<<"list_ups_dir">> ->
 				send_msg(?SERVERS, <<"list_ups_dir from ", (pid())/binary>>),
-				Data2= <<Box/binary,":list_ups_dir:",(list_up_fls())/binary>>,
+				Data2= <<Box/binary,":list_ups_dir:",(list_up_fls(Args))/binary>>,
 				io:format("~ndate: ~p -> done - list_ups_dir ~p ~n",[Date, Box]),
 				Data2;
 			<<"delscrfile">> ->
@@ -480,17 +480,17 @@ mng_dfile(File) ->
 
 %%
 
-list_up_fls() ->
+list_up_fls(Filter) ->
 	{ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
-    Head = <<"<div id='scrslist'><button id='closescrslist' class='ui-button ui-widget ui-corner-all'>Close</button><button id='addscrf' class='ui-button ui-widget ui-corner-all'>Add Script</button><div class='brk'></div><div id='upprog'></div><form id='mypost' method='post' enctype='multipart/form-data' action='/upload'><br><input id='fupload' type='submit' value='Upload'/><input id='selfile' type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form><table><tr><th></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
-	Mid = <<(erlang:list_to_binary([ mng_file(File) || File <- Files]))/binary>>,
+    Head = <<"<script>$('#scrfilter').focus(); var tmp=$('#scrfilter').val(); $('#scrfilter').val(''); $('#scrfilter').val(tmp);</script><div id='scrslist'><button id='closescrslist' class='ui-button ui-widget ui-corner-all'>Close</button><button id='addscrf' class='ui-button ui-widget ui-corner-all'>Add Script</button><div class='brk'></div><div id='upprog'></div><form id='mypost' method='post' enctype='multipart/form-data' action='/upload'><br><input id='fupload' type='submit' value='Upload'/><input id='selfile' type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form>Filter -> <input id='scrfilter' type='text' class='ui-widget' value='", (Filter)/binary, "' /><br><br><table><tr><th></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
+	Mid = <<(erlang:list_to_binary([ mng_file(File, Filter) || File <- Files]))/binary>>,
 	Tail = <<"</table><div class='brk'></div><button id='closescrslist' class='ui-button ui-widget ui-corner-all'>Close</button></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div><div id='scrtxtbox'>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br></div>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
 	<<Head/binary,Mid/binary,Tail/binary>>.
 
 %%
 
-mng_file(File) ->
+mng_file(File, Filter) ->
 	{Res, LnFile} = file:read_link(binary_to_list(?UPLOADS) ++ "/" ++ File),
 
 	case file:read_file_info(binary_to_list(?UPLOADS) ++ "/" ++ File) of
@@ -510,7 +510,26 @@ mng_file(File) ->
 							ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
 							tr1(File, Res, "msidiv", "lnmsidiv", ShortLnf);
 						_ -> 
-							tr(File, 0)
+							Filter2 =
+								case Filter of
+									<<>> -> "";
+									_ -> binary:bin_to_list(Filter)
+								end,
+							FileInfo = mng_file_info(File),
+							case Filter2 of
+								"" -> 
+									tr(File, 0, FileInfo);
+								_ ->
+									FF = string:rstr(File, Filter2),
+									FIF = string:rstr(FileInfo, Filter2),
+									io:format("ff = ~p - fif = ~p\n",[FF,FIF]),
+									io:format("ff > 0 = ~p - fif > 0 ~p\n",[(FF > 0),(FIF > 0)]),
+
+									case (FF > 0) or (FIF > 0) of
+										true -> tr(File, 0, FileInfo);
+										_ -> <<>>
+									end
+							end
 					end
 			end;
 		_ ->
@@ -519,7 +538,7 @@ mng_file(File) ->
 				"any.exe" -> tr1(File, Res, "exediv", "lnexediv", "");
 				"any.msi" -> tr1(File, Res, "msidiv", "lnmsidiv", "");
 				_ -> 
-					tr(File, 0)
+					tr(File, 0, mng_file_info(File))
 
 			end
 	end.
@@ -536,11 +555,11 @@ tr1(File, Res, Fdiv, Ldiv, LnFile) ->
 
 %%
 
-tr(File, 0) ->
-	"<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all' title='Delete File'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all' title='Rename File'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all' 'Link file to any(.cmd/.exe/.msi)>ln</button><button id='ebut' class='ui-button ui-widget ui-corner-all' title='Edit Script'>Edit</button><button id='fncbut' class='ui-button ui-widget ui-corner-all' title='Copy file name to clipboard'>Copy</button></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>";
+tr(File, 0, FileInfo) ->
+	"<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all' title='Delete File'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all' title='Rename File'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all' 'Link file to any(.cmd/.exe/.msi)>ln</button><button id='ebut' class='ui-button ui-widget ui-corner-all' title='Edit Script'>Edit</button><button id='fncbut' class='ui-button ui-widget ui-corner-all' title='Copy file name to clipboard'>Copy</button></td><td>" ++ File ++ "</td><td></td><td>" ++ FileInfo ++ "</td></tr>".
 
-tr(File, 1) ->
-	"<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all'>ln</button></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>";
+%tr(File, 1) ->
+%	"<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all'>ln</button></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>";
 
 tr(File, 2) ->
 	"<tr class='r'><td><button id='dbutd' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbutd' class='ui-button ui-widget ui-corner-all'>Ren</button></td><td>" ++ File ++ "</td><td></td></tr>".
