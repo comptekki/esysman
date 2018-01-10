@@ -548,7 +548,7 @@ mng_file(File, Filter) ->
 tr1(File, Res, Fdiv, Ldiv, LnFile) ->
 	case Res of
 		ok ->
-			"<tr class='r'><td></td><td><div id='" ++ Fdiv ++"'>" ++ File ++ "</div></td><td><div id='" ++ Ldiv ++ "'>" ++ LnFile ++ "</div></td><td>" ++ mng_file_info(File) ++ "</td></tr>";
+			"<tr class='r'><td></td><td><div id='" ++ Fdiv ++"'>" ++ File ++ "</div></td><td><div id='" ++ Ldiv ++ "'>" ++ LnFile ++ "</div></td><td>" ++ mng_file_info(LnFile) ++ "</td></tr>";
 		 _ ->
 			"<tr class='r'><td></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>"
 		end.
@@ -567,13 +567,18 @@ tr(File, 2) ->
 %%
 
 mng_file_info(File) ->
-        Info = case file:consult(<<(?UPLOADS)/binary,"info/",(erlang:list_to_binary(File))/binary,".info">>) of
-           {ok, [Terms]} ->
-					   Terms;
-           {error, Reason} ->
-					   io_lib:format("~p",[Reason])
+        Info = 
+		case file:consult(<<(?UPLOADS)/binary,"info/",(erlang:list_to_binary(File))/binary,".info">>) of
+			{ok, [Terms]} ->
+				Terms;
+			{error, Reason} ->
+				io_lib:format("~p",[Reason])
         end,
-        Info.
+io:format("info: ~p",[Info]),
+	case Info of
+		["enoent"] -> "";
+		_ -> Info
+	end.
 
 terminate(Reason, _Opts, _State) ->
 	io:format("~nTerminate Reason: ~p~n", [Reason]),
