@@ -1177,7 +1177,22 @@ function progressd(e){
       }
     });
 
+    var scrfiltertxt = '';
 
+    $(document).on('keyup', '#scrfilter',function(e) {
+
+      if(((e.which > 45) && (e.which < 58)) || ((e.which > 64) && (e.which < 91))
+         || (e.which == 8) || (e.which == 127)) {
+
+        scrfiltertxt = this.value;
+
+        $('#mngscripts').click();
+        $('#mngscripts').click();
+     }
+      else {
+        return false; 
+      }
+    });
 ",
 (jsAll(?ROOMS,<<"ping">>))/binary,
 (jsAllConfirm(?ROOMS,<<"reboot">>))/binary,
@@ -1230,7 +1245,7 @@ function progressd(e){
               $('#mngscrbox').css('position', 'absolute');
               $('#mngscrbox').css('z-index', parseInt($('.msgc').css('z-index')) + 2);
               showmngscrbox = true;
-              send('localhost@domain:list_ups_dir:0');
+              send('localhost@domain:list_ups_dir:' + scrfiltertxt);
           }
           else {
               $('#mngscrbox').hide();
