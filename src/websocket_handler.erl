@@ -522,8 +522,6 @@ mng_file(File, Filter) ->
 								_ ->
 									FF = string:rstr(File, Filter2),
 									FIF = string:rstr(FileInfo, Filter2),
-									io:format("ff = ~p - fif = ~p\n",[FF,FIF]),
-									io:format("ff > 0 = ~p - fif > 0 ~p\n",[(FF > 0),(FIF > 0)]),
 
 									case (FF > 0) or (FIF > 0) of
 										true -> tr(File, 0, FileInfo);
@@ -574,7 +572,6 @@ mng_file_info(File) ->
 			{error, Reason} ->
 				io_lib:format("~p",[Reason])
         end,
-io:format("info: ~p",[Info]),
 	case Info of
 		["enoent"] -> "";
 		_ -> Info
