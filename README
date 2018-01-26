@@ -140,9 +140,15 @@ Client/Server Setup
 --------
 Versions
 --------
+1.6
+
+-Update for Cowboy 2.2.1
+-Add search to Manage Scripts list
+
+--------
 1.5
 
--Update for cowboy 2.0.0-rc.2
+-Update for Cowboy 2.0.0-rc.2
 -Add downloads folder
 -Add upload to downloads interface
 
