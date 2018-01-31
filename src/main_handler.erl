@@ -428,6 +428,11 @@ Port/binary,
 							$('#'+box+'status').css('background-color','#005500');
 							$('#'+box+'_hltd').css('background-color','#005555');
 							$('#'+box+'_ltd').css('background-color','#005555');
+                            if ($('#'+box+'upstrttime').html().length == 11 ) {
+        					  $('#'+box+'upstrttime').html('Start Time: ' + getnow());
+// '01/29/2018-10:54:29');
+                            }
+        					$('#'+box+'uptime').html(difftime($('#'+box+'upstrttime').html()));
 							message(sepcol,boxCom[0] + ': ' + 'pong');
 							break;
 					    case 'pang':
@@ -592,6 +597,17 @@ Port/binary,
 	   message(true,'Error: '+exception)
 	}
 
+    function difftime(boxstrttime) {
+      tspl = boxstrttime.split(':');
+      tspl0 =  tspl[1].split('-');
+      tspl = tspl0[0] + ' ' + tspl0[1] + ':' + tspl[2] + ':' + tspl[3];
+      nd = new Date(Date.now() - Date.parse(tspl));
+//      s=parseInt(nd/1000)%60;
+      m=parseInt((nd/(1000*60)))%60; 
+      h=parseInt(nd/(1000*60*60))%60%24;
+      d=parseInt(nd/(1000*60*60*24))%24;  
+      return '&nbsp;&nbsp;Up Time: ' + d + 'd:' + h + 'h:' + m +  'm';  
+    }
 
     function chk_users(ignore,users) {
        retUsers='';
@@ -1949,11 +1965,14 @@ divhc(Rm,[{Wk,FQDN,MacAddr,_Os}|Wks],ColCnt) ->
 
 <div class='wk'>",FQDN/binary,"</div>
 
-
-
 <div class='brk'></div>
 
 <div id='",Wk/binary,"macaddr' class='macaddr'>",MacAddr/binary,"</div> <div id='",Wk/binary,"dfstatus' class='dfstatus'>DF?</div>
+
+<div class='brk'></div>
+
+<div id='",Wk/binary,"upstrttime' class=''>Start Time:</div>
+<div id='",Wk/binary,"uptime' class=''>&nbsp;&nbsp;Up Time:</div>
 
 </div>
 
