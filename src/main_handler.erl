@@ -430,7 +430,6 @@ Port/binary,
 							$('#'+box+'_ltd').css('background-color','#005555');
                             if ($('#'+box+'upstrttime').html().length == 11 ) {
         					  $('#'+box+'upstrttime').html('Start Time: ' + getnow());
-// '01/29/2018-10:54:29');
                             }
         					$('#'+box+'uptime').html(difftime($('#'+box+'upstrttime').html()));
 							message(sepcol,boxCom[0] + ': ' + 'pong');
@@ -2520,7 +2519,10 @@ jsrefcons_row([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm) ->
 		<<".">> ->	jsrefcons_row(Wks,Rm);
 		   _ ->
 <<"
-
+        if ($('#",Wk/binary,"status').html() == '.'){
+          $('#",Wk/binary,"upstrttime').html('Start Time:');
+          $('#",Wk/binary,"uptime').html('&nbsp;&nbspUp Time:');
+        }
 		$('#",Wk/binary,"_hltd').css('background-color','#000');
 		$('#",Wk/binary,"_ltd').css('background-color','#000');
 		$('#",Wk/binary,"dfstatus').css('color','cyan');
