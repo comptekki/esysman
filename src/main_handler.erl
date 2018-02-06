@@ -692,7 +692,7 @@ Port/binary,
         (mins<10)?mins='0'+mins:mins;
         (seconds<10)?seconds='0'+seconds:seconds;
 
-        return month+'/'+day+'/'+jsnow.getFullYear()+' '+hour+':'+mins+':'+seconds;
+        return jsnow.getFullYear()+'-'+month+'-'+day+' '+hour+':'+mins+':'+seconds;
     }
 
 	function message(sepcol,msg){        
