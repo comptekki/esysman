@@ -380,10 +380,15 @@ Port/binary,
 					   boxCom=m.data.split('/');
 					   sepcol=false;
 					}
-
+                    if (boxCom[0].indexOf('toggleawsts') == 0) {
+                      if($('#shutdownTimerSwitch').html() == 'On') {
+                        $('#shutdownTimerSwitch').html('Off')
+                      } else {
+                        $('#shutdownTimerSwitch').html('On')
+                      }
+                    }
 					box=boxCom[0].substr(0,boxCom[0].indexOf('.'));					
 					users='", ?IGNORESHOWUSERS, "';
-
 					if (box.indexOf('@')>0)
 					   box= box.split('@')[1]; //box.substr(box.indexOf('@')+1, box.length-1);
 					switch(boxCom[1]) {
@@ -511,13 +516,6 @@ Port/binary,
 						  $('#scrdesc').val(boxCom[3].substring(1, boxCom[3].length-2));
 							message(sepcol,boxCom[0] + ': ' + 'editscrfile');
                            break;
-                        case 'toggleawsts':
-                          if($('#shutdownTimerSwitch').html() == 'On') {
-                            $('#shutdownTimerSwitch').html('Off')
-                          } else {
-                            $('#shutdownTimerSwitch').html('On')
-                          }
-                          break;
 					    case 'com':
 						    $('#'+box+'status').css('color','#00cc00');
 							$('#'+box+'status').css('background-color','#006600');
@@ -537,7 +535,7 @@ Port/binary,
                                 if (boxCom[1].indexOf('<br>') > 0) {
                                   message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1])
                                 } else {
-						          message(sepcol,boxCom[0] + ': ' + boxCom[1].replace(/\\n|\\r\\n|\\r/g, '<br>'));
+                                  message(sepcol,boxCom[0] + ': ' + boxCom[1].replace(/\\n|\\r\\n|\\r/g, '<br>'));
                                 }
                             }
 					} // end switch
