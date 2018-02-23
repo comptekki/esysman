@@ -535,7 +535,7 @@ Port/binary,
                                 if (boxCom[1].indexOf('<br>') > 0) {
                                   message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1])
                                 } else {
-                                  if (boxCom[0].indexOf('toggleawsts') > -1) {
+                                  if (boxCom[1].indexOf('toggleawsts') > 0) {
                                     if($('#shutdownTimerSwitch').html() == 'On') {
                                       $('#shutdownTimerSwitch').html('Off')
                                     } else {
