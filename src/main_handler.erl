@@ -380,7 +380,7 @@ Port/binary,
 					   boxCom=m.data.split('/');
 					   sepcol=false;
 					}
-                    if (boxCom[0].indexOf('toggleawsts') == 0) {
+                    if (m.data.indexOf('toggleawsts') > -1) {
                       if($('#shutdownTimerSwitch').html() == 'On') {
                         $('#shutdownTimerSwitch').html('Off')
                       } else {
