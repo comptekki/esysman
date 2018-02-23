@@ -361,6 +361,8 @@ Port/binary,
 
 	}
 
+    var togcnt = 0;
+
 		socket.onmessage = function(m){
 //			console.log('onmessage called');
 			if (m.data)
@@ -380,11 +382,22 @@ Port/binary,
 					   boxCom=m.data.split('/');
 					   sepcol=false;
 					}
-                    if (m.data.indexOf('toggleawsts') == 0) {
-                      if($('#shutdownTimerSwitch').html() == 'On') {
-                        $('#shutdownTimerSwitch').html('Off')
-                      } else {
-                        $('#shutdownTimerSwitch').html('On')
+                    if (m.data.indexOf('toggleawsts') > -1) {
+                      if ((m.data.indexOf('done') > -1)) {
+                        togcnt=0;
+                        if($('#shutdownTimerSwitch').html() == 'On') {
+                          $('#shutdownTimerSwitch').html('Off')
+                        } else {
+                          $('#shutdownTimerSwitch').html('On')
+                        }
+                        togcnt++;
+                      }
+                      if ((m.data.indexOf('from') > -1) && (togcnt == 0)) {
+                        if($('#shutdownTimerSwitch').html() == 'On') {
+                          $('#shutdownTimerSwitch').html('Off')
+                        } else {
+                          $('#shutdownTimerSwitch').html('On')
+                        }
                       }
                     }
 					box=boxCom[0].substr(0,boxCom[0].indexOf('.'));					
@@ -535,15 +548,7 @@ Port/binary,
                                 if (boxCom[1].indexOf('<br>') > 0) {
                                   message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1])
                                 } else {
-                                  if (boxCom[1].indexOf('toggleawsts') > 0) {
-                                    if($('#shutdownTimerSwitch').html() == 'On') {
-                                      $('#shutdownTimerSwitch').html('Off')
-                                    } else {
-                                      $('#shutdownTimerSwitch').html('On')
-                                    }
-                                  } else {
                                     message(sepcol,boxCom[0] + ': ' + boxCom[1].replace(/\\n|\\r\\n|\\r/g, '<br>'));
-                                  }
                                 }
                             }
 					} // end switch
