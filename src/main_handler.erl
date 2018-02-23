@@ -364,7 +364,6 @@ Port/binary,
 		socket.onmessage = function(m){
 //			console.log('onmessage called');
 			if (m.data)
-
 				if(m.data.indexOf(':'>0) || m.data.indexOf('/')>0){
 					if(m.data.indexOf(':')>0) {
 						if(m.data.indexOf('^')>0) {
@@ -512,6 +511,13 @@ Port/binary,
 						  $('#scrdesc').val(boxCom[3].substring(1, boxCom[3].length-2));
 							message(sepcol,boxCom[0] + ': ' + 'editscrfile');
                            break;
+                        case 'toggleawsts':
+                          if($('#shutdownTimerSwitch').html() == 'On') {
+                            $('#shutdownTimerSwitch').html('Off')
+                          } else {
+                            $('#shutdownTimerSwitch').html('On')
+                          }
+                          break;
 					    case 'com':
 						    $('#'+box+'status').css('color','#00cc00');
 							$('#'+box+'status').css('background-color','#006600');
@@ -557,7 +563,7 @@ Port/binary,
 
    					if (ignore_sd.indexOf(box) < 0 && box.length > 0)
                     {
-					  if($('#shutdownTimerSwitch').val() == '1') {
+					  if($('#shutdownTimerSwitch').html() == 'On') {
                         if (hdiff(Number($('#shutdownTimeH').val()), Number($('#shutdownTimeH2').val()))) {
                           if (shutbox != box) {
 	        			    send(boxCom[0]+':shutdown:0');
@@ -694,7 +700,8 @@ Port/binary,
 
         return jsnow.getFullYear()+'-'+month+'-'+day+' '+hour+':'+mins+':'+seconds;
     }
-
+    
+    var reset = '';
 	function message(sepcol,msg){        
         now = getnow();
 		if (isNaN(msg)) {
@@ -706,7 +713,8 @@ Port/binary,
                 lines=$('#msgsm br').length;
 
          		if (msg.indexOf('done') > -1 || msg.indexOf('_') > -1 || msg.indexOf('reboot sent to') > -1 || msg.indexOf('dfstatus sent to') > -1 || msg.indexOf('pong') > -1 || msg.indexOf('OK') > -1 || msg.indexOf('Results') > -1 || msg.indexOf('Thawing') > -1 || msg.indexOf('Freezing') > -1 || msg.indexOf('copied') > -1) {
-     		        $('#cntr').html(Number($('#cntr').html()) + 1);
+                    reset=$('#cntrst').html();
+     		        $('#cntrst').html('('+(Number(reset.substring(1, reset.indexOf(')'))) + 1)+') Reset');
 		        }
 
                 if (lines > ", ?LINES, ") {
@@ -815,7 +823,11 @@ Port/binary,
     });
 
     $('#cntrst').click(function(){
-        $('#cntr').html('0');
+        $('#cntrst').html('(0) Reset');
+    });
+
+    $('#shutdownTimerSwitch').click(function(){
+        send('0:toggleawsts:');
     });
 
     var obj = '';
@@ -1380,13 +1392,20 @@ function progressd(e){
  Commands -- Auto Wks Shutdown Time: 
  <input style='width:25px;' id='shutdownTimeH'  type='text' name='shutdownTimeH' maxlength=2 value='",?SHUTDOWNSTART,"'/> <->
  <input style='width:25px;' id='shutdownTimeH2'  type='text' name='shutdownTimeH2' maxlength=2 value='",?SHUTDOWNEND,"'/>
- <select id='shutdownTimerSwitch' class='ui-widget' name='shutdownTimerSwitch'>
+
+<!--
+ <select id='shutdownTimerSwitch0' class='ui-widget' name='shutdownTimerSwitch'>
    <option ",?SELECTEDON," value='1'>On</option>
    <option ",?SELECTEDOFF," value='0'>Off</option>
  </select>
- ( <span id='cntr' class='ui-widget'>0</span> )
 
-<button id='cntrst' class='ui-button ui-widget ui-corner-all'>Reset</button>
+
+ ( <span id='cntr' class='ui-widget'>0</span> )
+-->
+
+<button id='shutdownTimerSwitch' class='ui-button ui-widget ui-corner-all'>On</button>
+
+<button id='cntrst' class='ui-button ui-widget ui-corner-all'>(0) Reset</button>
 
 <button id='lockscr' class='ui-button ui-widget ui-corner-all'>Lock</button>
 <button id='mngscripts' class='ui-button ui-widget ui-corner-all'>Manage Scripts</button>
