@@ -385,7 +385,7 @@ Port/binary,
                     if (m.data.indexOf('toggleawsts') > -1) {
                       if ((m.data.indexOf('done') > -1)) {
                         togcnt=0;
-                        if($('#shutdownTimerSwitch').html() == 'On') {
+                        if(m.data.indexOf('(On)') > -1) {
                           $('#shutdownTimerSwitch').html('Off')
                         } else {
                           $('#shutdownTimerSwitch').html('On')
@@ -393,7 +393,7 @@ Port/binary,
                         togcnt++;
                       }
                       if ((m.data.indexOf('from') > -1) && (togcnt == 0)) {
-                        if($('#shutdownTimerSwitch').html() == 'On') {
+                        if(m.data.indexOf('(On)') > -1) {
                           $('#shutdownTimerSwitch').html('Off')
                         } else {
                           $('#shutdownTimerSwitch').html('On')
@@ -838,7 +838,7 @@ Port/binary,
     });
 
     $('#shutdownTimerSwitch').click(function(){
-        send('0:toggleawsts:');
+        send('0:toggleawsts:'+$('#shutdownTimerSwitch').html());
     });
 
     var obj = '';
