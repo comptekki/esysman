@@ -326,9 +326,9 @@ websocket_handle({text, Msg}, State) ->
 				Data2= <<"done - login from lock failed:">>,
 				Data2;
 			  <<"toggleawsts">> ->
-				send_msg(?SERVERS, <<"toggleawsts from ", (pid())/binary>>),
-				io:format("~ndate: ~p -> done - toggleawsts",[Date]),
-				<<"done - server@localhost/toggleawsts">>;
+				send_msg(?SERVERS, <<"toggleawsts (",Args/binary,") from ", (pid())/binary>>),
+				io:format("~ndate: ~p -> done - toggleawsts/~p",[Date,Args]),
+				<<"done - server@localhost/toggleawsts/(",Args/binary,")">>;
 			_ ->					
 				send_msg(?SERVERS, <<"unsupported command from ", (pid())/binary>>),
 				<<"unsupported command">>
