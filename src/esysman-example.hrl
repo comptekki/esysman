@@ -20,11 +20,6 @@
 -define(LOCKSCRPASSWD,"temppass").
 -define(AUTOLOCK, "true"). % "false" no,  "true" yes 
 
--define(SHUTDOWNSTART,"22").
--define(SHUTDOWNEND,"06").
--define(SELECTEDON,"selected").
--define(SELECTEDOFF," ").
-
 -define(MAXAGE, 500).
 -define(TITLE, "ESysMan").
 -define(CSS, "/static/esysman.css").
