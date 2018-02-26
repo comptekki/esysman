@@ -66,7 +66,7 @@ fire_wall(Req) ->
 	{PeerAddress, _Port} = cowboy_req:peer(Req),
 	{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
 	Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
-	{ok, [_,{FireWallOnOff,IPAddresses},_,_]}=file:consult(?CONF),
+	{ok, [_,{FireWallOnOff,IPAddresses},_,_,_]}=file:consult(?CONF),
 	case FireWallOnOff of
 		on ->
 			case lists:member(PeerAddress,IPAddresses) of
@@ -84,7 +84,7 @@ fire_wall(Req) ->
 %%
 
 login_is() ->
-	{ok, [_,_,{UPOnOff,UnamePasswds},_]}=file:consult(?CONF),
+	{ok, [_,_,{UPOnOff,UnamePasswds},_,_]}=file:consult(?CONF),
 	case UPOnOff of
 		on ->
 			UnamePasswds;
@@ -274,7 +274,7 @@ app_front_end(Req, Opts) ->
 
 	Get_rms = get_rms_keys(?ROOMS, 49),
 
-	{ok, [_, _, _, {Ref_cons_time}]} = file:consult(?CONF),
+	{ok, [_, _, _, {Ref_cons_time},{ShutdownStartTime,ShutDownStopTime,OnorOff}]} = file:consult(?CONF),
 
 	Req2 = cowboy_req:reply(
 			200,
@@ -1401,20 +1401,10 @@ function progressd(e){
 
 <div id='com_title' class='ui-widget'>
  Commands -- Auto Wks Shutdown Time: 
- <input style='width:25px;' id='shutdownTimeH'  type='text' name='shutdownTimeH' maxlength=2 value='",?SHUTDOWNSTART,"'/> <->
- <input style='width:25px;' id='shutdownTimeH2'  type='text' name='shutdownTimeH2' maxlength=2 value='",?SHUTDOWNEND,"'/>
+ <input style='width:25px;' id='shutdownTimeH'  type='text' name='shutdownTimeH' maxlength=2 value='",ShutdownStartTime/binary,"'/> <->
+ <input style='width:25px;' id='shutdownTimeH2'  type='text' name='shutdownTimeH2' maxlength=2 value='",ShutDownStopTime/binary,"'/>
 
-<!--
- <select id='shutdownTimerSwitch0' class='ui-widget' name='shutdownTimerSwitch'>
-   <option ",?SELECTEDON," value='1'>On</option>
-   <option ",?SELECTEDOFF," value='0'>Off</option>
- </select>
-
-
- ( <span id='cntr' class='ui-widget'>0</span> )
--->
-
-<button id='shutdownTimerSwitch' class='ui-button ui-widget ui-corner-all'>On</button>
+<button id='shutdownTimerSwitch' class='ui-button ui-widget ui-corner-all'>", OnorOff/binary ,"</button>
 
 <button id='cntrst' class='ui-button ui-widget ui-corner-all'>(0) Reset</button>
 
