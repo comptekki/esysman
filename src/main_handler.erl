@@ -1404,13 +1404,13 @@ function progressd(e){
  <input style='width:25px;' id='shutdownTimeH'  type='text' name='shutdownTimeH' maxlength=2 value='",ShutdownStartTime/binary,"'/> <->
  <input style='width:25px;' id='shutdownTimeH2'  type='text' name='shutdownTimeH2' maxlength=2 value='",ShutDownStopTime/binary,"'/>
 
-<button id='shutdownTimerSwitch' class='ui-button ui-widget ui-corner-all'>", OnorOff/binary ,"</button>
+<button id='shutdownTimerSwitch' class='ui-button ui-widget ui-corner-all' title='Toggle Workstation Shutdown Time'>", OnorOff/binary ,"</button>
 
-<button id='cntrst' class='ui-button ui-widget ui-corner-all'>(0) Reset</button>
+<button id='cntrst' class='ui-button ui-widget ui-corner-all' title='Reset Server Messages Counter'>(0) Reset</button>
 
-<button id='lockscr' class='ui-button ui-widget ui-corner-all'>Lock</button>
-<button id='mngscripts' class='ui-button ui-widget ui-corner-all'>Manage Scripts</button>
-<button id='mngdwnlds' class='ui-button ui-widget ui-corner-all'>Manage Downloads</button>
+<button id='lockscr' class='ui-button ui-widget ui-corner-all' title='Lock Screen'>Lock</button>
+<button id='mngscripts' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Scripts and Binaries panel'>Manage Scripts</button>
+<button id='mngdwnlds' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Downloads panel'>Manage Downloads</button>
 <span id='fncp' style='display:none'>File name copied to Clipboard!</span>
 <div id='mngscrbox' class='ui-widget-content'></div>
 <div id='mngdwnldsbox' class='ui-widget-content'></div>
@@ -1453,14 +1453,14 @@ function progressd(e){
  </div>
 
  <div id='tmsgs' class='tmsgsc'>
-   <div id='mtop' class='mtopc'> <button id='smbig' class='mbig ui-button ui-widget ui-corner-all' title='View more lines...'/>+</button> <button id='smclear' class='clr ui-button ui-widget ui-corner-all' title='Clear Server Logs'>C</button> Server Messages (most recent at top) <div id='cntsm'>0KB/0L</div></div>
+   <div id='mtop' class='mtopc'> <button id='smbig' class='mbig ui-button ui-widget ui-corner-all' title='View more lines...'/>+</button> <button id='smclear' class='clr ui-button ui-widget ui-corner-all' title='Clear Server Messages'>C</button> Server Messages (most recent at top) <div id='cntsm'>0KB/0L</div></div>
 	 <div id='msg-div'>
 	 <div id='msgsm' class='msgcsm'></div>
    </div>
  </div>
 
  <div id='tmsgscl' class='tmsgsc'>
-   <div id='mtopcl' class='mtopc'> <button id='clbig' class='mbig ui-button ui-widget ui-corner-all' title='View more lines...'/>+</button> <button id='cmclear' class='clr ui-button ui-widget ui-corner-all' title='Clear Server Logs'>C</button> Client Messages (most recent at top) <div id='cntcl'>0KB/0L</div></div>
+   <div id='mtopcl' class='mtopc'> <button id='clbig' class='mbig ui-button ui-widget ui-corner-all' title='View more lines...'/>+</button> <button id='cmclear' class='clr ui-button ui-widget ui-corner-all' title='Clear Client Messages'>C</button> Client Messages (most recent at top) <div id='cntcl'>0KB/0L</div></div>
 	 <div id='msg-divcl'>
 	   <div id='msgcl' class='msgc'></div>
      </div>
