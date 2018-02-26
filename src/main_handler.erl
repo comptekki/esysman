@@ -1467,7 +1467,7 @@ function progressd(e){
  </div>
 
  <div id='tmsgsdup' class='tmsgsc'>
-   <div id='mtopdup' class='mtopcd'><button id='duclear' class='clr ui-button ui-widget ui-corner-all' title='Clear Server Logs'>C</button> Duplicate Users (most recent at top) <div id='cntdup'>0KB/0L</div></div>
+   <div id='mtopdup' class='mtopcd'><button id='duclear' class='clr ui-button ui-widget ui-corner-all' title='Clear Duplicate Messages'>C</button> Duplicate Users (most recent at top) <div id='cntdup'>0KB/0L</div></div>
 	 <div id='msg-div-dup'>
 	 <div id='msgdup' class='msgcd'></div>
    </div>
