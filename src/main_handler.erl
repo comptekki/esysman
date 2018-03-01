@@ -615,24 +615,24 @@ Port/binary,
 
     // help from: https://stackoverflow.com/questions/13903897/javascript-return-number-of-days-hours-minutes-seconds-between-two-dates
     function difftime(date_str) {
-	var date_now = new Date();
-	var date_past = new Date(date_str)
+  	  var date_now = new Date();
+	  var date_past = new Date(date_str)
 
-	var delta = Math.abs(date_now - date_past) / 1000;
+	  var delta = Math.abs(date_now - date_past) / 1000;
 
-	var days = Math.floor(delta / 86400);
-	delta -= days * 86400;
+	  var days = Math.floor(delta / 86400);
+	  delta -= days * 86400;
 
-	var hours = Math.floor(delta / 3600) % 24;
-	delta -= hours * 3600;
+	  var hours = Math.floor(delta / 3600) % 24;
+	  delta -= hours * 3600;
 
-	var minutes = Math.floor(delta / 60) % 60;
-	delta -= minutes * 60;
+	  var minutes = Math.floor(delta / 60) % 60;
+	  delta -= minutes * 60;
 
-	//var seconds = Math.floor(delta % 60);
+	  //var seconds = Math.floor(delta % 60);
 
-	return '&nbsp;&nbsp;Up Time: ' + days + 'd:' + hours + 'h:' + minutes + 'm';
-	//'m:' + seconds + 's';  
+	  return '&nbsp;&nbsp;Up Time: ' + days + 'd:' + hours + 'h:' + minutes + 'm';
+	  //'m:' + seconds + 's';  
     }
 
     function chk_users(ignore,users) {
@@ -1242,6 +1242,9 @@ function progressd(e){
         return false; 
       }
     });
+
+    $('#refreshtime').html('Refresh Time: ' + getnow());
+
 ",
 (jsAll(?ROOMS,<<"ping">>))/binary,
 (jsAllConfirm(?ROOMS,<<"reboot">>))/binary,
@@ -1411,6 +1414,7 @@ function progressd(e){
 <button id='lockscr' class='ui-button ui-widget ui-corner-all' title='Lock Screen'>Lock</button>
 <button id='mngscripts' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Scripts and Binaries panel'>Manage Scripts</button>
 <button id='mngdwnlds' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Downloads panel'>Manage Downloads</button>
+<span id=refreshtime></span>
 <span id='fncp' style='display:none'>File name copied to Clipboard!</span>
 <div id='mngscrbox' class='ui-widget-content'></div>
 <div id='mngdwnldsbox' class='ui-widget-content'></div>
@@ -2529,6 +2533,7 @@ jsrefcons_rm([Rm|Rows]) ->
 	<<"
 
 function refresh_cons_",Rm/binary,"(){
+  $('#refreshtime').html('Refresh Time: ' + getnow());
 ",
 (jsrefcons_rows(Rows,Rm))/binary,
 "
