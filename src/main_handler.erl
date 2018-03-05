@@ -400,6 +400,27 @@ Port/binary,
                         }
                       }
                     }
+                    if (m.data.indexOf('clearcmsg') > -1) {
+                      $('#msgcl').html('');
+                      $('#cntcl').html('0K/L');
+                    }
+                    if (m.data.indexOf('cleardmsg') > -1) {
+                      $('#msgdup').html('');
+                      $('#cntdup').html('0K/L');
+                      $('#cntrst').html('(0) Reset');
+                    }
+                    if (m.data.indexOf('clearsmsg') > -1) {
+                      $('#msgsm').html('');
+                      $('#cntsm').html('0K/L');
+                      $('#cntrst').html('(0) Reset');
+                    }
+                    if (m.data.indexOf('resetall') > -1) {
+                      send('0:clearsmsg:');
+                      send('0:clearcmsg:');
+                      send('0:cleardmsg:');
+                      $('#cntrst').html('(0) Reset');
+                    }
+
 					box=boxCom[0].substr(0,boxCom[0].indexOf('.'));					
 					users='", ?IGNORESHOWUSERS, "';
 					if (box.indexOf('@')>0)
@@ -540,9 +561,6 @@ Port/binary,
                             }
                			    else if(boxCom[1] == undefined) {
 						        message(sepcol,boxCom[0]);
-						        if(boxCom[0].indexOf('clearsmsg') > -1 || boxCom[0].indexOf('clearcmsg') > -1 || boxCom[0].indexOf('cleardmsg') > -1) {
-                                  $('#cntrst').click();
-                                };
                             }
                    		    else {
                                 if (boxCom[1].indexOf('<br>') > 0) {
@@ -730,8 +748,6 @@ Port/binary,
 
                 if (lines > ", ?LINES, ") {
 //                     window.location.href='/esysman';
-                    $('#msgsm').html('');
-                    $('#cntsm').html('0K/0L');
                     send('0:clearsmsg:');
                 }
                 else {
@@ -748,8 +764,7 @@ Port/binary,
                 mb = 1048576;
                 lines=$('#msgsm br').length;
                 if (lines > ", ?LINES, ") {
-                    $('#msgsm').html('');
-                    $('#cntsm').html('0K/0L');
+                    send('0:clearsmsg:');
                 }
                 else {
                     mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
@@ -765,8 +780,6 @@ Port/binary,
                 lines=$('#msgcl br').length;
                 if (lines > ", ?LINES, ") {
 //                      window.location.href='/esysman';
-                    $('#msgcl').html('');
-                    $('#cntcl').html('0K/0L');
                     send('0:clearcmsg:');
                 }
                 else {
@@ -783,8 +796,7 @@ Port/binary,
                 lines=$('#msgsm br').length;
                 if (lines > ", ?LINES, ") {
 //                    window.location.href='/esysman';
-                    $('#msgsm').html('');
-                    $('#cntsm').html('0K/0L');
+                    send('0:clearsmsg:');
                 }
                 else {
                     mcnt = (mcnt > mb ? (mcnt / mb).toFixed(2) +'MB': mcnt > kb ? (mcnt / kb).toFixed(2) + 'KB' : mcnt + 'B') + '/' + lines +'L';
@@ -816,25 +828,19 @@ Port/binary,
 	});
 
     $('#smclear').click(function(){
-        $('#msgsm').html('');
-        $('#cntsm').html('0K/L');
         send('0:clearsmsg:');
     });
 
     $('#cmclear').click(function(){
-        $('#msgcl').html('');
-        $('#cntcl').html('0K/0L');
         send('0:clearcmsg:');
     });
 
     $('#duclear').click(function(){
-        $('#msgdup').html('');
-        $('#cntdup').html('0K/0L');
         send('0:cleardmsg:');
     });
 
     $('#cntrst').click(function(){
-        $('#cntrst').html('(0) Reset');
+        send('0:resetall:');
     });
 
     $('#shutdownTimerSwitch').click(function(){
@@ -1993,7 +1999,7 @@ divhc(Rm,[{Wk,FQDN,MacAddr,_Os}|Wks],ColCnt) ->
 
 <div class='wkchk'>
 <input id='",Wk/binary,"check' type='checkbox' class='checkbox' /></div>
-
+<button id='",Wk/binary,"_col' class='ui-button ui-widget ui-corner-all' title='Select Columns' />C</button>
 <button id='",Wk/binary, "Expr' class='ui-button ui-widget ui-corner-all' title='Expand Row' />E</button>
 
 <div class='wk'>",FQDN/binary,"</div>
@@ -2030,7 +2036,6 @@ divc({Wk,_FQDN,_MacAddr,_Os}) ->
  <button id='reboot_",Wk/binary,"' class='ui-button ui-widget ui-corner-all' title='Reboot' />R</button>
  <button id='shutdown_",Wk/binary,"' class='ui-button ui-widget ui-corner-all' title='Shutdown' />S</button>
  <button id='loggedon_",Wk/binary,"' class='ui-button ui-widget ui-corner-all' title='Logged On' />L</button>
- <button id='",Wk/binary,"' class='ui-button ui-widget ui-corner-all' title='Select Columns' />C</button>
 
 <div class='brk'></div>
 
@@ -2455,8 +2460,6 @@ function chk_dupe_users_",Rm/binary,"(){
                 mb = 1048576;
                 lines=$('#msgdup br').length;
                 if (lines > ", ?LINES, ") {
-                    $('#msgdup').html('');
-                    $('#cntdup').html('0K/0L');
                     send('0:cleardmsg:');
                 }
                 else {
