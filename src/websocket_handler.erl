@@ -310,6 +310,11 @@ websocket_handle({text, Msg}, State) ->
 				io:format("~ndate: ~p -> done - clearing duplicates message panel",[Date]),
 				Data2= <<"done - clearing duplicates message panel:">>,
 				Data2;
+			<<"resetall">> ->
+				send_msg(?SERVERS, <<"resetall from ", (pid())/binary>>),
+				io:format("~ndate: ~p -> done - reset all",[Date]),
+				Data2= <<"done - reset all:">>,
+				Data2;
 			<<"lockactivate">> ->
 				send_msg(?SERVERS, <<"lockactivate from ", (pid())/binary>>),
 				io:format("~ndate: ~p -> done - lock activate",[Date]),
