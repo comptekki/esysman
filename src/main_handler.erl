@@ -841,6 +841,8 @@ Port/binary,
 
     $('#cntrst').click(function(){
         send('0:resetall:');
+        $('.hltd').css('background-color', '#333333');
+        $('.ltd').css('background-color', '#333333');
     });
 
     $('#shutdownTimerSwitch').click(function(){
