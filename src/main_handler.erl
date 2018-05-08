@@ -843,7 +843,7 @@ Port/binary,
         send('0:resetall:');
         $('.hltd').css('background-color', '#333333');
         $('.ltd').css('background-color', '#333333');
-        $('.dfstatus').css('background-color', 'gray');
+        $('.dfstatus').css('background-color', '#333333');
     });
 
     $('#shutdownTimerSwitch').click(function(){
