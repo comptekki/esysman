@@ -162,8 +162,10 @@ app_login(Req, Opts) ->
 							  200,
 							  #{ <<"content-type">> => <<"text/html">> },
 
-<<"<html>
-<head> 
+<<"<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
 <title>", ?TITLE, "</title>
 
 <meta Http-Equiv='Cache-Control' Content='no-cache'>
@@ -212,8 +214,10 @@ body {background-color:black; color:yellow}
 							{ok, cowboy_req:reply(
 							  200, 
 							  #{ <<"Content-Type">> => <<"text/html">> },
-<<"<html>
-<head> 
+<<"<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
 <title>", ?TITLE, " Login</title>
 
 <meta Http-Equiv='Cache-Control' Content='no-cache'>
@@ -241,8 +245,9 @@ fwDenyMessage(Req, Opts) ->
 			200,
 			#{ <<"content-type">> => <<"text/html">> },
 
-<<"<html>
-<head> 
+<<"<html lang='en'>
+<head>
+<meta charset='utf-8'>
 <title>", ?TITLE, "</title>
 
 <meta Http-Equiv='Cache-Control' Content='no-cache'>
@@ -280,8 +285,10 @@ app_front_end(Req, Opts) ->
 			200,
 			#{ <<"content-type">> => <<"text/html">> },
 
-<<"<html>
-<head> 
+<<"<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
 <title>", ?TITLE, "</title>
 
 <meta Http-Equiv='Cache-Control' Content='no-cache'>
@@ -555,6 +562,19 @@ Port/binary,
 							$('#'+box+'status').css('background-color','#006600');
 							message(sepcol,boxCom[0] + ': ' + 'com');
 							break;
+                        case 'chkpasswd':
+                            if (boxCom[2] == 'pass') {
+                              $('#unlockscr').show();
+                              $('#unlockscr').focus();
+                              $('#unlockscrpasswd').val('');
+                              $('#unlockscrpasswd').hide();
+
+                              $('#lockpane').hide();
+                              send('0:lockloginok:');
+                            } else {
+                              send('0:lockloginfailed:');
+                            }
+                            break;
 					    default:
 						    if(boxCom[2] != undefined) {
 						        message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1] + ' ' + boxCom[2] + '<br>' + m.data.replace(/\\n|\\r\\n|\\r/g, '<br>').replace(/->/g, '-> <br>'))
@@ -1198,7 +1218,6 @@ function progressd(e){
 
     $(document).on('keydown', '#unlockscrpasswd',function(e) {
       if(e.which == 13) {
-        var ok = true;
         var passwd=$('#unlockscrpasswd').val();
         if (passwd.length == 0) {
           $('#unlockscr').show();
@@ -1211,20 +1230,7 @@ function progressd(e){
           if (passwd.length > 0){
             var regex=/^[a-zA-Z0-9-_\.]+$/;
             if (passwd.match(regex)) {
-              if (passwd == '", ?LOCKSCRPASSWD,"') {
-                ok = false;
-
-                $('#unlockscr').show();
-                $('#unlockscr').focus();
-                $('#unlockscrpasswd').val('');
-                $('#unlockscrpasswd').hide();
-
-                $('#lockpane').hide();
-                send('0:lockloginok:');
-              } else {
-                ok = false;
-                send('0:lockloginfailed:');
-              }
+              send('0:chkpasswd:'+passwd);
             }
           }
 

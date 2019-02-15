@@ -334,6 +334,15 @@ websocket_handle({text, Msg}, State) ->
 				send_msg(?SERVERS, <<"toggleawsts (",Args/binary,") from ", (pid())/binary>>),
 				io:format("~ndate: ~p -> done - toggleawsts/~p",[Date,Args]),
 				<<"done - server@localhost/toggleawsts/(",Args/binary,")">>;
+			  <<"chkpasswd">> ->
+				send_msg(?SERVERS, <<"chkpasswd from ", (pid())/binary>>),
+				io:format("~ndate: ~p -> done - chkpasswd",[Date]),
+				{ok, [{Passwd}]}=file:consult(?PASSWDCONF),
+				Data2 = case Passwd of
+					Args -> <<"done - 0/chkpasswd/pass">>;
+					   _ -> <<"done - 0/chkpasswd/fail">>
+				end,
+			    Data2;
 			_ ->					
 				send_msg(?SERVERS, <<"unsupported command from ", (pid())/binary>>),
 				<<"unsupported command">>
