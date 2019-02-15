@@ -634,6 +634,7 @@ Port/binary,
     // help from: https://stackoverflow.com/questions/13903897/javascript-return-number-of-days-hours-minutes-seconds-between-two-dates
     function difftime(date_str) {
   	  var date_now = new Date();
+      date_str = date_str.replace('Start Time: ','');
 	  var date_past = new Date(date_str)
 
 	  var delta = Math.abs(date_now - date_past) / 1000;
