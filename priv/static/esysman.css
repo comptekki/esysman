@@ -53,7 +53,7 @@ input {width:100px;}
 #switcher { padding: 3px 3px 3px 3px; }
 
 #commands {
-	height:485px;
+	height:495px;
 	width:98.7%;
 	background-color:#444;
 	margin: 3px 0 3px 3px;
@@ -65,7 +65,7 @@ input {width:100px;}
 #tcoms {
 	float:left;
 //	width:300px;
-	height:435px;
+	height:445px;
 	background-color:#111;
 	margin: 3px 3px 3px 5px;
 	padding: 5px 5px 0 5px;
@@ -79,7 +79,7 @@ input {width:100px;}
 
 #tinputs {
 	float:left;
-	height:435px;
+	height:445px;
 	background-color:#111;
 	margin: 3px 0 0 0;
 	padding: 5px 5px 0 5px;
@@ -104,16 +104,16 @@ input {width:100px;}
 
 .tmsgsc {
 	float:left;
-	width: 550px;
+	width: 600px;
 	padding:0 0 0 3px;
 }
 
-.mtopc { background-color:#666; width:550px; font-weight:bold; padding:3px 0 3px 3px;}
+.mtopc { background-color:#666; width:600px; font-weight:bold; padding:3px 0 3px 3px;}
 
 .msgc {
 	overflow:scroll;
-	width:550px;
-	height:405px;
+	width:600px;
+	height:415px;
 	color:yellow;
 	background-color:black;
 	padding:0 0 0 3px;
@@ -122,8 +122,8 @@ input {width:100px;}
 
 .msgcsm {
 	overflow:scroll;
-	width:550px;
-	height:405px;
+	width:600px;
+	height:415px;
 	color:yellow;
 	background-color:black;
 	padding:0 0 0 3px;
@@ -132,14 +132,14 @@ input {width:100px;}
 
 .msgcd {
 	overflow:scroll;
-	width:550px;
-	height:405px;
+	width:600px;
+	height:415px;
 	color:yellow;
 	background-color:black;
 	padding:0 0 0 3px;
 }
 
-.mtopcd { background-color:#666; width:550px; font-weight:bold; padding:3px 0 3px 3px;}
+.mtopcd { background-color:#666; width:600px; font-weight:bold; padding:3px 0 3px 3px;}
 
 
 #workstations { width:100%; margin:0 auto;}
@@ -150,7 +150,7 @@ input {width:100px;}
 
 .hltd {
 	float:left;
-	width:280px;
+	width:300px;
 	height:120px;
 	padding:4px;
 	vertical-align:top;
@@ -161,8 +161,8 @@ input {width:100px;}
 
 .ltd {
 	float:left;
-	width:280px;
-	height:250px;
+	width:300px;
+	height:260px;
 	padding:4px;
 	vertical-align:top;
 	border:5px solid #555555;
