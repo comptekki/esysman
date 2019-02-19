@@ -2512,7 +2512,7 @@ jschkduRow([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm) ->
         hash_",Rm/binary,"[dupe_",Rm/binary,"[dupe_",Rm/binary,".length-1]].push('",Wk/binary,"');
         ",Rm/binary,"cnt++;
         tot_cnt++;
-        $('#rooms_title').html('['+tot_cnt.toString()+']-'+'Rooms:');
+        $('#rooms_title').html('['+tot_cnt.toString()+']-'+'Rooms');
     }
 ",(jschkduRow(Wks,Rm))/binary>>
 	end;

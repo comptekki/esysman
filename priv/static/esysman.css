@@ -49,12 +49,11 @@ input {width:100px;}
 #menu { width:99%; background-color:#888; font-weight:bold;  margin: 3px 3px 0 3px;}
 
 #rooms_title {
-	//	float:left;
-	font-size:17pt;
-	font-weight:bold;
-	background-color:#666;
+	font-size: 17pt;
+	font-weight: bold;
+	background-color: #666;
 	padding: 1px 3px 3px 3px;
-	margin:3 5 3 5;
+	margin-right: 5px;
 	height: 37px;
 }
 
