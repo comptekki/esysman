@@ -1402,7 +1402,7 @@ function progressd(e){
 
 <div id='menu' class='fl'>
 
-<div id='rooms_title' class='fl ui-widget ui-corner-all'>
+<div id='rooms_title' class='fl'>
 [0]-Rooms
 </div>
 
