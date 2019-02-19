@@ -670,7 +670,7 @@ Port/binary,
 
 	  //var seconds = Math.floor(delta % 60);
 
-	  return '&nbsp;&nbsp;Up Time: ' + days + 'd:' + hours + 'h:' + minutes + 'm';
+	  return '&nbsp;&nbsp;&nbsp;Up Time: ' + days + 'd:' + hours + 'h:' + minutes + 'm';
 	  //'m:' + seconds + 's';  
     }
 
@@ -2021,7 +2021,7 @@ divhc(Rm,[{Wk,FQDN,MacAddr,_Os}|Wks],ColCnt) ->
 <div class='brk'></div>
 
 <div id='",Wk/binary,"upstrttime' class=''>Start Time:</div>
-<div id='",Wk/binary,"uptime' class=''>&nbsp;&nbsp;Up Time:</div>
+<div id='",Wk/binary,"uptime' class=''>&nbsp;&nbsp;&nbsp;Up Time:</div>
 
 </div>
 
@@ -2569,7 +2569,7 @@ jsrefcons_row([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm) ->
 <<"
         if ($('#",Wk/binary,"status').html() == '.'){
           $('#",Wk/binary,"upstrttime').html('Start Time:');
-          $('#",Wk/binary,"uptime').html('&nbsp;&nbspUp Time:');
+          $('#",Wk/binary,"uptime').html('&nbsp;&nbsp;&nbspUp Time:');
         }
 		$('#",Wk/binary,"_hltd').css('background-color','#000');
 		$('#",Wk/binary,"_ltd').css('background-color','#000');
