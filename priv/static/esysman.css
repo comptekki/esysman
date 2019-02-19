@@ -152,7 +152,7 @@ input {width:100px;}
 
 #workstations { width:100%; margin:0 auto;}
 
-#cntsm, #cntcl, #cntdup {float:right; padding-right:20px;}
+#cntsm, #cntcl, #cntdup {float:right; padding-right:20px; padding-top:5px;}
 
 .brk { clear:both; height:3px;}
 
