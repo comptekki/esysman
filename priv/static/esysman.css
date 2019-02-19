@@ -53,9 +53,9 @@ input {width:100px;}
 	font-size:17pt;
 	font-weight:bold;
 	background-color:#666;
-	padding: 0px 3px 3px 3px;
-	margin:1 5 3 5;
-	height: 100%;
+	padding: 1px 3px 3px 3px;
+	margin:3 5 3 5;
+	height: 37px;
 }
 
 #switcher { padding: 3px 3px 3px 3px; }
