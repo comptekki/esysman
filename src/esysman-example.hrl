@@ -4,6 +4,7 @@
 -define(APPS, [<<"">>,<<"any.cmd">>,<<"any.exe">>,<<"any.msi">>,<<"any.msp">>,<<"any.reg">>,<<"ecom.beam">>,<<"NiniteOne.exe">>,<<"ninite.cmd">>,<<"WUInstall.exe">>]).
 -define(COMS, [<<"">>,<<"anycmd">>,<<"listupfls">>,<<"mkuploads">>,<<"ninite">>,<<"ninitecmd">>,<<"ninitelog">>,<<"wuinstall">>,<<"wuilog">>,<<"unamea">>,<<"lsbver">>,<<"yumcheck">>,<<"yumupdate">>,<<"ubuntuver">>,<<"aptcheck">>,<<"aptupgrade-list">>,<<"aptupgrade">>,<<"aptdistupgrade-list">>,<<"aptdistupgrade">>,<<"aptulog">>,<<"yumcheck">>,<<"yumupdate">>,<<"dnfcheck">>,<<"dnfupdate">>,<<"osxsupdate">>,<<"osxsulog">>]).
 -define(CONF,"/usr/local/src/esysman/src/esysman.conf").
+-define(PASSWDCONF,"/usr/local/src/esysman/src/passwd.conf").
 -define(UPLOADS,<<"/usr/local/src/uploads/">>).
 -define(DOWNLOADS,<<"/home/user/esysman/priv/downloads/">>).
 
