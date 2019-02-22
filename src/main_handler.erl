@@ -628,10 +628,11 @@ Port/binary,
 		socket.onclose = function() {
 //			console.log('onclose called')
 		    message(true,'Socket status: 3 (Closed)');
+            setTimeout(function(){wsconnect()}, 5000);
 		}
 
 		socket.onerror = function(e) {
-			message(true,'Socket Status: '+e.data)
+			message(true,'Socket Status: '+e.data);
 		}
 
   } // end function wsconnect()
