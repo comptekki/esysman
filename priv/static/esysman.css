@@ -44,9 +44,23 @@ th.oth {font-size:18pt; text-align:center; border:1px solid #555555;}
 table { border-collapse:collapse;}
 input {width:100px;}
 
-#wrapper { width:2900px; margin:0 auto; /* border:1px solid #333333;*/}
+#wrapper {
+	/*	width:2900px; */
+	overflow: auto;
+	margin:0 auto;
+}
 
-#menu { width:99%; background-color:#888; font-weight:bold;  margin: 3px 3px 0 3px;}
+#menu {
+	min-width:2900px;
+	background-color:#888;
+	font-weight:bold;
+	margin: 3px 3px 3px 3px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	border:4px solid #555555;
+	display: inline-block;
+	white-space: nowrap;
+}
 
 #rooms_title {
 	font-size: 17pt;
@@ -55,23 +69,30 @@ input {width:100px;}
 	padding: 1px 3px 3px 3px;
 	margin-right: 5px;
 	height: 37px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
 }
 
-#switcher { padding: 3px 3px 3px 3px; }
+#switcher {
+	padding:3px 3px 3px 3px;
+	display:inline-block;
+	white-space:nowrap;
+}
 
 #commands {
 	height:495px;
-	width:98.7%;
+	min-width:2900px;
 	background-color:#444;
-	margin: 3px 0 3px 3px;
+	margin: 3px 3px 3px 3px;
 	-moz-border-radius: 15px;
 	-webkit-border-radius: 15px;
 	border:4px solid #555555;
+	display:inline-block;
+	white-space:nowrap;
 }
 
 #tcoms {
 	float:left;
-//	width:300px;
 	height:445px;
 	background-color:#111;
 	margin: 3px 3px 3px 5px;
