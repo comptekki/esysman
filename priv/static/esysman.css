@@ -80,9 +80,9 @@ input {width:100px;}
 }
 
 #commands {
-	height:495px;
+//	height:495px;
 	min-width:2900px;
-	background-color:#444;
+	background-color:#111;
 	margin: 3px 3px 3px 3px;
 	-moz-border-radius: 15px;
 	-webkit-border-radius: 15px;
@@ -93,10 +93,12 @@ input {width:100px;}
 
 #tcoms {
 	float:left;
-	height:445px;
+//	height:445px;
 	background-color:#111;
 	margin: 3px 3px 3px 5px;
 	padding: 5px 5px 0 5px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
 }
 
 #com_title {
@@ -107,10 +109,16 @@ input {width:100px;}
 
 #tinputs {
 	float:left;
-	height:445px;
+	//	min-height:445px;
+//	height:100%;
 	background-color:#111;
 	margin: 3px 0 0 0;
-	padding: 5px 5px 0 5px;
+	padding: 5px 5px 5px 5px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
 }
 
 /*
@@ -282,6 +290,7 @@ a.button { text-decoration:none; padding: 0 2px 0 2px; }
 .room {
 	display:none;
 }
+
 .ttop {width:100%;}
 
 .wkchk { float:left; height:18px; background-color:#454545; padding:3px 0 3px; 0;}

@@ -1931,7 +1931,7 @@ mkARComsComsInput(Rm,{Com,ComText}) ->
 mkAllRoomsSelectUnselectToggleAll([Room|Rooms]) ->
 	 [Rm|_]=Room,
 	 <<"
- <div class='brk'></div>
+<!-- <div class='brk'></div> -->
 
  <div id='",Rm/binary,"_selunseltogall' class='room'>
 
@@ -1948,7 +1948,7 @@ mkAllRoomsSelectUnselectToggleAll([Room|Rooms]) ->
 
 mkselunseltogAll(Rm) ->
 	<<"
-  <button id='selectAll",Rm/binary,"' class='ui-button ui-widget ui-corner-all' title='Select all Workstations...' />Select All</button>
+  <button id='selectAll",Rm/binary,"' class='ui-button ui-widget ui-corner-all'  title='Select all Workstations...' />Select All</button>
 
 <div class='brk'></div>
 
