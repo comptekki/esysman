@@ -1931,7 +1931,6 @@ mkARComsComsInput(Rm,{Com,ComText}) ->
 mkAllRoomsSelectUnselectToggleAll([Room|Rooms]) ->
 	 [Rm|_]=Room,
 	 <<"
-<!-- <div class='brk'></div> -->
 
  <div id='",Rm/binary,"_selunseltogall' class='room'>
 
