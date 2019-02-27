@@ -170,7 +170,10 @@ input {width:100px;}
 .mtopcd { background-color:#666; width:600px; font-weight:bold; padding:3px 0 3px 3px;}
 
 
-#workstations { width:100%; margin:0 auto;}
+#workstations {
+	min-width:2900px;
+	margin:0 auto;
+}
 
 #cntsm, #cntcl, #cntdup {float:right; padding-right:20px; padding-top:5px;}
 
