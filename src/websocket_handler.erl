@@ -330,26 +330,30 @@ websocket_handle({text, Msg}, State) ->
 				io:format("~ndate: ~p -> done - login from lock failed",[Date]),
 				Data2= <<"done - login from lock failed:">>,
 				Data2;
-			  <<"toggleawsts">> ->
-				send_msg(?SERVERS, <<"toggleawsts (",Args/binary,") from ", (pid())/binary>>),
-				io:format("~ndate: ~p -> done - toggleawsts/~p",[Date,Args]),
-				<<"done - server@localhost/toggleawsts/(",Args/binary,")">>;
-			  <<"chkpasswd">> ->
-				send_msg(?SERVERS, <<"chkpasswd from ", (pid())/binary>>),
-				io:format("~ndate: ~p -> done - chkpasswd",[Date]),
-				{ok, [{Passwd}]}=file:consult(?PASSWDCONF),
-				Data2 = case Passwd of
-					Args -> <<"done - 0/chkpasswd/pass">>;
-					   _ -> <<"done - 0/chkpasswd/fail">>
+		    <<"toggleawsts">> ->
+			send_msg(?SERVERS, <<"toggleawsts (",Args/binary,") from ", (pid())/binary>>),
+			io:format("~ndate: ~p -> done - toggleawsts/~p",[Date,Args]),
+			<<"done - server@localhost/toggleawsts/(",Args/binary,")">>;
+		    <<"chkpasswd">> ->
+			send_msg(?SERVERS, <<"chkpasswd from ", (pid())/binary>>),
+			io:format("~ndate: ~p -> done - chkpasswd",[Date]),
+			{ok, [{Passwd}]}=file:consult(?PASSWDCONF),
+			Data2 = case Passwd of
+				    Args -> <<"done - 0/chkpasswd/pass">>;
+				    _ -> <<"done - 0/chkpasswd/fail">>
 				end,
-			    Data2;
-			_ ->					
-				send_msg(?SERVERS, <<"unsupported command from ", (pid())/binary>>),
-				<<"unsupported command">>
-				end,
-				{reply, {text, Data3}, State, hibernate};
+			Data2;
+		    <<"resetrefreshtime">> ->
+			send_msg(?SERVERS, <<"resetrefreshtime ",Args/binary," from ", (pid())/binary>>),
+			io:format("~ndate: ~p -> done - resetrefreshtime/~p",[Date,Args]),
+			<<"done - server@localhost/resetrefreshtime/",Args/binary>>;
+		    _ ->					
+			send_msg(?SERVERS, <<"unsupported command from ", (pid())/binary>>),
+			<<"unsupported command">>
+		end,
+    {reply, {text, Data3}, State, hibernate};
 websocket_handle(_Data, State) ->
-	{ok, State}.
+    {ok, State}.
 
 %%
 

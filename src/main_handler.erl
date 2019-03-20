@@ -348,6 +348,11 @@ Port/binary,
       send('0:lockactivate:');
    }
 
+   function resetRefreshTimers() {
+",
+(init2(?ROOMS,Ref_cons_time))/binary,
+"
+   }
 
   function wsconnect() {
         socket = new WebSocket(ws_str);
@@ -359,14 +364,21 @@ Port/binary,
 			message(true, socket.readyState);
 ",
 (init_open(?ROOMS))/binary,
-(init2(?ROOMS,Ref_cons_time))/binary,
 "
+//      resetRefreshTimers();
+
+      var rrt='Refresh Time: ' + getnow();
+      $('#refreshtime').html(rrt);
+      send('0:resetrefreshtime:' + btoa(rrt));
+
+
 
       if (",?AUTOLOCK,") {
         lockscr();
       }
 
 	}
+
 
     var togcnt = 0;
 
@@ -389,6 +401,15 @@ Port/binary,
 					   boxCom=m.data.split('/');
 					   sepcol=false;
 					}
+
+                    if (m.data.indexOf('resetrefreshtime') > -1) {
+                      if ((m.data.indexOf('done') == -1)) {
+		        boxCom2=m.data.split(' ');
+                        $('#refreshtime').html(atob(boxCom2[1]));
+                        resetRefreshTimers();
+                      }
+                    }
+
                     if (m.data.indexOf('toggleawsts') > -1) {
                       if ((m.data.indexOf('done') > -1)) {
                         togcnt=0;
@@ -575,6 +596,7 @@ Port/binary,
                               send('0:lockloginfailed:');
                             }
                             break;
+
 					    default:
 						    if(boxCom[2] != undefined) {
 						        message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1] + ' ' + boxCom[2] + '<br>' + m.data.replace(/\\n|\\r\\n|\\r/g, '<br>').replace(/->/g, '-> <br>'))
@@ -872,6 +894,13 @@ Port/binary,
         send('0:toggleawsts:'+$('#shutdownTimerSwitch').html());
     });
 
+    $('#resetRefreshTime').click(function(){
+      var rrt='Refresh Time: ' + getnow();
+      $('#refreshtime').html(rrt);
+      send('0:resetrefreshtime:' + btoa(rrt));
+      resetRefreshTimers();
+    });
+
     var obj = '';
 
 	$(document).on('click', '#dbut', function(){
@@ -1157,18 +1186,15 @@ function progress(e){
 
       var perc = parseInt((current * 100)/max);
       $('#upprog').html(perc + '% Uploaded.... of ' + bitsStr);
-//        console.log(Percentage);
-
       if(perc >= 100){
        // process completed  
         showmngscrbox = false;
         $('#mngscripts').click();
       }
     }  
- }
+  }
 
-
-function progressd(e){
+  function progressd(e){
 
     if(e.lengthComputable){
       var max = e.total;
@@ -1186,7 +1212,6 @@ function progressd(e){
 
       var perc = parseInt((current * 100)/max);
       $('#dprog').html(perc + '% Uploaded.... of ' + bitsStr);
-//        console.log(Percentage);
 
       if(perc >= 100){
        // process completed  
@@ -1194,7 +1219,7 @@ function progressd(e){
         $('#mngdwnlds').click();
       }
     }  
- }
+  }
 
     $(document).on('click', '#closedwnldslist', function(){
       showmngdwnldsbox = true;
@@ -1260,7 +1285,7 @@ function progressd(e){
       }
     });
 
-    $('#refreshtime').html('Refresh Time: ' + getnow());
+//    $('#refreshtime').html('Refresh Time: ' + getnow());
 
 ",
 (jsAll(?ROOMS,<<"ping">>))/binary,
@@ -1426,6 +1451,7 @@ function progressd(e){
 <button id='lockscr' class='ui-button ui-widget ui-corner-all' title='Lock Screen'>Lock</button>
 <button id='mngscripts' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Scripts and Binaries panel'>Manage Scripts</button>
 <button id='mngdwnlds' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Downloads panel'>Manage Downloads</button>
+<button id='resetRefreshTime' class='ui-button ui-widget ui-corner-all' title='Reset Refresh Time'>Reset -></button>
 <span id=refreshtime></span>
 <span id='fncp' style='display:none'>File name copied to Clipboard!</span>
 <div id='mngscrbox' class='ui-widget-content'></div>
