@@ -365,13 +365,11 @@ Port/binary,
 ",
 (init_open(?ROOMS))/binary,
 "
-//      resetRefreshTimers();
-
-      var rrt='Refresh Time: ' + getnow();
-      $('#refreshtime').html(rrt);
+//      var rrt='Refresh Time: ' + getnow();
+//      $('#refreshtime').html(rrt);
 //      send('0:resetrefreshtime:' + btoa(rrt));
 
-
+$('#resetRefreshTime').click();
 
       if (",?AUTOLOCK,") {
         lockscr();
@@ -381,6 +379,7 @@ Port/binary,
 
 
     var togcnt = 0;
+    var refreshcnt = 0;
 
 		socket.onmessage = function(m){
 //			console.log('onmessage called');
@@ -400,15 +399,22 @@ Port/binary,
 					else {
 					   boxCom=m.data.split('/');
 					   sepcol=false;
-					}
+                                 }
 
-//                    if (m.data.indexOf('resetrefreshtime') > -1) {
-//                      if ((m.data.indexOf('done') == -1)) {
-//		        boxCom2=m.data.split(' ');
-//                        $('#refreshtime').html(atob(boxCom2[1]));
-//                        resetRefreshTimers();
-//                      }
-//                    }
+                    if (m.data.indexOf('resetrefreshtime') > -1)
+console.log(m.data);
+console.log(refreshcnt);
+
+                      if (refreshcnt == 0) {
+
+                      if ((m.data.indexOf('done') == -1)) {
+                        refreshcnt = 0;
+		        boxCom2=m.data.split(' ');
+                        $('#refreshtime').html(atob(boxCom2[1]));
+                        resetRefreshTimers();
+                      }
+                      refreshcnt++;
+                    }
 
                     if (m.data.indexOf('toggleawsts') > -1) {
                       if ((m.data.indexOf('done') > -1)) {
