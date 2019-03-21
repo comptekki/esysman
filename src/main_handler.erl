@@ -369,7 +369,7 @@ Port/binary,
 
       var rrt='Refresh Time: ' + getnow();
       $('#refreshtime').html(rrt);
-      send('0:resetrefreshtime:' + btoa(rrt));
+//      send('0:resetrefreshtime:' + btoa(rrt));
 
 
 
@@ -402,13 +402,13 @@ Port/binary,
 					   sepcol=false;
 					}
 
-                    if (m.data.indexOf('resetrefreshtime') > -1) {
-                      if ((m.data.indexOf('done') == -1)) {
-		        boxCom2=m.data.split(' ');
-                        $('#refreshtime').html(atob(boxCom2[1]));
-                        resetRefreshTimers();
-                      }
-                    }
+//                    if (m.data.indexOf('resetrefreshtime') > -1) {
+//                      if ((m.data.indexOf('done') == -1)) {
+//		        boxCom2=m.data.split(' ');
+//                        $('#refreshtime').html(atob(boxCom2[1]));
+//                        resetRefreshTimers();
+//                      }
+//                    }
 
                     if (m.data.indexOf('toggleawsts') > -1) {
                       if ((m.data.indexOf('done') > -1)) {
