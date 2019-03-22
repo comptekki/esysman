@@ -399,18 +399,22 @@ $('#resetRefreshTime').click();
 					else {
 					   boxCom=m.data.split('/');
 					   sepcol=false;
-                                 }
+                                        }
+                                
 
-                    if (m.data.indexOf('resetrefreshtime') > -1)
+                    if (m.data.indexOf('resetrefreshtime') > -1) {
+                      console.log(m.data);
                       if (refreshcnt == 0) {
-                      if ((m.data.indexOf('done') == -1)) {
-                        refreshcnt = 0;
-		        boxCom2=m.data.split(' ');
-//                        $('#refreshtime').html(atob(boxCom2[1]));
-//                        resetRefreshTimers();
+                        if ((m.data.indexOf('done') == -1)) {
+			  refreshcnt = 0;
+			  boxCom2=m.data.split(' ');
+			  $('#refreshtime').html(atob(boxCom2[1]));
+			  resetRefreshTimers();
+			  refreshcnt++;      
+                        }
                       }
-                      refreshcnt++;
                     }
+
 
                     if (m.data.indexOf('toggleawsts') > -1) {
                       if ((m.data.indexOf('done') > -1)) {
@@ -899,8 +903,9 @@ $('#resetRefreshTime').click();
     $('#resetRefreshTime').click(function(){
       var rrt='Refresh Time: ' + getnow();
       $('#refreshtime').html(rrt);
-//      send('0:resetrefreshtime:' + btoa(rrt));
-//      resetRefreshTimers();
+console.log(rrt + ' - ' + 'rrt.click');
+      send('0:resetrefreshtime:' + btoa(rrt));
+//    resetRefreshTimers();
     });
 
     var obj = '';
