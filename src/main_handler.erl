@@ -402,16 +402,12 @@ $('#resetRefreshTime').click();
                                  }
 
                     if (m.data.indexOf('resetrefreshtime') > -1)
-console.log(m.data);
-console.log(refreshcnt);
-
                       if (refreshcnt == 0) {
-
                       if ((m.data.indexOf('done') == -1)) {
                         refreshcnt = 0;
 		        boxCom2=m.data.split(' ');
-                        $('#refreshtime').html(atob(boxCom2[1]));
-                        resetRefreshTimers();
+//                        $('#refreshtime').html(atob(boxCom2[1]));
+//                        resetRefreshTimers();
                       }
                       refreshcnt++;
                     }
@@ -903,8 +899,8 @@ console.log(refreshcnt);
     $('#resetRefreshTime').click(function(){
       var rrt='Refresh Time: ' + getnow();
       $('#refreshtime').html(rrt);
-      send('0:resetrefreshtime:' + btoa(rrt));
-      resetRefreshTimers();
+//      send('0:resetrefreshtime:' + btoa(rrt));
+//      resetRefreshTimers();
     });
 
     var obj = '';
