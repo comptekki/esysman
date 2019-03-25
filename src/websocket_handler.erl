@@ -335,10 +335,6 @@ websocket_handle({text, Msg}, State) ->
 			    _ -> <<"done - 0/chkpasswd/fail">>
 			end,
 		Data2;
-	    <<"resetrefreshtime">> ->
-		send_msg(?SERVERS, <<"resetrefreshtime ",Args/binary," from ", (pid())/binary>>),
-		io:format("~ndate: ~p -> done - resetrefreshtime/~p",[Date,Args]),
-		<<"done - server@localhost/resetrefreshtime/",Args/binary>>;
 	    _ ->					
 		send_msg(?SERVERS, <<"unsupported command from ", (pid())/binary>>),
 		<<"unsupported command">>
