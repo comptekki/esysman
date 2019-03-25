@@ -44,313 +44,305 @@
 
 init(Req, State) ->
 %	Opts = #{ compress => true, idle_timeout => 36000000 },
-	Opts = #{ idle_timeout => 31200000 },
+    Opts = #{ idle_timeout => 31200000 },
     {cowboy_websocket, Req, State, Opts}.
 
 %%
 
 websocket_init(State) ->
-	case lists:member(hanwebs, registered()) of
+    case lists:member(hanwebs, registered()) of
+	true -> 
+	    case lists:member(hanwebs2, registered()) of
 		true -> 
-			case lists:member(hanwebs2, registered()) of
-				true -> 
-					case lists:member(hanwebs3, registered()) of
-						true -> 
-							register(hanwebs4, self()),
-							ok;
-						false ->
-							register(hanwebs3, self())
-					end,
-					ok;
-				false ->
-					register(hanwebs2, self())
-			end,
-			ok;
+		    case lists:member(hanwebs3, registered()) of
+			true -> 
+			    register(hanwebs4, self()),
+			    ok;
+			false ->
+			    register(hanwebs3, self())
+		    end,
+		    ok;
 		false ->
-			register(hanwebs, self())
+		    register(hanwebs2, self())
+	    end,
+	    ok;
+	false ->
+	    register(hanwebs, self())
 	end,
-	{ok, State, hibernate}.
+    {ok, State, hibernate}.
 
 %%
 
 websocket_handle({text, <<"close">>}, State) ->
-			{stop, State};
+    {stop, State};
 websocket_handle({text, <<"client-connected">>}, State) ->
-			{reply, {text, <<"client-connected">> }, State, hibernate};
+    {reply, {text, <<"client-connected">> }, State, hibernate};
 websocket_handle({text, Msg}, State) ->
-	Ldatacrt = binary:split(Msg,<<"^">>,[global]),
+    Ldatacrt = binary:split(Msg,<<"^">>,[global]),
 
-	Ldata = 
-		case erlang:length(Ldatacrt) > 1 of
-			true ->
-				[C1, C2, C3] = Ldatacrt,
-				[B1, B2, B3] = binary:split(C1,<<":">>,[global]),
-				[B1,B2,<<B3/binary,"^",C2/binary,"^",C3/binary>>];
-			_  ->
-				binary:split(Msg,<<":">>,[global])
+    Ldata = 
+	case erlang:length(Ldatacrt) > 1 of
+	    true ->
+		[C1, C2, C3] = Ldatacrt,
+		[B1, B2, B3] = binary:split(C1,<<":">>,[global]),
+		[B1,B2,<<B3/binary,"^",C2/binary,"^",C3/binary>>];
+	    _  ->
+		binary:split(Msg,<<":">>,[global])
+	end,
+
+    {{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
+    Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
+
+    [Box,Com,Args]=Ldata,
+    Rec_Node=binary_to_atom(<<Box/binary>>,latin1),
+    Data3 =
+	case Com of
+	    <<"com">> ->
+		send_msg(?SERVERS, <<"com - ",Args/binary," - from ", (pid())/binary>>),
+		{rec_com, Rec_Node} ! {Box,Com,Args},
+		Data2= <<"done - com -> ",Args/binary,"  <- sent to: ",Box/binary>>,
+		io:format("~ndate: ~p -> done - sent com ~p - data2: ~p ~n",[Date, Box, Data2]),
+		Data2;
+	    <<"loggedon">> ->
+		{rec_com, Rec_Node} ! {Box,Com,<<"">>},
+		Data2= <<"done - loggedon sent to: ",Box/binary>>,
+		io:format("~ndate: ~p -> done - loggedon ~p - data2: ~p ~n",[Date, Box, Data2]),
+		Data2;
+	    <<"copy">> ->
+		send_msg(?SERVERS, <<"copy from ", (pid())/binary>>),
+		case file:read_file(<<?UPLOADS/binary,Args/binary>>) of
+		    {ok, DataBin} ->
+			{rec_com, Rec_Node} ! {Box,Com,{Args,DataBin}},
+			io:format("~ndate: ~p -> done - copy - ~p ~n",[Date, Box]),
+			<<"done - copy sent to: ",Box/binary>>;
+		    {error, Reason} ->
+			io:format("~ndate: ~p -> done - copy - ~p - error: ~p~n",[Date, Box, Reason]),
+			<<Box/binary,":copy error-",(atom_to_binary(Reason,latin1))/binary>>
+		end;
+	    <<"dffreeze">> ->
+		send_msg(?SERVERS, <<"dffreeze from ", (pid())/binary>>),
+		{rec_com, Rec_Node} ! {Box,Com,<<"">>},
+		Data2= <<Box/binary,":dffreeze">>,
+		io:format("~ndate: ~p -> done dffreeze ~p~n",[Date, Box]),
+		Data2;
+	    <<"dfthaw">> ->
+		send_msg(?SERVERS, <<"dfthaw from ", (pid())/binary>>),
+		{rec_com, Rec_Node} ! {Box,Com,<<"">>},
+		Data2= <<Box/binary,":dfthaw">>,
+		io:format("~ndate: ~p -> done - dfthaw ~p~n",[Date, Box]),
+		Data2;
+	    <<"dfstatus">> ->
+		send_msg(?SERVERS, <<"dfstatus from ", (pid())/binary>>),
+		{rec_com, Rec_Node} ! {Box,Com,<<"">>},
+		Data2= <<"done - dfstatus sent to: ",Box/binary>>,
+		io:format("~ndate: ~p -> done - dfstatus ~p~n",[Date, Box]),
+		Data2;
+	    <<"net_restart">> ->
+		send_msg(?SERVERS, <<"net_restart from ", (pid())/binary>>),
+		{rec_com, Rec_Node} ! {Box,Com,<<"">>},
+		Data2= <<"done - net_restart sent to: ",Box/binary>>,
+		io:format("~ndate: ~p -> done - net_restart ~p~n",[Date, Box]),
+		Data2;
+	    <<"net_stop">> ->
+		send_msg(?SERVERS, <<"net_stop from ", (pid())/binary>>),
+		{rec_com, Rec_Node} ! {Box,Com,<<"">>},
+		Data2= <<"done - net_stop sent to: ",Box/binary>>,
+		io:format("~ndate: ~p -> done - net_stop ~p~n",[Date, Box]),
+		Data2;
+	    <<"reboot">> ->
+		send_msg(?SERVERS, <<"reboot from ", (pid())/binary>>),
+		{rec_com, Rec_Node} ! {Box,Com,<<"">>},
+		Data2= <<"done - reboot sent to: ",Box/binary>>,
+		io:format("~ndate: ~p -> done - reboot ~p~n",[Date, Box]),
+		Data2;
+	    <<"shutdown">> ->
+		send_msg(?SERVERS, <<"shutdown from ", (pid())/binary>>),
+		{rec_com, Rec_Node} ! {Box,Com,<<"">>},
+		Data2= <<"done - shutdown sent to: ",Box/binary>>,
+		io:format("~ndate: ~p -> done - shutdown ~p~n",[Date, Box]),
+		Data2;
+	    <<"wol">> ->
+		MacAddr=binary_to_list(Args),
+		MacAddrBin= <<<<(list_to_integer(X, 16))>> || X <- string:tokens(MacAddr,"-")>>,
+		MagicPacket= << (dup(<<16#FF>>, 6))/binary, (dup(MacAddrBin, 16))/binary >>,
+		{ok,S} = gen_udp:open(0, [{broadcast, true}]),
+		gen_udp:send(S, ?BROADCAST_ADDR, 9, MagicPacket),
+		gen_udp:close(S),
+		send_msg(?SERVERS, <<"wol from ", (pid())/binary>>),
+		Data2= <<"done - wol: ",Box/binary,"....!">>,
+		io:format("~ndate: ~p -> done - wol - ~p ~n",[Date, Box]),
+		Data2;
+	    <<"ping">> ->
+		send_msg(?SERVERS, <<"ping from ", (pid())/binary>>),
+		{rec_com, Rec_Node} ! {Box,Com,<<"">>},
+		Data2= <<"done - ping sent to: ",Box/binary>>,
+		io:format("~ndate: ~p -> done - ping ~p~n",[Date, Box]),
+		Data2;
+	    <<"list_dwnlds_dir">> ->
+		send_msg(?SERVERS, <<"list_dwnlds_dir from ", (pid())/binary>>),
+		Data2= <<Box/binary,":list_dwnlds_dir:",(list_dwnld_fls())/binary>>,
+		io:format("~ndate: ~p -> done - list_dwnlds_dir ~p ~n",[Date, Box]),
+		Data2;
+	    <<"deldwnldsfile">> ->
+		_ = file:delete(<<(?DOWNLOADS)/binary,Args/binary>>),	
+		io:format("~ndate: ~p ->  done - deleting file/downloads file: ~p ~n",[Date, Args]),
+		Data2= <<"done - deleting file/downloads file: ", Args/binary, "....!">>,
+		Data2;
+	    <<"list_ups_dir">> ->
+		send_msg(?SERVERS, <<"list_ups_dir from ", (pid())/binary>>),
+		Data2= <<Box/binary,":list_ups_dir:",(list_up_fls(Args))/binary>>,
+		io:format("~ndate: ~p -> done - list_ups_dir ~p ~n",[Date, Box]),
+		Data2;
+	    <<"delscrfile">> ->
+		_ = file:delete(<<(?UPLOADS)/binary,Args/binary>>),
+		_ = file:delete(<<(?UPLOADS)/binary, "info/", Args/binary, ".info">>),
+		io:format("~ndate: ~p ->  done - deleting file/script file: ~p ~n",[Date, Args]),
+		Data2= <<"done - deleting file/script file: ", Args/binary, "....!">>,
+		Data2;
+	    <<"lnscrfile">> ->
+		send_msg(?SERVERS, <<"lnscrfile from ", (pid())/binary>>),
+		[F1,F2] = binary:split(Args, <<"+">>, [global]),
+		case file:make_symlink(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary,F2/binary>>) of
+		    ok ->
+			"";
+		    {error, eexist} ->
+			case binary:split(F1, <<".">>, [global]) of
+			    [_, <<"cmd">>] ->
+				file:delete(<<(?UPLOADS)/binary, "any.cmd">>);
+			    [_, <<"exe">>] ->
+				file:delete(<<(?UPLOADS)/binary, "any.exe">>);
+			    [_, <<"msi">>] ->
+				file:delete(<<(?UPLOADS)/binary, "any.msi">>)
+			end,
+			file:make_symlink(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary, F2/binary>>)
 		end,
-
-	{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
-	Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
-
-	[Box,Com,Args]=Ldata,
-	Rec_Node=binary_to_atom(<<Box/binary>>,latin1),
-	Data3 =
-		case Com of
-			<<"com">> ->
-				send_msg(?SERVERS, <<"com - ",Args/binary," - from ", (pid())/binary>>),
-				{rec_com, Rec_Node} ! {Box,Com,Args},
-				Data2= <<"done - com -> ",Args/binary,"  <- sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done - sent com ~p - data2: ~p ~n",[Date, Box, Data2]),
-				Data2;
-			<<"loggedon">> ->
-				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-				Data2= <<"done - loggedon sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done - loggedon ~p - data2: ~p ~n",[Date, Box, Data2]),
-				Data2;
-			<<"copy">> ->
-				send_msg(?SERVERS, <<"copy from ", (pid())/binary>>),
-				case file:read_file(<<?UPLOADS/binary,Args/binary>>) of
-					{ok, DataBin} ->
-						{rec_com, Rec_Node} ! {Box,Com,{Args,DataBin}},
-						io:format("~ndate: ~p -> done - copy - ~p ~n",[Date, Box]),
-						<<"done - copy sent to: ",Box/binary>>;
-					{error, Reason} ->
-						io:format("~ndate: ~p -> done - copy - ~p - error: ~p~n",[Date, Box, Reason]),
-						<<Box/binary,":copy error-",(atom_to_binary(Reason,latin1))/binary>>
-							end;
-			<<"dffreeze">> ->
-				send_msg(?SERVERS, <<"dffreeze from ", (pid())/binary>>),
-				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-				Data2= <<Box/binary,":dffreeze">>,
-				io:format("~ndate: ~p -> done dffreeze ~p~n",[Date, Box]),
-				Data2;
-			<<"dfthaw">> ->
-				send_msg(?SERVERS, <<"dfthaw from ", (pid())/binary>>),
-				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-				Data2= <<Box/binary,":dfthaw">>,
-				io:format("~ndate: ~p -> done - dfthaw ~p~n",[Date, Box]),
-				Data2;
-			<<"dfstatus">> ->
-				send_msg(?SERVERS, <<"dfstatus from ", (pid())/binary>>),
-				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-				Data2= <<"done - dfstatus sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done - dfstatus ~p~n",[Date, Box]),
-				Data2;
-			<<"net_restart">> ->
-				send_msg(?SERVERS, <<"net_restart from ", (pid())/binary>>),
-				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-				Data2= <<"done - net_restart sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done - net_restart ~p~n",[Date, Box]),
-				Data2;
-			<<"net_stop">> ->
-				send_msg(?SERVERS, <<"net_stop from ", (pid())/binary>>),
-				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-				Data2= <<"done - net_stop sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done - net_stop ~p~n",[Date, Box]),
-				Data2;
-			<<"reboot">> ->
-				send_msg(?SERVERS, <<"reboot from ", (pid())/binary>>),
-				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-				Data2= <<"done - reboot sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done - reboot ~p~n",[Date, Box]),
-				Data2;
-			<<"shutdown">> ->
-				send_msg(?SERVERS, <<"shutdown from ", (pid())/binary>>),
-				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-				Data2= <<"done - shutdown sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done - shutdown ~p~n",[Date, Box]),
-				Data2;
-			<<"wol">> ->
-				MacAddr=binary_to_list(Args),
-				MacAddrBin= <<<<(list_to_integer(X, 16))>> || X <- string:tokens(MacAddr,"-")>>,
-				MagicPacket= << (dup(<<16#FF>>, 6))/binary, (dup(MacAddrBin, 16))/binary >>,
-				{ok,S} = gen_udp:open(0, [{broadcast, true}]),
-				gen_udp:send(S, ?BROADCAST_ADDR, 9, MagicPacket),
-				gen_udp:close(S),
-				send_msg(?SERVERS, <<"wol from ", (pid())/binary>>),
-				Data2= <<"done - wol: ",Box/binary,"....!">>,
-				io:format("~ndate: ~p -> done - wol - ~p ~n",[Date, Box]),
-				Data2;
-			  <<"ping">> ->
-				send_msg(?SERVERS, <<"ping from ", (pid())/binary>>),
-				{rec_com, Rec_Node} ! {Box,Com,<<"">>},
-				Data2= <<"done - ping sent to: ",Box/binary>>,
-				io:format("~ndate: ~p -> done - ping ~p~n",[Date, Box]),
-				Data2;
-			<<"list_dwnlds_dir">> ->
-				send_msg(?SERVERS, <<"list_dwnlds_dir from ", (pid())/binary>>),
-				Data2= <<Box/binary,":list_dwnlds_dir:",(list_dwnld_fls())/binary>>,
-				io:format("~ndate: ~p -> done - list_dwnlds_dir ~p ~n",[Date, Box]),
-				Data2;
-			<<"deldwnldsfile">> ->
-				_ = file:delete(<<(?DOWNLOADS)/binary,Args/binary>>),
-
-				io:format("~ndate: ~p ->  done - deleting file/downloads file: ~p ~n",[Date, Args]),
-				Data2= <<"done - deleting file/downloads file: ", Args/binary, "....!">>,
-				Data2;
-			<<"list_ups_dir">> ->
-				send_msg(?SERVERS, <<"list_ups_dir from ", (pid())/binary>>),
-				Data2= <<Box/binary,":list_ups_dir:",(list_up_fls(Args))/binary>>,
-				io:format("~ndate: ~p -> done - list_ups_dir ~p ~n",[Date, Box]),
-				Data2;
-			<<"delscrfile">> ->
-				_ = file:delete(<<(?UPLOADS)/binary,Args/binary>>),
-				_ = file:delete(<<(?UPLOADS)/binary, "info/", Args/binary, ".info">>),
-
-				io:format("~ndate: ~p ->  done - deleting file/script file: ~p ~n",[Date, Args]),
-				Data2= <<"done - deleting file/script file: ", Args/binary, "....!">>,
-				Data2;
-			<<"lnscrfile">> ->
-				send_msg(?SERVERS, <<"lnscrfile from ", (pid())/binary>>),
-				[F1,F2] = binary:split(Args, <<"+">>, [global]),
-				case file:make_symlink(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary,F2/binary>>) of
-					ok ->
-						"";
-					{error, eexist} ->
-						case binary:split(F1, <<".">>, [global]) of
-							[_, <<"cmd">>] ->
-								file:delete(<<(?UPLOADS)/binary, "any.cmd">>);
-							[_, <<"exe">>] ->
-								file:delete(<<(?UPLOADS)/binary, "any.exe">>);
-							[_, <<"msi">>] ->
-								file:delete(<<(?UPLOADS)/binary, "any.msi">>)
-						end,
-						file:make_symlink(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary, F2/binary>>)
-				end,
-				io:format("~ndate: ~p -> done - linking file/script file: ~p -> ~p~n",[Date, F1, F2]),
-				Data2= <<"done - linking file/script file: ", F1/binary, "->", F2/binary, "....!">>,
-				Data2;
-			<<"renscrfile">> ->
-				send_msg(?SERVERS, <<"renscrfile from ", (pid())/binary>>),
-				[F1,F2] = binary:split(Args, <<"+">>, [global]),
-				file:rename(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary, F2/binary>>),
-				file:rename(<<(?UPLOADS)/binary,"info/",F1/binary,".info">>, <<(?UPLOADS)/binary,"info/",F2/binary,".info">>),
-
-				io:format("~ndate: ~p -> done - renaming file/script file: ~p -> ~p~n",[Date, F1, F2]),
-				Data4= <<"done - renaming file/script file: ", F1/binary, "->", F2/binary, "....!">>,
-				Data4;
-			<<"rendwnldsfile">> ->
-				send_msg(?SERVERS, <<"rendwnldsfile from ", (pid())/binary>>),
-				[F1,F2] = binary:split(Args, <<"+">>, [global]),
-				file:rename(<<(?DOWNLOADS)/binary,F1/binary>>, <<(?DOWNLOADS)/binary, F2/binary>>),
-
-				io:format("~ndate: ~p -> done - renaming file/downloads file: ~p -> ~p~n",[Date, F1, F2]),
-				Data4= <<"done - renaming file/downloads file: ", F1/binary, "->", F2/binary, "....!">>,
-				Data4;
-			<<"editscrfile">> ->
-				send_msg(?SERVERS, <<"editscrfile from ", (pid())/binary>>),
-				Dataf = 
-					case lists:last(binary:split(Args, <<".">>, [global])) of
-						<<"cmd">> ->
-							{ok, Dataf2} = 
-								file:read_file(<<(?UPLOADS)/binary,Args/binary>>),
-							Dataf2;
-						_ ->
-							Dataf2 = 
-								<<"">>,
-							Dataf2
-					end,
-
-				Datafi = 
-					case file:read_file(<<(?UPLOADS)/binary,"info/",Args/binary,".info">>) of
-						{ok, Data} ->
-							Data;
-						{reason, _} ->
-							<<"">>; %erlang:atom_to_binary(Res,latin1);
-						{error, _} ->
-							<<"">>
-					end,
-
-				io:format("~ndate: ~p -> done - edit script file: ...~n",[Date]),
-				Data2= <<"done - edit script file...:editscrfile:^",Dataf/binary,"^:",Datafi/binary>>,
-				Data2;
-			<<"savescrfile">> ->
-				send_msg(?SERVERS, <<"savescrfile from ", (pid())/binary>>),
-				[Fname,Dataf,Datafi] = binary:split(Args, <<"^">>, [global]),
-				[_,T] = binary:split(Fname, <<".">>, [global]),
-				Fnres = 
-					case T of
-						<<"cmd">> ->
-							case file:write_file(<<(?UPLOADS)/binary,Fname/binary>>, Dataf) of
-								ok ->
-									Res = <<"ok">>,
-									Res;
-								{error, Res} ->
-									Res
-							end;
-						_ ->
-							<<"">>
-					end,
-
-				Finres = 
-					case file:write_file(<<(?UPLOADS)/binary,"info/",Fname/binary,".info">>, <<"\"",Datafi/binary,"\".">>) of
-						ok ->
-							Res2 = <<"ok">>,
-							Res2;
-						{error, Res2} ->
-							Res2
-					end,
-
-				io:format("~ndate: ~p -> done - save script file: ~p...~n",[Date, Fname]),
-				Data2= <<"done - save script file...: ",Fname/binary, " - fnres -> ",Fnres/binary, " - finres -> ",Finres/binary >>,
-				Data2;
-			<<"clearcmsg">> ->
-				send_msg(?SERVERS, <<"clearcmsg from ", (pid())/binary>>),
-				io:format("~ndate: ~p -> done - clearing client message panel",[Date]),
-				Data2= <<"done - clearing client message panel:">>,
-				Data2;
-			<<"clearsmsg">> ->
-				send_msg(?SERVERS, <<"clearsmsg from ", (pid())/binary>>),
-				io:format("~ndate: ~p -> done - clearing *server message panel",[Date]),
-				Data2= <<"done - clearing *server message panel:">>,
-				Data2;
-			<<"cleardmsg">> ->
-				send_msg(?SERVERS, <<"cleardmsg from ", (pid())/binary>>),
-				io:format("~ndate: ~p -> done - clearing duplicates message panel",[Date]),
-				Data2= <<"done - clearing duplicates message panel:">>,
-				Data2;
-			<<"resetall">> ->
-				send_msg(?SERVERS, <<"resetall from ", (pid())/binary>>),
-				io:format("~ndate: ~p -> done - reset all",[Date]),
-				Data2= <<"done - reset all:">>,
-				Data2;
-			<<"lockactivate">> ->
-				send_msg(?SERVERS, <<"lockactivate from ", (pid())/binary>>),
-				io:format("~ndate: ~p -> done - lock activate",[Date]),
-				Data2= <<"done - lock activate:">>,
-				Data2;
-			<<"lockloginok">> ->
-				send_msg(?SERVERS, <<"lockloginok from ", (pid())/binary>>),
-				io:format("~ndate: ~p -> done - login from lock ok",[Date]),
-				Data2= <<"done - login from lock ok:">>,
-				Data2;
-			<<"lockloginfailed">> ->
-				send_msg(?SERVERS, <<"lockloginfailed from ", (pid())/binary>>),
-				io:format("~ndate: ~p -> done - login from lock failed",[Date]),
-				Data2= <<"done - login from lock failed:">>,
-				Data2;
-		    <<"toggleawsts">> ->
-			send_msg(?SERVERS, <<"toggleawsts (",Args/binary,") from ", (pid())/binary>>),
-			io:format("~ndate: ~p -> done - toggleawsts/~p",[Date,Args]),
-			<<"done - server@localhost/toggleawsts/(",Args/binary,")">>;
-		    <<"chkpasswd">> ->
-			send_msg(?SERVERS, <<"chkpasswd from ", (pid())/binary>>),
-			io:format("~ndate: ~p -> done - chkpasswd",[Date]),
-			{ok, [{Passwd}]}=file:consult(?PASSWDCONF),
-			Data2 = case Passwd of
-				    Args -> <<"done - 0/chkpasswd/pass">>;
-				    _ -> <<"done - 0/chkpasswd/fail">>
-				end,
-			Data2;
-		    <<"resetrefreshtime">> ->
-			send_msg(?SERVERS, <<"resetrefreshtime ",Args/binary," from ", (pid())/binary>>),
-			io:format("~ndate: ~p -> done - resetrefreshtime/~p",[Date,Args]),
-			<<"done - server@localhost/resetrefreshtime/",Args/binary>>;
-		    _ ->					
-			send_msg(?SERVERS, <<"unsupported command from ", (pid())/binary>>),
-			<<"unsupported command">>
-		end,
+		io:format("~ndate: ~p -> done - linking file/script file: ~p -> ~p~n",[Date, F1, F2]),
+		Data2= <<"done - linking file/script file: ", F1/binary, "->", F2/binary, "....!">>,
+		Data2;
+	    <<"renscrfile">> ->
+		send_msg(?SERVERS, <<"renscrfile from ", (pid())/binary>>),
+		[F1,F2] = binary:split(Args, <<"+">>, [global]),
+		file:rename(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary, F2/binary>>),
+		file:rename(<<(?UPLOADS)/binary,"info/",F1/binary,".info">>, <<(?UPLOADS)/binary,"info/",F2/binary,".info">>),
+		io:format("~ndate: ~p -> done - renaming file/script file: ~p -> ~p~n",[Date, F1, F2]),
+		Data4= <<"done - renaming file/script file: ", F1/binary, "->", F2/binary, "....!">>,
+		Data4;
+	    <<"rendwnldsfile">> ->
+		send_msg(?SERVERS, <<"rendwnldsfile from ", (pid())/binary>>),
+		[F1,F2] = binary:split(Args, <<"+">>, [global]),
+		file:rename(<<(?DOWNLOADS)/binary,F1/binary>>, <<(?DOWNLOADS)/binary, F2/binary>>),
+		io:format("~ndate: ~p -> done - renaming file/downloads file: ~p -> ~p~n",[Date, F1, F2]),
+		Data4= <<"done - renaming file/downloads file: ", F1/binary, "->", F2/binary, "....!">>,
+		Data4;
+	    <<"editscrfile">> ->
+		send_msg(?SERVERS, <<"editscrfile from ", (pid())/binary>>),
+		Dataf = 
+		    case lists:last(binary:split(Args, <<".">>, [global])) of
+			<<"cmd">> ->
+			    {ok, Dataf2} = 
+				file:read_file(<<(?UPLOADS)/binary,Args/binary>>),
+			    Dataf2;
+			_ ->
+			    Dataf2 = 
+				<<"">>,
+			    Dataf2
+		    end,
+		Datafi = 
+		    case file:read_file(<<(?UPLOADS)/binary,"info/",Args/binary,".info">>) of
+			{ok, Data} ->
+			    Data;
+			{reason, _} ->
+			    <<"">>; %erlang:atom_to_binary(Res,latin1);
+			{error, _} ->
+			    <<"">>
+		    end,
+		io:format("~ndate: ~p -> done - edit script file: ...~n",[Date]),
+		Data2= <<"done - edit script file...:editscrfile:^",Dataf/binary,"^:",Datafi/binary>>,
+		Data2;
+	    <<"savescrfile">> ->
+		send_msg(?SERVERS, <<"savescrfile from ", (pid())/binary>>),
+		[Fname,Dataf,Datafi] = binary:split(Args, <<"^">>, [global]),
+		[_,T] = binary:split(Fname, <<".">>, [global]),
+		Fnres = 
+		    case T of
+			<<"cmd">> ->
+			    case file:write_file(<<(?UPLOADS)/binary,Fname/binary>>, Dataf) of
+				ok ->
+				    Res = <<"ok">>,
+				    Res;
+				{error, Res} ->
+				    Res
+			    end;
+			_ ->
+			    <<"">>
+		    end,
+		Finres = 
+		    case file:write_file(<<(?UPLOADS)/binary,"info/",Fname/binary,".info">>, <<"\"",Datafi/binary,"\".">>) of
+			ok ->
+			    Res2 = <<"ok">>,
+			    Res2;
+			{error, Res2} ->
+			    Res2
+		    end,
+		io:format("~ndate: ~p -> done - save script file: ~p...~n",[Date, Fname]),
+		Data2= <<"done - save script file...: ",Fname/binary, " - fnres -> ",Fnres/binary, " - finres -> ",Finres/binary >>,
+		Data2;
+	    <<"clearcmsg">> ->
+		send_msg(?SERVERS, <<"clearcmsg from ", (pid())/binary>>),
+		io:format("~ndate: ~p -> done - clearing client message panel",[Date]),
+		Data2= <<"done - clearing client message panel:">>,
+		Data2;
+	    <<"clearsmsg">> ->
+		send_msg(?SERVERS, <<"clearsmsg from ", (pid())/binary>>),
+		io:format("~ndate: ~p -> done - clearing *server message panel",[Date]),
+		Data2= <<"done - clearing *server message panel:">>,
+		Data2;
+	    <<"cleardmsg">> ->
+		send_msg(?SERVERS, <<"cleardmsg from ", (pid())/binary>>),
+		io:format("~ndate: ~p -> done - clearing duplicates message panel",[Date]),
+		Data2= <<"done - clearing duplicates message panel:">>,
+		Data2;
+	    <<"resetall">> ->
+		send_msg(?SERVERS, <<"resetall from ", (pid())/binary>>),
+		io:format("~ndate: ~p -> done - reset all",[Date]),
+		Data2= <<"done - reset all:">>,
+		Data2;
+	    <<"lockactivate">> ->
+		send_msg(?SERVERS, <<"lockactivate from ", (pid())/binary>>),
+		io:format("~ndate: ~p -> done - lock activate",[Date]),
+		Data2= <<"done - lock activate:">>,
+		Data2;
+	    <<"lockloginok">> ->
+		send_msg(?SERVERS, <<"lockloginok from ", (pid())/binary>>),
+		io:format("~ndate: ~p -> done - login from lock ok",[Date]),
+		Data2= <<"done - login from lock ok:">>,
+		Data2;
+	    <<"lockloginfailed">> ->
+		send_msg(?SERVERS, <<"lockloginfailed from ", (pid())/binary>>),
+		io:format("~ndate: ~p -> done - login from lock failed",[Date]),
+		Data2= <<"done - login from lock failed:">>,
+		Data2;
+	    <<"toggleawsts">> ->
+		send_msg(?SERVERS, <<"toggleawsts (",Args/binary,") from ", (pid())/binary>>),
+		io:format("~ndate: ~p -> done - toggleawsts/~p",[Date,Args]),
+		<<"done - server@localhost/toggleawsts/(",Args/binary,")">>;
+	    <<"chkpasswd">> ->
+		send_msg(?SERVERS, <<"chkpasswd from ", (pid())/binary>>),
+		io:format("~ndate: ~p -> done - chkpasswd",[Date]),
+		{ok, [{Passwd}]}=file:consult(?PASSWDCONF),
+		Data2 = case Passwd of
+			    Args -> <<"done - 0/chkpasswd/pass">>;
+			    _ -> <<"done - 0/chkpasswd/fail">>
+			end,
+		Data2;
+	    <<"resetrefreshtime">> ->
+		send_msg(?SERVERS, <<"resetrefreshtime ",Args/binary," from ", (pid())/binary>>),
+		io:format("~ndate: ~p -> done - resetrefreshtime/~p",[Date,Args]),
+		<<"done - server@localhost/resetrefreshtime/",Args/binary>>;
+	    _ ->					
+		send_msg(?SERVERS, <<"unsupported command from ", (pid())/binary>>),
+		<<"unsupported command">>
+	end,
     {reply, {text, Data3}, State, hibernate};
 websocket_handle(_Data, State) ->
     {ok, State}.
@@ -359,76 +351,69 @@ websocket_handle(_Data, State) ->
 
 dup(B,Acc) when Acc > 1 ->	
     B2=dup(B, Acc-1),
-	<< B/binary,  B2/binary >>;
+    << B/binary,  B2/binary >>;
 dup(B,1) ->
     B.
 
 %%
 
 send_msg([Server|Rest], Msg) ->
-	msg_to_consoles(Server, ?CONSOLES, Msg),
-	send_msg(Rest, Msg);
+    msg_to_consoles(Server, ?CONSOLES, Msg),
+    send_msg(Rest, Msg);
 send_msg([], _Msg) ->
-	[].
+    [].
 
 %%
 
 msg_to_consoles(Server, [Console|Rest], Msg) ->
-	{Console, Server} ! Msg,
-	msg_to_consoles(Server, Rest, Msg);
+    {Console, Server} ! Msg,
+    msg_to_consoles(Server, Rest, Msg);
 msg_to_consoles(_Server, [], _Msg) ->
-	[].
+    [].
 
 %%
 
 pid() ->
-	Apid = self(),
-	case whereis(hanwebs) =:= Apid of
-		true -> 
-			<<"cons1">>;
+    Apid = self(),
+    case whereis(hanwebs) =:= Apid of
+	true -> 
+	    <<"cons1">>;
+	_ ->
+	    case whereis(hanwebs2) =:= Apid of
+		true ->
+		    <<"cons2">>; 
 		_ ->
-			case whereis(hanwebs2) =:= Apid of
-				true ->
-					<<"cons2">>; 
-				_ ->
-					case whereis(hanwebs3) =:= Apid of
-						true -> 
-							<<"cons3">>; 
-						_ ->
-							<<"cons4">> 
-					end
-			end
-	end.	
+		    case whereis(hanwebs3) =:= Apid of
+			true -> 
+			    <<"cons3">>; 
+			_ ->
+			    <<"cons4">> 
+		    end
+	    end
+    end.	
 
 %%
 
 websocket_info(PreMsg, State) ->
-	Msg=
-		case PreMsg of
-			{Msg2,_PID}-> Msg2;
-			_ -> PreMsg
-		end,
-
-%	{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
-%	Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
-%   io:format("~n date: ~p -> msg: ~p ~n",[Date, Msg]),
-
-	Msg3 = 
-		case is_binary(Msg) of
-			true ->
-			     Msg;
-			false -> 
-
-			      case Msg of
-			      	   {'EXIT', _, normal} ->
-				   	    <<>>;
-				   _ ->
-			     	   	list_to_binary(Msg)
-			      end				 
-		end,
-
-	chk_insert(binary:split(Msg3, <<"/">>, [global])),
-	{reply, {text, Msg3}, State, hibernate}.
+    Msg=
+	case PreMsg of
+	    {Msg2,_PID}-> Msg2;
+	    _ -> PreMsg
+	end,
+    Msg3 = 
+	case is_binary(Msg) of
+	    true ->
+		Msg;
+	    false -> 
+		case Msg of
+		    {'EXIT', _, normal} ->
+			<<>>;
+		    _ ->
+			list_to_binary(Msg)
+		end				 
+	end,
+    chk_insert(binary:split(Msg3, <<"/">>, [global])),
+    {reply, {text, Msg3}, State, hibernate}.
 
 %%
 
@@ -436,169 +421,167 @@ chk_insert([_]) -> ok;
 chk_insert([_, <<"pong">>]) -> ok;
 chk_insert([_, _, <<>>]) ->	ok;
 chk_insert([B1, _, B2]) ->
-
-	case binary:split(B2, <<" ">>) of
-		[_, _] ->
-			[];
-		_ ->		
+    case binary:split(B2, <<" ">>) of
+	[_, _] ->
+	    [];
+	_ ->		
             case binary:match(B2,binary:split(?IGNOREUSERS2,<<":">>,[global]), []) of
-				nomatch ->
-					{{Year, Month, Day}, {Hour, Min, _}} = calendar:local_time(),
-					TimeStamp = list_to_binary(io_lib:format("~p-~2..0B-~2..0B ~2..0B:~2..0B", [Year, Month, Day, Hour, Min])),
-					[_,H1]=binary:split(B1,<<"@">>,[global]),
-					[H2|_]=binary:split(H1,<<".">>,[global]),
-					case binary:match(H2,[<<?IGNORESHOWUSERS>>], []) of
-						nomatch ->
-							do_insert(TimeStamp, B1, B2);
-						_ ->
-							do_insert(TimeStamp, B1, <<"">>)
-					end;
-				_  -> 
-	               ok
-			end
-	end;
+		nomatch ->
+		    {{Year, Month, Day}, {Hour, Min, _}} = calendar:local_time(),
+		    TimeStamp = list_to_binary(io_lib:format("~p-~2..0B-~2..0B ~2..0B:~2..0B", [Year, Month, Day, Hour, Min])),
+		    [_,H1]=binary:split(B1,<<"@">>,[global]),
+		    [H2|_]=binary:split(H1,<<".">>,[global]),
+		    case binary:match(H2,[<<?IGNORESHOWUSERS>>], []) of
+			nomatch ->
+			    do_insert(TimeStamp, B1, B2);
+			_ ->
+			    do_insert(TimeStamp, B1, <<"">>)
+		    end;
+		_  -> 
+		    ok
+	    end
+    end;
 chk_insert(_Data) when length(_Data) >= 2 -> ok.
 
+%%
+
 do_insert(TimeStamp, Box, User) ->
-	S = <<"insert into esysman (atimestamp, abox, auser) values ('", TimeStamp/binary, "', '", Box/binary, "', '", User/binary, "')">>,
-	case pgsql:connect(?DBHOST, ?USERNAME, ?PASSWORD, [{database, ?DB}, {port, ?PORT}]) of
-		{error,_} ->
-			{S, error};
-		{ok, Db} -> 
-			case pgsql:squery(Db, S) of
-				{error,Error} ->
-					io:format("insert error: ~p~n", [Error]),
-					{S, error};
-				{_,Res} ->
-					pgsql:close(Db),
-					{S, Res}
-			end
-	end.
+    S = <<"insert into esysman (atimestamp, abox, auser) values ('", TimeStamp/binary, "', '", Box/binary, "', '", User/binary, "')">>,
+    case pgsql:connect(?DBHOST, ?USERNAME, ?PASSWORD, [{database, ?DB}, {port, ?PORT}]) of
+	{error,_} ->
+	    {S, error};
+	{ok, Db} -> 
+	    case pgsql:squery(Db, S) of
+		{error,Error} ->
+		    io:format("insert error: ~p~n", [Error]),
+		    {S, error};
+		{_,Res} ->
+		    pgsql:close(Db),
+		    {S, Res}
+	    end
+    end.
 
 %%
 
 list_dwnld_fls() ->
-	{ok, Files0}=file:list_dir(?DOWNLOADS),
+    {ok, Files0}=file:list_dir(?DOWNLOADS),
     Files=lists:sort(Files0),
     Head = <<"<div id='dwnldslist'><button id='closedwnldslist' class='ui-button ui-widget ui-corner-all'>Close</button></div><div id='dprog'></div><form id='mypostd' method='post' enctype='multipart/form-data' action='/uptodown'><br><input id='fdwnload' type='submit' value='Upload'/><input id='selfiled' type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form><table><tr><th></th><th>File Name</th></tr>">>,
-	Mid = <<(erlang:list_to_binary([ mng_dfile(File) || File <- Files]))/binary>>,
-	Tail = <<"</table><div class='brk'></div><button id='closedwnldslist' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
-	<<Head/binary,Mid/binary,Tail/binary>>.
+    Mid = <<(erlang:list_to_binary([ mng_dfile(File) || File <- Files]))/binary>>,
+    Tail = <<"</table><div class='brk'></div><button id='closedwnldslist' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
+    <<Head/binary,Mid/binary,Tail/binary>>.
 
 %%
 
 mng_dfile(File) ->
-	case file:read_file_info(binary_to_list(?DOWNLOADS) ++ "/" ++ File) of
-		{ok, {_,_,Ftype,_,_,_,_,_,_,_,_,_,_,_}} ->
-			case Ftype of
-				directory -> 
-					"";
-				_ ->
-					tr(File, 2)
-			end;
+    case file:read_file_info(binary_to_list(?DOWNLOADS) ++ "/" ++ File) of
+	{ok, {_,_,Ftype,_,_,_,_,_,_,_,_,_,_,_}} ->
+	    case Ftype of
+		directory -> 
+		    "";
 		_ ->
-			tr(File, 2)
-	end.
+		    tr(File, 2)
+	    end;
+	_ ->
+	    tr(File, 2)
+    end.
 
 %%
 
 list_up_fls(Filter) ->
-	{ok, Files0}=file:list_dir(?UPLOADS),
+    {ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
     Head = <<"<script>$('#scrfilter').focus(); var tmp=$('#scrfilter').val(); $('#scrfilter').val(''); $('#scrfilter').val(tmp);</script><div id='scrslist'><button id='closescrslist' class='ui-button ui-widget ui-corner-all'>Close</button><button id='addscrf' class='ui-button ui-widget ui-corner-all'>Add Script</button><div class='brk'></div><div id='upprog'></div><form id='mypost' method='post' enctype='multipart/form-data' action='/upload'><br><input id='fupload' type='submit' value='Upload'/><input id='selfile' type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form>Filter -> <input id='scrfilter' type='text' class='ui-widget' value='", (Filter)/binary, "' /><br><br><table><tr><th></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
-	Mid = <<(erlang:list_to_binary([ mng_file(File, Filter) || File <- Files]))/binary>>,
-	Tail = <<"</table><div class='brk'></div><button id='closescrslist' class='ui-button ui-widget ui-corner-all'>Close</button></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div><div id='scrtxtbox'>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br></div>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
-	<<Head/binary,Mid/binary,Tail/binary>>.
+    Mid = <<(erlang:list_to_binary([ mng_file(File, Filter) || File <- Files]))/binary>>,
+    Tail = <<"</table><div class='brk'></div><button id='closescrslist' class='ui-button ui-widget ui-corner-all'>Close</button></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div><div id='scrtxtbox'>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br></div>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
+    <<Head/binary,Mid/binary,Tail/binary>>.
 
 %%
 
 mng_file(File, Filter) ->
-	{Res, LnFile} = file:read_link(binary_to_list(?UPLOADS) ++ "/" ++ File),
-
-	case file:read_file_info(binary_to_list(?UPLOADS) ++ "/" ++ File) of
-		{ok, {_,_,Ftype,_,_,_,_,_,_,_,_,_,_,_}} ->
-			case Ftype of
-				directory -> 
-					"";
-				_ ->
-					case File of
-						"any.cmd" -> 
-							ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
-							tr1(File, Res, "cmddiv", "lncmddiv", ShortLnf);
-						"any.exe" -> 
-							ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
-							tr1(File, Res, "exediv", "lnexediv", ShortLnf);
-						"any.msi" -> 
-							ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
-							tr1(File, Res, "msidiv", "lnmsidiv", ShortLnf);
-						_ -> 
-							Filter2 =
-								case Filter of
-									<<>> -> "";
-									_ -> binary:bin_to_list(Filter)
-								end,
-							FileInfo = mng_file_info(File),
-							case Filter2 of
-								"" -> 
-									tr(File, 0, FileInfo);
-								_ ->
-									FF = string:rstr(File, Filter2),
-									FIF = string:rstr(FileInfo, Filter2),
-
-									case (FF > 0) or (FIF > 0) of
-										true -> tr(File, 0, FileInfo);
-										_ -> <<>>
-									end
-							end
-					end
-			end;
+    {Res, LnFile} = file:read_link(binary_to_list(?UPLOADS) ++ "/" ++ File),
+    case file:read_file_info(binary_to_list(?UPLOADS) ++ "/" ++ File) of
+	{ok, {_,_,Ftype,_,_,_,_,_,_,_,_,_,_,_}} ->
+	    case Ftype of
+		directory -> 
+		    "";
 		_ ->
-			case File of
-				"any.cmd" -> tr1(File, Res, "cmddiv", "lncmddiv", "");
-				"any.exe" -> tr1(File, Res, "exediv", "lnexediv", "");
-				"any.msi" -> tr1(File, Res, "msidiv", "lnmsidiv", "");
-				_ -> 
-					tr(File, 0, mng_file_info(File))
-
-			end
-	end.
+		    case File of
+			"any.cmd" -> 
+			    ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
+			    tr1(File, Res, "cmddiv", "lncmddiv", ShortLnf);
+			"any.exe" -> 
+			    ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
+			    tr1(File, Res, "exediv", "lnexediv", ShortLnf);
+			"any.msi" -> 
+			    ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
+			    tr1(File, Res, "msidiv", "lnmsidiv", ShortLnf);
+			_ -> 
+			    Filter2 =
+				case Filter of
+				    <<>> -> "";
+				    _ -> binary:bin_to_list(Filter)
+				end,
+			    FileInfo = mng_file_info(File),
+			    case Filter2 of
+				"" -> 
+				    tr(File, 0, FileInfo);
+				_ ->
+				    FF = string:rstr(File, Filter2),
+				    FIF = string:rstr(FileInfo, Filter2),
+				    case (FF > 0) or (FIF > 0) of
+					true -> tr(File, 0, FileInfo);
+					_ -> <<>>
+				    end
+			    end
+		    end
+	    end;
+	_ ->
+	    case File of
+		"any.cmd" -> tr1(File, Res, "cmddiv", "lncmddiv", "");
+		"any.exe" -> tr1(File, Res, "exediv", "lnexediv", "");
+		"any.msi" -> tr1(File, Res, "msidiv", "lnmsidiv", "");
+		_ -> 
+		    tr(File, 0, mng_file_info(File))
+			
+	    end
+    end.
 
 %%
 
 tr1(File, Res, Fdiv, Ldiv, LnFile) ->
-	case Res of
-		ok ->
-			"<tr class='r'><td></td><td><div id='" ++ Fdiv ++"'>" ++ File ++ "</div></td><td><div id='" ++ Ldiv ++ "'>" ++ LnFile ++ "</div></td><td>" ++ mng_file_info(LnFile) ++ "</td></tr>";
-		 _ ->
-			"<tr class='r'><td></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>"
-		end.
+    case Res of
+	ok ->
+	    "<tr class='r'><td></td><td><div id='" ++ Fdiv ++"'>" ++ File ++ "</div></td><td><div id='" ++ Ldiv ++ "'>" ++ LnFile ++ "</div></td><td>" ++ mng_file_info(LnFile) ++ "</td></tr>";
+	_ ->
+	    "<tr class='r'><td></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>"
+    end.
 
 %%
 
 tr(File, 0, FileInfo) ->
-	"<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all' title='Delete File'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all' title='Rename File'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all' 'Link file to any(.cmd/.exe/.msi)>ln</button><button id='ebut' class='ui-button ui-widget ui-corner-all' title='Edit Script'>Edit</button><button id='fncbut' class='ui-button ui-widget ui-corner-all' title='Copy file name to clipboard'>Copy</button></td><td>" ++ File ++ "</td><td></td><td>" ++ FileInfo ++ "</td></tr>".
-
-%tr(File, 1) ->
-%	"<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all'>ln</button></td><td>" ++ File ++ "</td><td></td><td>" ++ mng_file_info(File) ++ "</td></tr>";
+    "<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all' title='Delete File'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all' title='Rename File'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all' 'Link file to any(.cmd/.exe/.msi)>ln</button><button id='ebut' class='ui-button ui-widget ui-corner-all' title='Edit Script'>Edit</button><button id='fncbut' class='ui-button ui-widget ui-corner-all' title='Copy file name to clipboard'>Copy</button></td><td>" ++ File ++ "</td><td></td><td>" ++ FileInfo ++ "</td></tr>".
 
 tr(File, 2) ->
-	"<tr class='r'><td><button id='dbutd' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbutd' class='ui-button ui-widget ui-corner-all'>Ren</button></td><td>" ++ File ++ "</td><td></td></tr>".
+    "<tr class='r'><td><button id='dbutd' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbutd' class='ui-button ui-widget ui-corner-all'>Ren</button></td><td>" ++ File ++ "</td><td></td></tr>".
 
 %%
 
 mng_file_info(File) ->
-        Info = 
-		case file:consult(<<(?UPLOADS)/binary,"info/",(erlang:list_to_binary(File))/binary,".info">>) of
-			{ok, [Terms]} ->
-				Terms;
-			{error, Reason} ->
-				io_lib:format("~p",[Reason])
+    Info = 
+	case file:consult(<<(?UPLOADS)/binary,"info/",(erlang:list_to_binary(File))/binary,".info">>) of
+	    {ok, [Terms]} ->
+		Terms;
+	    {error, Reason} ->
+		io_lib:format("~p",[Reason])
         end,
-	case Info of
-		["enoent"] -> "";
-		_ -> Info
-	end.
+    case Info of
+	["enoent"] -> "";
+	_ -> Info
+    end.
+
+%%
 
 terminate(Reason, _Opts, _State) ->
-	io:format("~nTerminate Reason: ~p~n", [Reason]),
-	ok.
+    io:format("~nTerminate Reason: ~p~n", [Reason]),
+    ok.

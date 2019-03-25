@@ -365,11 +365,8 @@ Port/binary,
 ",
 (init_open(?ROOMS))/binary,
 "
-//      var rrt='Refresh Time: ' + getnow();
-//      $('#refreshtime').html(rrt);
-//      send('0:resetrefreshtime:' + btoa(rrt));
 
-$('#resetRefreshTime').click();
+    resetRefreshTimers();
 
       if (",?AUTOLOCK,") {
         lockscr();
@@ -400,21 +397,6 @@ $('#resetRefreshTime').click();
 					   boxCom=m.data.split('/');
 					   sepcol=false;
                                         }
-                                
-
-                    if (m.data.indexOf('resetrefreshtime') > -1) {
-                      console.log(m.data);
-                      if (refreshcnt == 0) {
-                        if ((m.data.indexOf('done') == -1)) {
-			  refreshcnt = 0;
-			  boxCom2=m.data.split(' ');
-			  $('#refreshtime').html(atob(boxCom2[1]));
-			  resetRefreshTimers();
-			  refreshcnt++;      
-                        }
-                      }
-                    }
-
 
                     if (m.data.indexOf('toggleawsts') > -1) {
                       if ((m.data.indexOf('done') > -1)) {
@@ -900,14 +882,6 @@ $('#resetRefreshTime').click();
         send('0:toggleawsts:'+$('#shutdownTimerSwitch').html());
     });
 
-    $('#resetRefreshTime').click(function(){
-      var rrt='Refresh Time: ' + getnow();
-      $('#refreshtime').html(rrt);
-console.log(rrt + ' - ' + 'rrt.click');
-      send('0:resetrefreshtime:' + btoa(rrt));
-//    resetRefreshTimers();
-    });
-
     var obj = '';
 
 	$(document).on('click', '#dbut', function(){
@@ -1292,7 +1266,7 @@ function progress(e){
       }
     });
 
-//    $('#refreshtime').html('Refresh Time: ' + getnow());
+    $('#refreshtime').html('Refresh Time: ' + getnow());
 
 ",
 (jsAll(?ROOMS,<<"ping">>))/binary,
@@ -1458,7 +1432,6 @@ function progress(e){
 <button id='lockscr' class='ui-button ui-widget ui-corner-all' title='Lock Screen'>Lock</button>
 <button id='mngscripts' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Scripts and Binaries panel'>Manage Scripts</button>
 <button id='mngdwnlds' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Downloads panel'>Manage Downloads</button>
-<button id='resetRefreshTime' class='ui-button ui-widget ui-corner-all' title='Reset Refresh Time'>Reset -></button>
 <span id=refreshtime></span>
 <span id='fncp' style='display:none'>File name copied to Clipboard!</span>
 <div id='mngscrbox' class='ui-widget-content'></div>
