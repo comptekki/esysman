@@ -68,7 +68,6 @@ websocket_init(State) ->
 	    ok;
 	false ->
 	    register(hanwebs, self()),
-	    apply_interval(30000, websocket_handler, send_msg, [?SERVERS, <<"time test from ", (pid())/binary>>])
 	end,
     {ok, State, hibernate}.
 
