@@ -67,7 +67,8 @@ websocket_init(State) ->
 	    end,
 	    ok;
 	false ->
-	    register(hanwebs, self())
+	    register(hanwebs, self()),
+	    apply_interval(30000, websocket_handler, send_msg, [?SERVERS, <<"time test from ", (pid())/binary>>])
 	end,
     {ok, State, hibernate}.
 
@@ -330,10 +331,11 @@ websocket_handle({text, Msg}, State) ->
 		send_msg(?SERVERS, <<"chkpasswd from ", (pid())/binary>>),
 		io:format("~ndate: ~p -> done - chkpasswd",[Date]),
 		{ok, [{Passwd}]}=file:consult(?PASSWDCONF),
-		Data2 = case Passwd of
-			    Args -> <<"done - 0/chkpasswd/pass">>;
-			    _ -> <<"done - 0/chkpasswd/fail">>
-			end,
+		Data2 =
+		    case Passwd of
+			Args -> <<"done - 0/chkpasswd/pass">>;
+			_ -> <<"done - 0/chkpasswd/fail">>
+		    end,
 		Data2;
 	    _ ->					
 		send_msg(?SERVERS, <<"unsupported command from ", (pid())/binary>>),
