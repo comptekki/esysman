@@ -367,7 +367,7 @@ Port/binary,
         lockscr();
       }
 
-	}
+  }
 
 
     var togcnt = 0;
@@ -377,26 +377,26 @@ Port/binary,
     var cons3 = 0;
     var cons4 = 0;
 
-		socket.onmessage = function(m){
-//			console.log('onmessage called');
+    socket.onmessage = function(m){
+//	console.log('onmessage called');
 
-			if (m.data)
-				if(m.data.indexOf(':'>0) || m.data.indexOf('/')>0){
-					if(m.data.indexOf(':')>0) {
-						if(m.data.indexOf('^')>0) {
-							boxCom2=m.data.split('^');
-							boxCom = boxCom2[0].split(':');
-							boxCom[2] = boxCom2[1];
-							boxCom.push(boxCom2[2].slice(1));
-						} else {
-							boxCom=m.data.split(':');
-						}
-						sepcol=true;
-					}
-					else {
-					   boxCom=m.data.split('/');
-					   sepcol=false;
-                                        }
+	if (m.data)
+            if(m.data.indexOf(':'>0) || m.data.indexOf('/')>0) {
+		if(m.data.indexOf(':')>0) {
+		    if(m.data.indexOf('^')>0) {
+			boxCom2=m.data.split('^');
+			boxCom = boxCom2[0].split(':');
+			boxCom[2] = boxCom2[1];
+			boxCom.push(boxCom2[2].slice(1));
+		    } else {
+			boxCom=m.data.split(':');
+		    }
+		    sepcol=true;
+		}
+		else {
+		   boxCom=m.data.split('/');
+		   sepcol=false;
+                }
                     if (m.data.indexOf('toggleawsts') > -1) {
                       if ((m.data.indexOf('done') > -1)) {
                         togcnt=0;
@@ -435,159 +435,155 @@ Port/binary,
                       send('0:cleardmsg:');
                       $('#cntrst').html('(0) Reset');
                     }
-                    if ((m.data.indexOf('resetrefreshtimer') > -1) && (m.data.indexOf('cons1') > -1)) {
-                      refreshCons();
-                      $('#refreshtime').html('Refresh Time: ' + getnow());
-                    } else if (m.data.indexOf('resetrefreshtimer') > -1)
-                       { console.log(m.data)}
+                    if (m.data.indexOf('resetrefreshtimer') > -1)
+                      if (m.data.indexOf('cons1') > -1) {
+                        refreshCons();
+                        $('#refreshtime').html('Refresh Time: ' + getnow());
+                      }
 
-					box=boxCom[0].substr(0,boxCom[0].indexOf('.'));					
-					users='", ?IGNORESHOWUSERS, "';
-					if (box.indexOf('@')>0)
-					   box= box.split('@')[1]; //box.substr(box.indexOf('@')+1, box.length-1);
-					switch(boxCom[1]) {
-						case 'loggedon':
-							if(users.indexOf(box)<0 && users.indexOf(boxCom[2])<0) {
-								message(sepcol,boxCom[0] + ': ' + boxCom[2]);
-							}
-							else {
-							  message(sepcol,boxCom[0] + ':');
-						    }
+		box=boxCom[0].substr(0,boxCom[0].indexOf('.'));					
+		users='", ?IGNORESHOWUSERS, "';
+		if (box.indexOf('@')>0)
+		   box= box.split('@')[1]; //box.substr(box.indexOf('@')+1, box.length-1);
+ 		switch(boxCom[1]) {
+		   case 'loggedon':
+			if(users.indexOf(box)<0 && users.indexOf(boxCom[2])<0) {
+				message(sepcol,boxCom[0] + ': ' + boxCom[2]);
+			}
+			else {
+			  message(sepcol,boxCom[0] + ':');
+		        }
 
-							if (boxCom[2].indexOf('command not')<0)
-                            {
-								 if(boxCom[2].length>0)
-                                 {
-                                   if(chk_users('", ?IGNOREUSERS, "',boxCom[2]))
-                                   {
-									 if(users.indexOf(box)<0) {
-										 $('#'+box+'status').html(retUsers);									
-									 }
-                                     else {
-									   $('#'+box+'status').html('Up');									
-                                     }
-                                   }
-                                   else
-                                   {
-                                     $('#'+box+'status').html('Up');
-                                   }
+		        if (boxCom[2].indexOf('command not')<0) {
+			   if(boxCom[2].length>0) {
+                             if(chk_users('", ?IGNOREUSERS, "',boxCom[2])) {
+				 if(users.indexOf(box)<0) {
+				     $('#'+box+'status').html(retUsers);									
+				 }
+                                 else {
+				   $('#'+box+'status').html('Up');									
                                  }
-							     else
-							         $('#'+box+'status').html('Up');
-                              }
-                              else {
-                                 $('#'+box+'status').html('.');
-							     $('#'+box+'status').css('color','red');
-							     $('#'+box+'status').css('background-color','#550000');
-                               }
-							break;
-						case 'pong':
-							$('#'+box+'status').css('color','green');
-							$('#'+box+'status').css('background-color','#005500');
-							$('#'+box+'_hltd').css('background-color','#005555');
-							$('#'+box+'_ltd').css('background-color','#005555');
-                            if ($('#'+box+'upstrttime').html().length == 11 ) {
-        					  $('#'+box+'upstrttime').html('Start Time: ' + getnow());
-                            }
-        					$('#'+box+'uptime').html(difftime($('#'+box+'upstrttime').html()));
-							message(sepcol,boxCom[0] + ': ' + 'pong');
-							break;
-					    case 'pang':
-							$('#'+box+'status').css('color','red');
-							$('#'+box+'status').css('background-color','#550000');
-							message(sepcol,boxCom[0] + ': ' + 'pang');
-							break;
-						case 'reboot':
-							$('#'+box+'status').css('color','red');
-							$('#'+box+'status').css('background-color','#550000');
-                       		$('#'+box+'status').html('.');
-							$('#'+box+'_hltd').css('background-color','#000000');
-							$('#'+box+'_ltd').css('background-color','#000000');
-							message(sepcol,boxCom[0] + ': ' + 'reboot');
-							break;
-					    case 'shutdown':
-							$('#'+box+'status').css('color','red');
-							$('#'+box+'status').css('background-color','#550000');
-                       		$('#'+box+'status').html('.');
-							$('#'+box+'_hltd').css('background-color','#000000');
-							$('#'+box+'_ltd').css('background-color','#000000');
-							message(sepcol,boxCom[0] + ': ' + 'shutdown');
-							break;
-					    case 'dffreeze':
-							$('#'+box+'dfstatus').css('color','cyan');
-							$('#'+box+'dfstatus').css('background-color','#006666');
-							$('#'+box+'status').css('color','red');
-							$('#'+box+'status').css('background-color','#550000');
-                            				$('#'+box+'status').html('.');
-							$('#'+box+'_hltd').css('background-color','#000000');
-							$('#'+box+'_ltd').css('background-color','#000000');
-							message(sepcol,boxCom[0] + ': ' + 'dffreeze');
-							break;
-					    case 'dfthaw':
-							$('#'+box+'dfstatus').css('color','green');
-							$('#'+box+'dfstatus').css('background-color','#006600');
-							$('#'+box+'status').css('color','red');
-							$('#'+box+'status').css('background-color','#550000');
-                            				$('#'+box+'status').html('.');
-							$('#'+box+'_hltd').css('background-color','#000000');
-							$('#'+box+'_ltd').css('background-color','#000000');
-							message(sepcol,boxCom[0] + ': ' + 'dfthaw');
-							break;
-					    case 'dfstatus':
-							if(!(boxCom[2].indexOf('thawed'))){
-								$('#'+box+'dfstatus').html('DF');
-								$('#'+box+'dfstatus').css('color','green');
-								$('#'+box+'dfstatus').css('background-color','#006600');
-							}
-							else {
-								$('#'+box+'dfstatus').html('DF');
-								$('#'+box+'dfstatus').css('color','cyan');
-								$('#'+box+'dfstatus').css('background-color','#006666');
-							}
-							message(sepcol,boxCom[0] + ': ' + 'dfstatus');
-							break;
-					    case 'copy':
-							$('#'+box+'status').css('color','#00cc00');
-							$('#'+box+'status').css('background-color','#006600');
-							message(sepcol,boxCom[0] + ': ' + 'copy');
-							break;
-                        case 'list_dwnlds_dir':
-						  $('#mngdwnldsbox').html(boxCom[2]);
-							message(sepcol,boxCom[0] + ': ' + 'list_dwnlds_dir');
-                           break;
-                        case 'list_ups_dir':
-						  $('#mngscrbox').html(boxCom[2]);
-							message(sepcol,boxCom[0] + ': ' + 'list_ups_dir');
-                           break;
-                        case 'editscrfile':
-                          var fname = $('#scrname').html().split('.');
-                          if (fname[fname.length-1] == 'cmd') {
-						    $('#scripttext').val(boxCom[2]);
-                          } else {
-                            notcmd = true;
-                            $('#scrtxtbox').hide();
-                          }
-						  $('#scrdesc').val(boxCom[3].substring(1, boxCom[3].length-2));
-							message(sepcol,boxCom[0] + ': ' + 'editscrfile');
-                           break;
-					    case 'com':
-						    $('#'+box+'status').css('color','#00cc00');
-							$('#'+box+'status').css('background-color','#006600');
-							message(sepcol,boxCom[0] + ': ' + 'com');
-							break;
-                        case 'chkpasswd':
-                            if (boxCom[2] == 'pass') {
-                              $('#unlockscr').show();
-                              $('#unlockscr').focus();
-                              $('#unlockscrpasswd').val('');
-                              $('#unlockscrpasswd').hide();
+                             }
+                             else {
+                                 $('#'+box+'status').html('Up');
+                             }
+                           }
+			   else
+			     $('#'+box+'status').html('Up');
+                        }
+                        else {
+                           $('#'+box+'status').html('.');
+			   $('#'+box+'status').css('color','red');
+			   $('#'+box+'status').css('background-color','#550000');
+                        }
+			break;
+		    case 'pong':
+			$('#'+box+'status').css('color','green');
+			$('#'+box+'status').css('background-color','#005500');
+		        $('#'+box+'_hltd').css('background-color','#005555');
+			$('#'+box+'_ltd').css('background-color','#005555');
+                        if ($('#'+box+'upstrttime').html().length == 11 ) {
+        		  $('#'+box+'upstrttime').html('Start Time: ' + getnow());
+                        }
+        		$('#'+box+'uptime').html(difftime($('#'+box+'upstrttime').html()));
+			message(sepcol,boxCom[0] + ': ' + 'pong');
+			break;
+		    case 'pang':
+			$('#'+box+'status').css('color','red');
+			$('#'+box+'status').css('background-color','#550000');
+			message(sepcol,boxCom[0] + ': ' + 'pang');
+			break;
+		    case 'reboot':
+			$('#'+box+'status').css('color','red');
+			$('#'+box+'status').css('background-color','#550000');
+                	$('#'+box+'status').html('.');
+			$('#'+box+'_hltd').css('background-color','#000000');
+			$('#'+box+'_ltd').css('background-color','#000000');
+			message(sepcol,boxCom[0] + ': ' + 'reboot');
+			break;
+		    case 'shutdown':
+			$('#'+box+'status').css('color','red');
+			$('#'+box+'status').css('background-color','#550000');
+                	$('#'+box+'status').html('.');
+			$('#'+box+'_hltd').css('background-color','#000000');
+			$('#'+box+'_ltd').css('background-color','#000000');
+			message(sepcol,boxCom[0] + ': ' + 'shutdown');
+			break;
+		    case 'dffreeze':
+			$('#'+box+'dfstatus').css('color','cyan');
+			$('#'+box+'dfstatus').css('background-color','#006666');
+			$('#'+box+'status').css('color','red');
+			$('#'+box+'status').css('background-color','#550000');
+                	$('#'+box+'status').html('.');
+			$('#'+box+'_hltd').css('background-color','#000000');
+			$('#'+box+'_ltd').css('background-color','#000000');
+			message(sepcol,boxCom[0] + ': ' + 'dffreeze');
+			break;
+		    case 'dfthaw':
+			$('#'+box+'dfstatus').css('color','green');
+			$('#'+box+'dfstatus').css('background-color','#006600');
+			$('#'+box+'status').css('color','red');
+			$('#'+box+'status').css('background-color','#550000');
+                	$('#'+box+'status').html('.');
+			$('#'+box+'_hltd').css('background-color','#000000');
+			$('#'+box+'_ltd').css('background-color','#000000');
+			message(sepcol,boxCom[0] + ': ' + 'dfthaw');
+			break;
+		    case 'dfstatus':
+			if(!(boxCom[2].indexOf('thawed'))) {
+		           $('#'+box+'dfstatus').html('DF');
+			   $('#'+box+'dfstatus').css('color','green');
+			   $('#'+box+'dfstatus').css('background-color','#006600');
+			}
+			else {
+			    $('#'+box+'dfstatus').html('DF');
+			    $('#'+box+'dfstatus').css('color','cyan');
+			    $('#'+box+'dfstatus').css('background-color','#006666');
+			}
+			message(sepcol,boxCom[0] + ': ' + 'dfstatus');
+			break;
+		    case 'copy':
+			$('#'+box+'status').css('color','#00cc00');
+			$('#'+box+'status').css('background-color','#006600');
+			message(sepcol,boxCom[0] + ': ' + 'copy');
+			break;
+                    case 'list_dwnlds_dir':
+		        $('#mngdwnldsbox').html(boxCom[2]);
+			message(sepcol,boxCom[0] + ': ' + 'list_dwnlds_dir');
+                        break;
+                    case 'list_ups_dir':
+		        $('#mngscrbox').html(boxCom[2]);
+			message(sepcol,boxCom[0] + ': ' + 'list_ups_dir');
+                        break;
+                    case 'editscrfile':
+                        var fname = $('#scrname').html().split('.');
+                        if (fname[fname.length-1] == 'cmd') {
+			    $('#scripttext').val(boxCom[2]);
+                        } else {
+                          notcmd = true;
+                          $('#scrtxtbox').hide();
+                        }
+		        $('#scrdesc').val(boxCom[3].substring(1, boxCom[3].length-2));
+			message(sepcol,boxCom[0] + ': ' + 'editscrfile');
+                        break;
+		    case 'com':
+		        $('#'+box+'status').css('color','#00cc00');
+			$('#'+box+'status').css('background-color','#006600');
+			message(sepcol,boxCom[0] + ': ' + 'com');
+			break;
+                    case 'chkpasswd':
+                        if (boxCom[2] == 'pass') {
+                           $('#unlockscr').show();
+                           $('#unlockscr').focus();
+                           $('#unlockscrpasswd').val('');
+                           $('#unlockscrpasswd').hide();
 
-                              $('#lockpane').hide();
-                              send('0:lockloginok:');
-                            } else {
-                              send('0:lockloginfailed:');
-                            }
-                            break;
+                           $('#lockpane').hide();
+                           send('0:lockloginok:');
+                        } else {
+                           send('0:lockloginfailed:');
+                        }
+                        break;
 		    default:
 		      if(boxCom[2] != undefined) {
 		        message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1] + ' ' + boxCom[2] + '<br>' + m.data.replace(/\\n|\\r\\n|\\r/g, '<br>').replace(/->/g, '-> <br>'))
@@ -606,49 +602,46 @@ Port/binary,
                     }
 		} // end switch
 
-		            var ignore_sd = '",?IGNORESHUTDOWN,"';
-                    var ignore_rb = '",?IGNOREREBOOT,"';
-                    var ignoreu1 = '",?IGNOREU1,"';
-                    var ignoreu2 = '",?IGNOREU2,"';
-                    var ignoreu3 = '",?IGNOREU3,"';
-                    var ignoreu4 = '",?IGNOREU4,"';
+		var ignore_sd = '",?IGNORESHUTDOWN,"';
+                var ignore_rb = '",?IGNOREREBOOT,"';
+                var ignoreu1 = '",?IGNOREU1,"';
+                var ignoreu2 = '",?IGNOREU2,"';
+                var ignoreu3 = '",?IGNOREU3,"';
+                var ignoreu4 = '",?IGNOREU4,"';
 
-                    if (boxCom.length > 2) {
-						 if(boxCom[2].indexOf('|') > -1 && boxCom[2].indexOf(ignoreu1) < 0 && 
-								boxCom[2].indexOf(ignoreu2) < 0 && boxCom[2].indexOf(ignoreu3) < 0 &&
-								boxCom[2].indexOf(ignoreu4) < 0
-						   )
-						   {
-							  if (ignore_rb.indexOf(box) < 0 && box.length > 0) {
-							     send(boxCom[0]+':reboot:0');
-							  }
-						   }
-				    }
+                if (boxCom.length > 2) {
+		    if(boxCom[2].indexOf('|') > -1 && boxCom[2].indexOf(ignoreu1) < 0 && 
+		          boxCom[2].indexOf(ignoreu2) < 0 && boxCom[2].indexOf(ignoreu3) < 0 &&
+		          boxCom[2].indexOf(ignoreu4) < 0) {
+		       if (ignore_rb.indexOf(box) < 0 && box.length > 0) {
+		           send(boxCom[0]+':reboot:0');
+		       }
+		    }
+		}
 
-   					if (ignore_sd.indexOf(box) < 0 && box.length > 0)
-                    {
-					  if($('#shutdownTimerSwitch').html() == 'On') {
+   		if (ignore_sd.indexOf(box) < 0 && box.length > 0) {
+                    if($('#shutdownTimerSwitch').html() == 'On') {
                         if (hdiff(Number($('#shutdownTimeH').val()), Number($('#shutdownTimeH2').val()))) {
-                          if (shutbox != box) {
-	        			    send(boxCom[0]+':shutdown:0');
-                            shutbox = box;
-                          }
+                            if (shutbox != box) {
+	                       send(boxCom[0]+':shutdown:0');
+                               shutbox = box;
+                            }
                         }
-					  }
-					}
-				}
-				else message(true,m.data)
+		    }
 		}
+	}
+	else message(true,m.data)
+    } // end socket.onmessage
 
-		socket.onclose = function() {
-//			console.log('onclose called')
-		    message(true,'Socket status: 3 (Closed)');
-                    setTimeout(function(){wsconnect()}, 5000);
-		}
+    socket.onclose = function() {
+//	console.log('onclose called')
+        message(true,'Socket status: 3 (Closed)');
+        setTimeout(function(){wsconnect()}, 5000);
+    }
 
-		socket.onerror = function(e) {
-			message(true,'Socket Status: '+e.data);
-		}
+    socket.onerror = function(e) {
+	message(true,'Socket Status: '+e.data);
+    }
 
   } // end function wsconnect()
 
@@ -659,13 +652,11 @@ Port/binary,
      ws_str='ws://'+host+':'+port+'/websocket';
 
 
-	try{
-
-      wsconnect();
-
-	} catch(exception) {
-	   message(true,'Error: '+exception)
-	}
+    try{
+        wsconnect();
+    } catch(exception) {
+        message(true,'Error: '+exception)
+    }
 
     // help from: https://stackoverflow.com/questions/13903897/javascript-return-number-of-days-hours-minutes-seconds-between-two-dates
     function difftime(date_str) {
