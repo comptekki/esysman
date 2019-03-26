@@ -66,7 +66,7 @@ fire_wall(Req) ->
 	{PeerAddress, _Port} = cowboy_req:peer(Req),
 	{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
 	Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
-	{ok, [_,{FireWallOnOff,IPAddresses},_,_,_]}=file:consult(?CONF),
+	{ok, [_,{FireWallOnOff,IPAddresses},_,_]}=file:consult(?CONF),
 	case FireWallOnOff of
 		on ->
 			case lists:member(PeerAddress,IPAddresses) of
@@ -84,7 +84,7 @@ fire_wall(Req) ->
 %%
 
 login_is() ->
-	{ok, [_,_,{UPOnOff,UnamePasswds},_,_]}=file:consult(?CONF),
+	{ok, [_,_,{UPOnOff,UnamePasswds},_]}=file:consult(?CONF),
 	case UPOnOff of
 		on ->
 			UnamePasswds;
@@ -279,7 +279,7 @@ app_front_end(Req, Opts) ->
 
 	Get_rms = get_rms_keys(?ROOMS, 49),
 
-	{ok, [_, _, _, {Ref_cons_time},{ShutdownStartTime,ShutDownStopTime,OnorOff}]} = file:consult(?CONF),
+	{ok, [_, _, _, {ShutdownStartTime,ShutDownStopTime,OnorOff}]} = file:consult(?CONF),
 
 	Req2 = cowboy_req:reply(
 			200,
@@ -348,9 +348,9 @@ Port/binary,
       send('0:lockactivate:');
    }
 
-   function resetRefreshTimers() {
+   function refreshCons() {
 ",
-(init2(?ROOMS,Ref_cons_time))/binary,
+(init2(?ROOMS))/binary,
 "
    }
 
@@ -366,7 +366,7 @@ Port/binary,
 (init_open(?ROOMS))/binary,
 "
 
-    resetRefreshTimers();
+//    refreshCons();
 
       if (",?AUTOLOCK,") {
         lockscr();
@@ -380,6 +380,7 @@ Port/binary,
 
 		socket.onmessage = function(m){
 //			console.log('onmessage called');
+
 			if (m.data)
 				if(m.data.indexOf(':'>0) || m.data.indexOf('/')>0){
 					if(m.data.indexOf(':')>0) {
@@ -397,7 +398,6 @@ Port/binary,
 					   boxCom=m.data.split('/');
 					   sepcol=false;
                                         }
-
                     if (m.data.indexOf('toggleawsts') > -1) {
                       if ((m.data.indexOf('done') > -1)) {
                         togcnt=0;
@@ -435,6 +435,10 @@ Port/binary,
                       send('0:clearcmsg:');
                       send('0:cleardmsg:');
                       $('#cntrst').html('(0) Reset');
+                    }
+                    if (m.data.indexOf('resetrefreshtimer') > -1) {
+                      refreshCons();
+                      $('#refreshtime').html('Refresh Time: ' + getnow());
                     }
 
 					box=boxCom[0].substr(0,boxCom[0].indexOf('.'));					
@@ -584,22 +588,23 @@ Port/binary,
                               send('0:lockloginfailed:');
                             }
                             break;
-
-					    default:
-						    if(boxCom[2] != undefined) {
-						        message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1] + ' ' + boxCom[2] + '<br>' + m.data.replace(/\\n|\\r\\n|\\r/g, '<br>').replace(/->/g, '-> <br>'))
-                            }
-               			    else if(boxCom[1] == undefined) {
-						        message(sepcol,boxCom[0]);
-                            }
-                   		    else {
-                                if (boxCom[1].indexOf('<br>') > 0) {
-                                  message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1])
-                                } else {
-                                    message(sepcol,boxCom[0] + ': ' + boxCom[1].replace(/\\n|\\r\\n|\\r/g, '<br>'));
-                                }
-                            }
-					} // end switch
+		    default:
+		      if(boxCom[2] != undefined) {
+		        message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1] + ' ' + boxCom[2] + '<br>' + m.data.replace(/\\n|\\r\\n|\\r/g, '<br>').replace(/->/g, '-> <br>'))
+                      }
+               	    else if(boxCom[1] == undefined) {
+                        if (boxCom[0].indexOf('resetrefreshtimer') == -1) {
+			        message(sepcol,boxCom[0]);
+                        }
+                    }
+                    else {
+                      if (boxCom[1].indexOf('<br>') > 0) {
+                        message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1])
+                      } else {
+                          message(sepcol,boxCom[0] + ': ' + boxCom[1].replace(/\\n|\\r\\n|\\r/g, '<br>'));
+                      }
+                    }
+		} // end switch
 
 		            var ignore_sd = '",?IGNORESHUTDOWN,"';
                     var ignore_rb = '",?IGNOREREBOOT,"';
@@ -2362,16 +2367,17 @@ mkjsComAllRow([],_Rm,_Com) ->
 
 %%
 
-init2([Room|Rooms],Ref_cons_time) ->	
-	<<(init2_rm(Room,Ref_cons_time))/binary,(init2(Rooms,Ref_cons_time))/binary>>;
-init2([],_) ->
+init2([Room|Rooms]) ->	
+	<<(init2_rm(Room))/binary,(init2(Rooms))/binary>>;
+init2([]) ->
     <<>>.
 
 %%
 
-init2_rm([Rm|_],Ref_cons_time) ->
+init2_rm([Rm|_]) ->
 <<"
-                     interval_",Rm/binary,"_ref_cons=setInterval(refresh_cons_",Rm/binary,",",(list_to_binary(integer_to_list(Ref_cons_time)))/binary,");
+
+                     refresh_cons_",Rm/binary,"();
 
 ">>.
 

@@ -34,6 +34,7 @@
 -export([websocket_init/1]).
 -export([websocket_handle/2]).
 -export([websocket_info/2]).
+-export([send_msg/2]).
 
 -export([terminate/3]).
 
@@ -68,6 +69,7 @@ websocket_init(State) ->
 	    ok;
 	false ->
 	    register(hanwebs, self()),
+	    timer:apply_interval(?REFRESHTIME, websocket_handler, send_msg, [?SERVERS, <<"com - resetrefreshtimer - from ", (pid())/binary>>])
 	end,
     {ok, State, hibernate}.
 
@@ -94,6 +96,7 @@ websocket_handle({text, Msg}, State) ->
     Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
 
     [Box,Com,Args]=Ldata,
+		io:format("~ndate: ~p -> done - sent com ~p - data2: ~p ~n",[Box, Com, Args]),
     Rec_Node=binary_to_atom(<<Box/binary>>,latin1),
     Data3 =
 	case Com of
