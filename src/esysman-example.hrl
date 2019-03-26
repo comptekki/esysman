@@ -20,8 +20,6 @@
 -define(IGNOREU4,"u4").
 -define(LOCKSCRPASSWD,"temppass").
 -define(AUTOLOCK, "true"). % "false" no,  "true" yes 
--define(SELECTEDON,"selected"). % auto shutdown 
--define(SELECTEDOFF," ").
 -define(REFRESHTIME,300000). % 300000 = 5 minutes
 
 -define(MAXAGE, 500).
