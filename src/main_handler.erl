@@ -437,11 +437,48 @@ Port/binary,
                     send('0:cleardmsg:');
                     $('#cntrst').html('(0) Reset');
                 }
-                if (m.data.indexOf('resetrefreshtimer') > -1)
+                if (m.data.indexOf('resetrefreshtimer') > -1) {
+console.log(m.data + ' cons1 = ' + cons1 + ' cons2 = ' + cons2 + ' cons3 = ' + cons3 + ' cons4 = ' + cons4);
                     if (m.data.indexOf('cons1') > -1) {
                       refreshCons();
                       $('#refreshtime').html('Refresh Time: ' + getnow());
-                    }
+                      cons1 = 1;
+                      cons2 = 0;
+                      cons3 = 0;
+                      cons4 = 0;
+                      console.log(m.data + ' - cons1 - resfresh');
+                    } else if (m.data.indexOf('cons2') > -1 && cons1 == 1 && cons2 == 0) {
+                      cons1 = 0;
+                      cons2 = 1;
+                      cons3 = 0;
+                      cons4 = 0;
+                      console.log(m.data + ' - cons2 - reset');
+                    } else if (m.data.indexOf('cons2') > -1 && cons1 == 0 && cons2 == 1) {
+                      refreshCons();
+                      $('#refreshtime').html('Refresh Time: ' + getnow());
+                      console.log(m.data + ' - cons2 - refresh');
+                    } else if (m.data.indexOf('cons2') > -1 && cons2 == 1 && cons3 == 0) {
+                      cons1 = 0;
+                      cons2 = 0;
+                      cons3 = 1;
+                      cons4 = 0;
+                      console.log(m.data + ' - cons3 - reset');
+                    } else if (m.data.indexOf('cons3') > -1 && cons1 == 0 && cons2 == 0 && cons3 == 1) {
+                      refreshCons();
+                      $('#refreshtime').html('Refresh Time: ' + getnow());
+                      console.log(m.data + ' - cons3 - refresh');
+                    } else if (m.data.indexOf('cons4') > -1 && cons3 == 1 && cons4 == 0) {
+                      cons1 = 0;
+                      cons2 = 0;
+                      cons3 = 0;
+                      cons4 = 4;
+                      console.log(m.data + ' - cons4 - reset');
+                    } else if (m.data.indexOf('cons4') > -1 && cons1 == 0 && cons2 == 0 && cons3 == 0 && cons4 == 1) {
+                      refreshCons();
+                      $('#refreshtime').html('Refresh Time: ' + getnow());
+                      console.log(m.data + ' - cons4 - refresh');
+                    } 
+                }
 
 		box=boxCom[0].substr(0,boxCom[0].indexOf('.'));					
 		users='", ?IGNORESHOWUSERS, "';
