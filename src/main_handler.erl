@@ -325,14 +325,14 @@ Port/binary,
   var socket = 0;
   var ws_str = '';
 
-	var r=false;
-	rall=false;
-	var first=true;
-    var tot_cnt=0;
-	var shutbox='';
-    var retUsers='';
+  var r=false;
+//  rall=false;
+  var first=true;
+  var tot_cnt=0;
+  var shutbox='';
+  var retUsers='';
 
-   function lockscr() {
+  function lockscr() {
       $('#lockpane').show();
       $('#lockpane').attr('tabindex', 1);
       $('#unlockscr').attr('tabindex', -1);
@@ -343,9 +343,9 @@ Port/binary,
       $('#unlockscrpasswd').hide();
 
       send('0:lockactivate:');
-   }
+  }
 
-   function refreshCons() {
+  function refreshCons() {
 ",
 (init2(?ROOMS))/binary,
 "
@@ -397,8 +397,9 @@ Port/binary,
 		   boxCom=m.data.split('/');
 		   sepcol=false;
                 }
-                    if (m.data.indexOf('toggleawsts') > -1) {
-                      if ((m.data.indexOf('done') > -1)) {
+
+                if (m.data.indexOf('toggleawsts') > -1) {
+                    if ((m.data.indexOf('done') > -1)) {
                         togcnt=0;
                         if(m.data.indexOf('(On)') > -1) {
                           $('#shutdownTimerSwitch').html('Off')
@@ -406,40 +407,41 @@ Port/binary,
                           $('#shutdownTimerSwitch').html('On')
                         }
                         togcnt++;
-                      }
-                      if ((m.data.indexOf('from') > -1) && (togcnt == 0)) {
+                    }
+                    if ((m.data.indexOf('from') > -1) && (togcnt == 0)) {
                         if(m.data.indexOf('(On)') > -1) {
                           $('#shutdownTimerSwitch').html('Off')
                         } else {
                           $('#shutdownTimerSwitch').html('On')
                         }
-                      }
                     }
-                    if (m.data.indexOf('clearcmsg') > -1) {
-                      $('#msgcl').html('');
-                      $('#cntcl').html('0K/L');
+                }
+
+                if (m.data.indexOf('clearcmsg') > -1) {
+                    $('#msgcl').html('');
+                    $('#cntcl').html('0K/L');
+                }
+                if (m.data.indexOf('cleardmsg') > -1) {
+                    $('#msgdup').html('');
+                    $('#cntdup').html('0K/L');
+                    $('#cntrst').html('(0) Reset');
+                }
+                if (m.data.indexOf('clearsmsg') > -1) {
+                    $('#msgsm').html('');
+                    $('#cntsm').html('0K/L');
+                    $('#cntrst').html('(0) Reset');
+                }
+                if (m.data.indexOf('resetall') > -1) {
+                    send('0:clearsmsg:');
+                    send('0:clearcmsg:');
+                    send('0:cleardmsg:');
+                    $('#cntrst').html('(0) Reset');
+                }
+                if (m.data.indexOf('resetrefreshtimer') > -1)
+                    if (m.data.indexOf('cons1') > -1) {
+                      refreshCons();
+                      $('#refreshtime').html('Refresh Time: ' + getnow());
                     }
-                    if (m.data.indexOf('cleardmsg') > -1) {
-                      $('#msgdup').html('');
-                      $('#cntdup').html('0K/L');
-                      $('#cntrst').html('(0) Reset');
-                    }
-                    if (m.data.indexOf('clearsmsg') > -1) {
-                      $('#msgsm').html('');
-                      $('#cntsm').html('0K/L');
-                      $('#cntrst').html('(0) Reset');
-                    }
-                    if (m.data.indexOf('resetall') > -1) {
-                      send('0:clearsmsg:');
-                      send('0:clearcmsg:');
-                      send('0:cleardmsg:');
-                      $('#cntrst').html('(0) Reset');
-                    }
-                    if (m.data.indexOf('resetrefreshtimer') > -1)
-                      if (m.data.indexOf('cons1') > -1) {
-                        refreshCons();
-                        $('#refreshtime').html('Refresh Time: ' + getnow());
-                      }
 
 		box=boxCom[0].substr(0,boxCom[0].indexOf('.'));					
 		users='", ?IGNORESHOWUSERS, "';
