@@ -36,133 +36,132 @@
 %%
 
 init(Req, Opts) ->
-		case fire_wall(Req) of
-			allow ->
-				Creds=login_is(),
-				case is_list(Creds) of
-					true -> 
-						{Cred, Req2} = checkCreds(Creds, Req, Opts),
-						case Cred of
-							fail ->
-								app_login(Req2, Opts);
-							pass ->
-								app_front_end(Req2, Opts)
-						end;
-					false -> 
-						case Creds of
-							off ->
-								app_front_end(Req, Opts);
-							_  ->
-								app_login(Req, Opts)
-						end
-				end;
-			deny ->
-				fwDenyMessage(Req, Opts)
-		end.
+    case fire_wall(Req) of
+	allow ->
+	    Creds=login_is(),
+	    case is_list(Creds) of
+		true -> 
+		    {Cred, Req2} = checkCreds(Creds, Req, Opts),
+		    case Cred of
+			fail ->
+			    app_login(Req2, Opts);
+			pass ->
+			    app_front_end(Req2, Opts)
+		    end;
+		false -> 
+		    case Creds of
+			off ->
+			    app_front_end(Req, Opts);
+			_  ->
+			    app_login(Req, Opts)
+		    end
+	    end;
+	deny ->
+	    fwDenyMessage(Req, Opts)
+    end.
 
 %%
 
 fire_wall(Req) ->	
-	{PeerAddress, _Port} = cowboy_req:peer(Req),
-	{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
-	Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
-	{ok, [_,{FireWallOnOff,IPAddresses},_,_]}=file:consult(?CONF),
-	case FireWallOnOff of
-		on ->
-			case lists:member(PeerAddress,IPAddresses) of
-				true ->
-					io:format("~ndate: ~p -> firewall allow -> ~p",[Date, PeerAddress]),
-					allow;
-				false ->
-					io:format("~ndate: ~p -> firewall denied -> ~p",[Date, PeerAddress]),
-					deny
-			end;
-		off ->
-			allow
-	end.
+    {PeerAddress, _Port} = cowboy_req:peer(Req),
+    {{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
+    Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
+    {ok, [_,{FireWallOnOff,IPAddresses},_,_]}=file:consult(?CONF),
+    case FireWallOnOff of
+	on ->
+	    case lists:member(PeerAddress,IPAddresses) of
+		true ->
+		    io:format("~ndate: ~p -> firewall allow -> ~p",[Date, PeerAddress]),
+		    allow;
+		false ->
+		    io:format("~ndate: ~p -> firewall denied -> ~p",[Date, PeerAddress]),
+		    deny
+	    end;
+	off ->
+	    allow
+    end.
 
 %%
 
 login_is() ->
-	{ok, [_,_,{UPOnOff,UnamePasswds},_]}=file:consult(?CONF),
-	case UPOnOff of
-		on ->
-			UnamePasswds;
-		off ->
-			off
-	end.
+    {ok, [_,_,{UPOnOff,UnamePasswds},_]}=file:consult(?CONF),
+    case UPOnOff of
+	on ->
+	    UnamePasswds;
+	off ->
+	    off
+    end.
 	
 %%
 
 checkCreds(UnamePasswds, Req, _Opts) ->
-	[{Uname,_}] = UnamePasswds,
-	Cookies = cowboy_req:parse_cookies(Req),
+    [{Uname,_}] = UnamePasswds,
+    Cookies = cowboy_req:parse_cookies(Req),
     case (Cookies == undefined) or (Cookies == []) of
-		true ->
-			checkPost(UnamePasswds, Req);
-		false  ->
-			CookieVal = get_cookie_val(), 
-			Req2 = cowboy_req:set_resp_cookie(Uname, CookieVal, Req, #{max_age =>  ?MAXAGE, path => "/", secure => true, http_only => true}),
-			{pass, Req2}
-	end.
+	true ->
+	    checkPost(UnamePasswds, Req);
+	false  ->
+	    CookieVal = get_cookie_val(), 
+	    Req2 = cowboy_req:set_resp_cookie(Uname, CookieVal, Req, #{max_age =>  ?MAXAGE, path => "/", secure => true, http_only => true}),
+	    {pass, Req2}
+    end.
 
 %%
 
 checkCreds([{Uname,Passwd}|UnamePasswds], Uarg, Parg, Req) ->
     case Uname of
-		Uarg ->
-			case Passwd of
-				Parg ->
-					CookieVal = get_cookie_val(), 
-					Req0 = cowboy_req:set_resp_cookie(Uname, CookieVal, Req, #{max_age =>  ?MAXAGE, path => "/", secure => true, http_only => true}),
-					{pass, Req0};
-				_ ->
-					checkCreds(UnamePasswds,Uarg,Parg,Req)
-			end;
+	Uarg ->
+	    case Passwd of
+		Parg ->
+		    CookieVal = get_cookie_val(), 
+		    Req0 = cowboy_req:set_resp_cookie(Uname, CookieVal, Req, #{max_age =>  ?MAXAGE, path => "/", secure => true, http_only => true}),
+		    {pass, Req0};
 		_ ->
-			checkCreds(UnamePasswds, Uarg, Parg, Req)
-	end;
+		    checkCreds(UnamePasswds,Uarg,Parg,Req)
+	    end;
+	_ ->
+	    checkCreds(UnamePasswds, Uarg, Parg, Req)
+    end;
 checkCreds([], _Uarg, _Parg, Req) ->
-	{fail, Req}.
+    {fail, Req}.
 
 %%
 
 checkPost(UnamePasswds,Req) ->
-	case cowboy_req:method(Req) of
-		<<"POST">> ->
-			{ok, FormData, Req2} = cowboy_req:read_urlencoded_body(Req),
-			case FormData of
-				[{_UnameVar, UnameVal}, {_PasswdVar, PasswdVal}, _Login] ->
-					checkCreds(UnamePasswds, UnameVal, PasswdVal, Req2);
-				_ ->
-					{fail, Req}
-			end;
+    case cowboy_req:method(Req) of
+	<<"POST">> ->
+	    {ok, FormData, Req2} = cowboy_req:read_urlencoded_body(Req),
+	    case FormData of
+		[{_UnameVar, UnameVal}, {_PasswdVar, PasswdVal}, _Login] ->
+		    checkCreds(UnamePasswds, UnameVal, PasswdVal, Req2);
 		_ ->
-			{fail, Req}
-	end.
+		    {fail, Req}
+	    end;
+	_ ->
+	    {fail, Req}
+    end.
 
 %%
 
 get_cookie_val() ->
-	list_to_binary(
-	  integer_to_list(
-		calendar:datetime_to_gregorian_seconds({date(), time()})
-	   )).
+    list_to_binary(
+      integer_to_list(
+	calendar:datetime_to_gregorian_seconds({date(), time()})
+       )).
 
 %%
 
 app_login(Req, Opts) ->
-
-		case fire_wall(Req) of
-			allow ->
-				Req3 =
-					case is_list(login_is()) of
-						true ->
-							cowboy_req:reply(
-							  200,
-							  #{ <<"content-type">> => <<"text/html">> },
-
-<<"<!DOCTYPE html>
+    case fire_wall(Req) of
+	allow ->
+	    Req3 =
+		case is_list(login_is()) of
+		    true ->
+			cowboy_req:reply(
+			  200,
+			  #{ <<"content-type">> => <<"text/html">> },
+			  
+			  <<"<!DOCTYPE html>
 <html lang='en'>
 <head>
 <meta charset='utf-8'>
@@ -240,10 +239,9 @@ hi
 %%
 
 fwDenyMessage(Req, Opts) ->
-
-	Req2 = cowboy_req:reply(
-			200,
-			#{ <<"content-type">> => <<"text/html">> },
+    Req2 = cowboy_req:reply(
+	     200,
+	     #{ <<"content-type">> => <<"text/html">> },
 
 <<"<html lang='en'>
 <head>
@@ -269,21 +267,20 @@ Access Denied!
 %%
 
 app_front_end(Req, Opts) ->
-	Host = cowboy_req:host(Req),
+    Host = cowboy_req:host(Req),
+    PortInt  = cowboy_req:port(Req),
+    Port = list_to_binary(integer_to_list(PortInt)),
+    {{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
+    Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
+    io:format("~ndate: ~p -> host: ~p : ~p~n", [Date, Host, Port]),
+    
+    Get_rms = get_rms_keys(?ROOMS, 49),
 
-	PortInt  = cowboy_req:port(Req),
-	Port = list_to_binary(integer_to_list(PortInt)),
-	{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
-	Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
-	io:format("~ndate: ~p -> host: ~p : ~p~n", [Date, Host, Port]),
+    {ok, [_, _, _, {ShutdownStartTime,ShutDownStopTime,OnorOff}]} = file:consult(?CONF),
 
-	Get_rms = get_rms_keys(?ROOMS, 49),
-
-	{ok, [_, _, _, {ShutdownStartTime,ShutDownStopTime,OnorOff}]} = file:consult(?CONF),
-
-	Req2 = cowboy_req:reply(
-			200,
-			#{ <<"content-type">> => <<"text/html">> },
+    Req2 = cowboy_req:reply(
+	     200,
+	     #{ <<"content-type">> => <<"text/html">> },
 
 <<"<!DOCTYPE html>
 <html lang='en'>
@@ -366,8 +363,6 @@ Port/binary,
 (init_open(?ROOMS))/binary,
 "
 
-//    refreshCons();
-
       if (",?AUTOLOCK,") {
         lockscr();
       }
@@ -377,6 +372,10 @@ Port/binary,
 
     var togcnt = 0;
     var refreshcnt = 0;
+    var cons1 = 0;
+    var cons2 = 0;
+    var cons3 = 0;
+    var cons4 = 0;
 
 		socket.onmessage = function(m){
 //			console.log('onmessage called');
@@ -436,10 +435,11 @@ Port/binary,
                       send('0:cleardmsg:');
                       $('#cntrst').html('(0) Reset');
                     }
-                    if (m.data.indexOf('resetrefreshtimer') > -1) {
+                    if ((m.data.indexOf('resetrefreshtimer') > -1) && (m.data.indexOf('cons1') > -1)) {
                       refreshCons();
                       $('#refreshtime').html('Refresh Time: ' + getnow());
-                    }
+                    } else if (m.data.indexOf('resetrefreshtimer') > -1)
+                       { console.log(m.data)}
 
 					box=boxCom[0].substr(0,boxCom[0].indexOf('.'));					
 					users='", ?IGNORESHOWUSERS, "';
@@ -1562,9 +1562,9 @@ toggle_items([],_) ->
 %%
 
 toggle_item([Room|_],Rm) ->
-	case Room of
-		Rm ->
-			<< "
+    case Room of
+	Rm ->
+	    << "
 		 $('#",Rm/binary,"').show();
 		 $('#",Rm/binary,"_coms').show();
 		 $('#",Rm/binary,"_comsInputcopy').show();
@@ -1574,8 +1574,8 @@ toggle_item([Room|_],Rm) ->
 		 $('#",Rm/binary,"toggle').removeClass('rm_not_selected');
 		 $('#",Rm/binary,"toggle').addClass('rm_selected');
 ">>;
-		_ -> 
-			<<"
+	_ -> 
+	    <<"
 		 $('#",Room/binary,"').hide();
 		 $('#",Room/binary,"_coms').hide();
 		 $('#",Room/binary,"_comsInputcopy').hide();
@@ -1586,27 +1586,27 @@ toggle_item([Room|_],Rm) ->
 		 $('#",Room/binary,"toggle').addClass('rm_not_selected')
 
 ">>
-	end;
+    end;
 toggle_item([],_) ->
-	<<>>.
+    <<>>.
 
 %%
 
 jsAll([Room|Rooms],Com) ->
-	[Rm|_]=Room,
-	<<(case Com of
-		<<"com">>  -> ifcomcopy(Rm,Com);
-		<<"copy">> -> ifcomcopy(Rm,Com);
-		_ ->
-			<<"
+    [Rm|_]=Room,
+    <<(case Com of
+	   <<"com">>  -> ifcomcopy(Rm,Com);
+	   <<"copy">> -> ifcomcopy(Rm,Com);
+	   _ ->
+	       <<"
 
 	 $('#",Com/binary,"All",Rm/binary,"').click(function(){
 ",Com/binary,"All",Rm/binary,"();
 			 message(true,'",Com/binary," All ",Rm/binary,"...')
 	 });">>
-	end)/binary,(jsAll(Rooms,Com))/binary>>;
+       end)/binary,(jsAll(Rooms,Com))/binary>>;
 jsAll([],_) ->
-	<<>>.
+    <<>>.
 
 %%
 
@@ -1627,8 +1627,8 @@ ifcomcopy(Rm,Com) ->
 %%
 
 jsAllConfirm([Room|Rooms],Com) ->
-	[Rm|_]=Room,
-	<<"
+    [Rm|_]=Room,
+    <<"
 
 	 $('#",Com/binary,"All",Rm/binary,"').click(function(){
 
@@ -1649,17 +1649,17 @@ jsAllConfirm([Room|Rooms],Com) ->
 
 ",(jsAllConfirm(Rooms,Com))/binary>>;
 jsAllConfirm([],_) ->
-	<<>>.
+    <<>>.
 
 %%
 
 mkjsAllSelect_copy([Room|Rooms]) ->
-	<<(mkjsAllSelectRm_copy(Room))/binary,(mkjsAllSelect_copy(Rooms))/binary>>;
+    <<(mkjsAllSelectRm_copy(Room))/binary,(mkjsAllSelect_copy(Rooms))/binary>>;
 mkjsAllSelect_copy([]) ->
-	<<>>.
+    <<>>.
 
 mkjsAllSelectRm_copy([Room|Rows]) ->
-	<<"
+    <<"
 
  $('#copyAllSelect",Room/binary,"').change(function(){
 
@@ -1672,17 +1672,17 @@ mkjsAllSelectRm_copy([Room|Rows]) ->
 %%
 
 jsAllSelectRows_copy(Room,[Row|Rows]) ->
-	<<(jsAllSelect_copy(Room,Row))/binary,(jsAllSelectRows_copy(Room,Rows))/binary>>;
+    <<(jsAllSelect_copy(Room,Row))/binary,(jsAllSelectRows_copy(Room,Rows))/binary>>;
 jsAllSelectRows_copy(_Room,[]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 jsAllSelect_copy(Rm,[{Wk,_FQDN,_MacAddr,_Os}|Wks]) ->
-	case Wk of
-		<<".">> ->	jsAllSelect_copy(Rm,Wks);
-		_ ->
-			<<"
+    case Wk of
+	<<".">> ->	jsAllSelect_copy(Rm,Wks);
+	_ ->
+	    <<"
 	 if(
 		 ($('#copyAll",Rm/binary,"check').prop('checked') && $('#",Wk/binary,"check').prop('checked')) ||
 		 (!$('#copyAll",Rm/binary,"check').prop('checked') && 
@@ -1690,55 +1690,55 @@ jsAllSelect_copy(Rm,[{Wk,_FQDN,_MacAddr,_Os}|Wks]) ->
 	   )
 		 $('#copyfn_",Wk/binary,"').val($('#copyAllInput",Rm/binary,"').val());
  ",(jsAllSelect_copy(Rm,Wks))/binary>>
-	end;
+    end;
 jsAllSelect_copy(_Room,[]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 mkjsSelect_copy([Room|Rooms]) ->
-	<<(mkjsSelectRm_copy(Room))/binary,(mkjsSelect_copy(Rooms))/binary>>;
+    <<(mkjsSelectRm_copy(Room))/binary,(mkjsSelect_copy(Rooms))/binary>>;
 mkjsSelect_copy([]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 mkjsSelectRm_copy([_Room|Rows]) ->
-	jsSelectRows_copy(Rows).
+    jsSelectRows_copy(Rows).
 
 jsSelectRows_copy([Row|Rows]) ->
-	<<(jsSelect_copy(Row))/binary,(jsSelectRows_copy(Rows))/binary>>;
+    <<(jsSelect_copy(Row))/binary,(jsSelectRows_copy(Rows))/binary>>;
 jsSelectRows_copy([]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 jsSelect_copy([{Wk,_FQDN,_MacAddr,_Os}|Wks]) ->
-	case Wk of
-		<<".">> ->	jsSelect_copy(Wks);
-		_ ->
-			<<"
+    case Wk of
+	<<".">> ->	jsSelect_copy(Wks);
+	_ ->
+	    <<"
 
  $('#copyselect",Wk/binary,"').change(function(){
 	 $('#copyfn_",Wk/binary,"').val($('#copyselect",Wk/binary," option:selected').text());
  });
 
  ",(jsSelect_copy(Wks))/binary>>
-	end;
+    end;
 jsSelect_copy([]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 mkjsAllSelect_com([Room|Rooms]) ->
-	<<(mkjsAllSelectRm_com(Room))/binary,(mkjsAllSelect_com(Rooms))/binary>>;
+    <<(mkjsAllSelectRm_com(Room))/binary,(mkjsAllSelect_com(Rooms))/binary>>;
 mkjsAllSelect_com([]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 mkjsAllSelectRm_com([Room|Rows]) ->
-	<<"
+    <<"
 
  $('#comAllSelect",Room/binary,"').change(function(){
 
@@ -1751,16 +1751,16 @@ mkjsAllSelectRm_com([Room|Rows]) ->
 %%
 
 jsAllSelectRows_com(Room,[Row|Rows]) ->
-	<<(jsAllSelect_com(Room,Row))/binary,(jsAllSelectRows_com(Room,Rows))/binary>>;
+    <<(jsAllSelect_com(Room,Row))/binary,(jsAllSelectRows_com(Room,Rows))/binary>>;
 jsAllSelectRows_com(_Room,[]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 jsAllSelect_com(Rm,[{Wk,_FQDN,_MacAddr,_Os}|Wks]) ->
-	case Wk of
-		<<".">> ->	jsAllSelect_com(Rm,Wks);
-		_ ->
+    case Wk of
+	<<".">> ->	jsAllSelect_com(Rm,Wks);
+	_ ->
 <<"
 	 if(
 		 ($('#comAll",Rm/binary,"check').prop('checked') && $('#",Wk/binary,"check').prop('checked')) ||
@@ -1769,33 +1769,33 @@ jsAllSelect_com(Rm,[{Wk,_FQDN,_MacAddr,_Os}|Wks]) ->
 	   )
 		 $('#comstr_",Wk/binary,"').val($('#comAllInput",Rm/binary,"').val());
  ",(jsAllSelect_com(Rm,Wks))/binary>>
-	end;
+    end;
 jsAllSelect_com(_Room,[]) ->
-	<<>>.
+    <<>>.
  
 %%
 
 mkjsSelect_com([Room|Rooms]) ->
-	<<(mkjsSelectRm_com(Room))/binary,(mkjsSelect_com(Rooms))/binary>>;
+    <<(mkjsSelectRm_com(Room))/binary,(mkjsSelect_com(Rooms))/binary>>;
 mkjsSelect_com([]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 mkjsSelectRm_com([_Room|Rows]) ->
-	jsSelectRows_com(Rows).
+    jsSelectRows_com(Rows).
 
 jsSelectRows_com([Row|Rows]) ->
-	<<(jsSelect_com(Row))/binary,(jsSelectRows_com(Rows))/binary>>;
+    <<(jsSelect_com(Row))/binary,(jsSelectRows_com(Rows))/binary>>;
 jsSelectRows_com([]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 jsSelect_com([{Wk,_FQDN,_MacAddr,_Os}|Wks]) ->
-	case Wk of
-		<<".">> ->	jsSelect_com(Wks);
-		_ ->
+    case Wk of
+	<<".">> ->	jsSelect_com(Wks);
+	_ ->
 <<"
 
  $('#comselect",Wk/binary,"').change(function(){
@@ -1803,15 +1803,15 @@ jsSelect_com([{Wk,_FQDN,_MacAddr,_Os}|Wks]) ->
  });
 
  ",(jsSelect_com(Wks))/binary>>
-	end;
+    end;
 jsSelect_com([]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 mkjsSelectAllChk([Room|Rooms]) ->
-	[Rm|_]=Room,
-	<<"
+    [Rm|_]=Room,
+    <<"
  $('#selectAll",Rm/binary,"').click(function(){
      $('#",Rm/binary," input:checkbox').each(function() {
          $(this).prop('checked', true);
@@ -1820,13 +1820,13 @@ mkjsSelectAllChk([Room|Rooms]) ->
 
 ",(mkjsSelectAllChk(Rooms))/binary>>;
 mkjsSelectAllChk([]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 mkjsUnSelectAllChk([Room|Rooms]) ->
-	[Rm|_]=Room,
-	<<"
+    [Rm|_]=Room,
+    <<"
  $('#unselectAll",Rm/binary,"').click(function(){
      $('#",Rm/binary," input:checkbox').each(function() {
          $(this).prop('checked', false);
@@ -1835,13 +1835,13 @@ mkjsUnSelectAllChk([Room|Rooms]) ->
 
 ",(mkjsUnSelectAllChk(Rooms))/binary>>;
 mkjsUnSelectAllChk([]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 mkjsToggleAllChk([Room|Rooms]) ->
-	[Rm|_]=Room,
-	<<"
+    [Rm|_]=Room,
+    <<"
  $('#toggleAll",Rm/binary,"').click(function(){
      $('#",Rm/binary," input:checkbox').each(function() {
          this.checked = !this.checked;
@@ -1850,25 +1850,25 @@ mkjsToggleAllChk([Room|Rooms]) ->
 
 ",(mkjsToggleAllChk(Rooms))/binary>>;
 mkjsToggleAllChk([]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 mkAllRoomsComs(Coms) ->
-	mkARComs(?ROOMS,Coms).
+    mkARComs(?ROOMS,Coms).
 
 %%
 
 mkARComs([Room|Rooms],Coms) ->
-	[Rm|_]=Room,
-	<<"<div id='",Rm/binary,"_coms' class='room'>",(mkARComsComs(Rm,Coms))/binary,"</div>",(mkARComs(Rooms,Coms))/binary>>;
+    [Rm|_]=Room,
+    <<"<div id='",Rm/binary,"_coms' class='room'>",(mkARComsComs(Rm,Coms))/binary,"</div>",(mkARComs(Rooms,Coms))/binary>>;
 mkARComs([],_Coms) ->
-	<<>>.
+    <<>>.
 
 %%
 
 mkARComsComs(Rm,[{Com,ComText}|Coms]) ->
-	<<"
+    <<"
 
  <div class='fl'>
  <input id='",Com/binary,"All",Rm/binary,"check' type='checkbox' class='checkbox ui-widget' /></a>
@@ -1879,16 +1879,16 @@ mkARComsComs(Rm,[{Com,ComText}|Coms]) ->
 
 ",(mkARComsComs(Rm,Coms))/binary>>;
 mkARComsComs(_Rm,[]) ->
-	<<>>.
+    <<>>.
 
 %%
 
  mkAllRoomsComsInput(Com) ->
-	 mkARComsInput(?ROOMS,Com).
+    mkARComsInput(?ROOMS,Com).
 
  mkARComsInput([Room|Rooms],ComT) ->
-	 {Com,ComText}=ComT,
-	 [Rm|_]=Room,
+    {Com,ComText}=ComT,
+    [Rm|_]=Room,
 <<"
 
  <div id='",Rm/binary,"_comsInput",Com/binary,"' class='room'>
@@ -1897,12 +1897,12 @@ mkARComsComs(_Rm,[]) ->
 
 ",(mkARComsInput(Rooms,{Com,ComText}))/binary>>;
 mkARComsInput([],_Com) ->
-	<<>>.
+    <<>>.
 
 %%
 
 mkARComsComsInput(Rm,{Com,ComText}) ->
-	<<"
+    <<"
 
  <div class='fl'>
 
@@ -1916,12 +1916,12 @@ mkARComsComsInput(Rm,{Com,ComText}) ->
  <select id='",Com/binary,"AllSelect",Rm/binary,"' class='fl ui-widget'>
 	 ",
 
-	  (case Com of
-		   <<"copy">> ->
-			   selections(?APPS);
-		   <<"com">> ->
-			   selections(?COMS)
-	   end)/binary,
+      (case Com of
+	   <<"copy">> ->
+	       selections(?APPS);
+	   <<"com">> ->
+	       selections(?COMS)
+       end)/binary,
 "
  </select>
 
@@ -1935,8 +1935,8 @@ mkARComsComsInput(Rm,{Com,ComText}) ->
 %%
 
 mkAllRoomsSelectUnselectToggleAll([Room|Rooms]) ->
-	 [Rm|_]=Room,
-	 <<"
+    [Rm|_]=Room,
+    <<"
 
  <div id='",Rm/binary,"_selunseltogall' class='room'>
 
@@ -1947,12 +1947,12 @@ mkAllRoomsSelectUnselectToggleAll([Room|Rooms]) ->
 
  ",(mkAllRoomsSelectUnselectToggleAll(Rooms))/binary>>;
  mkAllRoomsSelectUnselectToggleAll([]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 mkselunseltogAll(Rm) ->
-	<<"
+    <<"
   <button id='selectAll",Rm/binary,"' class='ui-button ui-widget ui-corner-all'  title='Select all Workstations...' />Select All</button>
 
 <div class='brk'></div>
@@ -1967,14 +1967,14 @@ mkselunseltogAll(Rm) ->
 %%
 
 mkRooms([Room|Rooms]) ->
-	<<(mkRoom(Room))/binary,(mkRooms(Rooms))/binary>>;
+    <<(mkRoom(Room))/binary,(mkRooms(Rooms))/binary>>;
 mkRooms([]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 mkRoom([Room|Rows]) ->
-	<<"
+    <<"
 
  <div id='",Room/binary,"' class='room'>
  ",(mkRoomRows(Rows,Room,1))/binary,"
@@ -1986,28 +1986,28 @@ mkRoom([Room|Rows]) ->
 %%
 
 mkRoomRows([Row|Rows],Rm,RowCnt) ->
-	<<"
+    <<"
  <div id='",Rm/binary,"_row_",(list_to_binary(integer_to_list(RowCnt)))/binary,"'>",
-	  (divhc(Rm,Row,1))/binary,
+      (divhc(Rm,Row,1))/binary,
 "
  </div>
  <div class='brk'></div>
  <div id='",Rm/binary,"_row_",(list_to_binary(integer_to_list(RowCnt)))/binary,"_Coms' style='display:none;'>",
-	  << <<(divc(Wks))/binary>> || Wks <- Row >>/binary,
+      << <<(divc(Wks))/binary>> || Wks <- Row >>/binary,
 "
  </div>
  <div class='brk'></div>"
-	 ,(mkRoomRows(Rows,Rm,RowCnt+1))/binary>>;
- mkRoomRows([],_Rm,_RowCnt) ->
-	 <<>>.
+     ,(mkRoomRows(Rows,Rm,RowCnt+1))/binary>>;
+mkRoomRows([],_Rm,_RowCnt) ->
+    <<>>.
 
 %%
 
 divhc(Rm,[{Wk,FQDN,MacAddr,_Os}|Wks],ColCnt) ->
-	<<(case Wk of
-		 <<".">> ->	<<"<div class='hltd'>.</div>">>;
-			_ ->
-			   <<"
+    <<(case Wk of
+	   <<".">> ->	<<"<div class='hltd'>.</div>">>;
+	   _ ->
+	       <<"
 
 <div id='",Wk/binary,"_hltd' class='hltd ",Rm/binary,"_col_",(list_to_binary(integer_to_list(ColCnt)))/binary,"'>
 
@@ -2032,16 +2032,16 @@ divhc(Rm,[{Wk,FQDN,MacAddr,_Os}|Wks],ColCnt) ->
 </div>
 
 ">>
-	  end)/binary,(divhc(Rm,Wks,ColCnt+1))/binary>>;
+       end)/binary,(divhc(Rm,Wks,ColCnt+1))/binary>>;
 divhc(_Rm,[],_ColCnt) ->
-	<<>>.
+    <<>>.
 
 %%
 
 divc({Wk,_FQDN,_MacAddr,_Os}) ->
-	case Wk of
-		<<".">> ->	<<"<div class='ltd'>.</div>">>;
-		   _ ->
+    case Wk of
+	<<".">> ->	<<"<div class='ltd'>.</div>">>;
+	_ ->
 <<"
 <div id='",Wk/binary,"_ltd' class=\"ltd\">
 <div id='",Wk/binary,"_ccell'>
@@ -2077,7 +2077,7 @@ divc({Wk,_FQDN,_MacAddr,_Os}) ->
 <div class='brk'></div>
 <select id='copyselect",Wk/binary,"' class='ui-widget'>
 ",
-       (selections(?APPS))/binary,
+  (selections(?APPS))/binary,
 "
 </select>
  <input id='copyfn_",Wk/binary,"' type='text' class='ui-widget' /><br>
@@ -2095,7 +2095,7 @@ divc({Wk,_FQDN,_MacAddr,_Os}) ->
 <div class='brk'></div>
 <select id='comselect",Wk/binary,"' class='ui-widget'>
 ",
-        (selections(?COMS))/binary,
+  (selections(?COMS))/binary,
 "
 </select>
 <input id='comstr_",Wk/binary,"' type='text' class='ui-widget' />
@@ -2117,23 +2117,23 @@ Click button to delete: <br><span id=dialogtext2d style='font-weight:bold;align:
 </div>
 
 ">>
-	end.
+    end.
 
 %%
 
 selections([Com|Coms]) ->
-<<"
+    <<"
 <option value='",Com/binary,"'>",Com/binary,"</option>
 ",(selections(Coms))/binary>>;
 selections([]) ->
-<<>>.
+    <<>>.
 	
 %%
 
 mkcomButtons([Room|Rooms]) ->
-	<<(comButtonsRm(Room))/binary,(mkcomButtons(Rooms))/binary>>;
+    <<(comButtonsRm(Room))/binary,(mkcomButtons(Rooms))/binary>>;
 mkcomButtons([]) ->
-	<<>>.
+    <<>>.
 
 %%
 
@@ -2141,17 +2141,17 @@ comButtonsRm([Room|Rows]) ->
     comButtonsRows(Rows,Room,1).
 
 comButtonsRows([Row|Rows],Rm,RowCnt) ->
-	<<(comButtons(Row,Rm,RowCnt,1))/binary,(comButtonsRows(Rows,Rm,RowCnt+1))/binary>>;
+    <<(comButtons(Row,Rm,RowCnt,1))/binary,(comButtonsRows(Rows,Rm,RowCnt+1))/binary>>;
 comButtonsRows([],_Rm,_RowCnt) ->
-	<<>>.
+    <<>>.
 
 %%
 
 comButtons([{Wk,FQDN,MacAddr,_Os}|Wks],Rm,RowCnt,ColCnt) ->
-	case Wk of
-		<<".">> -> << (comButtons(Wks,Rm,RowCnt,ColCnt+1))/binary >>;
-		_ ->
-	<<"
+    case Wk of
+	<<".">> -> << (comButtons(Wks,Rm,RowCnt,ColCnt+1))/binary >>;
+	_ ->
+	    <<"
 
     $('#",Wk/binary,"_col').click(function(){
         $('.",Rm/binary,"_col_",(list_to_binary(integer_to_list(ColCnt)))/binary," input:checkbox').each(function() {
@@ -2301,22 +2301,22 @@ comButtons([{Wk,FQDN,MacAddr,_Os}|Wks],Rm,RowCnt,ColCnt) ->
 	});
 
 ",(comButtons(Wks,Rm,RowCnt,ColCnt+1))/binary>>
-	end;
+    end;
 
 comButtons([],_Rm,_RowCnt,_ColCnt) ->
-	<<>>.
+    <<>>.
 
 %%
 
 mkjsComAll([Room|Rooms],Com) ->
-   <<(mkjsComAllRm(Room,Com))/binary,(mkjsComAll(Rooms,Com))/binary>>;
+    <<(mkjsComAllRm(Room,Com))/binary,(mkjsComAll(Rooms,Com))/binary>>;
 mkjsComAll([],_Com) ->
-	<<>>.
+    <<>>.
 
 %%
 
 mkjsComAllRm([Rm|Rows],Com) ->
-<<"
+    <<"
 
 function ",Com/binary,"All",Rm/binary,"(){
 ",(mkjsComAllRows(Rows,Rm,Com))/binary,"
@@ -2328,19 +2328,19 @@ function ",Com/binary,"All",Rm/binary,"(){
 %%
 
 mkjsComAllRows([Row|Rows],Rm,Com) ->
-	<<(mkjsComAllRow(Row,Rm,Com))/binary,(mkjsComAllRows(Rows,Rm,Com))/binary>>;
+    <<(mkjsComAllRow(Row,Rm,Com))/binary,(mkjsComAllRows(Rows,Rm,Com))/binary>>;
 mkjsComAllRows([],_Rm,_Com) ->
     <<>>.
 
 %%
 
 mkjsComAllRow([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm,Com) ->
-	case Wk of
-		<<".">> ->
-			mkjsComAllRow(Wks,Rm,Com);
-		_ ->
-			<<(case Com of
-				   <<"copy">> ->
+    case Wk of
+	<<".">> ->
+	    mkjsComAllRow(Wks,Rm,Com);
+	_ ->
+	    <<(case Com of
+		   <<"copy">> ->
 <<"
     if(
         ($('#",Com/binary,"All",Rm/binary,"check').prop('checked') && $('#",Wk/binary,"check').prop('checked')) ||
@@ -2351,7 +2351,7 @@ mkjsComAllRow([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm,Com) ->
         $('#copy_",Wk/binary,"').click();
     }
 ">>;
-				   _  ->
+		   _  ->
 <<"
     if(
         ($('#",Com/binary,"All",Rm/binary,"check').prop('checked') && $('#",Wk/binary,"check').prop('checked')) ||
@@ -2361,21 +2361,21 @@ mkjsComAllRow([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm,Com) ->
         $('#",Com/binary,"_",Wk/binary,"').click();
 ">>
 			   end)/binary,(mkjsComAllRow(Wks,Rm,Com))/binary>>
-	end;
+    end;
 mkjsComAllRow([],_Rm,_Com) ->
-	<<>>.
+    <<>>.
 
 %%
 
 init2([Room|Rooms]) ->	
-	<<(init2_rm(Room))/binary,(init2(Rooms))/binary>>;
+    <<(init2_rm(Room))/binary,(init2(Rooms))/binary>>;
 init2([]) ->
     <<>>.
 
 %%
 
 init2_rm([Rm|_]) ->
-<<"
+    <<"
 
                      refresh_cons_",Rm/binary,"();
 
@@ -2384,15 +2384,15 @@ init2_rm([Rm|_]) ->
 %%
 
 get_rms_keys([Room|Rooms],Key) ->
-	[Rm|_]=Room,
-	[{Rm,Key}|get_rms_keys(Rooms,Key+1)];
+    [Rm|_]=Room,
+    [{Rm,Key}|get_rms_keys(Rooms,Key+1)];
 get_rms_keys([],_) ->
-	[].
+    [].
 
 %%
 
 rms_keys([{Rm,_}|Rms],Rms_ks) ->
-	<<"
+    <<"
     $('#",Rm/binary,"toggle').keydown(function(event) {
 ",
 (loop_rms_keys(Rms_ks))/binary,
@@ -2401,19 +2401,19 @@ rms_keys([{Rm,_}|Rms],Rms_ks) ->
 
 ",(rms_keys(Rms,Rms_ks))/binary>>;
 rms_keys([],_) ->
-	<<>>.
+    <<>>.
 
 %%
 
 loop_rms_keys([Rm|Rms]) ->
-	<<(loop_rm_keys(Rm))/binary,(loop_rms_keys(Rms))/binary>>;
+    <<(loop_rm_keys(Rm))/binary,(loop_rms_keys(Rms))/binary>>;
 loop_rms_keys([]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 loop_rm_keys({Rm,Key}) ->
-<<"
+    <<"
         if (event.which == ",(list_to_binary(integer_to_list(Key)))/binary,"){
             event.preventDefault();
             $('#",Rm/binary,"toggle').click();
@@ -2423,7 +2423,7 @@ loop_rm_keys({Rm,Key}) ->
 %%
 
 chk_dupe_usersa(Rooms) ->
-<<"
+    <<"
 function  chk_dupe_users(){
         tot_cnt=0;
 ",
@@ -2433,9 +2433,9 @@ function  chk_dupe_users(){
 ">>.
 
 chk_dupe_users_rms([Room|Rooms]) ->
-	<<(jschkduRma(Room))/binary,(chk_dupe_users_rms(Rooms))/binary>>;
+    <<(jschkduRma(Room))/binary,(chk_dupe_users_rms(Rooms))/binary>>;
 chk_dupe_users_rms([]) ->
-	<<>>.
+    <<>>.
 
 %%
 
@@ -2448,14 +2448,14 @@ jschkduRma([Rm|_Rows]) ->
 %%
 
 chk_dupe_users([Room|Rooms]) ->
-	<<(jschkduRm(Room))/binary,(chk_dupe_users(Rooms))/binary>>;
+    <<(jschkduRm(Room))/binary,(chk_dupe_users(Rooms))/binary>>;
 chk_dupe_users([]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 jschkduRm([Rm|Rows]) ->
-	<<"
+    <<"
 
 function chk_dupe_users_",Rm/binary,"(){
     var dupe_",Rm/binary,"=[];
@@ -2496,17 +2496,17 @@ function chk_dupe_users_",Rm/binary,"(){
 %%
 
 jschkduRows([Row|Rows],Rm) ->
-	<<(jschkduRow(Row,Rm))/binary,(jschkduRows(Rows,Rm))/binary>>;
+    <<(jschkduRow(Row,Rm))/binary,(jschkduRows(Rows,Rm))/binary>>;
 jschkduRows([],_Rm) ->
     <<>>.
 
 %%
 
 jschkduRow([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm) ->
-	case Wk of
-		<<".">> ->	jschkduRow(Wks,Rm);
-		   _ ->
-<<"
+    case Wk of
+	<<".">> ->	jschkduRow(Wks,Rm);
+	_ ->
+	    <<"
 
     var ignore_box = '",?IGNORESHUTDOWN,"';
     var ignore_box2 = '",?IGNOREDUPES,"';
@@ -2522,35 +2522,35 @@ jschkduRow([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm) ->
         $('#rooms_title').html('['+tot_cnt.toString()+']-'+'Rooms');
     }
 ",(jschkduRow(Wks,Rm))/binary>>
-	end;
+    end;
 jschkduRow([],_Rm) ->
-	<<>>.
+    <<>>.
 
 %%
 
 switcher([Room|Rooms]) ->
-	<<(switcher_rm(Room))/binary,(switcher(Rooms))/binary>>;
+    <<(switcher_rm(Room))/binary,(switcher(Rooms))/binary>>;
 switcher([]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 switcher_rm([Rm|_Rows]) ->
-	<<"
+    <<"
 <button id='",Rm/binary,"toggle' class='ui-button ui-widget ui-corner-all' />[0]-",Rm/binary,"</button>
 ">>.
 
 %%
 
 refresh_cons([Room|Rooms]) ->
-	<<(jsrefcons_rm(Room))/binary,(refresh_cons(Rooms))/binary>>;
+    <<(jsrefcons_rm(Room))/binary,(refresh_cons(Rooms))/binary>>;
 refresh_cons([]) ->
-	<<>>.
+    <<>>.
 
 %%
 
 jsrefcons_rm([Rm|Rows]) ->
-	<<"
+    <<"
 
 function refresh_cons_",Rm/binary,"(){
   $('#refreshtime').html('Refresh Time: ' + getnow());
@@ -2563,16 +2563,16 @@ function refresh_cons_",Rm/binary,"(){
 %%
 
 jsrefcons_rows([Row|Rows],Rm) ->
-	<<(jsrefcons_row(Row,Rm))/binary,(jsrefcons_rows(Rows,Rm))/binary>>;
+    <<(jsrefcons_row(Row,Rm))/binary,(jsrefcons_rows(Rows,Rm))/binary>>;
 jsrefcons_rows([],_Rm) ->
     <<>>.
 
 %%
 
 jsrefcons_row([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm) ->
-	case Wk of
-		<<".">> ->	jsrefcons_row(Wks,Rm);
-		   _ ->
+    case Wk of
+	<<".">> ->	jsrefcons_row(Wks,Rm);
+	_ ->
 <<"
         if ($('#",Wk/binary,"status').html() == '.'){
           $('#",Wk/binary,"upstrttime').html('Start Time:');
@@ -2587,12 +2587,12 @@ jsrefcons_row([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm) ->
         $('#",Wk/binary,"status').html('.');
 
 ",(jsrefcons_row(Wks,Rm))/binary>>
-	end;
+    end;
 jsrefcons_row([],_Rm) ->
-	<<>>.
+    <<>>.
 
 %
 
 now_bin() ->
-	{N1,N2,N3}=erlang:timestamp(), %now()
-	list_to_binary(integer_to_list(N1)++integer_to_list(N2)++integer_to_list(N3)).
+    {N1,N2,N3}=erlang:timestamp(), %now()
+    list_to_binary(integer_to_list(N1)++integer_to_list(N2)++integer_to_list(N3)).

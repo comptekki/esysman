@@ -68,9 +68,9 @@ websocket_init(State) ->
 	    end,
 	    ok;
 	false ->
-	    register(hanwebs, self()),
-	    timer:apply_interval(?REFRESHTIME, websocket_handler, send_msg, [?SERVERS, <<"com - resetrefreshtimer - from ", (pid())/binary>>])
+	    register(hanwebs, self())
 	end,
+    timer:apply_interval(?REFRESHTIME, websocket_handler, send_msg, [?SERVERS, <<"com - resetrefreshtimer - from ", (pid())/binary>>]),
     {ok, State, hibernate}.
 
 %%
