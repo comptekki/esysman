@@ -73,7 +73,7 @@ Prerequisites:
 1. Erlang (on server and client)
 		http://erlang.org
 
-2. Cowboy 2.2.2 (downloaded and compiled when 'make' is run)
+2. Cowboy 2.6.1 (downloaded and compiled when 'make' is run)
 	  https://github.com/extend/cowboy.git
 
 3. OpenSSL for creating selfsigned certificates
@@ -139,6 +139,13 @@ Client/Server Setup
 
 --------
 Versions
+--------
+1.8
+-Works with Cowboy 2.6.1 and OTP 22.0-rc2
+-Add sync refresh timer for all consoles
+-Add retry websocket connect every 5 seconds after disconnect
+-Fix workstation update time for firefox
+ 
 --------
 1.7
 
