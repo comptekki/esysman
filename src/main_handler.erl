@@ -376,6 +376,7 @@ Port/binary,
     var cons2 = 0;
     var cons3 = 0;
     var cons4 = 0;
+    var refreshtime = 300000;
 
     socket.onmessage = function(m){
 //	console.log('onmessage called');
@@ -438,45 +439,29 @@ Port/binary,
                     $('#cntrst').html('(0) Reset');
                 }
                 if (m.data.indexOf('resetrefreshtimer') > -1) {
-console.log(m.data + ' cons1 = ' + cons1 + ' cons2 = ' + cons2 + ' cons3 = ' + cons3 + ' cons4 = ' + cons4);
                     if (m.data.indexOf('cons1') > -1) {
                       refreshCons();
                       $('#refreshtime').html('Refresh Time: ' + getnow());
-                      cons1 = 1;
-                      cons2 = 0;
-                      cons3 = 0;
-                      cons4 = 0;
-                      console.log(m.data + ' - cons1 - resfresh');
-                    } else if (m.data.indexOf('cons2') > -1 && cons1 == 1 && cons2 == 0) {
-                      cons1 = 0;
-                      cons2 = 1;
-                      cons3 = 0;
-                      cons4 = 0;
-                      console.log(m.data + ' - cons2 - reset');
-                    } else if (m.data.indexOf('cons2') > -1 && cons1 == 0 && cons2 == 1) {
-                      refreshCons();
-                      $('#refreshtime').html('Refresh Time: ' + getnow());
-                      console.log(m.data + ' - cons2 - refresh');
-                    } else if (m.data.indexOf('cons2') > -1 && cons2 == 1 && cons3 == 0) {
-                      cons1 = 0;
-                      cons2 = 0;
-                      cons3 = 1;
-                      cons4 = 0;
-                      console.log(m.data + ' - cons3 - reset');
-                    } else if (m.data.indexOf('cons3') > -1 && cons1 == 0 && cons2 == 0 && cons3 == 1) {
-                      refreshCons();
-                      $('#refreshtime').html('Refresh Time: ' + getnow());
-                      console.log(m.data + ' - cons3 - refresh');
-                    } else if (m.data.indexOf('cons4') > -1 && cons3 == 1 && cons4 == 0) {
-                      cons1 = 0;
-                      cons2 = 0;
-                      cons3 = 0;
-                      cons4 = 4;
-                      console.log(m.data + ' - cons4 - reset');
-                    } else if (m.data.indexOf('cons4') > -1 && cons1 == 0 && cons2 == 0 && cons3 == 0 && cons4 == 1) {
-                      refreshCons();
-                      $('#refreshtime').html('Refresh Time: ' + getnow());
-                      console.log(m.data + ' - cons4 - refresh');
+                      cons1 = new Date();
+                    } else if (m.data.indexOf('cons2') > -1) {
+                      if ((cons2 - cons1) > refreshtime) {
+                        refreshCons();
+                        $('#refreshtime').html('Refresh Time: ' + getnow());
+                      }
+                      cons2 = new Date();
+                    } else if (m.data.indexOf('cons3') > -1) {
+                      if (((cons3 - cons2) > refreshtime) && ((cons3 - cons1) > refreshtime)) {
+                        refreshCons();
+                        $('#refreshtime').html('Refresh Time: ' + getnow());
+                      }
+                      cons3 = new Date();
+                    }
+                    else if (m.data.indexOf('cons4') > -1) {
+                      if (((cons4 - cons3) > refreshtime) && ((cons4 - cons2) > refreshtime) && ((cons4 - cons1) > refreshtime)) {
+                        refreshCons();
+                        $('#refreshtime').html('Refresh Time: ' + getnow());
+                      }
+                      cons4 = new Date();
                     } 
                 }
 
