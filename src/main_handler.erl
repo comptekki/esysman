@@ -1333,6 +1333,7 @@ function progress(e){
 }//End else - has websockets
     var showmngscrbox = false
 
+
     $('#mngscripts').click(function(){
           if (!showmngscrbox) {
               $('#mngscrbox').css('z-index', 2000);
@@ -1405,6 +1406,39 @@ function progress(e){
     $('#logout').click(function() {
       window.location='/esysman/logout';
     });
+
+    $(document).keydown(function(objEvent) {
+      if (objEvent.keyCode == 9) { //tab 
+        objEvent.preventDefault(); 
+      }
+    });
+
+    $('#mngscrbox').mouseup(function(evt) {
+      if (ctlKey == true){
+        $('#mngscrbox').draggable({disabled:true});
+      }
+    }).mousedown(function(evt) {
+      if (ctlKey == true){
+        $('#mngscrbox').draggable({disabled:false});
+      }
+    });
+
+    var ctlKey = false;
+
+    $(window).keydown(function(evt) {
+        if (evt.which == 17) { // ctrl
+          ctlKey = true;
+        }
+    }).keyup(function(evt) {
+        if (evt.which == 17) { // ctrl
+          ctlKey = false;
+          $('#mngscrbox').draggable({disabled:true});
+        }
+    });
+
+    $('#mngscrbox').draggable({disabled:false});
+    $('#mngscrbox').draggable({disabled:true});
+    $('#mngscrbox').resizable();
 
 });
 
