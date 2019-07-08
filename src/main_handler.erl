@@ -1333,7 +1333,6 @@ function progress(e){
 }//End else - has websockets
     var showmngscrbox = false
 
-
     $('#mngscripts').click(function(){
           if (!showmngscrbox) {
               $('#mngscrbox').css('z-index', 2000);

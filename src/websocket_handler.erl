@@ -492,13 +492,14 @@ list_up_fls(Filter) ->
     {ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
     Head = <<"<script>$('#scrfilter').focus(); var tmp=$('#scrfilter').val(); $('#scrfilter').val(''); $('#scrfilter').val(tmp);</script><div id='scrslist'><button id='closescrslist' class='ui-button ui-widget ui-corner-all'>Close</button><button id='addscrf' class='ui-button ui-widget ui-corner-all'>Add Script</button><div class='brk'></div><div id='upprog'></div><form id='mypost' method='post' enctype='multipart/form-data' action='/upload'><br><input id='fupload' type='submit' value='Upload'/><input id='selfile' type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form>Filter -> <input id='scrfilter' type='text' class='ui-widget' value='", (Filter)/binary, "' /><br><br><table><tr><th></th><th>File Name</th><th>ln File Name</th><th>Description</th></tr>">>,
-    Mid = <<(erlang:list_to_binary([ mng_file(File, Filter) || File <- Files]))/binary>>,
+    AnyFiles = <<(erlang:list_to_binary([any_mng_file(File, Filter) || File <- Files]))/binary>>,
+    Mid = <<(erlang:list_to_binary([mng_file(File, Filter) || File <- Files]))/binary>>,
     Tail = <<"</table><div class='brk'></div><button id='closescrslist' class='ui-button ui-widget ui-corner-all'>Close</button></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div><div id='scrtxtbox'>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br></div>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
-    <<Head/binary,Mid/binary,Tail/binary>>.
+    <<Head/binary,AnyFiles/binary,Mid/binary,Tail/binary>>.
 
 %%
 
-mng_file(File, Filter) ->
+any_mng_file(File, _Filter) ->
     {Res, LnFile} = file:read_link(binary_to_list(?UPLOADS) ++ "/" ++ File),
     case file:read_file_info(binary_to_list(?UPLOADS) ++ "/" ++ File) of
 	{ok, {_,_,Ftype,_,_,_,_,_,_,_,_,_,_,_}} ->
@@ -516,6 +517,39 @@ mng_file(File, Filter) ->
 			"any.msi" -> 
 			    ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
 			    tr1(File, Res, "msidiv", "lnmsidiv", ShortLnf);
+			_ -> 
+				<<>>
+		    end
+	    end;
+	_ ->
+	    case File of
+		"any.cmd" ->
+		    tr1(File, Res, "cmddiv", "lncmddiv", "");
+		"any.exe" ->
+		    tr1(File, Res, "exediv", "lnexediv", "");
+		"any.msi" ->
+		    tr1(File, Res, "msidiv", "lnmsidiv", "");
+		_ -> 
+		    <<>>			
+	    end
+    end.
+
+%%
+
+mng_file(File, Filter) ->
+    case file:read_file_info(binary_to_list(?UPLOADS) ++ "/" ++ File) of
+	{ok, {_,_,Ftype,_,_,_,_,_,_,_,_,_,_,_}} ->
+	    case Ftype of
+		directory -> 
+		    "";
+		_ ->
+		    case File of
+			"any.cmd" -> 
+			    <<>>;			
+			"any.exe" -> 
+			    <<>>;
+			"any.msi" -> 
+			    <<>>;
 			_ -> 
 			    Filter2 =
 				case Filter of
@@ -538,12 +572,14 @@ mng_file(File, Filter) ->
 	    end;
 	_ ->
 	    case File of
-		"any.cmd" -> tr1(File, Res, "cmddiv", "lncmddiv", "");
-		"any.exe" -> tr1(File, Res, "exediv", "lnexediv", "");
-		"any.msi" -> tr1(File, Res, "msidiv", "lnmsidiv", "");
+		"any.cmd" ->
+		    <<>>;
+		"any.exe" ->
+		    <<>>;			
+		"any.msi" ->
+		    <<>>;			
 		_ -> 
-		    tr(File, 0, mng_file_info(File))
-			
+		    tr(File, 0, mng_file_info(File))	
 	    end
     end.
 
