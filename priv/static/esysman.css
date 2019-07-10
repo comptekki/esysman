@@ -202,10 +202,6 @@ input {width:100px;}
 	-webkit-border-radius: 15px;
 }
 
-//a:link, a:visited { color:#fff; background-color:#000;}
-
-//.button1 { text-decoration:none !important; }
-
 .button1 {
 	font-size:12pt;
 	font-weight:bold;	
@@ -213,8 +209,8 @@ input {width:100px;}
 }
 
 .button1:hover {
-//	font:size:14pt !important;
-//	font-weight:bold !important;
+/*	font:size:14pt !important;
+	font-weight:bold !important; */
 	color:black !important;
 }
 
@@ -305,8 +301,6 @@ input[type=checkbox] {/*width:50px;*/ height:10px;}
 
 a.cols, a.mbig, a.clr {text-decoration:none;}
 
-//.mbig,
-
 a.clr {
 	background-color:#aaaaaa;
 	color:111;
@@ -321,11 +315,11 @@ a.clr {
 	width:1100px;
 	height:600px;
 	padding:10px 10px 10px 10px;
-	border:10px solid #888;
-	-moz-border-radius:15px;
-	-webkit-border-radius:15px;
+	border:6px solid #888;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
 	color:yellow;
-	background-color:black;
+	background-color:#003300; 
 	overflow:scroll;
 	display:none;
 }
@@ -337,11 +331,11 @@ a.clr {
 	width:800px;
 	height:600px;
 	padding:10px 10px 10px 10px;
-	border:10px solid #888;
-	-moz-border-radius:15px;
-	-webkit-border-radius:15px;
+	border:6px solid #888;
+	-moz-border-radius:5x;
+	-webkit-border-radius:5px;
 	color:yellow;
-	background-color:black;
+	background-color:#003300;
 	overflow:scroll;
 	display:none;
 }
