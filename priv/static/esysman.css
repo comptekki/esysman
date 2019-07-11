@@ -248,6 +248,7 @@ a.ui-button:focus { color:inherit !important; }
 }
 
 .fl { float:left; }
+.fr { float:right; }
 
 .unamed, .passwdd { height:30px;}
 .logind {}

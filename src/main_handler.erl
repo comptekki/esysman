@@ -578,7 +578,6 @@ Port/binary,
             case 'list_ups_dir':
 		      $('#mngscrbox').html(boxCom[2]);
               $('#mngscrbox').resizable();
-              $('#scrcount').html($('#mngscrscripts >tr').length);
 			  message(sepcol,boxCom[0] + ': ' + 'list_ups_dir');
               break;
             case 'editscrfile':
