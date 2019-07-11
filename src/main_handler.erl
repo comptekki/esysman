@@ -567,48 +567,48 @@ Port/binary,
 			message(sepcol,boxCom[0] + ': ' + 'dfstatus');
 			break;
 		    case 'copy':
-			$('#'+box+'status').css('color','#00cc00');
-			$('#'+box+'status').css('background-color','#006600');
-			message(sepcol,boxCom[0] + ': ' + 'copy');
-			break;
-                    case 'list_dwnlds_dir':
+  			  $('#'+box+'status').css('color','#00cc00');
+			  $('#'+box+'status').css('background-color','#006600');
+			  message(sepcol,boxCom[0] + ': ' + 'copy');
+			  break;
+            case 'list_dwnlds_dir':
 		        $('#mngdwnldsbox').html(boxCom[2]);
-			message(sepcol,boxCom[0] + ': ' + 'list_dwnlds_dir');
-                        break;
-                    case 'list_ups_dir':
-		        $('#mngscrbox').html(boxCom[2]);
-                        $('#mngscrbox').resizable();
-			message(sepcol,boxCom[0] + ': ' + 'list_ups_dir');
-                        break;
-                    case 'editscrfile':
-                        var fname = $('#scrname').html().split('.');
-                        if (fname[fname.length-1] == 'cmd') {
+			    message(sepcol,boxCom[0] + ': ' + 'list_dwnlds_dir');
+                break;
+            case 'list_ups_dir':
+		      $('#mngscrbox').html(boxCom[2]);
+              $('#mngscrbox').resizable();
+              $('#scrcount').html($('#mngscrscripts >tr').length);
+			  message(sepcol,boxCom[0] + ': ' + 'list_ups_dir');
+              break;
+            case 'editscrfile':
+              var fname = $('#scrname').html().split('.');
+              if (fname[fname.length-1] == 'cmd') {
 			    $('#scripttext').val(boxCom[2]);
-                        } else {
-                          notcmd = true;
-                          $('#scrtxtbox').hide();
-                        }
-		        $('#scrdesc').val(boxCom[3].substring(1, boxCom[3].length-2));
-			message(sepcol,boxCom[0] + ': ' + 'editscrfile');
-                        break;
+              } else {
+                notcmd = true;
+                $('#scrtxtbox').hide();
+              }
+		      $('#scrdesc').val(boxCom[3].substring(1, boxCom[3].length-2));
+			  message(sepcol,boxCom[0] + ': ' + 'editscrfile');
+              break;
 		    case 'com':
-		        $('#'+box+'status').css('color','#00cc00');
-			$('#'+box+'status').css('background-color','#006600');
-			message(sepcol,boxCom[0] + ': ' + 'com');
-			break;
-                    case 'chkpasswd':
-                        if (boxCom[2] == 'pass') {
-                           $('#unlockscr').show();
-                           $('#unlockscr').focus();
-                           $('#unlockscrpasswd').val('');
-                           $('#unlockscrpasswd').hide();
-
-                           $('#lockpane').hide();
-                           send('0:lockloginok:');
-                        } else {
-                           send('0:lockloginfailed:');
-                        }
-                        break;
+		      $('#'+box+'status').css('color','#00cc00');
+			  $('#'+box+'status').css('background-color','#006600');
+			  message(sepcol,boxCom[0] + ': ' + 'com');
+			  break;
+            case 'chkpasswd':
+              if (boxCom[2] == 'pass') {
+                $('#unlockscr').show();
+                $('#unlockscr').focus();
+                $('#unlockscrpasswd').val('');
+                $('#unlockscrpasswd').hide();
+                $('#lockpane').hide();
+                send('0:lockloginok:');
+              } else {
+                send('0:lockloginfailed:');
+              }
+              break;
 		    default:
 		      if(boxCom[2] != undefined) {
 		        message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1] + ' ' + boxCom[2] + '<br>' + m.data.replace(/\\n|\\r\\n|\\r/g, '<br>').replace(/->/g, '-> <br>'))
