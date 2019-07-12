@@ -413,3 +413,7 @@ tr.r:hover {
 .ui-front{
 	z-index: 6000 !important;
 }
+
+.ui-resizable-se{
+  background-color:lightgrey;
+}
