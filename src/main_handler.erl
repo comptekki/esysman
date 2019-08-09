@@ -578,6 +578,8 @@ Port/binary,
             case 'list_ups_dir':
 	      $('#mngscrbox').html(boxCom[2]);
               $('#mngscrbox').resizable({alsoResize: '#scrslist'});
+//              $('#scsrslist').css('width', $('#mngscrbox').css('width')-10);
+//              $('#scsrslist').css('height', $('#mngscrbox').css('height'));
 	      message(sepcol,boxCom[0] + ': ' + 'list_ups_dir');
               break;
             case 'editscrfile':
@@ -1278,8 +1280,10 @@ function progress(e){
 
         scrfiltertxt = this.value;
 
-        $('#mngscripts').click();
-        $('#mngscripts').click();
+        send('localhost@domain:list_ups_dir:' + scrfiltertxt);
+        $('#mngscrbox').resizable('destroy');
+        $('#scrslist').resizable('destroy');
+        $('#mngscrbox').resizable({alsoResize: '#scrslist'});
      }
       else {
         return false; 
@@ -1339,6 +1343,10 @@ function progress(e){
               $('#mngscrbox').show();
               $('#mngscrbox').css('position', 'absolute');
               $('#mngscrbox').css('z-index', parseInt($('.msgc').css('z-index')) + 2);
+
+              $('#scsrslist').css('width', '97.7%');
+              $('#scsrslist').css('height', '100%');
+
               showmngscrbox = true;
               send('localhost@domain:list_ups_dir:' + scrfiltertxt);
           }

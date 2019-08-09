@@ -331,9 +331,9 @@ a.clr {
     position: absolute;
     top: 0;
     bottom: 0;
-    width:1140px;
+    width:97.5%;
     min-width:940px;
-    height:600px;
+    height:100%;
     min-height: 500px;
     padding:10px 10px 10px 10px;
     overflow:auto;
