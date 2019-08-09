@@ -314,15 +314,29 @@ a.clr {
 	left:400px;
 	top:200px;
 	width:1150px;
+	min-width:950px;
 	height:600px;
+	min-height: 500px;
 	padding:10px 10px 10px 10px;
 	border:6px solid #888;
 	-moz-border-radius:5px;
 	-webkit-border-radius:5px;
 	color:yellow;
 	background-color:#003300; 
-	overflow:scroll;
 	display:none;
+	overflow:hidden;
+}
+
+#scrslist {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width:1140px;
+    min-width:940px;
+    height:600px;
+    min-height: 500px;
+    padding:10px 10px 10px 10px;
+    overflow:auto;
 }
 
 #mngdwnldsbox {

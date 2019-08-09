@@ -576,9 +576,9 @@ Port/binary,
 			    message(sepcol,boxCom[0] + ': ' + 'list_dwnlds_dir');
                 break;
             case 'list_ups_dir':
-		      $('#mngscrbox').html(boxCom[2]);
-              $('#mngscrbox').resizable();
-			  message(sepcol,boxCom[0] + ': ' + 'list_ups_dir');
+	      $('#mngscrbox').html(boxCom[2]);
+              $('#mngscrbox').resizable({alsoResize: '#scrslist'});
+	      message(sepcol,boxCom[0] + ': ' + 'list_ups_dir');
               break;
             case 'editscrfile':
               var fname = $('#scrname').html().split('.');
@@ -1346,6 +1346,7 @@ function progress(e){
               $('#mngscrbox').hide();
               showmngscrbox = false;
               $('#mngscrbox').resizable('destroy');
+              $('#scrslist').resizable('destroy');
           }
 	});
 
@@ -1414,15 +1415,16 @@ function progress(e){
     });
 
     $('#mngscrbox').mouseup(function(evt) {
-      if (ctlKey == true){
+  //    if (ctlKey == true){
         $('#mngscrbox').draggable({disabled:true});
-      }
+    //  }
     }).mousedown(function(evt) {
-      if (ctlKey == true){
+      //if (ctlKey == true){
         $('#mngscrbox').draggable({disabled:false});
-      }
+     // }
     });
 
+/*
     var ctlKey = false;
 
     $(window).keydown(function(evt) {
@@ -1435,6 +1437,7 @@ function progress(e){
           $('#mngscrbox').draggable({disabled:true});
         }
     });
+*/
 
     $('#mngscrbox').draggable({disabled:false});
     $('#mngscrbox').draggable({disabled:true});
@@ -1486,7 +1489,7 @@ function progress(e){
 <button id='mngdwnlds' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Downloads panel'>Manage Downloads</button>
 <span id=refreshtime></span>
 <span id='fncp' style='display:none'>File name copied to Clipboard!</span>
-<div id='mngscrbox' class='ui-widget-content' title='Ctrl-Click to drag window'></div>
+<div id='mngscrbox' class='ui-widget-content' title='Click to drag window'></div>
 <div id='mngdwnldsbox' class='ui-widget-content'></div>
 
 </div> 
