@@ -937,40 +937,37 @@ Port/binary,
 	});
 
 	$(document).on('click', '#dbutd', function(){
-        obj = $(this);
+          obj = $(this);
 
-        $('#dialogtext2d').html($(obj).parent().next('td').html());
-        $('#dialog2d').dialog({
-        title:' Confirm Delete Downloads File',
-        buttons: [{
-            text: 'Confirm delete Downloads File!',
-            click: function() {
+          $('#dialogtext2d').html($(obj).parent().next('td').html());
+          $('#dialog2d').dialog({
+            title:' Confirm Delete Downloads File',
+            buttons: [{
+                text: 'Confirm delete Downloads File!',
+                click: function() {
 
-              $(obj).closest('tr').remove();
-              send('0:deldwnldsfile:' + $(obj).parent().next('td').html());
+                  $(obj).closest('tr').remove();
+                  send('0:deldwnldsfile:' + $(obj).parent().next('td').html());
 
-              $( this ).dialog( 'close' );
-            }
-          }]
-        });
-
+                  $( this ).dialog( 'close' );
+                }
+              }]
+          });
 	});
 
 	$(document).on('click', '#lbut', function(){
-        if ($(this).parent().next('td').html().indexOf('.cmd')>0) {
-          $('#lncmddiv').html($(this).parent().next('td').html());
-          send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.cmd');
-        }
-        else if ($(this).parent().next('td').html().indexOf('.exe')>0) {
-          $('#lnexediv').html($(this).parent().next('td').html());
-          send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.exe');
-        }
-        else if ($(this).parent().next('td').html().indexOf('.msi')>0) {
-          $('#lnmsidiv').html($(this).parent().next('td').html());
-          send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.msi');
-        }
-        $('#mngscripts').click();
-        $('#mngscripts').click();
+          if ($(this).parent().next('td').html().indexOf('.cmd')>0) {
+            $('#lncmddiv').html($(this).parent().next('td').html());
+            send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.cmd');
+          }
+          else if ($(this).parent().next('td').html().indexOf('.exe')>0) {
+            $('#lnexediv').html($(this).parent().next('td').html());
+            send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.exe');
+          }
+          else if ($(this).parent().next('td').html().indexOf('.msi')>0) {
+            $('#lnmsidiv').html($(this).parent().next('td').html());
+            send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.msi');
+          }
 	});
 
 	$(document).on('click', '#rbut', function(){     

@@ -616,18 +616,18 @@ file_size(S, [M|_]) ->
 tr1(File, Fsize, Res, Fdiv, Ldiv, LnFile) ->
     case Res of
 	ok ->
-	    "<tr class='r'><td></td><td> <div id='" ++ Fdiv ++"'>" ++ File ++ "</div> </td><td align=right> "++Fsize++" </td><td> <div id='" ++ Ldiv ++ "'>" ++ LnFile ++ "</div> </td><td>" ++ mng_file_info(LnFile) ++ " </td></tr>";
+	    "<tr class='r'><td></td><td><div id='" ++ Fdiv ++"'>" ++ File ++ "</div></td><td align=right>"++Fsize++"</td><td><div id='" ++ Ldiv ++ "'>" ++ LnFile ++ "</div></td><td>"++mng_file_info(LnFile)++" </td></tr>";
 	_ ->
-	    "<tr class='r'><td></td><td> " ++ File ++ " </td><td></td><td></td><td> " ++ mng_file_info(File) ++ " </td></tr>"
+	    "<tr class='r'><td></td><td>"++File++"</td><td></td><td></td><td>"++mng_file_info(File)++" </td></tr>"
     end.
 
 %%
 
 tr(File, Fsize, 0, FileInfo) ->
-    "<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all' title='Delete File'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all' title='Rename File'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all' 'Link file to any(.cmd/.exe/.msi)>ln</button><button id='ebut' class='ui-button ui-widget ui-corner-all' title='Edit Script'>Edit</button><button id='fncbut' class='ui-button ui-widget ui-corner-all' title='Copy file name to clipboard'>Copy</button></td><td> " ++ File ++ " </td><td align=right> "++Fsize++" </td><td></td><td> " ++ FileInfo ++ " </td></tr>".
+    "<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all' title='Delete File'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all' title='Rename File'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all' 'Link file to any(.cmd/.exe/.msi)>ln</button><button id='ebut' class='ui-button ui-widget ui-corner-all' title='Edit Script'>Edit</button><button id='fncbut' class='ui-button ui-widget ui-corner-all' title='Copy file name to clipboard'>Copy</button></td><td>"++File++"</td><td align=right>"++Fsize++"</td><td></td><td>"++FileInfo++"</td></tr>".
 
 tr(File, Fsize, 2) ->
-    "<tr class='r'><td><button id='dbutd' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbutd' class='ui-button ui-widget ui-corner-all'>Ren</button></td><td> " ++ File ++ " </td><td align=right> "++Fsize++" </td><td></td></tr>".
+    "<tr class='r'><td><button id='dbutd' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbutd' class='ui-button ui-widget ui-corner-all'>Ren</button></td><td>"++File++"</td><td align=right>"++Fsize++"</td><td></td></tr>".
 
 %%
 
