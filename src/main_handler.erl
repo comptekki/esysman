@@ -462,7 +462,7 @@ Port/binary,
                         $('#refreshtime').html('Refresh Time: ' + getnow());
                       }
                       cons4 = new Date();
-                    } 
+                    }
                 }
 
 		box=boxCom[0].substr(0,boxCom[0].indexOf('.'));					
@@ -2480,7 +2480,8 @@ loop_rm_keys({Rm,Key}) ->
 chk_dupe_usersa(Rooms) ->
     <<"
 function  chk_dupe_users(){
-        tot_cnt=0;
+    tot_cnt=0;
+    $('#rooms_title').html('[0]- Rooms');
 ",
 (chk_dupe_users_rms(Rooms))/binary,
 "
@@ -2517,9 +2518,8 @@ function chk_dupe_users_",Rm/binary,"(){
 
     var hash_",Rm/binary," = [];
 
-	var ",Rm/binary,"cnt=0;
+    var ",Rm/binary,"cnt=0;
     
-
 ",
 (jschkduRows(Rows,Rm))/binary,
 "
