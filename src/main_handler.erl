@@ -531,7 +531,7 @@ Port/binary,
                 	$('#'+box+'status').html('.');
 			$('#'+box+'_hltd').css('background-color','#000000');
 			$('#'+box+'_ltd').css('background-color','#000000');
-			message(sepcol,boxCom[0] + ': ' + 'shutdown');
+			message(sepcol,boxCom[0] + ': ' + 'shutdown')
 			break;
 		    case 'dffreeze':
 			$('#'+box+'dfstatus').css('color','cyan');
@@ -649,8 +649,10 @@ Port/binary,
                     if($('#shutdownTimerSwitch').html() == 'On') {
                         if (hdiff(Number($('#shutdownTimeH').val()), Number($('#shutdownTimeH2').val()))) {
                             if (shutbox != box) {
-	                       send(boxCom[0]+':shutdown:0');
-                               shutbox = box;
+                              if ($('#'+box+'autoshut-toggle').html() == 'AS On') {
+	                        send(boxCom[0]+':shutdown:0');
+                                shutbox = box
+                              }
                             }
                         }
 		    }
@@ -2077,7 +2079,7 @@ divhc(Rm,[{Wk,FQDN,MacAddr,_Os}|Wks],ColCnt) ->
 
 <div class='brk'></div>
 
-<div id='",Wk/binary,"macaddr' class='macaddr'>",MacAddr/binary,"</div> <div id='",Wk/binary,"dfstatus' class='dfstatus'>DF?</div>
+<div id='",Wk/binary,"macaddr' class='macaddr'>",MacAddr/binary,"</div> <div id='",Wk/binary,"dfstatus' class='dfstatus' title='DeepFreeze Status'>DF?</div> <div id='",Wk/binary,"autoshut-toggle' class='autoshut-toggle' title='Auto Shutdown Status'>AS On</div>
 
 <div class='brk'></div>
 
@@ -2224,7 +2226,17 @@ comButtons([{Wk,FQDN,MacAddr,_Os}|Wks],Rm,RowCnt,ColCnt) ->
         $('#",Rm/binary,"_row_",(list_to_binary(integer_to_list(RowCnt)))/binary,"_Coms').slideToggle('slow');
 	});
 
-	$('#reboot_",Wk/binary,"').click(function(){
+    $('#",Wk/binary,"autoshut-toggle').click(function(){
+        if ($('#",Wk/binary,"autoshut-toggle').html() == 'AS Off'){
+          $('#",Wk/binary,"autoshut-toggle').html('AS On');
+          $('#",Wk/binary,"autoshut-toggle').css('color','red')
+        } else {
+          $('#",Wk/binary,"autoshut-toggle').html('AS Off');
+          $('#",Wk/binary,"autoshut-toggle').css('color','green')
+        }
+    });
+
+    $('#reboot_",Wk/binary,"').click(function(){
       if (rall==false) {
         $('#dialogtext').html('reboot');
         $('#dialog').dialog({
