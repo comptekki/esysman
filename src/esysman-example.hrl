@@ -18,7 +18,6 @@
 -define(IGNOREU2,"u2").
 -define(IGNOREU3,"u3").
 -define(IGNOREU4,"u4").
--define(LOCKSCRPASSWD,"temppass").
 -define(AUTOLOCK, "true"). % "false" no,  "true" yes 
 -define(REFRESHTIME,300000). % 300000 = 5 minutes
 
@@ -29,6 +28,7 @@
 -define(JQUERYUI, "/static/jquery-ui-1.12.1/jquery-ui.min.js").
 -define(JQUERYUICSS, "/static/jquery-ui-1.12.1/jquery-ui.min.css").
 -define(LINES, "10000").
+% workstation params {<<"hostname">>,<<"hostname.domain.name">>,<<"mac address seprated by '-'">>,<<"AutoS On or AutoS Off">>}
 -define(ROOMS,
 [
  [<<"room1">>,

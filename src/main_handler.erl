@@ -649,7 +649,7 @@ Port/binary,
                     if($('#shutdownTimerSwitch').html() == 'On') {
                         if (hdiff(Number($('#shutdownTimeH').val()), Number($('#shutdownTimeH2').val()))) {
                             if (shutbox != box) {
-                              if ($('#'+box+'autoshut-toggle').html() == 'AS On') {
+                              if ($('#'+box+'autoshut-toggle').html() == 'AutoS On') {
 	                        send(boxCom[0]+':shutdown:0');
                                 shutbox = box
                               }
@@ -1735,7 +1735,7 @@ jsAllSelectRows_copy(_Room,[]) ->
 
 %%
 
-jsAllSelect_copy(Rm,[{Wk,_FQDN,_MacAddr,_Os}|Wks]) ->
+jsAllSelect_copy(Rm,[{Wk,_FQDN,_MacAddr,_AutoS}|Wks]) ->
     case Wk of
 	<<".">> ->	jsAllSelect_copy(Rm,Wks);
 	_ ->
@@ -1770,7 +1770,7 @@ jsSelectRows_copy([]) ->
 
 %%
 
-jsSelect_copy([{Wk,_FQDN,_MacAddr,_Os}|Wks]) ->
+jsSelect_copy([{Wk,_FQDN,_MacAddr,_AutoS}|Wks]) ->
     case Wk of
 	<<".">> ->	jsSelect_copy(Wks);
 	_ ->
@@ -1814,7 +1814,7 @@ jsAllSelectRows_com(_Room,[]) ->
 
 %%
 
-jsAllSelect_com(Rm,[{Wk,_FQDN,_MacAddr,_Os}|Wks]) ->
+jsAllSelect_com(Rm,[{Wk,_FQDN,_MacAddr,_AutoS}|Wks]) ->
     case Wk of
 	<<".">> ->	jsAllSelect_com(Rm,Wks);
 	_ ->
@@ -1849,7 +1849,7 @@ jsSelectRows_com([]) ->
 
 %%
 
-jsSelect_com([{Wk,_FQDN,_MacAddr,_Os}|Wks]) ->
+jsSelect_com([{Wk,_FQDN,_MacAddr,_AutoS}|Wks]) ->
     case Wk of
 	<<".">> ->	jsSelect_com(Wks);
 	_ ->
@@ -2060,10 +2060,16 @@ mkRoomRows([],_Rm,_RowCnt) ->
 
 %%
 
-divhc(Rm,[{Wk,FQDN,MacAddr,_Os}|Wks],ColCnt) ->
+divhc(Rm,[{Wk,FQDN,MacAddr,AutoS}|Wks],ColCnt) ->
     <<(case Wk of
 	   <<".">> ->	<<"<div class='hltd'>.</div>">>;
 	   _ ->
+	       {AutoS2, TogColor} = case AutoS of
+		<<"">> ->
+		       {<<"AutoS On">>, <<"on">>};
+		   _ -> 
+		       {<<"AutoS Off">>,<<"off">>}
+	       end,
 	       <<"
 
 <div id='",Wk/binary,"_hltd' class='hltd ",Rm/binary,"_col_",(list_to_binary(integer_to_list(ColCnt)))/binary,"'>
@@ -2079,7 +2085,7 @@ divhc(Rm,[{Wk,FQDN,MacAddr,_Os}|Wks],ColCnt) ->
 
 <div class='brk'></div>
 
-<div id='",Wk/binary,"macaddr' class='macaddr'>",MacAddr/binary,"</div> <div id='",Wk/binary,"dfstatus' class='dfstatus' title='DeepFreeze Status'>DF?</div> <div id='",Wk/binary,"autoshut-toggle' class='autoshut-toggle' title='Auto Shutdown Status'>AS On</div>
+<div id='",Wk/binary,"macaddr' class='macaddr'>",MacAddr/binary,"</div> <div id='",Wk/binary,"dfstatus' class='dfstatus' title='DeepFreeze Status'>DF?</div> <div id='",Wk/binary,"autoshut-toggle' class='autoshut-toggle-",TogColor/binary,"' title='Auto Shutdown Status'>",AutoS2/binary,"</div>
 
 <div class='brk'></div>
 
@@ -2095,7 +2101,7 @@ divhc(_Rm,[],_ColCnt) ->
 
 %%
 
-divc({Wk,_FQDN,_MacAddr,_Os}) ->
+divc({Wk,_FQDN,_MacAddr,_AutoS}) ->
     case Wk of
 	<<".">> ->	<<"<div class='ltd'>.</div>">>;
 	_ ->
@@ -2204,7 +2210,7 @@ comButtonsRows([],_Rm,_RowCnt) ->
 
 %%
 
-comButtons([{Wk,FQDN,MacAddr,_Os}|Wks],Rm,RowCnt,ColCnt) ->
+comButtons([{Wk,FQDN,MacAddr,_AutoS}|Wks],Rm,RowCnt,ColCnt) ->
     case Wk of
 	<<".">> -> << (comButtons(Wks,Rm,RowCnt,ColCnt+1))/binary >>;
 	_ ->
@@ -2227,11 +2233,11 @@ comButtons([{Wk,FQDN,MacAddr,_Os}|Wks],Rm,RowCnt,ColCnt) ->
 	});
 
     $('#",Wk/binary,"autoshut-toggle').click(function(){
-        if ($('#",Wk/binary,"autoshut-toggle').html() == 'AS Off'){
-          $('#",Wk/binary,"autoshut-toggle').html('AS On');
+        if ($('#",Wk/binary,"autoshut-toggle').html() == 'AutoS Off'){
+          $('#",Wk/binary,"autoshut-toggle').html('AutoS On');
           $('#",Wk/binary,"autoshut-toggle').css('color','red')
         } else {
-          $('#",Wk/binary,"autoshut-toggle').html('AS Off');
+          $('#",Wk/binary,"autoshut-toggle').html('AutoS Off');
           $('#",Wk/binary,"autoshut-toggle').css('color','green')
         }
     });
@@ -2401,7 +2407,7 @@ mkjsComAllRows([],_Rm,_Com) ->
 
 %%
 
-mkjsComAllRow([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm,Com) ->
+mkjsComAllRow([{Wk,_FQDN,_MacAddr,_AutoS}|Wks],Rm,Com) ->
     case Wk of
 	<<".">> ->
 	    mkjsComAllRow(Wks,Rm,Com);
@@ -2569,7 +2575,7 @@ jschkduRows([],_Rm) ->
 
 %%
 
-jschkduRow([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm) ->
+jschkduRow([{Wk,_FQDN,_MacAddr,_AutoS}|Wks],Rm) ->
     case Wk of
 	<<".">> ->	jschkduRow(Wks,Rm);
 	_ ->
@@ -2636,7 +2642,7 @@ jsrefcons_rows([],_Rm) ->
 
 %%
 
-jsrefcons_row([{Wk,_FQDN,_MacAddr,_Os}|Wks],Rm) ->
+jsrefcons_row([{Wk,_FQDN,_MacAddr,_AutoS}|Wks],Rm) ->
     case Wk of
 	<<".">> ->	jsrefcons_row(Wks,Rm);
 	_ ->
