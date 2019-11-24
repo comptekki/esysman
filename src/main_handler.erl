@@ -628,7 +628,6 @@ Port/binary,
                     }
 		} // end switch
 
-		var ignore_sd = '",?IGNORESHUTDOWN,"';
                 var ignore_rb = '",?IGNOREREBOOT,"';
                 var ignoreu1 = '",?IGNOREU1,"';
                 var ignoreu2 = '",?IGNOREU2,"';
@@ -645,7 +644,6 @@ Port/binary,
 		    }
 		}
 
-   		if (ignore_sd.indexOf(box) < 0 && box.length > 0) {
                     if($('#shutdownTimerSwitch').html() == 'On') {
                         if (hdiff(Number($('#shutdownTimeH').val()), Number($('#shutdownTimeH2').val()))) {
                             if (shutbox != box) {
@@ -656,7 +654,6 @@ Port/binary,
                             }
                         }
 		    }
-		}
 	}
 	else message(true,m.data)
     } // end socket.onmessage
@@ -2581,10 +2578,9 @@ jschkduRow([{Wk,_FQDN,_MacAddr,_AutoS}|Wks],Rm) ->
 	_ ->
 	    <<"
 
-    var ignore_box = '",?IGNORESHUTDOWN,"';
     var ignore_box2 = '",?IGNOREDUPES,"';
 
-    if ($('#",Wk/binary,"status').html()!='.' && ignore_box.indexOf('",Wk/binary,"') < 0 && ignore_box2.indexOf('",Wk/binary,"') < 0){
+    if ($('#",Wk/binary,"status').html()!='.' && ignore_box2.indexOf('",Wk/binary,"') < 0){
         dupe_",Rm/binary,".push($('#",Wk/binary,"status').html().toLowerCase());
         if (typeof hash_",Rm/binary,"[dupe_",Rm/binary,"[dupe_",Rm/binary,".length-1]] === 'undefined')
             hash_",Rm/binary,"[dupe_",Rm/binary,"[dupe_",Rm/binary,".length-1]] = [];
