@@ -141,10 +141,10 @@ Client/Server Setup
 Versions
 --------
 1.9
--update to Cowboy 2.7.0
--make scripts window draggable/resizable
--add item count in scripts window and file size
--add wks auto shutdown default setting and toggle
+-Update to Cowboy 2.7.0
+-Make scripts window draggable/resizable
+-Add item count in scripts window and file size
+-Add wks auto shutdown default setting and toggle
 
 --------
 1.8
