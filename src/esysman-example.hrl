@@ -8,7 +8,6 @@
 -define(UPLOADS,<<"/usr/local/src/uploads/">>).
 -define(DOWNLOADS,<<"/home/user/esysman/priv/downloads/">>).
 
--define(IGNORESHUTDOWN,"box1:box2:box3").
 -define(IGNOREDUPES,"box1").
 -define(IGNOREREBOOT,"box1").
 -define(IGNORESHOWUSERS,"box1").
