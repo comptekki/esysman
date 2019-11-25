@@ -145,6 +145,7 @@ Versions
 -Make scripts window draggable/resizable
 -Add item count in scripts window and file size
 -Add wks auto shutdown default setting and toggle
+-Fix total users count
 
 --------
 1.8
