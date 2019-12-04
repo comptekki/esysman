@@ -2216,14 +2216,16 @@ comButtons([{Wk,FQDN,MacAddr,_AutoS}|Wks],Rm,RowCnt,ColCnt) ->
     $('#",Wk/binary,"_col').click(function(){
         $('.",Rm/binary,"_col_",(list_to_binary(integer_to_list(ColCnt)))/binary," input:checkbox').each(function() {
            this.checked = !this.checked;
+           $(this).parent().parent().find('div:nth-child(9)').click()
        });
-	});
+    });
 
     $('#",Wk/binary,"status').click(function(){
         $('#",Rm/binary,"_row_",(list_to_binary(integer_to_list(RowCnt)))/binary," input:checkbox').each(function() {
            this.checked = !this.checked;
+           $(this).parent().parent().find('div:nth-child(9)').click()
        });
-	});
+    });
 
     $('#",Wk/binary,"Expr').click(function(){
         $('#",Rm/binary,"_row_",(list_to_binary(integer_to_list(RowCnt)))/binary,"_Coms').slideToggle('slow');
