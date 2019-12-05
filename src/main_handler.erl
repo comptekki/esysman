@@ -376,7 +376,7 @@ Port/binary,
     var cons2 = 0;
     var cons3 = 0;
     var cons4 = 0;
-    var refreshtime = ",?REFRESHTIME,";
+    var refreshtime = ",(list_to_binary(integer_to_list(?REFRESHTIME)))/binary,";
 
     socket.onmessage = function(m){
 //	console.log('onmessage called');
