@@ -376,7 +376,7 @@ Port/binary,
     var cons2 = 0;
     var cons3 = 0;
     var cons4 = 0;
-    var refreshtime = 300000;
+    var refreshtime = ",?REFRESHTIME,";
 
     socket.onmessage = function(m){
 //	console.log('onmessage called');
@@ -417,7 +417,6 @@ Port/binary,
                         }
                     }
                 }
-
                 if (m.data.indexOf('clearcmsg') > -1) {
                     $('#msgcl').html('');
                     $('#cntcl').html('0K/L');
@@ -2498,7 +2497,7 @@ chk_dupe_usersa(Rooms) ->
     <<"
 function  chk_dupe_users(){
     tot_cnt=0;
-    $('#rooms_title').html('[0]- Rooms');
+    $('#rooms_title').html('[0]-Rooms');
 ",
 (chk_dupe_users_rms(Rooms))/binary,
 "
