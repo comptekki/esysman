@@ -276,7 +276,7 @@ app_front_end(Req, Opts) ->
     
     Get_rms = get_rms_keys(?ROOMS, 49),
 
-    {ok, [_, _, _, {ShutdownStartTime,ShutDownStopTime,OnorOff}]} = file:consult(?CONF),
+    {ok, [_, _, _, {ShutdownStartTime,ShutdownStopTime,OnorOff}]} = file:consult(?CONF),
 
     Req2 = cowboy_req:reply(
 	     200,
@@ -644,7 +644,7 @@ Port/binary,
 		}
 
                     if($('#shutdownTimerSwitch').html() == 'On') {
-                        if (hdiff(Number($('#shutdownTimeH').val()), Number($('#shutdownTimeH2').val()))) {
+                        if (hdiff(Number($('#shutdownTimeH').html()), Number($('#shutdownTimeH2').html()))) {
                             if (shutbox != box) {
                               if ($('#'+box+'autoshut-toggle').html() == 'AutoS On') {
 	                        send(boxCom[0]+':shutdown:0');
@@ -1480,8 +1480,11 @@ function progress(e){
 
 <div id='com_title' class='ui-widget'>
  Commands -- Auto Wks Shutdown Time: 
- <input style='width:25px;' id='shutdownTimeH'  type='text' name='shutdownTimeH' maxlength=2 value='",ShutdownStartTime/binary,"'/> <->
- <input style='width:25px;' id='shutdownTimeH2'  type='text' name='shutdownTimeH2' maxlength=2 value='",ShutDownStopTime/binary,"'/>
+[<span id='shutdownTimeH'>",ShutdownStartTime/binary,"</span>]
+<!-- <input style='width:25px;' id='shutdownTimeH'  type='text' name='shutdownTimeH' maxlength=2 value='",ShutdownStartTime/binary,"'/> -->
+<-> 
+[<span id='shutdownTimeH2'>",ShutdownStopTime/binary,"</span>]
+<!-- <input style='width:25px;' id='shutdownTimeH2'  type='text' name='shutdownTimeH2' maxlength=2 value='",ShutdownStopTime/binary,"'/> -->
 
 <button id='shutdownTimerSwitch' class='ui-button ui-widget ui-corner-all' title='Toggle Workstation Shutdown Time'>", OnorOff/binary ,"</button>
 
