@@ -1451,9 +1451,7 @@ function progress(e){
 
 <body bgcolor='#333333' style='color:yellow;'>
 <div id='lockpane'>
-<!--
-<input type='button' id='unlockscr' class='button' value='Unlock'>
--->
+
 <button id='unlockscr' class='ui-button ui-widget ui-corner-all'>Unlock</button>
 <input type='password'class='ui-widget' id='unlockscrpasswd'>
 </div>
@@ -1480,11 +1478,9 @@ function progress(e){
 
 <div id='com_title' class='ui-widget'>
  Commands -- Auto Wks Shutdown Time: 
-[<span id='shutdownTimeH'>",ShutdownStartTime/binary,"</span>]
-<!-- <input style='width:25px;' id='shutdownTimeH'  type='text' name='shutdownTimeH' maxlength=2 value='",ShutdownStartTime/binary,"'/> -->
+<button id='shutdownTimeH' class='ui-button ui-widget ui-corner-all' style='background:gray' title='Shutdown Start Time'>",ShutdownStartTime/binary,"</button>
 <-> 
-[<span id='shutdownTimeH2'>",ShutdownStopTime/binary,"</span>]
-<!-- <input style='width:25px;' id='shutdownTimeH2'  type='text' name='shutdownTimeH2' maxlength=2 value='",ShutdownStopTime/binary,"'/> -->
+<button id='shutdownTimeH2' class='ui-button ui-widget ui-corner-all' style='background:gray' title='Shutdown Stop Time'>",ShutdownStopTime/binary,"</button>
 
 <button id='shutdownTimerSwitch' class='ui-button ui-widget ui-corner-all' title='Toggle Workstation Shutdown Time'>", OnorOff/binary ,"</button>
 
@@ -1669,11 +1665,11 @@ jsAll([],_) ->
 ifcomcopy(Rm,Com) ->
 <<"
 	 $('#",Com/binary,"All",Rm/binary,"').click(function(){
-		 if($('#",Com/binary,"AllInput",Rm/binary,"').val().length){
+		 if($('#",Com/binary,"AllInput",Rm/binary,"').html().length){
 			 ",Com/binary,"All",Rm/binary,"();
 			 message(true,'",Com/binary," All ",Rm/binary,"...')
 		 } else {
-			 $('#",Com/binary,"AllInput",Rm/binary,"').val('!');
+			 $('#",Com/binary,"AllInput",Rm/binary,"').html('!');
 			 message(true,'",Com/binary," All ",Rm/binary," is blank!')
 		 }
 	 });
@@ -1718,8 +1714,7 @@ mkjsAllSelectRm_copy([Room|Rows]) ->
     <<"
 
  $('#copyAllSelect",Room/binary,"').change(function(){
-
-	 $('#copyAllInput",Room/binary,"').val($('#copyAllSelect",Room/binary," option:selected').text());
+	 $('#copyAllInput",Room/binary,"').html($('#copyAllSelect",Room/binary," option:selected').text());
 	 ",(jsAllSelectRows_copy(Room,Rows))/binary,"
  });
 
@@ -1744,7 +1739,7 @@ jsAllSelect_copy(Rm,[{Wk,_FQDN,_MacAddr,_AutoS}|Wks]) ->
 		 (!$('#copyAll",Rm/binary,"check').prop('checked') && 
 			 (!$('#",Wk/binary,"check').prop('checked') || $('#",Wk/binary,"check').prop('checked')))
 	   )
-		 $('#copyfn_",Wk/binary,"').val($('#copyAllInput",Rm/binary,"').val());
+		 $('#copyfn_",Wk/binary,"').html($('#copyAllInput",Rm/binary,"').html());
  ",(jsAllSelect_copy(Rm,Wks))/binary>>
     end;
 jsAllSelect_copy(_Room,[]) ->
@@ -1776,7 +1771,7 @@ jsSelect_copy([{Wk,_FQDN,_MacAddr,_AutoS}|Wks]) ->
 	    <<"
 
  $('#copyselect",Wk/binary,"').change(function(){
-	 $('#copyfn_",Wk/binary,"').val($('#copyselect",Wk/binary," option:selected').text());
+	 $('#copyfn_",Wk/binary,"').html($('#copyselect",Wk/binary," option:selected').text());
  });
 
  ",(jsSelect_copy(Wks))/binary>>
@@ -1798,7 +1793,7 @@ mkjsAllSelectRm_com([Room|Rows]) ->
 
  $('#comAllSelect",Room/binary,"').change(function(){
 
-	 $('#comAllInput",Room/binary,"').val($('#comAllSelect",Room/binary," option:selected').text());
+	 $('#comAllInput",Room/binary,"').html($('#comAllSelect",Room/binary," option:selected').text());
 	 ",(jsAllSelectRows_com(Room,Rows))/binary,"
  });
 
@@ -1823,7 +1818,7 @@ jsAllSelect_com(Rm,[{Wk,_FQDN,_MacAddr,_AutoS}|Wks]) ->
 		 (!$('#comAll",Rm/binary,"check').prop('checked') && 
 			 (!$('#",Wk/binary,"check').prop('checked') || $('#",Wk/binary,"check').prop('checked')))
 	   )
-		 $('#comstr_",Wk/binary,"').val($('#comAllInput",Rm/binary,"').val());
+		 $('#comstr_",Wk/binary,"').html($('#comAllInput",Rm/binary,"').html());
  ",(jsAllSelect_com(Rm,Wks))/binary>>
     end;
 jsAllSelect_com(_Room,[]) ->
@@ -1855,7 +1850,7 @@ jsSelect_com([{Wk,_FQDN,_MacAddr,_AutoS}|Wks]) ->
 <<"
 
  $('#comselect",Wk/binary,"').change(function(){
-	 $('#comstr_",Wk/binary,"').val($('#comselect",Wk/binary," option:selected').text());
+	 $('#comstr_",Wk/binary,"').html($('#comselect",Wk/binary," option:selected').text());
  });
 
  ",(jsSelect_com(Wks))/binary>>
@@ -1982,8 +1977,15 @@ mkARComsComsInput(Rm,{Com,ComText}) ->
  </select>
 
 <div class='brk'></div>
+",
 
-  <input id='",Com/binary,"AllInput",Rm/binary,"' type='text', name='",Com/binary,"AllInput' class='fl ui-widget'/>
+      (case Com of
+	   <<"copy">> ->
+               <<"<button id='",Com/binary,"AllInput",Rm/binary,"' type='text', name='",Com/binary,"AllInput' class='fl ui-button ui-widget ui-corner-all' style='background:gray' title='Copy All File Name'>any.cmd</button>">>;
+	   <<"com">> ->
+              <<"<button id='",Com/binary,"AllInput",Rm/binary,"' type='text', name='",Com/binary,"AllInput' class='fl ui-button ui-widget ui-corner-all' style='background:gray' title='Com All Name'>anycmd</button>">>
+       end)/binary,
+"
 
  </div>
  ">>.
@@ -2142,7 +2144,9 @@ divc({Wk,_FQDN,_MacAddr,_AutoS}) ->
   (selections(?APPS))/binary,
 "
 </select>
- <input id='copyfn_",Wk/binary,"' type='text' class='ui-widget' /><br>
+
+      <button id='copyfn_",Wk/binary,"' type='text', name='copyfn_",Wk/binary,"Input' class='ui-button ui-widget ui-corner-all' style='background:gray' title='Copy File Name'>any.cmd</button>
+<br>
 
 
 
@@ -2160,7 +2164,8 @@ divc({Wk,_FQDN,_MacAddr,_AutoS}) ->
   (selections(?COMS))/binary,
 "
 </select>
-<input id='comstr_",Wk/binary,"' type='text' class='ui-widget' />
+
+      <button id='comstr_",Wk/binary,"' type='text', name='comstr_",Wk/binary,"Input' class='ui-button ui-widget ui-corner-all' style='background:gray' title='Com Name'>anycmd</button>
 
 </div>
 </div>
@@ -2355,21 +2360,21 @@ comButtons([{Wk,FQDN,MacAddr,_AutoS}|Wks],Rm,RowCnt,ColCnt) ->
 	});
 
 	$('#copy_",Wk/binary,"').click(function(){
-        if($('#copyfn_",Wk/binary,"').val().length){
-		    send('",FQDN/binary,":copy:' + $('#copyfn_",Wk/binary,"').val());
+        if($('#copyfn_",Wk/binary,"').html().length){
+		    send('",FQDN/binary,":copy:' + $('#copyfn_",Wk/binary,"').html());
 		    message(true,'Copy sent ",Wk/binary,"...')
         } else {
-            $('#copyfn_",Wk/binary,"').val('!');
+            $('#copyfn_",Wk/binary,"').html('!');
 		    message(true,'Copy file name blank! ",Wk/binary,"...')
         }
 	});
 
 	$('#com_",Wk/binary,"').click(function(){
-        if($('#comstr_",Wk/binary,"').val().length){
-		    send('",FQDN/binary,":com:' + $('#comstr_",Wk/binary,"').val());
+        if($('#comstr_",Wk/binary,"').html().length){
+		    send('",FQDN/binary,":com:' + $('#comstr_",Wk/binary,"').html());
 		    message(true,'Command sent ",Wk/binary,"...')
         } else {
-            $('#comstr_",Wk/binary,"').val('!');
+            $('#comstr_",Wk/binary,"').html('!');
 		    message(true,'Command is blank! ",Wk/binary,"...')
         }
 	});
@@ -2421,7 +2426,7 @@ mkjsComAllRow([{Wk,_FQDN,_MacAddr,_AutoS}|Wks],Rm,Com) ->
         (!$('#",Com/binary,"All",Rm/binary,"check').prop('checked') && 
             (!$('#",Wk/binary,"check').prop('checked') || $('#",Wk/binary,"check').prop('checked')))
       ){
-	    $('#copyfn_",Wk/binary,"').val($('#copyAllInput",Rm/binary,"').val());
+	    $('#copyfn_",Wk/binary,"').html($('#copyAllInput",Rm/binary,"').html());
         $('#copy_",Wk/binary,"').click();
     }
 ">>;
