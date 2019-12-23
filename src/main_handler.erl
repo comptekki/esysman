@@ -1287,6 +1287,20 @@ function progress(e){
 
     $('#refreshtime').html('Refresh Time: ' + getnow());
 
+    $('#shutdownTimeH').click(function(){
+      var ctext=prompt('Enter command to send:');
+      if(ctext) {
+        $('#shutdownTimeH').html(ctext);
+      }
+    });
+
+    $('#shutdownTimeH2').click(function(){
+      var ctext=prompt('Enter command to send:');
+      if(ctext) {
+        $('#shutdownTimeH2').html(ctext);
+      }
+    });
+
 ",
 (jsAll(?ROOMS,<<"ping">>))/binary,
 (jsAllConfirm(?ROOMS,<<"reboot">>))/binary,
@@ -1713,8 +1727,20 @@ mkjsAllSelect_copy([]) ->
 mkjsAllSelectRm_copy([Room|Rows]) ->
     <<"
 
+ $('#copyAllInput",Room/binary,"').click(function(){
+      var ctext=prompt('Enter file to copy:');
+      if(ctext) {
+        $('#copyAllInput",Room/binary,"').html(ctext);
+        $('#copyAllInputH",Room/binary,"').val(ctext).trigger('change')
+      }
+ });
+
  $('#copyAllSelect",Room/binary,"').change(function(){
 	 $('#copyAllInput",Room/binary,"').html($('#copyAllSelect",Room/binary," option:selected').text());
+	 ",(jsAllSelectRows_copy(Room,Rows))/binary,"
+ });
+
+ $('#copyAllInputH",Room/binary,"').change(function(){
 	 ",(jsAllSelectRows_copy(Room,Rows))/binary,"
  });
 
@@ -1791,9 +1817,20 @@ mkjsAllSelect_com([]) ->
 mkjsAllSelectRm_com([Room|Rows]) ->
     <<"
 
- $('#comAllSelect",Room/binary,"').change(function(){
+ $('#comAllInput",Room/binary,"').click(function(){
+    var ctext=prompt('Enter command to send:');
+    if(ctext) {
+      $('#comAllInput",Room/binary,"').html(ctext);
+      $('#comAllInputH",Room/binary,"').val(ctext).trigger('change')
+    }
+ });
 
+ $('#comAllSelect",Room/binary,"').change(function(){
 	 $('#comAllInput",Room/binary,"').html($('#comAllSelect",Room/binary," option:selected').text());
+	 ",(jsAllSelectRows_com(Room,Rows))/binary,"
+ });
+
+ $('#comAllInputH",Room/binary,"').change(function(){
 	 ",(jsAllSelectRows_com(Room,Rows))/binary,"
  });
 
@@ -1981,9 +2018,9 @@ mkARComsComsInput(Rm,{Com,ComText}) ->
 
       (case Com of
 	   <<"copy">> ->
-               <<"<button id='",Com/binary,"AllInput",Rm/binary,"' type='text', name='",Com/binary,"AllInput' class='fl ui-button ui-widget ui-corner-all' style='background:gray' title='Copy All File Name'>any.cmd</button>">>;
+               <<"<button id='",Com/binary,"AllInput",Rm/binary,"' type='text', name='",Com/binary,"AllInput' class='fl ui-button ui-widget ui-corner-all' style='background:gray' title='Copy All File Name'>any.cmd</button><input id='",Com/binary,"AllInputH",Rm/binary,"' type='hidden'>">>;
 	   <<"com">> ->
-              <<"<button id='",Com/binary,"AllInput",Rm/binary,"' type='text', name='",Com/binary,"AllInput' class='fl ui-button ui-widget ui-corner-all' style='background:gray' title='Com All Name'>anycmd</button>">>
+              <<"<button id='",Com/binary,"AllInput",Rm/binary,"' type='text', name='",Com/binary,"AllInput' class='fl ui-button ui-widget ui-corner-all' style='background:gray' title='Com All Name'>anycmd</button><input id='",Com/binary,"AllInputH",Rm/binary,"' type='hidden'>">>
        end)/binary,
 "
 
