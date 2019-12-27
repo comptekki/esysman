@@ -1288,16 +1288,98 @@ function progress(e){
     $('#refreshtime').html('Refresh Time: ' + getnow());
 
     $('#shutdownTimeH').click(function(){
-      var ctext=prompt('Enter command to send:');
-      if(ctext) {
-        $('#shutdownTimeH').html(ctext);
-      }
+      $('#shutdownTimeHid').css('display','inline-block');
+      $('#shutdownTimeHi').val($('#shutdownTimeH').html());
+      $('#shutdownTimeH').css('display','none');
+      $('#shutdownTimeHi').select();
     });
 
     $('#shutdownTimeH2').click(function(){
-      var ctext=prompt('Enter command to send:');
-      if(ctext) {
-        $('#shutdownTimeH2').html(ctext);
+      $('#shutdownTimeH2id').css('display','inline-block');
+      $('#shutdownTimeH2i').val($('#shutdownTimeH2').html());
+      $('#shutdownTimeH2').css('display','none');
+      $('#shutdownTimeH2i').select();
+    });
+
+    $('#shutdownTimeHce').click(function(){
+      $('#shutdownTimeHid').css('display','none');
+      $('#shutdownTimeH').css('display','inline-block');
+    });
+
+    $('#shutdownTimeHsce').click(function(){
+      if ($('#shutdownTimeHi').val().length > 0) {
+        if ($('#shutdownTimeHi').val() < 10) {
+          $('#shutdownTimeH').html('0' + $('#shutdownTimeHi').val());
+        } else {
+          $('#shutdownTimeH').html($('#shutdownTimeHi').val());
+        }
+      }
+      $('#shutdownTimeHid').css('display','none');
+      $('#shutdownTimeH').css('display','inline-block');
+    });
+
+    $('#shutdownTimeH2ce').click(function(){
+      $('#shutdownTimeH2id').css('display','none');
+      $('#shutdownTimeH2').css('display','inline-block');
+    });
+
+    $('#shutdownTimeH2sce').click(function(){
+      if ($('#shutdownTimeH2i').val().length > 0) {
+        if ($('#shutdownTimeH2i').val() < 10) {
+          $('#shutdownTimeH2').html('0' + $('#shutdownTimeH2i').val());
+        } else {
+          $('#shutdownTimeH2').html($('#shutdownTimeH2i').val());
+        }
+      }
+      $('#shutdownTimeH2id').css('display','none');
+      $('#shutdownTimeH2').css('display','inline-block');
+    });
+
+    $(document).on('keydown', '#shutdownTimeHi',function(e) {
+      if(((e.which > 47) && (e.which < 58)) || (e.which == 8) || (e.which == 127)) {
+        return
+      }
+      else if (e.which == 13) {
+        if ($('#shutdownTimeHi').val().length > 0) {
+          if ($('#shutdownTimeHi').val() < 10) {
+            $('#shutdownTimeH').html('0' + $('#shutdownTimeHi').val());
+          } else {
+            $('#shutdownTimeH').html($('#shutdownTimeHi').val());
+          }
+        }
+        $('#shutdownTimeHid').css('display','none');
+        $('#shutdownTimeH').css('display','inline-block');
+      }
+      else if (e.which == 27) {
+        $('#shutdownTimeHid').css('display','none');
+        $('#shutdownTimeH').css('display','inline-block');
+      }
+      else {
+        return false
+      }
+    });
+
+    $(document).on('keydown', '#shutdownTimeH2i',function(e) {
+      if(((e.which > 47) && (e.which < 58)) || (e.which == 8) || (e.which == 127)) {
+        return
+      }
+      else if (e.which == 13) {
+        if ($('#shutdownTimeH2i').val().length > 0) {
+          if ($('#shutdownTimeH2i').val() < 10) {
+            $('#shutdownTimeH2').html('0' + $('#shutdownTimeH2i').val());
+          } else {
+            $('#shutdownTimeH2').html($('#shutdownTimeH2i').val());
+          }
+        }
+        $('#shutdownTimeH2id').css('display','none');
+        $('#shutdownTimeH2').css('display','inline-block');
+      }
+      else if (e.which == 27) {
+        $('#shutdownTimeH2id').css('display','none');
+        $('#shutdownTimeH2').css('display','inline-block');
+      }
+      else {
+        return false
       }
     });
 
@@ -1493,8 +1575,20 @@ function progress(e){
 <div id='com_title' class='ui-widget'>
  Commands -- Auto Wks Shutdown Time: 
 <button id='shutdownTimeH' class='ui-button ui-widget ui-corner-all' style='background:gray' title='Shutdown Start Time'>",ShutdownStartTime/binary,"</button>
+
+ <div id='shutdownTimeHid' style='display:none'>
+ <input style='width:25px;' id='shutdownTimeHi'  type='text' maxlength=2 value=''/>
+<button id='shutdownTimeHsce' class='ui-button ui-widget ui-corner-all' title='Save and Close Shutdown Start Time'>&#10004;</button>
+<button id='shutdownTimeHce' class='ui-button ui-widget ui-corner-all'  title='Cancel Edit Shutdown Start Time'>X</button>
+ </div>
 <-> 
-<button id='shutdownTimeH2' class='ui-button ui-widget ui-corner-all' style='background:gray' title='Shutdown Stop Time'>",ShutdownStopTime/binary,"</button>
+<button id='shutdownTimeH2' class='ui-button ui-widget ui-corner-all' style='background:gray' title='Shutdown End Time'>",ShutdownStopTime/binary,"</button>
+
+ <div id='shutdownTimeH2id' style='display:none'>
+ <input style='width:25px;' id='shutdownTimeH2i'  type='text' maxlength=2 value=''/>
+ <button id='shutdownTimeH2sce' class='ui-button ui-widget ui-corner-all' title='Save and Close Shutdown End Time'>&#10004;</button>
+<button id='shutdownTimeH2ce' class='ui-button ui-widget ui-corner-all' title='Cancel Edit Shutdown End Time'>X</button>
+ </div>
 
 <button id='shutdownTimerSwitch' class='ui-button ui-widget ui-corner-all' title='Toggle Workstation Shutdown Time'>", OnorOff/binary ,"</button>
 
