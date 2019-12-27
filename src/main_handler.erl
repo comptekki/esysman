@@ -1840,11 +1840,12 @@ mkjsAllSelectRm_copy([Room|Rows]) ->
     <<"
 
  $('#copyAllInput",Room/binary,"').click(function(){
-      var ctext=prompt('Enter file to copy:');
-      if(ctext) {
-        $('#copyAllInput",Room/binary,"').html(ctext);
-        $('#copyAllInputH",Room/binary,"').val(ctext).trigger('change')
-      }
+    var ctext=prompt('Enter file to copy:');
+    if(ctext) {
+      ctext = ctext.replace(/[^.0-9a-zA-Z_]/g, '');
+      $('#copyAllInput",Room/binary,"').html(ctext);
+      $('#copyAllInputH",Room/binary,"').val(ctext).trigger('change')
+    }
  });
 
  $('#copyAllSelect",Room/binary,"').change(function(){
@@ -1932,6 +1933,7 @@ mkjsAllSelectRm_com([Room|Rows]) ->
  $('#comAllInput",Room/binary,"').click(function(){
     var ctext=prompt('Enter command to send:');
     if(ctext) {
+      ctext = ctext.replace(/[^0-9a-zA-Z_]/g, '');
       $('#comAllInput",Room/binary,"').html(ctext);
       $('#comAllInputH",Room/binary,"').val(ctext).trigger('change')
     }
