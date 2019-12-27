@@ -1311,7 +1311,11 @@ function progress(e){
         if ($('#shutdownTimeHi').val() < 10) {
           $('#shutdownTimeH').html('0' + $('#shutdownTimeHi').val());
         } else {
-          $('#shutdownTimeH').html($('#shutdownTimeHi').val());
+          if ($('#shutdownTimeHi').val() < 24) {
+            $('#shutdownTimeH').html($('#shutdownTimeHi').val());
+          } else {
+            return false;
+          }
         }
       }
       $('#shutdownTimeHid').css('display','none');
@@ -1328,7 +1332,11 @@ function progress(e){
         if ($('#shutdownTimeH2i').val() < 10) {
           $('#shutdownTimeH2').html('0' + $('#shutdownTimeH2i').val());
         } else {
-          $('#shutdownTimeH2').html($('#shutdownTimeH2i').val());
+          if ($('#shutdownTimeHi').val() < 24) {
+            $('#shutdownTimeH2').html($('#shutdownTimeH2i').val());
+          } else {
+            return false;
+          }
         }
       }
       $('#shutdownTimeH2id').css('display','none');
@@ -1336,50 +1344,60 @@ function progress(e){
     });
 
     $(document).on('keydown', '#shutdownTimeHi',function(e) {
-      if(((e.which > 47) && (e.which < 58)) || (e.which == 8) || (e.which == 127)) {
-        return
+      v = e.which;
+      if (((v > 47) && (v < 58)) || (v == 8) || (v == 127)) {
+          return;
       }
-      else if (e.which == 13) {
+      else if (v == 13) {
         if ($('#shutdownTimeHi').val().length > 0) {
           if ($('#shutdownTimeHi').val() < 10) {
             $('#shutdownTimeH').html('0' + $('#shutdownTimeHi').val());
           } else {
-            $('#shutdownTimeH').html($('#shutdownTimeHi').val());
+            if ($('#shutdownTimeHi').val() < 24) {
+              $('#shutdownTimeH').html($('#shutdownTimeHi').val());
+            } else {
+              return false;
+            }
           }
         }
         $('#shutdownTimeHid').css('display','none');
         $('#shutdownTimeH').css('display','inline-block');
       }
-      else if (e.which == 27) {
+      else if (v == 27) {
         $('#shutdownTimeHid').css('display','none');
         $('#shutdownTimeH').css('display','inline-block');
       }
       else {
-        return false
+        return false;
       }
     });
 
     $(document).on('keydown', '#shutdownTimeH2i',function(e) {
-      if(((e.which > 47) && (e.which < 58)) || (e.which == 8) || (e.which == 127)) {
-        return
+      v = e.which;
+      if (((v > 47) && (v < 58)) || (v == 8) || (v == 127)) {
+          return;
       }
-      else if (e.which == 13) {
+      else if (v == 13) {
         if ($('#shutdownTimeH2i').val().length > 0) {
           if ($('#shutdownTimeH2i').val() < 10) {
             $('#shutdownTimeH2').html('0' + $('#shutdownTimeH2i').val());
           } else {
-            $('#shutdownTimeH2').html($('#shutdownTimeH2i').val());
+            if ($('#shutdownTimeH2i').val() < 24) {
+              $('#shutdownTimeH2').html($('#shutdownTimeH2i').val());
+            } else {
+              return false;
+            }
           }
         }
         $('#shutdownTimeH2id').css('display','none');
         $('#shutdownTimeH2').css('display','inline-block');
       }
-      else if (e.which == 27) {
+      else if (v == 27) {
         $('#shutdownTimeH2id').css('display','none');
         $('#shutdownTimeH2').css('display','inline-block');
       }
       else {
-        return false
+        return false;
       }
     });
 
