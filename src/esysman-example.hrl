@@ -23,7 +23,7 @@
 -define(MAXAGE, 500).
 -define(TITLE, "ESysMan").
 -define(CSS, "/static/esysman.css").
--define(JQUERY, "/static/jquery-2.1.1.min.js").
+-define(JQUERY, "/static/jquery-2.4.1.min.js").
 -define(JQUERYUI, "/static/jquery-ui-1.12.1/jquery-ui.min.js").
 -define(JQUERYUICSS, "/static/jquery-ui-1.12.1/jquery-ui.min.css").
 -define(LINES, "10000").

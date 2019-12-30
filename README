@@ -144,6 +144,7 @@ Versions
 
 -Test with Cowboy 2.7.0
 -Test with Erlang 22.2.1
+-Update to jquery 3.4.1
 -Change input method for shutdown start/stop times and copy/com
 -Miner updates and fixes
 --------
