@@ -51,7 +51,7 @@ input {width:100px;}
 }
 
 #menu {
-	min-width:2900px;
+//	min-width:2900px;
 	background-color:#888;
 	font-weight:bold;
 	margin: 3px 3px 3px 3px;
@@ -80,7 +80,7 @@ input {width:100px;}
 }
 
 #commands {
-	min-width:2900px;
+//	min-width:2900px;
 	background-color:#111;
 	margin: 3px 3px 3px 3px;
 	-moz-border-radius: 15px;
@@ -88,6 +88,7 @@ input {width:100px;}
 	border:4px solid #555555;
 	display:inline-block;
 	white-space:nowrap;
+	padding: 5px 8px 5px 0;
 }
 
 #tcoms {
