@@ -58,8 +58,8 @@ start(_Type, _Args) ->
 		   {certfile, PrivDir ++ "/ssl/server.crt"},
 		   {keyfile, PrivDir ++ "/ssl/server.key"},
 		   {password, ""}],
-		  #{env => #{dispatch => Dispatch}
-	   }),
+		  #{env => #{dispatch => Dispatch, max_received_frame_rate => {10000, 10000}}}
+                ),
 	esysman_sup:start_link().
 
 stop(_State) ->
