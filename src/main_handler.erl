@@ -2214,7 +2214,7 @@ mkRoomRows([],_Rm,_RowCnt) ->
 
 divhc(Rm,[{Wk,FQDN,MacAddr,AutoS}|Wks],ColCnt) ->
     <<(case Wk of
-	   <<".">> ->	<<"<div class='hltd'>.</div>">>;
+	   <<".">> ->	<<"<div class='hltd2'></div>">>;
 	   _ ->
 	       {AutoS2, TogColor} = case AutoS of
 		<<"">> ->
@@ -2224,6 +2224,8 @@ divhc(Rm,[{Wk,FQDN,MacAddr,AutoS}|Wks],ColCnt) ->
 	       end,
 	       <<"
 
+<!-- start cell 
+<div> -->
 <div id='",Wk/binary,"_hltd' class='hltd ",Rm/binary,"_col_",(list_to_binary(integer_to_list(ColCnt)))/binary,"'>
 
 <div id='",Wk/binary,"status' class='status'>.</div>
@@ -2255,7 +2257,7 @@ divhc(_Rm,[],_ColCnt) ->
 
 divc({Wk,_FQDN,_MacAddr,_AutoS}) ->
     case Wk of
-	<<".">> ->	<<"<div class='ltd'>.</div>">>;
+	<<".">> ->	<<"<div class='ltd2'></div>">>;
 	_ ->
 <<"
 <div id='",Wk/binary,"_ltd' class=\"ltd\">
@@ -2334,6 +2336,8 @@ Click button to delete: <br><span id=dialogtext2 style='font-weight:bold;align:c
 Click button to delete: <br><span id=dialogtext2d style='font-weight:bold;align:center;'>temp</span>...
 </div>
 
+<!--
+</div> end cell -->
 ">>
     end.
 
