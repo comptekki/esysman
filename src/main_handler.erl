@@ -2232,11 +2232,13 @@ divhc(Rm,[{Wk,FQDN,MacAddr,AutoS}|Wks],ColCnt) ->
 
 <div class='wkchk'>
 <input id='",Wk/binary,"check' type='checkbox' class='checkbox' /></div>
-<button id='",Wk/binary,"_col' class='ui-button ui-widget ui-corner-all' title='Select Column' />C</button>
+
 <button id='",Wk/binary,"_row' class='ui-button ui-widget ui-corner-all' title='Select Row' />R</button>
 <button id='",Wk/binary, "Expr' class='ui-button ui-widget ui-corner-all' title='Expand Row' />E</button>
 
 <div class='wk'>",FQDN/binary,"</div>
+
+<div style='margin: 0px 0px 0px 5px'><button id='",Wk/binary,"_col' class='ui-button ui-widget ui-corner-all' title='Select Column' />C</button></div>
 
 <div class='brk'></div>
 

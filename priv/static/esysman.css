@@ -190,7 +190,7 @@ input {width:100px;}
 
 .hltd2 {
 	float:left;
-	width:390px;
+	width:280px;
 	height:40px;
 	padding:4px;
 	vertical-align:top;
@@ -201,7 +201,7 @@ input {width:100px;}
 
 .hltd {
 	float:left;
-	width:390px;
+	width:280px;
 //	height:140px;
 //	width:auto;
 	height:auto;
@@ -214,7 +214,7 @@ input {width:100px;}
 
 .ltd2 {
     float:left;
-    width:390px;
+    width:280px;
     height:40px;
     padding:4px;
     vertical-align:top;
@@ -225,7 +225,7 @@ input {width:100px;}
 
 .ltd {
     float:left;
-    width:390px;
+    width:280px;
 //    height:265px;
 //    width:auto;
     height:auto;
@@ -268,7 +268,7 @@ a.ui-button:focus { color:inherit !important; }
 
 .line2 { float:left; width:257px; background-color:#333; padding:0px 5px 0px 5px; margin:0 auto;}
 .status { float:left; width:54%; color:red; background-color:#333; text-align:center; padding:0 5px 0 5px; margin:0 auto;}
-.macaddr { float:left; width:56%; background-color:#454545;  padding:0 5px 0 5px;}
+.macaddr { float:left; width:55%; text-align:center; background-color:#454545;  padding:0 5px 0 5px;}
 .dfstatus { float:left; width:15%; color:aquamarine; background-color:#333; text-align:center; }
 .autoshut-toggle-on { float:left; width:25%; color:red; background-color:black; text-align:center; }
 .autoshut-toggle-off { float:left; width:25%; color:green; background-color:black; text-align:center; }
@@ -320,7 +320,7 @@ a.button { text-decoration:none; padding: 0 2px 0 2px; }
 .ttop {width:100%;}
 
 .wkchk { float:left; height:18px; background-color:#454545; padding:3px 0 3px; 0;}
-.wk { float:left; width:100%; background-color:#454545; padding:3px 0 3px; 0;}
+.wk { float:left; width:83%; text-align:center; background-color:#454545; padding:3px 0 3px; 0;}
 
 input[type=checkbox] {
     /*width:50px;*/
