@@ -190,7 +190,7 @@ input {width:100px;}
 
 .hltd2 {
 	float:left;
-	width:350px;
+	width:390px;
 	height:40px;
 	padding:4px;
 	vertical-align:top;
@@ -201,7 +201,7 @@ input {width:100px;}
 
 .hltd {
 	float:left;
-	width:350px;
+	width:390px;
 //	height:140px;
 //	width:auto;
 	height:auto;
@@ -214,7 +214,7 @@ input {width:100px;}
 
 .ltd2 {
     float:left;
-    width:350px;
+    width:390px;
     height:40px;
     padding:4px;
     vertical-align:top;
@@ -225,7 +225,7 @@ input {width:100px;}
 
 .ltd {
     float:left;
-    width:350px;
+    width:390px;
 //    height:265px;
 //    width:auto;
     height:auto;
@@ -292,7 +292,7 @@ a.ui-button:focus { color:inherit !important; }
 .unamed-t {float:left; padding: 0 5px 0 0;}
 .passwdd-t {float:left; padding: 0 5px 0 4px;}
 
-.button { float:left; }
+.button {float:left; }
 a.button:link, a.button:visited { color:#00ccff; }
 a.button:hover { color:#ffffff; }
 a.button { text-decoration:none; padding: 0 2px 0 2px; }

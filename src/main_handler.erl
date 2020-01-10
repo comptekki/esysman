@@ -1658,21 +1658,21 @@ function progress(e){
  </div>
 
  <div id='tmsgs' class='tmsgsc'>
-   <div id='mtop' class='mtopc'> <button id='smbig' class='mbig ui-button ui-widget ui-corner-all' title='View more lines...'/>+</button> <button id='smclear' class='clr ui-button ui-widget ui-corner-all' title='Clear Server Messages'>C</button> Server Messages (most recent at top) <div id='cntsm'>0KB/0L</div></div>
+   <div id='mtop' class='mtopc'> <button id='smbig' class='mbig ui-button ui-widget ui-corner-all' title='View more lines...'/>+</button> <button id='smclear' class='clr ui-button ui-widget ui-corner-all' title='Clear Server Messages'>Clr</button> Server Messages (most recent at top) <div id='cntsm'>0KB/0L</div></div>
 	 <div id='msg-div'>
 	 <div id='msgsm' class='msgcsm'></div>
    </div>
  </div>
 
  <div id='tmsgscl' class='tmsgsc'>
-   <div id='mtopcl' class='mtopc'> <button id='clbig' class='mbig ui-button ui-widget ui-corner-all' title='View more lines...'/>+</button> <button id='cmclear' class='clr ui-button ui-widget ui-corner-all' title='Clear Client Messages'>C</button> Client Messages (most recent at top) <div id='cntcl'>0KB/0L</div></div>
+   <div id='mtopcl' class='mtopc'> <button id='clbig' class='mbig ui-button ui-widget ui-corner-all' title='View more lines...'/>+</button> <button id='cmclear' class='clr ui-button ui-widget ui-corner-all' title='Clear Client Messages'>Clr</button> Client Messages (most recent at top) <div id='cntcl'>0KB/0L</div></div>
 	 <div id='msg-divcl'>
 	   <div id='msgcl' class='msgc'></div>
      </div>
  </div>
 
  <div id='tmsgsdup' class='tmsgsc'>
-   <div id='mtopdup' class='mtopcd'><button id='duclear' class='clr ui-button ui-widget ui-corner-all' title='Clear Duplicate Messages'>C</button> Duplicate Users (most recent at top) <div id='cntdup'>0KB/0L</div></div>
+   <div id='mtopdup' class='mtopcd'><button id='duclear' class='clr ui-button ui-widget ui-corner-all' title='Clear Duplicate Messages'>Clr</button> Duplicate Users (most recent at top) <div id='cntdup'>0KB/0L</div></div>
 	 <div id='msg-div-dup'>
 	 <div id='msgdup' class='msgcd'></div>
    </div>
@@ -2232,7 +2232,8 @@ divhc(Rm,[{Wk,FQDN,MacAddr,AutoS}|Wks],ColCnt) ->
 
 <div class='wkchk'>
 <input id='",Wk/binary,"check' type='checkbox' class='checkbox' /></div>
-<button id='",Wk/binary,"_col' class='ui-button ui-widget ui-corner-all' title='Select Columns' />C</button>
+<button id='",Wk/binary,"_col' class='ui-button ui-widget ui-corner-all' title='Select Column' />C</button>
+<button id='",Wk/binary,"_row' class='ui-button ui-widget ui-corner-all' title='Select Row' />R</button>
 <button id='",Wk/binary, "Expr' class='ui-button ui-widget ui-corner-all' title='Expand Row' />E</button>
 
 <div class='wk'>",FQDN/binary,"</div>
@@ -2382,7 +2383,7 @@ comButtons([{Wk,FQDN,MacAddr,_AutoS}|Wks],Rm,RowCnt,ColCnt) ->
        });
     });
 
-    $('#",Wk/binary,"status').click(function(){
+    $('#",Wk/binary,"_row').click(function(){
         $('#",Rm/binary,"_row_",(list_to_binary(integer_to_list(RowCnt)))/binary," input:checkbox').each(function() {
            this.checked = !this.checked;
            $(this).parent().parent().find('div:nth-child(9)').click()
