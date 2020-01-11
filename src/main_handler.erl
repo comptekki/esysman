@@ -1308,10 +1308,10 @@ function progress(e){
 
     $('#shutdownTimeHsce').click(function(){
       if ($('#shutdownTimeHi').val().length > 0) {
-        if ($('#shutdownTimeHi').val() < 10) {
-          $('#shutdownTimeH').html('0' + $('#shutdownTimeHi').val());
+        if (parseInt($('#shutdownTimeHi').val()) < 10) {
+          $('#shutdownTimeH').html('0' + parseInt($('#shutdownTimeHi').val()));
         } else {
-          if ($('#shutdownTimeHi').val() < 24) {
+          if (parseInt($('#shutdownTimeHi').val()) < 24) {
             $('#shutdownTimeH').html($('#shutdownTimeHi').val());
           } else {
             return false;
@@ -1329,10 +1329,10 @@ function progress(e){
 
     $('#shutdownTimeH2sce').click(function(){
       if ($('#shutdownTimeH2i').val().length > 0) {
-        if ($('#shutdownTimeH2i').val() < 10) {
-          $('#shutdownTimeH2').html('0' + $('#shutdownTimeH2i').val());
+        if (parseInt($('#shutdownTimeH2i').val()) < 10) {
+          $('#shutdownTimeH2').html('0' + parseInt($('#shutdownTimeH2i').val()));
         } else {
-          if ($('#shutdownTimeHi').val() < 24) {
+          if (parseInt($('#shutdownTimeHi').val()) < 24) {
             $('#shutdownTimeH2').html($('#shutdownTimeH2i').val());
           } else {
             return false;
@@ -1350,10 +1350,10 @@ function progress(e){
       }
       else if (v == 13) {
         if ($('#shutdownTimeHi').val().length > 0) {
-          if ($('#shutdownTimeHi').val() < 10) {
-            $('#shutdownTimeH').html('0' + $('#shutdownTimeHi').val());
+          if (parseInt($('#shutdownTimeHi').val()) < 10) {
+            $('#shutdownTimeH').html('0' + parseInt($('#shutdownTimeHi').val()));
           } else {
-            if ($('#shutdownTimeHi').val() < 24) {
+            if (parseInt($('#shutdownTimeHi').val()) < 24) {
               $('#shutdownTimeH').html($('#shutdownTimeHi').val());
             } else {
               return false;
@@ -1595,7 +1595,7 @@ function progress(e){
 <button id='shutdownTimeH' class='ui-button ui-widget ui-corner-all' style='background:gray' title='Shutdown Start Time'>",ShutdownStartTime/binary,"</button>
 
  <div id='shutdownTimeHid' style='display:none'>
- <input style='width:25px;' id='shutdownTimeHi'  type='text' maxlength=2 value=''/>
+ <input style='width:20px;' id='shutdownTimeHi'  type='text' maxlength=2 value=''/>
 <button id='shutdownTimeHsce' class='ui-button ui-widget ui-corner-all' title='Save and Close Shutdown Start Time'>&#10004;</button>
 <button id='shutdownTimeHce' class='ui-button ui-widget ui-corner-all'  title='Cancel Edit Shutdown Start Time'>X</button>
  </div>
@@ -1603,7 +1603,7 @@ function progress(e){
 <button id='shutdownTimeH2' class='ui-button ui-widget ui-corner-all' style='background:gray' title='Shutdown End Time'>",ShutdownStopTime/binary,"</button>
 
  <div id='shutdownTimeH2id' style='display:none'>
- <input style='width:25px;' id='shutdownTimeH2i'  type='text' maxlength=2 value=''/>
+ <input style='width:20px;' id='shutdownTimeH2i'  type='text' maxlength=2 value=''/>
  <button id='shutdownTimeH2sce' class='ui-button ui-widget ui-corner-all' title='Save and Close Shutdown End Time'>&#10004;</button>
 <button id='shutdownTimeH2ce' class='ui-button ui-widget ui-corner-all' title='Cancel Edit Shutdown End Time'>X</button>
  </div>
@@ -2228,17 +2228,14 @@ divhc(Rm,[{Wk,FQDN,MacAddr,AutoS}|Wks],ColCnt) ->
 <div> -->
 <div id='",Wk/binary,"_hltd' class='hltd ",Rm/binary,"_col_",(list_to_binary(integer_to_list(ColCnt)))/binary,"'>
 
+
+<button id='",Wk/binary,"_row' class='ui-button ui-widget ui-corner-all' title='Select Row' />Row Select</button>
+<button id='",Wk/binary,"_col' class='ui-button ui-widget ui-corner-all' title='Select Column' />Col Select</button>
+<button id='",Wk/binary, "Expr' class='ui-button ui-widget ui-corner-all' title='Show Workstation Command Options' />Wks Opts</button>
+
 <div id='",Wk/binary,"status' class='status'>.</div>
 
-<div class='wkchk'>
-<input id='",Wk/binary,"check' type='checkbox' class='checkbox' /></div>
-
-<button id='",Wk/binary,"_row' class='ui-button ui-widget ui-corner-all' title='Select Row' />R</button>
-<button id='",Wk/binary, "Expr' class='ui-button ui-widget ui-corner-all' title='Expand Row' />E</button>
-
 <div class='wk'>",FQDN/binary,"</div>
-
-<div style='margin: 0px 0px 0px 5px'><button id='",Wk/binary,"_col' class='ui-button ui-widget ui-corner-all' title='Select Column' />C</button></div>
 
 <div class='brk'></div>
 
@@ -2246,8 +2243,13 @@ divhc(Rm,[{Wk,FQDN,MacAddr,AutoS}|Wks],ColCnt) ->
 
 <div class='brk'></div>
 
+<div style='float:left'>
 <div id='",Wk/binary,"upstrttime' class=''>Start Time:</div>
 <div id='",Wk/binary,"uptime' class=''>&nbsp;&nbsp;&nbsp;Up Time:</div>
+</div>
+
+<!-- <div class='wkchk'><input id='",Wk/binary,"check' type='checkbox' class='checkbox' /></div> -->
+<input id='",Wk/binary,"check' type='checkbox' class='checkbox' style='float:right; width:auto' />
 
 </div>
 

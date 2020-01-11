@@ -43,7 +43,7 @@ body {
 
 th.oth {font-size:18pt; text-align:center; border:1px solid #555555;}
 table { border-collapse:collapse;}
-input {width:100px;}
+//input {width:100px;}
 
 #wrapper {
 	/*	width:2900px; */
@@ -106,9 +106,10 @@ input {width:100px;}
 }
 
 #com_title {
-	width:100%;
-	margin:0 0 0 5px;
-	padding: 0 0 3px 5px;
+    width:100%;
+    height:40px;
+//    margin:0 0 0 5px;
+    padding: 5px 0 3px 5px;
 }
 
 #tinputs {
@@ -190,7 +191,7 @@ input {width:100px;}
 
 .hltd2 {
 	float:left;
-	width:280px;
+	width:340px;
 	height:40px;
 	padding:4px;
 	vertical-align:top;
@@ -201,7 +202,7 @@ input {width:100px;}
 
 .hltd {
 	float:left;
-	width:280px;
+  	width:340px;
 //	height:140px;
 //	width:auto;
 	height:auto;
@@ -214,7 +215,7 @@ input {width:100px;}
 
 .ltd2 {
     float:left;
-    width:280px;
+    width:340px;
     height:40px;
     padding:4px;
     vertical-align:top;
@@ -225,7 +226,7 @@ input {width:100px;}
 
 .ltd {
     float:left;
-    width:280px;
+    width:340px;
 //    height:265px;
 //    width:auto;
     height:auto;
@@ -267,7 +268,15 @@ a.ui-button:focus { color:inherit !important; }
 .logged_on { color:green; background-color:#333; width:265px; text-align:center; margin:0 auto; }
 
 .line2 { float:left; width:257px; background-color:#333; padding:0px 5px 0px 5px; margin:0 auto;}
-.status { float:left; width:54%; color:red; background-color:#333; text-align:center; padding:0 5px 0 5px; margin:0 auto;}
+.status {
+    //  float:right
+    //  width:100%;
+    color:red;
+    background-color:#333;
+    text-align:center;
+    padding:0 5px 0 5px;
+    margin:0 auto;
+}
 .macaddr { float:left; width:55%; text-align:center; background-color:#454545;  padding:0 5px 0 5px;}
 .dfstatus { float:left; width:15%; color:aquamarine; background-color:#333; text-align:center; }
 .autoshut-toggle-on { float:left; width:25%; color:red; background-color:black; text-align:center; }
@@ -319,13 +328,20 @@ a.button { text-decoration:none; padding: 0 2px 0 2px; }
 
 .ttop {width:100%;}
 
-.wkchk { float:left; height:18px; background-color:#454545; padding:3px 0 3px; 0;}
-.wk { float:left; width:83%; text-align:center; background-color:#454545; padding:3px 0 3px; 0;}
+.wkchk {
+    //float:left;
+    height:18px;
+    background-color:#454545;
+    padding:3px 0 3px; 0;
+}
+.wk { float:left; width:100%; text-align:center; background-color:#454545; padding:3px 0 3px; 0;}
 
+/*
 input[type=checkbox] {
     /*width:50px;*/
     height:10px;
 }
+ */
 
 .checkbox
 {
