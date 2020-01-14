@@ -2229,9 +2229,9 @@ divhc(Rm,[{Wk,FQDN,MacAddr,AutoS}|Wks],ColCnt) ->
 <div id='",Wk/binary,"_hltd' class='hltd ",Rm/binary,"_col_",(list_to_binary(integer_to_list(ColCnt)))/binary,"'>
 
 
-<button id='",Wk/binary,"_row' class='ui-button ui-widget ui-corner-all' title='Select Row' />Row Select</button>
-<button id='",Wk/binary,"_col' class='ui-button ui-widget ui-corner-all' title='Select Column' />Col Select</button>
-<button id='",Wk/binary, "Expr' class='ui-button ui-widget ui-corner-all' title='Show Workstation Command Options' />Wks Opts</button>
+<button id='",Wk/binary,"_row' class='ui-button ui-widget ui-corner-all' title='Select Row' />R</button>
+<button id='",Wk/binary,"_col' class='ui-button ui-widget ui-corner-all' title='Select Column' />C</button>
+<button id='",Wk/binary, "Expr' class='ui-button ui-widget ui-corner-all' title='Show Workstation Command Options' />O</button>
 
 <div id='",Wk/binary,"status' class='status'>.</div>
 
@@ -2383,14 +2383,14 @@ comButtons([{Wk,FQDN,MacAddr,_AutoS}|Wks],Rm,RowCnt,ColCnt) ->
     $('#",Wk/binary,"_col').click(function(){
         $('.",Rm/binary,"_col_",(list_to_binary(integer_to_list(ColCnt)))/binary," input:checkbox').each(function() {
            this.checked = !this.checked;
-           $(this).parent().parent().find('div:nth-child(9)').click()
+//           $(this).parent().parent().find('div:nth-child(9)').click()
        });
     });
 
     $('#",Wk/binary,"_row').click(function(){
         $('#",Rm/binary,"_row_",(list_to_binary(integer_to_list(RowCnt)))/binary," input:checkbox').each(function() {
            this.checked = !this.checked;
-           $(this).parent().parent().find('div:nth-child(9)').click()
+//           $(this).parent().parent().find('div:nth-child(9)').click()
        });
     });
 

@@ -147,7 +147,7 @@ table { border-collapse:collapse;}
 .mtopc { background-color:#666; width:600px; font-weight:bold; padding:3px 0 3px 3px;}
 
 .msgc {
-	overflow:scroll;
+	overflow-y:scroll;
 	width:600px;
 	height:415px;
 	color:yellow;
@@ -157,7 +157,7 @@ table { border-collapse:collapse;}
 }
 
 .msgcsm {
-	overflow:scroll;
+	overflow-y:scroll;
 	width:600px;
 	height:415px;
 	color:yellow;
@@ -167,7 +167,7 @@ table { border-collapse:collapse;}
 }
 
 .msgcd {
-	overflow:scroll;
+	overflow-y:scroll;
 	width:600px;
 	height:415px;
 	color:yellow;
