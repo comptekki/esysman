@@ -84,16 +84,16 @@ table { border-collapse:collapse;}
 }
 
 #commands {
-//	min-width:2230px;
-	background-color:#111;
-	margin: 3px 3px 3px 3px;
-	-moz-border-radius: 15px;
-	-webkit-border-radius: 15px;
-	border:4px solid #555555;
-	display:inline-block;
-	white-space:nowrap;
-	white-space: -moz-nowrap;
-	padding: 5px 8px 5px 0;
+    //	min-width:2230px;
+    background-color:#111;
+    margin: 3px 3px 3px 3px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border:4px solid #555555;
+    display:inline-block;
+    white-space:nowrap;
+    white-space: -moz-nowrap;
+    padding: 5px 8px 5px 0;
 }
 
 #tcoms {
@@ -149,8 +149,7 @@ table { border-collapse:collapse;}
 .msgc {
 	overflow-y:auto;
 	width:600px;
-	height:100%;
-	//415px;
+	height:415px;
 	color:yellow;
 	background-color:black;
 	padding:0 0 0 3px;
@@ -160,8 +159,7 @@ table { border-collapse:collapse;}
 .msgcsm {
 	overflow-y:auto;
 	width:600px;
-	height:100%;
-	//415px;
+	height:415px;
 	color:yellow;
 	background-color:black;
 	padding:0 0 0 3px;
@@ -171,8 +169,7 @@ table { border-collapse:collapse;}
 .msgcd {
 	overflow-y:auto;
 	width:600px;
-	height:100%;
-	//415px;
+	height:415px;
 	color:yellow;
 	background-color:black;
 	padding:0 0 0 3px;
