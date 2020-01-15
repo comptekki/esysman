@@ -342,18 +342,13 @@ a.button { text-decoration:none; padding: 0 2px 0 2px; }
 }
 .wk { float:left; width:100%; text-align:center; background-color:#454545; padding:3px 0 3px; 0;}
 
-/*
-input[type=checkbox] {
-    /*width:50px;*/
-    height:10px;
-}
- */
-
 .checkbox
 {
-  float:left;
-  width: 20px;
-  margin: 0px 0px 0px 0px;
+    float:left;
+    -moz-transform:scale(0.75);
+    -webkit-transform:scale(0.75);
+    -o-transform:scale(0.75);
+    transform:scale(0.75);
 }
 
 .cols {
