@@ -2229,9 +2229,9 @@ divhc(Rm,[{Wk,FQDN,MacAddr,AutoS}|Wks],ColCnt) ->
 <div id='",Wk/binary,"_hltd' class='hltd ",Rm/binary,"_col_",(list_to_binary(integer_to_list(ColCnt)))/binary,"'>
 
 
-<button id='",Wk/binary,"_row' class='ui-button ui-widget ui-corner-all' title='Select Row' />R</button>
-<button id='",Wk/binary,"_col' class='ui-button ui-widget ui-corner-all' title='Select Column' />C</button>
-<button id='",Wk/binary, "Expr' class='ui-button ui-widget ui-corner-all' title='Show Workstation Command Options' />O</button>
+<button id='",Wk/binary,"_row' class='ui-button ui-widget ui-corner-all' title='Select Row' />Row</button>
+<button id='",Wk/binary,"_col' class='ui-button ui-widget ui-corner-all' title='Select Column' />Column</button>
+<button id='",Wk/binary, "Expr' class='ui-button ui-widget ui-corner-all' title='Show Workstation Command Options' />Options</button>
 
 <div id='",Wk/binary,"status' class='status'>.</div>
 
