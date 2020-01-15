@@ -440,25 +440,29 @@ Port/binary,
                 if (m.data.indexOf('resetrefreshtimer') > -1) {
                     if (m.data.indexOf('cons1') > -1) {
                       refreshCons();
-                      $('#refreshtime').html('Refresh Time: ' + getnow());
+                      refreshtime();
+//                      $('#refreshtime').html('Refresh Time: ' + getnow());
                       cons1 = new Date();
                     } else if (m.data.indexOf('cons2') > -1) {
                       if ((cons2 - cons1) > refreshtime) {
                         refreshCons();
-                        $('#refreshtime').html('Refresh Time: ' + getnow());
+                        refreshtime();                        
+//                        $('#refreshtime').html('Refresh Time: ' + getnow());
                       }
                       cons2 = new Date();
                     } else if (m.data.indexOf('cons3') > -1) {
                       if (((cons3 - cons2) > refreshtime) && ((cons3 - cons1) > refreshtime)) {
                         refreshCons();
-                        $('#refreshtime').html('Refresh Time: ' + getnow());
+                        refreshtime();
+//                        $('#refreshtime').html('Refresh Time: ' + getnow());
                       }
                       cons3 = new Date();
                     }
                     else if (m.data.indexOf('cons4') > -1) {
                       if (((cons4 - cons3) > refreshtime) && ((cons4 - cons2) > refreshtime) && ((cons4 - cons1) > refreshtime)) {
                         refreshCons();
-                        $('#refreshtime').html('Refresh Time: ' + getnow());
+                        refreshtime();
+//                        $('#refreshtime').html('Refresh Time: ' + getnow());
                       }
                       cons4 = new Date();
                     }
@@ -767,6 +771,22 @@ Port/binary,
 
     function getnow() {
         var jsnow = new Date();
+        var month=jsnow.getMonth()+1;
+        var day=jsnow.getDate();
+        var hour=jsnow.getHours();
+        var mins=jsnow.getMinutes();
+        var seconds=jsnow.getSeconds();
+
+        (month<10)?month='0'+month:month;
+        (day<10)?day='0'+day:day;
+        (hour<10)?hour='0'+hour:hour;
+        (mins<10)?mins='0'+mins:mins;
+        (seconds<10)?seconds='0'+seconds:seconds;
+
+        return jsnow.getFullYear()+'-'+month+'-'+day+' '+hour+':'+mins+':'+seconds;
+    }
+
+    function getnow2(jsnow) {
         var month=jsnow.getMonth()+1;
         var day=jsnow.getDate();
         var hour=jsnow.getHours();
@@ -1285,7 +1305,9 @@ function progress(e){
       }
     });
 
-    $('#refreshtime').html('Refresh Time: ' + getnow());
+    refreshtime();
+
+//    $('#refreshtime').html('Refresh Time: ' + getnow());
 
     $('#shutdownTimeH').click(function(){
       $('#shutdownTimeHid').css('display','inline-block');
@@ -2790,8 +2812,18 @@ refresh_cons([]) ->
 jsrefcons_rm([Rm|Rows]) ->
     <<"
 
+function refreshtime() {
+  jsnow = new Date();
+  jsnow2 = new Date(jsnow.getTime() + ",(list_to_binary(integer_to_list(?REFRESHTIME)))/binary,");
+
+  d1 = getnow2(jsnow);
+  d2 = getnow2(jsnow2);
+
+  $('#refreshtime').html('Refreshed: ' +  d1 + ' | Next Refresh: ' + d2);
+}
+
 function refresh_cons_",Rm/binary,"(){
-  $('#refreshtime').html('Refresh Time: ' + getnow());
+  refreshtime();
 ",
 (jsrefcons_rows(Rows,Rm))/binary,
 "
