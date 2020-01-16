@@ -487,3 +487,11 @@ tr.r:hover {
 .ui-resizable-se{
   background-color:lightgrey;
 }
+
+#refreshtime {
+//    color:black;
+//    background-color:white;
+//    padding: 5px 5px 5px 5px;
+    font-size:large;
+    font-weight:bold;
+}

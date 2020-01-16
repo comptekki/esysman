@@ -1613,7 +1613,7 @@ function progress(e){
 <div id='commands'>
 
 <div id='com_title' class='ui-widget'>
- Commands -- Auto Wks Shutdown Time: 
+ <span style='font-size:large;font-weight:bold'>Commands -- Auto Wks Shutdown Time: </span>
 <button id='shutdownTimeH' class='ui-button ui-widget ui-corner-all' style='background:gray' title='Shutdown Start Time'>",ShutdownStartTime/binary,"</button>
 
  <div id='shutdownTimeHid' style='display:none'>
@@ -1621,7 +1621,7 @@ function progress(e){
 <button id='shutdownTimeHsce' class='ui-button ui-widget ui-corner-all' title='Save and Close Shutdown Start Time'>&#10004;</button>
 <button id='shutdownTimeHce' class='ui-button ui-widget ui-corner-all'  title='Cancel Edit Shutdown Start Time'>X</button>
  </div>
-<-> 
+<span style='font-size:large;font-weight:bold'> <-> </span> 
 <button id='shutdownTimeH2' class='ui-button ui-widget ui-corner-all' style='background:gray' title='Shutdown End Time'>",ShutdownStopTime/binary,"</button>
 
  <div id='shutdownTimeH2id' style='display:none'>
@@ -2819,7 +2819,7 @@ function refreshtime() {
   d1 = getnow2(jsnow);
   d2 = getnow2(jsnow2);
 
-  $('#refreshtime').html('Refreshed: ' +  d1 + ' | Next Refresh: ' + d2);
+  $('#refreshtime').html('Refreshed: <span style=color:green>' +  d1 + '</span> -> Next Refresh: <span style=color:red>' + d2 + '</span>');
 }
 
 function refresh_cons_",Rm/binary,"(){
