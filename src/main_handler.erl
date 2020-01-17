@@ -1293,12 +1293,18 @@ function progress(e){
       if(((e.which > 45) && (e.which < 58)) || ((e.which > 64) && (e.which < 91))
          || (e.which == 8) || (e.which == 127)) {
 
-        scrfiltertxt = this.value;
+//        scrfiltertxt = this.value;
+//        send('localhost@domain:list_ups_dir:' + scrfiltertxt);
 
-        send('localhost@domain:list_ups_dir:' + scrfiltertxt);
-        $('#mngscrbox').resizable('destroy');
-        $('#scrslist').resizable('destroy');
-        $('#mngscrbox').resizable({alsoResize: '#scrslist'});
+// search table idea from https://www.w3schools.com/jquery/jquery_filters.asp
+
+        var value = $(this).val().toLowerCase();
+        $('#mngscripts tr').slice(4).filter(function() {
+          $(this).toggle($(this).find('td').slice(1).text().toLowerCase().indexOf(value) > -1)
+        });
+
+        scrcount = $('#mngscripts tr').filter(':visible').length-4;
+        $('#scrcount').html('[' + scrcount + ']-Items');
      }
       else {
         return false; 
