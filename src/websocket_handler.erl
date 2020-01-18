@@ -466,7 +466,7 @@ do_insert(TimeStamp, Box, User) ->
 list_dwnld_fls() ->
     {ok, Files0}=file:list_dir(?DOWNLOADS),
     Files=lists:sort(Files0),
-    Head = <<"<div id='dwnldslist'><button id='closedwnldslist' class='ui-button ui-widget ui-corner-all'>Close</button></div><div id='dprog'></div><form id='mypostd' method='post' enctype='multipart/form-data' action='/uptodown'><br><input id='fdwnload' type='submit' value='Upload'/><input id='selfiled' type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form><table><tr><th></th><th>File Name</th><th>File Size</th></tr>">>,
+    Head = <<"<div id='dwnldslist'><button id='closedwnldslist' class='ui-button ui-widget ui-corner-all'>Close</button></div><div id='dprog'></div><form id='mypostd' method='post' enctype='multipart/form-data' action='/uptodown'><br><input id='fdwnload' type='submit' value='Upload'/><input id='selfiled' type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form><table><tr><th></th><th>File Name</th><th>File Size</th><th>File Date</th></tr>">>,
     Mid = <<(list_to_binary([ mng_dfile(File) || File <- Files]))/binary>>,
     Tail = <<"</table><div class='brk'></div><button id='closedwnldslist' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
     <<Head/binary,Mid/binary,Tail/binary>>.
@@ -475,16 +475,17 @@ list_dwnld_fls() ->
 
 mng_dfile(File) ->
     case file:read_file_info(binary_to_list(?DOWNLOADS) ++ "/" ++ File) of
-	{ok, {_,Fsize1,Ftype,_,_,_,_,_,_,_,_,_,_,_}} ->
+	{ok, {_,Fsize1,Ftype,_,_,_,Ftime1,_,_,_,_,_,_,_}} ->
 	    case Ftype of
 		directory -> 
 		    "";
 		_ ->
 		    Fsize = file_size(Fsize1),
-		    tr(File, Fsize, 2)
+		    Ftime = file_time(Ftime1),
+		    tr(File, Fsize, Ftime, 2)
 	    end;
 	_ ->
-	    tr(File, "", 2)
+	    tr(File, "", "", 2)
     end.
 
 %%
@@ -493,7 +494,7 @@ list_up_fls(Filter) ->
     {ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
     Head= <<"<script>$('#scrfilter').focus(); var tmp=$('#scrfilter').val(); $('#scrfilter').val(''); $('#scrfilter').val(tmp);</script><div id='scrslist'><button id='closescrslist' class='ui-button ui-widget ui-corner-all'>Close</button><button id='addscrf' class='ui-button ui-widget ui-corner-all'>Add Script</button> <div id='scrcount' class='fr'>[">>,
-    Head2= <<"]-Items</div> <div class='brk'></div><div id='upprog'></div><form id='mypost' method='post' enctype='multipart/form-data' action='/upload'><br><input id='fupload' type='submit' value='Upload'/><input id='selfile' type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form>Filter -> <input id='scrfilter' type='text' class='ui-widget' value='", (Filter)/binary, "' /><br><br><table id='mngscripts'><tr><th class='comw'>Commands</th><th>File Name</th><th>File Size</th><th>ln File Name</th><th>Description</th></tr>">>,
+    Head2= <<"]-Items</div> <div class='brk'></div><div id='upprog'></div><form id='mypost' method='post' enctype='multipart/form-data' action='/upload'><br><input id='fupload' type='submit' value='Upload'/><input id='selfile' type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form>Filter -> <input id='scrfilter' type='text' class='ui-widget' value='", (Filter)/binary, "' /><br><br><table id='mngscripts'><tr><th class='comw'>Commands</th><th>File Name</th><th>File Size</th><th>File Date</th><th>Linked File Name</th><th>Description</th></tr>">>,
     Mid = [mng_file(File, Filter) || File <- Files],
     Tail = <<"</table><div class='brk'></div><button id='closescrslist' class='ui-button ui-widget ui-corner-all'>Close</button></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div><div id='scrtxtbox'>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br></div>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
     <<Head/binary,(list_to_binary(integer_to_list(file_count(Mid))))/binary,Head2/binary,(list_to_binary([any_mng_file(File, Filter) || File <- Files]))/binary,(list_to_binary(Mid))/binary,Tail/binary>>.
@@ -516,22 +517,23 @@ file_count(<<>>) ->
 any_mng_file(File, _Filter) ->
     {Res, LnFile} = file:read_link(binary_to_list(?UPLOADS) ++ "/" ++ File),
     case file:read_file_info(binary_to_list(?UPLOADS) ++ "/" ++ File) of
-	{ok, {_,Fsize1,Ftype,_,_,_,_,_,_,_,_,_,_,_}} ->
+	{ok, {_,Fsize1,Ftype,_,_,_,Ftime1,_,_,_,_,_,_,_}} ->
 	    case Ftype of
 		directory -> 
 		    "";
 		_ ->
 		    Fsize = file_size(Fsize1),
+		    Ftime = file_time(Ftime1),
 		    case File of
 			"any.cmd" -> 
 			    ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
-			    tr1(File, Fsize, Res, "cmddiv", "lncmddiv", ShortLnf);
+			    tr1(File, Fsize, Ftime, Res, "cmddiv", "lncmddiv", ShortLnf);
 			"any.exe" -> 
 			    ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
-			    tr1(File, Fsize, Res, "exediv", "lnexediv", ShortLnf);
+			    tr1(File, Fsize, Ftime, Res, "exediv", "lnexediv", ShortLnf);
 			"any.msi" -> 
 			    ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
-			    tr1(File, Fsize, Res, "msidiv", "lnmsidiv", ShortLnf);
+			    tr1(File, Fsize, Ftime, Res, "msidiv", "lnmsidiv", ShortLnf);
 			_ -> 
 				<<>>
 		    end
@@ -539,11 +541,11 @@ any_mng_file(File, _Filter) ->
 	_ ->
 	    case File of
 		"any.cmd" ->
-		    tr1(File, "", Res, "cmddiv", "lncmddiv", "");
+		    tr1(File, "", "", Res, "cmddiv", "lncmddiv", "");
 		"any.exe" ->
-		    tr1(File, "", Res, "exediv", "lnexediv", "");
+		    tr1(File, "", "", Res, "exediv", "lnexediv", "");
 		"any.msi" ->
-		    tr1(File, "", Res, "msidiv", "lnmsidiv", "");
+		    tr1(File, "", "", Res, "msidiv", "lnmsidiv", "");
 		_ -> 
 		    <<>>			
 	    end
@@ -553,12 +555,13 @@ any_mng_file(File, _Filter) ->
 
 mng_file(File, Filter) ->
     case file:read_file_info(binary_to_list(?UPLOADS) ++ "/" ++ File) of
-	{ok, {_,Fsize1,Ftype,_,_,_,_,_,_,_,_,_,_,_}} ->
+	{ok, {_,Fsize1,Ftype,_,_,_,Ftime1,_,_,_,_,_,_,_}} ->
 	    case Ftype of
 		directory -> 
 		    "";
 		_ ->
 		    Fsize = file_size(Fsize1),
+		    Ftime = file_time(Ftime1),
 		    case File of
 			"any.cmd" -> 
 			    "";			
@@ -575,12 +578,12 @@ mng_file(File, Filter) ->
 			    FileInfo = mng_file_info(File),
 			    case Filter2 of
 				"" -> 
-				    tr(File, Fsize, 0, FileInfo);
+				    tr(File, Fsize, Ftime, 0, FileInfo);
 				_ ->
 				    FF = string:rstr(File, Filter2),
 				    FIF = string:rstr(FileInfo, Filter2),
 				    case (FF > 0) or (FIF > 0) of
-					true -> tr(File, Fsize, 0, FileInfo);
+					true -> tr(File, Fsize, Ftime, 0, FileInfo);
 					_ -> ""
 				    end
 			    end
@@ -595,7 +598,7 @@ mng_file(File, Filter) ->
 		"any.msi" ->
 		    "";			
 		_ -> 
-		    tr(File, "", 0, mng_file_info(File))	
+		    tr(File, "", "", 0, mng_file_info(File))	
 	    end
     end.
 
@@ -610,23 +613,26 @@ file_size(S, [_|[_|_] = L]) when S >= 1024 ->
 file_size(S, [M|_]) ->
     io_lib:format("~.2f ~s", [float(S), M]).    
 
+file_time(Ftime) ->
+    {{Year, Month, Day}, {Hour, Min, _Sec}} = Ftime,
+    io_lib:format("&nbsp;&nbsp;~p/~p/~p ~p~p&nbsp;&nbsp;",[Year, Month, Day, Hour, Min]).
 %%
 
-tr1(File, Fsize, Res, Fdiv, Ldiv, LnFile) ->
+tr1(File, Fsize, Ftime, Res, Fdiv, Ldiv, LnFile) ->
     case Res of
 	ok ->
-	    "<tr class='r'><td></td><td><div id='" ++ Fdiv ++"'>" ++ File ++ "</div></td><td align=right>"++Fsize++"</td><td><div id='" ++ Ldiv ++ "'>" ++ LnFile ++ "</div></td><td>"++mng_file_info(LnFile)++" </td></tr>";
+	    "<tr class='r'><td></td><td><div id='" ++ Fdiv ++"'>" ++ File ++ "</div></td><td align=right>"++Fsize++"</td><td>"++Ftime++"</td><td><div id='" ++ Ldiv ++ "'>" ++ LnFile ++ "</div></td><td>"++mng_file_info(LnFile)++" </td></tr>";
 	_ ->
-	    "<tr class='r'><td></td><td>"++File++"</td><td></td><td></td><td>"++mng_file_info(File)++" </td></tr>"
+	    "<tr class='r'><td></td><td>"++File++"</td><td>"++Ftime++"</td><td></td><td></td><td>"++mng_file_info(File)++" </td></tr>"
     end.
 
 %%
 
-tr(File, Fsize, 0, FileInfo) ->
-    "<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all' title='Delete File'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all' title='Rename File'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all' 'Link file to any(.cmd/.exe/.msi)>ln</button><button id='ebut' class='ui-button ui-widget ui-corner-all' title='Edit Script'>Edit</button><button id='fncbut' class='ui-button ui-widget ui-corner-all' title='Copy file name to clipboard'>Copy</button></td><td>"++File++"</td><td align=right>"++Fsize++"</td><td></td><td>"++FileInfo++"</td></tr>".
+tr(File, Fsize, Ftime, 0, FileInfo) ->
+    "<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all' title='Delete File'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all' title='Rename File'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all' 'Link file to any(.cmd/.exe/.msi)>ln</button><button id='ebut' class='ui-button ui-widget ui-corner-all' title='Edit Script'>Edit</button><button id='fncbut' class='ui-button ui-widget ui-corner-all' title='Copy file name to clipboard'>Copy</button></td><td>"++File++"</td><td align=right>"++Fsize++"</td><td>"++Ftime++"</td><td></td><td>"++FileInfo++"</td></tr>".
 
-tr(File, Fsize, 2) ->
-    "<tr class='r'><td><button id='dbutd' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbutd' class='ui-button ui-widget ui-corner-all'>Ren</button></td><td>"++File++"</td><td align=right>"++Fsize++"</td></tr>".
+tr(File, Fsize, Ftime, 2) ->
+    "<tr class='r'><td><button id='dbutd' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbutd' class='ui-button ui-widget ui-corner-all'>Ren</button></td><td>"++File++"</td><td align=right>"++Fsize++"</td><td>"++Ftime++"</td><td></td></tr>".
 
 %%
 
