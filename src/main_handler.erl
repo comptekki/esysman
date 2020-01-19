@@ -924,7 +924,7 @@ Port/binary,
 
     var obj = '';
 
-	$(document).on('click', '#dbut', function(){
+    $(document).on('click', '#dbut', function(){
         obj = $(this);
 
         $('#dialogtext2').html($(obj).parent().next('td').html());
@@ -945,6 +945,10 @@ Port/binary,
               }
 
               $(obj).closest('tr').remove();
+
+              scrcount = $('#mngscripts tr').filter(':visible').length-4;
+              $('#scrcount').html('[' + scrcount + ']-Items');
+
               send('0:delscrfile:' + $(obj).parent().next('td').html());
 
               $( this ).dialog( 'close' );
@@ -952,7 +956,7 @@ Port/binary,
           }]
         });
 
-	});
+    });
 
 	$(document).on('click', '#dbutd', function(){
           obj = $(this);
