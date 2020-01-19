@@ -475,7 +475,7 @@ list_dwnld_fls() ->
 
 mng_dfile(File) ->
     case file:read_file_info(binary_to_list(?DOWNLOADS) ++ "/" ++ File) of
-	{ok, {_,Fsize1,Ftype,_,_,_,Ftime1,_,_,_,_,_,_,_}} ->
+	{ok, {_,Fsize1,Ftype,_,_,Ftime1,_,_,_,_,_,_,_,_}} ->
 	    case Ftype of
 		directory -> 
 		    "";
@@ -517,7 +517,7 @@ file_count(<<>>) ->
 any_mng_file(File, _Filter) ->
     {Res, LnFile} = file:read_link(binary_to_list(?UPLOADS) ++ "/" ++ File),
     case file:read_file_info(binary_to_list(?UPLOADS) ++ "/" ++ File) of
-	{ok, {_,Fsize1,Ftype,_,_,_,Ftime1,_,_,_,_,_,_,_}} ->
+	{ok, {_,Fsize1,Ftype,_,_,Ftime1,_,_,_,_,_,_,_,_}} ->
 	    case Ftype of
 		directory -> 
 		    "";
@@ -555,7 +555,7 @@ any_mng_file(File, _Filter) ->
 
 mng_file(File, Filter) ->
     case file:read_file_info(binary_to_list(?UPLOADS) ++ "/" ++ File) of
-	{ok, {_,Fsize1,Ftype,_,_,_,Ftime1,_,_,_,_,_,_,_}} ->
+	{ok, {_,Fsize1,Ftype,_,_,Ftime1,_,_,_,_,_,_,_,_}} ->
 	    case Ftype of
 		directory -> 
 		    "";
@@ -615,7 +615,7 @@ file_size(S, [M|_]) ->
 
 file_time(Ftime) ->
     {{Year, Month, Day}, {Hour, Min, _Sec}} = Ftime,
-    io_lib:format("&nbsp;&nbsp;~p/~p/~p ~p~p&nbsp;&nbsp;",[Year, Month, Day, Hour, Min]).
+    io_lib:format("&nbsp;&nbsp;~w/~2..0w/~2..0w ~2..0w~2..0w&nbsp;&nbsp;",[Year, Month, Day, Hour, Min]).
 %%
 
 tr1(File, Fsize, Ftime, Res, Fdiv, Ldiv, LnFile) ->
