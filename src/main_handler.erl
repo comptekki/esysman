@@ -440,20 +440,20 @@ Port/binary,
                 if (m.data.indexOf('resetrefreshtimer') > -1) {
                     if (m.data.indexOf('cons1') > -1) {
                       refreshCons();
-                      refreshtime();
+                      refreshtimef();
 //                      $('#refreshtime').html('Refresh Time: ' + getnow());
                       cons1 = new Date();
                     } else if (m.data.indexOf('cons2') > -1) {
                       if ((cons2 - cons1) > refreshtime) {
                         refreshCons();
-                        refreshtime();                        
+                        refreshtimef();                        
 //                        $('#refreshtime').html('Refresh Time: ' + getnow());
                       }
                       cons2 = new Date();
                     } else if (m.data.indexOf('cons3') > -1) {
                       if (((cons3 - cons2) > refreshtime) && ((cons3 - cons1) > refreshtime)) {
                         refreshCons();
-                        refreshtime();
+                        refreshtimef();
 //                        $('#refreshtime').html('Refresh Time: ' + getnow());
                       }
                       cons3 = new Date();
@@ -461,7 +461,7 @@ Port/binary,
                     else if (m.data.indexOf('cons4') > -1) {
                       if (((cons4 - cons3) > refreshtime) && ((cons4 - cons2) > refreshtime) && ((cons4 - cons1) > refreshtime)) {
                         refreshCons();
-                        refreshtime();
+                        refreshtimef();
 //                        $('#refreshtime').html('Refresh Time: ' + getnow());
                       }
                       cons4 = new Date();
@@ -1047,7 +1047,7 @@ Port/binary,
     }
 	});
 
-
+    var scrfiltertxt = '';
    var notcmd = false;
 
 	$(document).on('click', '#ebut', function(){     
@@ -1072,7 +1072,12 @@ Port/binary,
         $('#editscr').hide();
         //$('#scrslist').show();
         showmngscrbox = false;
+
+        scrfiltertxt = $('#scrfilter').val();
+
         $('#mngscripts').click();
+        $('#scrslist').show();
+
       } else {
         alert('Script text and script description must not be blank!');
       }
@@ -1090,14 +1095,14 @@ Port/binary,
 
     var addscrf = false;
 
-	$(document).on('click', '#addscrf', function(){     
+    $(document).on('click', '#addscrf', function(){     
       $('#scripttext').val('');
       $('#scrdesc').val('')
       $('#scrslist').hide();
       $('#editscr').show();
       $('#scrname').html('000000temp.cmd');
       $('#scripttext').focus();
-	});
+    });
 
     $(document).on('click', '#closescrslist', function(){
       showmngscrbox = true;
@@ -1118,6 +1123,7 @@ Port/binary,
       var bitsStr = Math.round(fSize*100)/100 + ' ' + fSExt[i];
 
       $('#upprog').html('0% Uploaded.... of ' + bitsStr);
+      scrfiltertxt =  $('#scrfilter').val();
     });
 
     $(document).on('submit', '#mypost', function(evt){
@@ -1219,8 +1225,12 @@ function progress(e){
       $('#upprog').html(perc + '% Uploaded.... of ' + bitsStr);
       if(perc >= 100){
        // process completed  
+
+        $('#scrfilter').val(scrfiltertxt);
+
         showmngscrbox = false;
         $('#mngscripts').click();
+
       }
     }  
   }
@@ -1299,8 +1309,6 @@ function progress(e){
       }
     });
 
-    var scrfiltertxt = '';
-
     $(document).on('keyup', '#scrfilter',function(e) {
 
       if(((e.which > 45) && (e.which < 58)) || ((e.which > 64) && (e.which < 91))
@@ -1324,7 +1332,7 @@ function progress(e){
       }
     });
 
-    refreshtime();
+    refreshtimef();
 
 //    $('#refreshtime').html('Refresh Time: ' + getnow());
 
@@ -1499,6 +1507,7 @@ function progress(e){
 
               showmngscrbox = true;
               send('localhost@domain:list_ups_dir:' + scrfiltertxt);
+
           }
           else {
               $('#mngscrbox').hide();
@@ -2831,7 +2840,7 @@ refresh_cons([]) ->
 jsrefcons_rm([Rm|Rows]) ->
     <<"
 
-function refreshtime() {
+function refreshtimef() {
   jsnow = new Date();
   jsnow2 = new Date(jsnow.getTime() + ",(list_to_binary(integer_to_list(?REFRESHTIME)))/binary,");
 
@@ -2842,7 +2851,7 @@ function refreshtime() {
 }
 
 function refresh_cons_",Rm/binary,"(){
-  refreshtime();
+  refreshtimef();
 ",
 (jsrefcons_rows(Rows,Rm))/binary,
 "
