@@ -990,6 +990,11 @@ Port/binary,
             $('#lnmsidiv').html($(this).parent().next('td').html());
             send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.msi');
           }
+
+          scrfiltertxt = $('#scrfilter').val();
+          showmngscrbox = false;
+          $('#mngscripts').click();
+
 	});
 
 	$(document).on('click', '#rbut', function(){     
