@@ -997,6 +997,8 @@ Port/binary,
 
 	});
 
+//        var rbut=false;
+
 	$(document).on('click', '#rbut', function(){     
       var fnameo = $(this).parent().next('td').html();
 //      fname = fnameo.split('.');
@@ -1013,14 +1015,34 @@ Port/binary,
             ok = false;
             $(this).parent().next('td').html(fnamex);
             send('0:renscrfile:' + fnameo + '+' + fnamex);
-
-            scrfiltertxt = $('#scrfilter').val();
-            showmngscrbox = false;
-            $('#mngscripts').click();
-
+//            send('localhost@domain:list_ups_dir:' + scrfiltertxt);
           }
         }
     }
+//          rbut = true;
+
+          scrfiltertxt = $('#scrfilter').val();
+//          send('localhost@domain:list_ups_dir:' + scrfiltertxt);
+
+      showmngdwnldsbox = true;
+      $('#mngdwnlds').click();
+
+//alert('blah - ' + scrfiltertxt);
+         showmngscrbox = false;
+          $('#mngscripts').click();
+
+//alert('blah2 - '+scrfiltertxt);
+
+
+//          showmngscrbox = true;
+//          $('#mngscripts').click();
+//alert('blah2');
+//          showmngscrbox = false;
+//          $('#mngscripts').click();
+//alert('blah3');
+
+//          scrcount = $('#mngscripts tr').filter(':visible').length-4;
+//          $('#scrcount').html('[' + scrcount + ']-Items');
 	});
 
 	$(document).on('click', '#rbutd', function(){     
@@ -1104,6 +1126,7 @@ Port/binary,
     });
 
     $(document).on('click', '#closescrslist', function(){
+      scrfiltertxt = $('#scrfilter').val();
       showmngscrbox = true;
       $('#mngscripts').click();
     });
@@ -1322,11 +1345,10 @@ function progress(e){
 
     $(document).on('keyup', '#scrfilter',function(e) {
 
+      scrfiltertxt = $(this).val();
+
       if(((e.which > 45) && (e.which < 58)) || ((e.which > 64) && (e.which < 91))
          || (e.which == 8) || (e.which == 127)) {
-
-//        scrfiltertxt = this.value;
-//        send('localhost@domain:list_ups_dir:' + scrfiltertxt);
 
 // search table idea from https://www.w3schools.com/jquery/jquery_filters.asp
 
@@ -1334,11 +1356,18 @@ function progress(e){
         $('#mngscripts tr').slice(4).filter(function() {
           $(this).toggle($(this).find('td').slice(1).text().toLowerCase().indexOf(value) > -1)
         });
-
+//console.log(value);
         scrcount = $('#mngscripts tr').filter(':visible').length-4;
         $('#scrcount').html('[' + scrcount + ']-Items');
      }
       else {
+
+//        showmngscrbox = false;
+//        $('#mngscripts').click();
+
+//        scrcount = $('#mngscripts tr').filter(':visible').length-4;
+//        $('#scrcount').html('[' + scrcount + ']-Items');
+
         return false; 
       }
     });
@@ -1508,23 +1537,23 @@ function progress(e){
 
     $('#mngscripts').click(function(){
           if (!showmngscrbox) {
-              $('#mngscrbox').css('z-index', 2000);
-              $('#mngscrbox').show();
-              $('#mngscrbox').css('position', 'absolute');
-              $('#mngscrbox').css('z-index', parseInt($('.msgc').css('z-index')) + 2);
+            $('#mngscrbox').css('z-index', 2000);
+            $('#mngscrbox').show();
+            $('#mngscrbox').css('position', 'absolute');
+            $('#mngscrbox').css('z-index', parseInt($('.msgc').css('z-index')) + 2);
 
-              $('#scsrslist').css('width', '97.7%');
-              $('#scsrslist').css('height', '100%');
+            $('#scsrslist').css('width', '97.7%');
+            $('#scsrslist').css('height', '100%');
 
-              showmngscrbox = true;
-              send('localhost@domain:list_ups_dir:' + scrfiltertxt);
-
+            showmngscrbox = true;
+            send('localhost@domain:list_ups_dir:' + scrfiltertxt);
           }
           else {
-              $('#mngscrbox').hide();
-              showmngscrbox = false;
-              $('#mngscrbox').resizable('destroy');
-              $('#scrslist').resizable('destroy');
+            scrfiltertxt = $('#scrfilter').val();
+            $('#mngscrbox').hide();
+            showmngscrbox = false;
+            $('#mngscrbox').resizable('destroy');
+            $('#scrslist').resizable('destroy');
           }
 	});
 
