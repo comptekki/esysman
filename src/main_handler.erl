@@ -1013,16 +1013,10 @@ Port/binary,
             ok = false;
             $(this).parent().next('td').html(fnamex);
             send('0:renscrfile:' + fnameo + '+' + fnamex);
-//            showmngscrbox = false;
-//            $('#mngscripts').click();
 
-            var value = $('#scrfilter').val().toLowerCase();
-            $('#mngscripts tr').slice(4).filter(function() {
-              $(this).toggle($(this).find('td').slice(1).text().toLowerCase().indexOf(value) > -1)
-            });
-
-            scrcount = $('#mngscripts tr').filter(':visible').length-4;
-            $('#scrcount').html('[' + scrcount + ']-Items');
+            scrfiltertxt = $('#scrfilter').val();
+            showmngscrbox = false;
+            $('#mngscripts').click();
 
           }
         }
