@@ -1308,6 +1308,18 @@ function progress(e){
       }
     });
 
+    $(document).on('keyup', '#scripttext',function(e) {
+      if(e.which == 9 || (e.shiftKey && e.which == 9)) {
+         $('#scrdesc').focus();
+      }
+    });
+
+    $(document).on('keyup', '#scrdesc',function(e) {
+      if(e.which == 9 || (e.shiftKey && e.which == 9)) {
+         $('#scripttext').focus();
+      }
+    });
+
     $(document).on('keyup', '#scrfilter',function(e) {
 
       if(((e.which > 45) && (e.which < 58)) || ((e.which > 64) && (e.which < 91))
