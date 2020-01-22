@@ -1025,11 +1025,11 @@ Port/binary,
 //          send('localhost@domain:list_ups_dir:' + scrfiltertxt);
 
       showmngdwnldsbox = true;
-      $('#mngdwnlds').click();
+      $('#mngscripts').click();
 
-//alert('blah - ' + scrfiltertxt);
-         showmngscrbox = false;
-          $('#mngscripts').click();
+alert('blah - ' + scrfiltertxt);
+//         showmngscrbox = false;
+//          $('#mngscripts').click();
 
 //alert('blah2 - '+scrfiltertxt);
 
@@ -1037,9 +1037,9 @@ Port/binary,
 //          showmngscrbox = true;
 //          $('#mngscripts').click();
 //alert('blah2');
-//          showmngscrbox = false;
-//          $('#mngscripts').click();
-//alert('blah3');
+          showmngscrbox = false;
+          $('#mngscripts').click();
+alert('blah3');
 
 //          scrcount = $('#mngscripts tr').filter(':visible').length-4;
 //          $('#scrcount').html('[' + scrcount + ']-Items');
@@ -1345,10 +1345,16 @@ function progress(e){
 
     $(document).on('keyup', '#scrfilter',function(e) {
 
-      scrfiltertxt = $(this).val();
+
 
       if(((e.which > 45) && (e.which < 58)) || ((e.which > 64) && (e.which < 91))
          || (e.which == 8) || (e.which == 127)) {
+
+
+        scrfiltertxt = $(this).val();
+
+        showmngscrbox = false;
+        $('#mngscripts').click();
 
 // search table idea from https://www.w3schools.com/jquery/jquery_filters.asp
 
