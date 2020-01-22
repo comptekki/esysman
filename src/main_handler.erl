@@ -990,18 +990,11 @@ Port/binary,
             $('#lnmsidiv').html($(this).parent().next('td').html());
             send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.msi');
           }
-
-          scrfiltertxt = $('#scrfilter').val();
-          showmngscrbox = false;
-          $('#mngscripts').click();
-
 	});
-
-//        var rbut=false;
 
 	$(document).on('click', '#rbut', function(){     
       var fnameo = $(this).parent().next('td').html();
-//      fname = fnameo.split('.');
+
       var ok = true;
       while (ok) {
         var fnamex=prompt('Rename file',fnameo);
@@ -1015,39 +1008,14 @@ Port/binary,
             ok = false;
             $(this).parent().next('td').html(fnamex);
             send('0:renscrfile:' + fnameo + '+' + fnamex);
-//            send('localhost@domain:list_ups_dir:' + scrfiltertxt);
           }
         }
     }
-//          rbut = true;
 
-          scrfiltertxt = $('#scrfilter').val();
-//          send('localhost@domain:list_ups_dir:' + scrfiltertxt);
-
-      showmngdwnldsbox = true;
-      $('#mngscripts').click();
-
-alert('blah - ' + scrfiltertxt);
-//         showmngscrbox = false;
-//          $('#mngscripts').click();
-
-//alert('blah2 - '+scrfiltertxt);
-
-
-//          showmngscrbox = true;
-//          $('#mngscripts').click();
-//alert('blah2');
-          showmngscrbox = false;
-          $('#mngscripts').click();
-alert('blah3');
-
-//          scrcount = $('#mngscripts tr').filter(':visible').length-4;
-//          $('#scrcount').html('[' + scrcount + ']-Items');
 	});
 
 	$(document).on('click', '#rbutd', function(){     
       var fnameo = $(this).parent().next('td').html();
-//      fname = fnameo.split('.');
       var ok = true;
       while (ok) {
         var fnamex=prompt('Rename file',fnameo);
@@ -1126,7 +1094,8 @@ alert('blah3');
     });
 
     $(document).on('click', '#closescrslist', function(){
-      scrfiltertxt = $('#scrfilter').val();
+//      scrfiltertxt = $('#scrfilter').val();
+//      $('#scrfilter').val('');
       showmngscrbox = true;
       $('#mngscripts').click();
     });
@@ -1345,16 +1314,13 @@ function progress(e){
 
     $(document).on('keyup', '#scrfilter',function(e) {
 
-
-
       if(((e.which > 45) && (e.which < 58)) || ((e.which > 64) && (e.which < 91))
          || (e.which == 8) || (e.which == 127)) {
 
+//        scrfiltertxt = $(this).val();
 
-        scrfiltertxt = $(this).val();
-
-        showmngscrbox = false;
-        $('#mngscripts').click();
+//        showmngscrbox = false;
+//        $('#mngscripts').click();
 
 // search table idea from https://www.w3schools.com/jquery/jquery_filters.asp
 
@@ -1362,18 +1328,12 @@ function progress(e){
         $('#mngscripts tr').slice(4).filter(function() {
           $(this).toggle($(this).find('td').slice(1).text().toLowerCase().indexOf(value) > -1)
         });
-//console.log(value);
+
         scrcount = $('#mngscripts tr').filter(':visible').length-4;
         $('#scrcount').html('[' + scrcount + ']-Items');
      }
       else {
-
-//        showmngscrbox = false;
-//        $('#mngscripts').click();
-
-//        scrcount = $('#mngscripts tr').filter(':visible').length-4;
-//        $('#scrcount').html('[' + scrcount + ']-Items');
-
+//        scrfiltertxt = $(this).val();
         return false; 
       }
     });
@@ -1539,10 +1499,12 @@ function progress(e){
     interval_chk_dupes=setInterval(chk_dupe_users,60000);
 
 }//End else - has websockets
+
     var showmngscrbox = false
 
     $('#mngscripts').click(function(){
           if (!showmngscrbox) {
+//            $('scrfilter').val(scrfiltertxt);
             $('#mngscrbox').css('z-index', 2000);
             $('#mngscrbox').show();
             $('#mngscrbox').css('position', 'absolute');
@@ -1555,11 +1517,11 @@ function progress(e){
             send('localhost@domain:list_ups_dir:' + scrfiltertxt);
           }
           else {
-            scrfiltertxt = $('#scrfilter').val();
+//            scrfiltertxt = $('#scrfilter').val();
             $('#mngscrbox').hide();
             showmngscrbox = false;
             $('#mngscrbox').resizable('destroy');
-            $('#scrslist').resizable('destroy');
+//            $('#scrslist').resizable('destroy');
           }
 	});
 
