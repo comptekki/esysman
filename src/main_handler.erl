@@ -998,7 +998,7 @@ Port/binary,
 
 	});
 
-	$(document).on('click', '#rbut', function(){     
+    $(document).on('click', '#rbut', function(){     
       var fnameo = $(this).parent().next('td').html();
 
       var ok = true;
@@ -1014,13 +1014,20 @@ Port/binary,
             ok = false;
             $(this).parent().next('td').html(fnamex);
             send('0:renscrfile:' + fnameo + '+' + fnamex);
+
+            scrfiltertxt = $('#scrfilter').val();            
+            showmngscrbox = true;
+            $('#mngscripts').click();
+
+            $('#scrfilter').val(scrfiltertxt);
+            showmngscrbox = false;
+            $('#mngscripts').click();
           }
         }
-    }
+      }
+    });
 
-	});
-
-	$(document).on('click', '#rbutd', function(){     
+    $(document).on('click', '#rbutd', function(){     
       var fnameo = $(this).parent().next('td').html();
       var ok = true;
       while (ok) {
@@ -1039,10 +1046,10 @@ Port/binary,
             $('#mngdwnlds').click();
           }
         }
-    }
-	});
+      }
+    });
 
-    var scrfiltertxt = '';
+   var scrfiltertxt = '';
    var notcmd = false;
 
 	$(document).on('click', '#ebut', function(){     
@@ -1318,19 +1325,17 @@ function progress(e){
       }
     });
 
-    $(document).on('keyup', '#scrfilter', function(e) {
+    $(document).on('keypress', '#scrfilter', function(e) {
 
-      if(((e.which > 45) && (e.which < 58)) || ((e.which > 64) && (e.which < 91))
-         || (e.which == 8) || (e.which == 127)) {
-
-//        scrfiltertxt = $(this).val();
-
-//        showmngscrbox = false;
-//        $('#mngscripts').click();
+      if(((e.which > 47) && (e.which < 58)) || ((e.which > 64) && (e.which < 91)) || ((e.which > 96) && (e.which < 123))
+         || (e.which == 45) || (e.which == 127)) {
 
 // search table idea from https://www.w3schools.com/jquery/jquery_filters.asp
 
-        var value = $(this).val().toLowerCase();
+        var value = $(this).val().toLowerCase() + String.fromCharCode(e.which);
+
+        scrfiltertxt = value;
+
         $('#mngscripts tr').slice(4).filter(function() {
           $(this).toggle($(this).find('td').slice(1).text().toLowerCase().indexOf(value) > -1)
         });
@@ -1339,7 +1344,28 @@ function progress(e){
         $('#scrcount').html('[' + scrcount + ']-Items');
      }
       else {
-//        scrfiltertxt = $(this).val();
+        return false; 
+      }
+    }).on('keyup', '#scrfilter', function(e) {
+      if (e.which == 8) {
+        var value = $(this).val().toLowerCase();
+
+        scrfiltertxt = value;
+
+        if (value.length > 0) {
+          $('#mngscripts tr').slice(4).filter(function() {
+            $(this).toggle($(this).find('td').slice(1).text().toLowerCase().indexOf(value) > -1)
+          });
+          scrcount = $('#mngscripts tr').filter(':visible').length-4;
+          $('#scrcount').html('[' + scrcount + ']-Items');
+        } else {
+          showmngscrbox = true;
+          $('#mngscripts').click();
+          showmngscrbox = false;
+          $('#mngscripts').click();
+        }
+     }
+      else {
         return false; 
       }
     });
