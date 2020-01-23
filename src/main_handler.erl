@@ -990,6 +990,12 @@ Port/binary,
             $('#lnmsidiv').html($(this).parent().next('td').html());
             send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.msi');
           }
+
+          showmngscrbox = true;
+          $('#mngscripts').click();
+          showmngscrbox = false;
+          $('#mngscripts').click();
+
 	});
 
 	$(document).on('click', '#rbut', function(){     
@@ -1062,7 +1068,7 @@ Port/binary,
         //$('#scrslist').show();
         showmngscrbox = false;
 
-        scrfiltertxt = $('#scrfilter').val();
+//        scrfiltertxt = $('#scrfilter').val();
 
         $('#mngscripts').click();
         $('#scrslist').show();
@@ -1114,7 +1120,7 @@ Port/binary,
       var bitsStr = Math.round(fSize*100)/100 + ' ' + fSExt[i];
 
       $('#upprog').html('0% Uploaded.... of ' + bitsStr);
-      scrfiltertxt =  $('#scrfilter').val();
+//      scrfiltertxt =  $('#scrfilter').val();
     });
 
     $(document).on('submit', '#mypost', function(evt){
@@ -1217,7 +1223,7 @@ function progress(e){
       if(perc >= 100){
        // process completed  
 
-        $('#scrfilter').val(scrfiltertxt);
+//        $('#scrfilter').val(scrfiltertxt);
 
         showmngscrbox = false;
         $('#mngscripts').click();
@@ -1312,7 +1318,7 @@ function progress(e){
       }
     });
 
-    $(document).on('keyup', '#scrfilter',function(e) {
+    $(document).on('keyup', '#scrfilter', function(e) {
 
       if(((e.which > 45) && (e.which < 58)) || ((e.which > 64) && (e.which < 91))
          || (e.which == 8) || (e.which == 127)) {
