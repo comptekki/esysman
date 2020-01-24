@@ -1015,11 +1015,9 @@ Port/binary,
             $(this).parent().next('td').html(fnamex);
             send('0:renscrfile:' + fnameo + '+' + fnamex);
 
-            scrfiltertxt = $('#scrfilter').val();            
             showmngscrbox = true;
             $('#mngscripts').click();
 
-            $('#scrfilter').val(scrfiltertxt);
             showmngscrbox = false;
             $('#mngscripts').click();
           }
@@ -1332,7 +1330,7 @@ function progress(e){
 
 // search table idea from https://www.w3schools.com/jquery/jquery_filters.asp
 
-        var value = $(this).val().toLowerCase() + String.fromCharCode(e.which);
+        var value = $(this).val().toLowerCase() + String.fromCharCode(e.which).toLowerCase();
 
         scrfiltertxt = value;
 
@@ -1364,7 +1362,7 @@ function progress(e){
           showmngscrbox = false;
           $('#mngscripts').click();
         }
-     }
+      }
       else {
         return false; 
       }
@@ -1536,7 +1534,7 @@ function progress(e){
 
     $('#mngscripts').click(function(){
           if (!showmngscrbox) {
-//            $('scrfilter').val(scrfiltertxt);
+            $('scrfilter').val(scrfiltertxt);
             $('#mngscrbox').css('z-index', 2000);
             $('#mngscrbox').show();
             $('#mngscrbox').css('position', 'absolute');
@@ -1549,7 +1547,7 @@ function progress(e){
             send('localhost@domain:list_ups_dir:' + scrfiltertxt);
           }
           else {
-//            scrfiltertxt = $('#scrfilter').val();
+            scrfiltertxt = $('#scrfilter').val();
             $('#mngscrbox').hide();
             showmngscrbox = false;
             $('#mngscrbox').resizable('destroy');
