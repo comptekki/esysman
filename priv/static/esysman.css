@@ -407,7 +407,7 @@ a.clr {
 	-webkit-border-radius:5px;
 	color:yellow;
 	background-color:#003300;
-	overflow:scroll;
+	overflow-y:scroll;
 	display:none;
 }
 

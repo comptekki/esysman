@@ -494,7 +494,7 @@ list_up_fls(Filter) ->
     {ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
     Head= <<"<script>$('#scrfilter').focus(); var tmp=$('#scrfilter').val(); $('#scrfilter').val(''); $('#scrfilter').val(tmp);</script><div id='scrslist'><button id='closescrslist' class='ui-button ui-widget ui-corner-all'>Close</button><button id='addscrf' class='ui-button ui-widget ui-corner-all'>Add Script</button> <div id='scrcount' class='fr'>[">>,
-    Head2= <<"]-Items</div> <div class='brk'></div><div id='upprog'></div><form id='mypost' method='post' enctype='multipart/form-data' action='/upload'><br><input id='fupload' type='submit' value='Upload'/><input id='selfile' type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form>Filter -> <input id='scrfilter' type='text' class='ui-widget' value='", (Filter)/binary, "' /><br><br><table id='mngscripts'><tr><th class='comw'>Commands</th><th>File Name</th><th>File Size</th><th>File Date</th><th>Linked File Name</th><th>Description</th></tr>">>,
+    Head2= <<"]-Items</div> <div class='brk'></div><div id='upprog'></div><form id='mypost' method='post' enctype='multipart/form-data' action='/upload'><br><input id='fupload' type='submit' value='Upload'/><input id='selfile' type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form>Filter -> <input id='scrfilter' type='text' class='ui-widget' maxlength=20 value='", (Filter)/binary, "' /><br><br><table id='mngscripts'><tr><th class='comw'>Commands</th><th>File Name</th><th>File Size</th><th>File Date</th><th>Linked File Name</th><th>Description</th></tr>">>,
     Mid = [mng_file(File, Filter) || File <- Files],
     Tail = <<"</table><div class='brk'></div><button id='closescrslist' class='ui-button ui-widget ui-corner-all'>Close</button></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div><div id='scrtxtbox'>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br></div>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,
     <<Head/binary,(list_to_binary(integer_to_list(file_count(Mid))))/binary,Head2/binary,(list_to_binary([any_mng_file(File, Filter) || File <- Files]))/binary,(list_to_binary(Mid))/binary,Tail/binary>>.
@@ -553,7 +553,7 @@ any_mng_file(File, _Filter) ->
 
 %%
 
-mng_file(File, Filter) ->
+mng_file(File, _Filter) ->
     case file:read_file_info(binary_to_list(?UPLOADS) ++ "/" ++ File) of
 	{ok, {_,Fsize1,Ftype,_,_,Ftime1,_,_,_,_,_,_,_,_}} ->
 	    case Ftype of
@@ -570,11 +570,11 @@ mng_file(File, Filter) ->
 			"any.msi" -> 
 			    "";
 			_ -> 
-			    Filter2 =
-				case Filter of
-				    <<>> -> "";
-				    _ -> binary:bin_to_list(Filter)
-				end,
+			    Filter2 = "",
+			%	case Filter of
+			%	    <<>> -> "";
+			%	    _ -> binary:bin_to_list(Filter)
+			%	end,
 			    FileInfo = mng_file_info(File),
 			    case Filter2 of
 				"" -> 
