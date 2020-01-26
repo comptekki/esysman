@@ -1327,6 +1327,11 @@ function progress(e){
           $(this).toggle($(this).find('td').slice(1).text().toLowerCase().indexOf(value) > -1)
         });
 
+        $('#mngscripts tr').slice(4).filter(function() {
+            if($(this).find('td').slice(1).text().indexOf('-temp.cmd') > -1)
+              $(this).show()
+        });
+
         scrcount = $('#mngscripts tr').filter(':visible').length-4;
         $('#scrcount').html('[' + scrcount + ']-Items');
      }
@@ -1352,6 +1357,10 @@ function progress(e){
           showmngscrbox = false;
           $('#mngscripts').click();
         }
+        $('#mngscripts tr').slice(4).filter(function() {
+          if($(this).find('td').slice(1).text().indexOf('-temp.cmd') > -1)
+            $(this).show()
+        });
       }
       else {
         return false; 
