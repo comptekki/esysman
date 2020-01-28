@@ -1078,14 +1078,14 @@ Port/binary,
       }
 	});
 
-	$(document).on('click', '#fncbut', function(){     
+    $(document).on('click', '#fncbut', function(){     
       var $temp = $('<input>');
       $('body').append($temp);
       $temp.val($(this).parent().next('td').html()).select();
       document.execCommand('copy');
       $temp.remove();
       $('#fncp').finish().show().delay(2000).fadeOut('slow');
-	});
+    });
 
 
     var addscrf = false;
@@ -1492,6 +1492,16 @@ function progress(e){
       }
     });
 
+    $('.wk').click(function(e) {
+      var $temp = $('<input>');
+      $('body').append($temp);
+      $temp.val($(this).html()).select();
+      document.execCommand('copy');
+      $temp.remove();
+      $('#hncp').finish().show().delay(2000).fadeOut('slow');
+    });
+
+
 ",
 (jsAll(?ROOMS,<<"ping">>))/binary,
 (jsAllConfirm(?ROOMS,<<"reboot">>))/binary,
@@ -1739,6 +1749,7 @@ function progress(e){
 <button id='mngtimers' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Timers panel'>Manage Timers</button>
 <span id=refreshtime></span>
 <span id='fncp' style='display:none'>File name copied to Clipboard!</span>
+<span id='hncp' style='display:none'>Host name copied to Clipboard!</span>
 <div id='mngscrbox' class='ui-widget-content' title='Click to drag window'></div>
 <div id='mngdwnldsbox' class='ui-widget-content' title='Click to drag window'></div>
 <div id='mngtimersbox' class='ui-widget-content' title='Click to drag window'>
