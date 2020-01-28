@@ -366,21 +366,22 @@ a.clr {
 }
 
 #mngscrbox {
-	position:absolute;
-	left:400px;
-	top:200px;
-	width:1400px;
-	min-width:950px;
-	height:600px;
-	min-height: 500px;
-	padding:10px 10px 10px 10px;
-	border:6px solid #888;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	color:yellow;
-	background-color:#003300; 
-	display:none;
-	overflow:hidden;
+    position:absolute;
+    left:400px;
+    top:200px;
+    width:1400px;
+    min-width:950px;
+    height:600px;
+    min-height: 500px;
+    padding:10px 10px 10px 10px;
+    border:6px solid #888;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    color:yellow;
+    background-color:#003300; 
+    display:none;
+    overflow:hidden;
+    z-index:2000;
 }
 
 #scrslist {
@@ -396,35 +397,39 @@ a.clr {
 }
 
 #mngdwnldsbox {
-	position:absolute;
-	left:400px;
-	top:200px;
-	width:850px;
-	height:600px;
-	padding:10px 10px 10px 10px;
-	border:6px solid #888;
-	-moz-border-radius:5x;
-	-webkit-border-radius:5px;
-	color:yellow;
-	background-color:#003300;
-	overflow-y:scroll;
-	display:none;
+    position:absolute;
+    left:400px;
+    top:200px;
+    width:850px;
+    height:600px;
+    padding:10px 10px 10px 10px;
+    border:6px solid #888;
+    -moz-border-radius:5x;
+    -webkit-border-radius:5px;
+    color:yellow;
+    background-color:#003300;
+    overflow-y:scroll;
+    display:none;
+    overflow:hidden;
+    z-index:2001;
 }
 
 #mngtimersbox {
-	position:absolute;
-	left:400px;
-	top:200px;
-	width:950px;
-	height:600px;
-	padding:10px 10px 10px 10px;
-	border:6px solid #888;
-	-moz-border-radius:5x;
-	-webkit-border-radius:5px;
-	color:yellow;
-	background-color:#003300;
-	overflow-y:scroll;
-	display:none;
+    position:absolute;
+    left:400px;
+    top:200px;
+    width:950px;
+    height:600px;
+    padding:10px 10px 10px 10px;
+    border:6px solid #888;
+    -moz-border-radius:5x;
+    -webkit-border-radius:5px;
+    color:yellow;
+    background-color:#003300;
+    overflow-y:scroll;
+    display:none;
+    overflow:hidden;
+    z-index:2002;
 }
 
 table, th, td {

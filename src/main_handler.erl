@@ -1537,57 +1537,55 @@ function progress(e){
 }//End else - has websockets
 
     var showmngscrbox = false
-
-    $('#mngscripts').click(function(){
-          if (!showmngscrbox) {
-            $('scrfilter').val(scrfiltertxt);
-
-            $('#mngscrbox').css('z-index', 2000);
-            $('#mngscrbox').show();
-            $('#mngscrbox').css('position', 'absolute');
-            $('#mngscrbox').css('z-index', parseInt($('.msgc').css('z-index')) + 2);
-
-            $('#scsrslist').css('width', '97.7%');
-            $('#scsrslist').css('height', '100%');
-
-            showmngscrbox = true;
-            send('localhost@domain:list_ups_dir:'+scrfiltertxt);
-          }
-          else {
-            scrfiltertxt = $('#scrfilter').val();
-            $('#mngscrbox').hide();
-            showmngscrbox = false;
-            $('#mngscrbox').resizable('destroy');
-          }
-	});
-
     var showmngdwnldsbox = false
     var showmngtimersbox = false
 
-    $('#mngdwnlds').click(function(){
-          if (!showmngdwnldsbox) {
-              $('#mngdwnldsbox').css('z-index', 2000);
-              $('#mngdwnldsbox').show();
-              $('#mngdwnldsbox').css('position', 'absolute');
-              $('#mngdwnldsbox').css('z-index', parseInt($('.msgc').css('z-index')) + 2);
-              showmngdwnldsbox = true;
-              send('localhost@domain:list_dwnlds_dir:0');
-          }
-          else {
-              $('#mngdwnldsbox').hide();
-              showmngdwnldsbox = false;
-          }
-	});
+    $('#mngscripts').click(function(){
+      if (!showmngscrbox) {
+        $('scrfilter').val(scrfiltertxt);
 
+        $('#mngscrbox').css('z-index', parseInt($('#mngdwnldsbox').css('z-index')) + parseInt($('#mngtimersbox').css('z-index')));
+        $('#mngscrbox').show();
+        $('#mngscrbox').css('position', 'absolute');
+
+        $('#scsrslist').css('width', '97.7%');
+        $('#scsrslist').css('height', '100%');
+
+        showmngscrbox = true;
+
+        send('localhost@domain:list_ups_dir:'+scrfiltertxt);
+      }
+      else {
+        scrfiltertxt = $('#scrfilter').val();
+        $('#mngscrbox').hide();
+        showmngscrbox = false;
+        $('#mngscrbox').resizable('destroy');
+      }
+    });
+
+    $('#mngdwnlds').click(function(){
+      if (!showmngdwnldsbox) {
+        $('#mngdwnldsbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngtimersbox').css('z-index')));
+        $('#mngdwnldsbox').show();
+        $('#mngdwnldsbox').css('position', 'absolute');
+
+        showmngdwnldsbox = true;
+
+        send('localhost@domain:list_dwnlds_dir:0');
+      }
+      else {
+        $('#mngdwnldsbox').hide();
+        showmngdwnldsbox = false;
+      }
+    });
 
     $('#mngtimers').click(function(){
       if (!showmngtimersbox) {
-        $('#mngtimersbox').css('z-index', 2000);
+        $('#mngtimersbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngdwnldsbox').css('z-index')));
         $('#mngtimersbox').show();
         $('#mngtimersbox').css('position', 'absolute');
-        $('#mngtimersbox').css('z-index', parseInt($('.msgc').css('z-index')) + 2);
+
         showmngtimersbox = true;
-//        send('localhost@domain:list_dwnlds_dir:0');
       }
       else {
         $('#mngtimersbox').hide();
@@ -1643,32 +1641,44 @@ function progress(e){
     });
 
     $('#mngscrbox').mouseup(function(evt) {
-  //    if (ctlKey == true){
-        $('#mngscrbox').draggable({disabled:true});
-    //  }
+      $('#mngscrbox').draggable({disabled:true});
     }).mousedown(function(evt) {
-      //if (ctlKey == true){
-        $('#mngscrbox').draggable({disabled:false});
-     // }
+      $('#mngscrbox').draggable({disabled:false});
     });
 
-/*
-    var ctlKey = false;
-
-    $(window).keydown(function(evt) {
-        if (evt.which == 17) { // ctrl
-          ctlKey = true;
-        }
-    }).keyup(function(evt) {
-        if (evt.which == 17) { // ctrl
-          ctlKey = false;
-          $('#mngscrbox').draggable({disabled:true});
-        }
+    $('#mngdwnldsbox').mouseup(function(evt) {
+      $('#mngdwnldsbox').draggable({disabled:true});
+    }).mousedown(function(evt) {
+      $('#mngdwnldsbox').draggable({disabled:false});
     });
-*/
+
+    $('#mngtimersbox').mouseup(function(evt) {
+      $('#mngtimersbox').draggable({disabled:true});
+    }).mousedown(function(evt) {
+      $('#mngtimersbox').draggable({disabled:false});
+    });
 
     $('#mngscrbox').draggable({disabled:false});
     $('#mngscrbox').draggable({disabled:true});
+
+    $('#mngdwnldsbox').draggable({disabled:false});
+    $('#mngdwnldsbox').draggable({disabled:true});
+
+    $('#mngtimersbox').draggable({disabled:false});
+    $('#mngtimersbox').draggable({disabled:true});
+
+    $('#mngscrbox').click(function(evt) {
+      $('#mngscrbox').css('z-index', parseInt($('#mngdwnldsbox').css('z-index')) + parseInt($('#mngtimersbox').css('z-index')));
+    });
+
+    $('#mngdwnldsbox').click(function(evt) {
+      $('#mngdwnldsbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngtimersbox').css('z-index')));
+    });
+
+    $('#mngtimersbox').click(function(evt) {
+      $('#mngtimersbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngdwnldsbox').css('z-index')));
+    });
+
 });
 
 </script>
@@ -1730,8 +1740,8 @@ function progress(e){
 <span id=refreshtime></span>
 <span id='fncp' style='display:none'>File name copied to Clipboard!</span>
 <div id='mngscrbox' class='ui-widget-content' title='Click to drag window'></div>
-<div id='mngdwnldsbox' class='ui-widget-content'></div>
-<div id='mngtimersbox' class='ui-widget-content'>
+<div id='mngdwnldsbox' class='ui-widget-content' title='Click to drag window'></div>
+<div id='mngtimersbox' class='ui-widget-content' title='Click to drag window'>
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br>
 <table>
 <tr><th>Date/Time</th><th>System</th><th>Description</th></tr>
