@@ -571,9 +571,9 @@ Port/binary,
 			  message(sepcol,boxCom[0] + ': ' + 'copy');
 			  break;
             case 'list_dwnlds_dir':
-		        $('#mngdwnldsbox').html(boxCom[2]);
-			    message(sepcol,boxCom[0] + ': ' + 'list_dwnlds_dir');
-                break;
+              $('#mngdwnldsbox').html(boxCom[2]);
+//              message(sepcol,boxCom[0] + ': ' + 'list_dwnlds_dir');
+              break;
             case 'list_ups_dir':
 	      $('#mngscrbox').html(boxCom[2]);
               $('#mngscrbox').resizable({alsoResize: '#scrslist'});
@@ -587,7 +587,7 @@ Port/binary,
               scrcount = $('#mngscripts tr').filter(':visible').length-4;
               $('#scrcount').html('[' + scrcount + ']-Items');
 
-	      message(sepcol,boxCom[0] + ': ' + 'list_ups_dir');
+//	      message(sepcol,boxCom[0] + ': ' + 'list_ups_dir');
               break;
             case 'editscrfile':
               var fname = $('#scrname').html().split('.');
@@ -1104,6 +1104,10 @@ Port/binary,
       $('#mngscripts').click();
     });
 
+    $(document).on('click', '#addtimer', function(){
+     $('#'+$('#tsystem1').val()).click()
+    });
+
     $(document).on('change', '#selfile', function(evt){
       max = $(this)[0].files[0].size
 
@@ -1256,6 +1260,11 @@ function progress(e){
     $(document).on('click', '#closedwnldslist', function(){
       showmngdwnldsbox = true;
       $('#mngdwnlds').click();
+    });
+
+    $(document).on('click', '#closemngtimersbox', function(){
+      showmngtimersbox = true;
+      $('#mngtimers').click();
     });
 
     $(document).on('click', '#lockscr', function(evt){
@@ -1553,6 +1562,7 @@ function progress(e){
 	});
 
     var showmngdwnldsbox = false
+    var showmngtimersbox = false
 
     $('#mngdwnlds').click(function(){
           if (!showmngdwnldsbox) {
@@ -1568,6 +1578,22 @@ function progress(e){
               showmngdwnldsbox = false;
           }
 	});
+
+
+    $('#mngtimers').click(function(){
+      if (!showmngtimersbox) {
+        $('#mngtimersbox').css('z-index', 2000);
+        $('#mngtimersbox').show();
+        $('#mngtimersbox').css('position', 'absolute');
+        $('#mngtimersbox').css('z-index', parseInt($('.msgc').css('z-index')) + 2);
+        showmngtimersbox = true;
+//        send('localhost@domain:list_dwnlds_dir:0');
+      }
+      else {
+        $('#mngtimersbox').hide();
+        showmngtimersbox = false;
+      }
+    });
 
 	$('#smbig').click(function(){
           if ($('.msgcsm').height() < 1024) {
@@ -1700,10 +1726,19 @@ function progress(e){
 <button id='lockscr' class='ui-button ui-widget ui-corner-all' title='Lock Screen'>Lock</button>
 <button id='mngscripts' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Scripts and Binaries panel'>Manage Scripts</button>
 <button id='mngdwnlds' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Downloads panel'>Manage Downloads</button>
+<button id='mngtimers' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Timers panel'>Manage Timers</button>
 <span id=refreshtime></span>
 <span id='fncp' style='display:none'>File name copied to Clipboard!</span>
 <div id='mngscrbox' class='ui-widget-content' title='Click to drag window'></div>
 <div id='mngdwnldsbox' class='ui-widget-content'></div>
+<div id='mngtimersbox' class='ui-widget-content'>
+<button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br>
+<table>
+<tr><th>Date/Time</th><th>System</th><th>Description</th></tr>
+<tr><td><input></td><td><input id='tsystem1'></td><td><input></td><td><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button></td></tr>
+</table><br>
+<button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
+</div>
 
 </div> 
 

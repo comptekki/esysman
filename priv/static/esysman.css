@@ -411,6 +411,22 @@ a.clr {
 	display:none;
 }
 
+#mngtimersbox {
+	position:absolute;
+	left:400px;
+	top:200px;
+	width:950px;
+	height:600px;
+	padding:10px 10px 10px 10px;
+	border:6px solid #888;
+	-moz-border-radius:5x;
+	-webkit-border-radius:5px;
+	color:yellow;
+	background-color:#003300;
+	overflow-y:scroll;
+	display:none;
+}
+
 table, th, td {
 	border:1px solid #888;
 }
