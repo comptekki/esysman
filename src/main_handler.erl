@@ -1105,7 +1105,15 @@ Port/binary,
     });
 
     $(document).on('click', '#addtimer', function(){
-      $('#com_'+$('#tsystem1').val()).click()
+//      $('#com_'+$('#tsystem1').val()).click()
+      $('#timers td:nth-child(1)').html('test');
+      $('#timers td:nth-child(2)').html('test2');
+      $('#timers td:nth-child(3)').html('test3');
+      $('#timers td:nth-child(4)').html('<button id=addtimer class=\"ui-button ui-widget ui-corner-all\">Del Timer</button>');
+
+      $('#timers').append('<tr><td><input></td><td><input id=tsystem1></td><td><input></td><td><button id=addtimer class=\"ui-button ui-widget ui-corner-all\">Add Timer</button></td></tr>');
+
+
     });
 
     $(document).on('change', '#selfile', function(evt){
@@ -1756,7 +1764,7 @@ function progress(e){
 <div id='mngdwnldsbox' class='ui-widget-content' title='Click to drag window'></div>
 <div id='mngtimersbox' class='ui-widget-content' title='Click to drag window'>
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br>
-<table>
+<table id='timers'>
 <tr><th>Date/Time</th><th>System</th><th>Description</th></tr>
 <tr><td><input></td><td><input id='tsystem1'></td><td><input></td><td><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button></td></tr>
 </table><br>
