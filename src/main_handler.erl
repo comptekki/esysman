@@ -321,6 +321,8 @@ Host/binary,
 Port/binary,
 "';
 
+  var rtime = ",(list_to_binary(integer_to_list(?REFRESHTIME)))/binary,";
+
   var rall=false;
   var socket = 0;
   var ws_str = '';
@@ -376,7 +378,6 @@ Port/binary,
     var cons2 = 0;
     var cons3 = 0;
     var cons4 = 0;
-    var refreshtime = ",(list_to_binary(integer_to_list(?REFRESHTIME)))/binary,";
 
     socket.onmessage = function(m){
 //	console.log('onmessage called');
@@ -443,20 +444,20 @@ Port/binary,
                       refreshtimef();
                       cons1 = new Date();
                     } else if (m.data.indexOf('cons2') > -1) {
-                      if ((cons2 - cons1) > refreshtime) {
+                      if ((cons2 - cons1) > rtime) {
                         refreshCons();
                         refreshtimef();                        
                       }
                       cons2 = new Date();
                     } else if (m.data.indexOf('cons3') > -1) {
-                      if (((cons3 - cons2) > refreshtime) && ((cons3 - cons1) > refreshtime)) {
+                      if (((cons3 - cons2) > rtime) && ((cons3 - cons1) > rtime)) {
                         refreshCons();
                         refreshtimef();
                       }
                       cons3 = new Date();
                     }
                     else if (m.data.indexOf('cons4') > -1) {
-                      if (((cons4 - cons3) > refreshtime) && ((cons4 - cons2) > refreshtime) && ((cons4 - cons1) > refreshtime)) {
+                      if (((cons4 - cons3) > rtime) && ((cons4 - cons2) > rtime) && ((cons4 - cons1) > rtime)) {
                         refreshCons();
                         refreshtimef();
                       }
@@ -1110,6 +1111,11 @@ Port/binary,
       var td2 = $('#tsystem').html();
       var td3 = $('#tinfo').val();
 
+      if (td1.length == 0 || td2.length == 0 || td3.length == 0 ) {
+        $('#terr').finish().show().delay(2000).fadeOut('slow');
+        return false
+      }
+
       $('#timertd1').html('<input id=ttime>');
       $('#timertd2').html('<span id=tsystem></span>');
       $('#timertd3').html('<input id=tinfo>');
@@ -1553,7 +1559,8 @@ function progress(e){
 (rms_keys(Get_rms,Get_rms))/binary,
 "
 
-    interval_chk_dupes=setInterval(chk_dupe_users,60000);
+  interval_chk_dupes=setInterval(chk_dupe_users,rtime);
+  interval_com_timers=setInterval(chk_timers,rtime);
 
 }//End else - has websockets
 
@@ -1701,6 +1708,15 @@ function progress(e){
       $('#mngtimersbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngdwnldsbox').css('z-index')));
     });
 
+  function chk_timers() {
+    $('#timers tbody tr').each(function(i) {
+      var value = $(this).find('td:first').text();
+      if (value.length > 0) {
+        console.log(value)
+      }
+    });
+  }
+
 });
 
 </script>
@@ -1765,7 +1781,9 @@ function progress(e){
 <div id='mngscrbox' class='ui-widget-content' title='Click to drag window'></div>
 <div id='mngdwnldsbox' class='ui-widget-content' title='Click to drag window'></div>
 <div id='mngtimersbox' class='ui-widget-content' title='Click to drag window'>
-<button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br>
+<button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
+<span id='terr' style='float:right;display:none'>All fields must be used to add a timer!</span>
+<br><br>
 <table id='timers'>
 <tr><th>Date/Time</th><th>System</th><th>Description</th></tr>
 <tr><td id=timertd1><input id=ttime></td><td id=timertd2><span id=tsystem></span></td><td id=timertd3><input id=tinfo></td><td id=timertd4><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button></td></tr>
