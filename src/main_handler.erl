@@ -1105,15 +1105,21 @@ Port/binary,
     });
 
     $(document).on('click', '#addtimer', function(){
-//      $('#com_'+$('#tsystem1').val()).click()
-      $('#timers td:nth-child(1)').html('test');
-      $('#timers td:nth-child(2)').html('test2');
-      $('#timers td:nth-child(3)').html('test3');
-      $('#timers td:nth-child(4)').html('<button id=addtimer class=\"ui-button ui-widget ui-corner-all\">Del Timer</button>');
 
-      $('#timers').append('<tr><td><input></td><td><input id=tsystem1></td><td><input></td><td><button id=addtimer class=\"ui-button ui-widget ui-corner-all\">Add Timer</button></td></tr>');
+      var td1 = $('#ttime').val();
+      var td2 = $('#tsystem').html();
+      var td3 = $('#tinfo').val();
 
+      $('#timertd1').html('<input id=ttime>');
+      $('#timertd2').html('<span id=tsystem></span>');
+      $('#timertd3').html('<input id=tinfo>');
+      $('#timertd4').html('<button id=addtimer class=\"ui-button ui-widget ui-corner-all\">Add Timer</button>');
 
+      $('#timers').append('<tr><td id=timertd1> ' + td1 + ' </td> <td id=timertd2>' + td2 + ' </td><td id=timertd3> ' + td3 + ' </td><td id=timertd4><button id=deltimer class=\"ui-button ui-widget ui-corner-all\" onclick=$(this).closest(\"tr\").remove()>Del Timer</button></td></tr>');
+
+      $('#ttime').focus();
+
+//      $('#com_'+$('#tsystem').html()).click()
     });
 
     $(document).on('change', '#selfile', function(evt){
@@ -1501,13 +1507,8 @@ function progress(e){
     });
 
     $('.wk').click(function(e) {
-//      var $temp = $('<input>');
-//      $('body').append($temp);
       var tv=$(this).html();
-//      $temp.val(tv.slice(5,tv.indexOf('.'))).select();
-//      document.execCommand('copy');
-//      $temp.remove();
-      $('#tsystem1').val(tv.slice(5,tv.indexOf('.')));
+      $('#tsystem').html(tv.slice(5,tv.indexOf('.')));
       $('#hncp').finish().show().delay(2000).fadeOut('slow');
     });
 
@@ -1606,6 +1607,7 @@ function progress(e){
         $('#mngtimersbox').css('position', 'absolute');
 
         showmngtimersbox = true;
+        $('#ttime').focus();
       }
       else {
         $('#mngtimersbox').hide();
@@ -1766,7 +1768,7 @@ function progress(e){
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br>
 <table id='timers'>
 <tr><th>Date/Time</th><th>System</th><th>Description</th></tr>
-<tr><td><input></td><td><input id='tsystem1'></td><td><input></td><td><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button></td></tr>
+<tr><td id=timertd1><input id=ttime></td><td id=timertd2><span id=tsystem></span></td><td id=timertd3><input id=tinfo></td><td id=timertd4><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button></td></tr>
 </table><br>
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
 </div>
