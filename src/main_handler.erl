@@ -174,6 +174,7 @@ app_login(Req, Opts) ->
 
 <link rel='icon' href='/static/favicon.ico' type='image/x-icon' />
 <link rel=\"stylesheet\" href=\"", ?CSS, "?", (now_bin())/binary, "\" type=\"text/css\" media=\"screen\" />
+
 <script type='text/javascript' src='", ?JQUERY, "'></script>
 
 <script>
@@ -189,6 +190,7 @@ body {background-color:black; color:yellow}
 </head>
 
 <body>
+blah
 <form action='/esysman' method='post'>
 <div>
   <h3>", ?TITLE, " Login</h3>
@@ -298,6 +300,9 @@ app_front_end(Req, Opts) ->
 <link rel=\"stylesheet\" href=\"", ?CSS, "?", (now_bin())/binary, "\" type=\"text/css\" media=\"screen\" />
 <script type='text/javascript' src='", ?JQUERY, "'></script>
 <script type='text/javascript' src='", ?JQUERYUI, "'></script>
+
+<link rel=\"stylesheet\" href=\"/static/jquery.timepicker.min.css\">
+<script type='text/javascript' src=\"/static/jquery.timepicker.min.js\"></script>
 
 <script>
 
@@ -1105,6 +1110,34 @@ Port/binary,
       $('#mngscripts').click();
     });
 
+    $( function() {
+      $('#tdate').datepicker();
+    });
+
+// https://github.com/wvega/timepicker/releases
+// https://stackoverflow.com/questions/48437606/timepicker-with-24-hour-format
+
+$(document).ready(function(){
+$('.timepicker').timepicker({
+    disableMousewheel: true,
+    icons: {
+        up: 'la la-angle-up',
+        down: 'la la-angle-down'
+    },
+    showSeconds: true,
+    showMeridian: false,
+    defaultTime: new Date()
+}).on('changeTime.timepicker', function (e) {
+
+    var hours = ('0' + e.time.hours).slice(-2);
+    var minutes = ('0' + e.time.minutes).slice(-2);
+    var seconds = ('0' + e.time.seconds).slice(-2);
+
+    $(this).val(hours + ':' + minutes + ':' + seconds);
+});
+
+});
+
     $(document).on('click', '#addtimer', function(){
 
       var td1 = $('#ttime').val();
@@ -1123,7 +1156,7 @@ Port/binary,
 
       $('#timers').append('<tr><td id=timertd1> ' + td1 + ' </td> <td id=timertd2>' + td2 + ' </td><td id=timertd3> ' + td3 + ' </td><td id=timertd4><button id=deltimer class=\"ui-button ui-widget ui-corner-all\" onclick=$(this).closest(\"tr\").remove()>Del Timer</button></td></tr>');
 
-      $('#ttime').focus();
+      $('#tinfo').focus();
 
 //      $('#com_'+$('#tsystem').html()).click()
     });
@@ -1614,7 +1647,7 @@ function progress(e){
         $('#mngtimersbox').css('position', 'absolute');
 
         showmngtimersbox = true;
-        $('#ttime').focus();
+        $('#tinfo').focus();
       }
       else {
         $('#mngtimersbox').hide();
@@ -1777,16 +1810,16 @@ function progress(e){
 <button id='mngtimers' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Timers panel'>Manage Timers</button>
 <span id=refreshtime></span>
 <span id='fncp' style='display:none'>File name copied to Clipboard!</span>
-<span id='hncp' style='display:none'>Host name copied...!</span>
 <div id='mngscrbox' class='ui-widget-content' title='Click to drag window'></div>
 <div id='mngdwnldsbox' class='ui-widget-content' title='Click to drag window'></div>
 <div id='mngtimersbox' class='ui-widget-content' title='Click to drag window'>
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
 <span id='terr' style='float:right;display:none'>All fields must be used to add a timer!</span>
+<span id='hncp' style='float:right;display:none'>Host name copied...!</span>
 <br><br>
 <table id='timers'>
 <tr><th>Date/Time</th><th>System</th><th>Description</th></tr>
-<tr><td id=timertd1><input id=ttime></td><td id=timertd2><span id=tsystem></span></td><td id=timertd3><input id=tinfo></td><td id=timertd4><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button></td></tr>
+<tr><td id=timertd1><input id=tdate><input id=ttime class=timepicker></td><td id=timertd2><span id=tsystem></span></td><td id=timertd3><input id=tinfo></td><td id=timertd4><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button></td></tr>
 </table><br>
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
 </div>
