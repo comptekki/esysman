@@ -301,9 +301,6 @@ app_front_end(Req, Opts) ->
 <script type='text/javascript' src='", ?JQUERY, "'></script>
 <script type='text/javascript' src='", ?JQUERYUI, "'></script>
 
-<link rel=\"stylesheet\" href=\"/static/jquery.timepicker.min.css\">
-<script type='text/javascript' src=\"/static/jquery.timepicker.min.js\"></script>
-
 <script>
 
 $(document).ready(function(){
@@ -1110,37 +1107,17 @@ Port/binary,
       $('#mngscripts').click();
     });
 
-    $( function() {
-      $('#tdate').datepicker();
-    });
+    set_date();
 
-// https://github.com/wvega/timepicker/releases
-// https://stackoverflow.com/questions/48437606/timepicker-with-24-hour-format
-
-$(document).ready(function(){
-$('.timepicker').timepicker({
-    disableMousewheel: true,
-    icons: {
-        up: 'la la-angle-up',
-        down: 'la la-angle-down'
-    },
-    showSeconds: true,
-    showMeridian: false,
-    defaultTime: new Date()
-}).on('changeTime.timepicker', function (e) {
-
-    var hours = ('0' + e.time.hours).slice(-2);
-    var minutes = ('0' + e.time.minutes).slice(-2);
-    var seconds = ('0' + e.time.seconds).slice(-2);
-
-    $(this).val(hours + ':' + minutes + ':' + seconds);
-});
-
-});
+    function set_date(){
+      $('#tdate').datepicker()
+    };
 
     $(document).on('click', '#addtimer', function(){
 
-      var td1 = $('#ttime').val();
+      var td1 = $('#tdate').val();
+      var td1h = $('#dhour option:selected').text();
+      var td1m = $('#dmin option:selected').text();
       var td2 = $('#tsystem').html();
       var td3 = $('#tinfo').val();
 
@@ -1149,16 +1126,17 @@ $('.timepicker').timepicker({
         return false
       }
 
-      $('#timertd1').html('<input id=ttime>');
+      $('#timertd1').html('<input id=tdate><select id=dhour></select><select id=dmin></select>');
       $('#timertd2').html('<span id=tsystem></span>');
       $('#timertd3').html('<input id=tinfo>');
       $('#timertd4').html('<button id=addtimer class=\"ui-button ui-widget ui-corner-all\">Add Timer</button>');
 
-      $('#timers').append('<tr><td id=timertd1> ' + td1 + ' </td> <td id=timertd2>' + td2 + ' </td><td id=timertd3> ' + td3 + ' </td><td id=timertd4><button id=deltimer class=\"ui-button ui-widget ui-corner-all\" onclick=$(this).closest(\"tr\").remove()>Del Timer</button></td></tr>');
+      $('#timers').append('<tr><td id=timertd1> ' + td1 + ' ' + td1h + ':' + td1m + '</td> <td id=timertd2>' + td2 + ' </td><td id=timertd3> ' + td3 + ' </td><td id=timertd4><button id=deltimer class=\"ui-button ui-widget ui-corner-all\" onclick=$(this).closest(\"tr\").remove()>Del Timer</button></td></tr>');
+
+      set_date();
+      set_hours_mins();
 
       $('#tinfo').focus();
-
-//      $('#com_'+$('#tsystem').html()).click()
     });
 
     $(document).on('change', '#selfile', function(evt){
@@ -1742,12 +1720,35 @@ function progress(e){
     });
 
   function chk_timers() {
-    $('#timers tbody tr').each(function(i) {
+    $('#timers tbody tr').each(function(e) {
       var value = $(this).find('td:first').text();
-      if (value.length > 0) {
-        console.log(value)
+      if ((value.length > 0) && (value.length < 18)) {
+        var now = new Date();
+        var trigger = new Date(value);
+        var seconds = (now - trigger)/1000;
+        if (seconds > 0 && seconds < 60) {
+          $('#com_'+$(this).find('td:nth-child(2)').text()).click()
+        }
       }
     });
+  }
+
+  set_hours_mins();
+
+  function set_hours_mins() {
+    var select = '';
+    for (i=0;i<=23;i++){
+      const ii = i < 10 ? '0'+i : i;
+      select += '<option val=' + ii + '>' + ii + '</option>';
+    }
+    $('#dhour').html(select);
+
+    select = '';
+    for (i=0;i<=59;i+=5){
+      const ii = i < 10 ? '0'+i : i;
+      select += '<option val=' + ii + '>' + ii + '</option>';
+    }
+    $('#dmin').html(select)
   }
 
 });
@@ -1819,7 +1820,13 @@ function progress(e){
 <br><br>
 <table id='timers'>
 <tr><th>Date/Time</th><th>System</th><th>Description</th></tr>
-<tr><td id=timertd1><input id=tdate><input id=ttime class=timepicker></td><td id=timertd2><span id=tsystem></span></td><td id=timertd3><input id=tinfo></td><td id=timertd4><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button></td></tr>
+<tr><td id=timertd1>
+<input id=tdate>
+<select id=dhour>
+</select>
+<select id=dmin>
+</select>
+</td><td id=timertd2><span id=tsystem></span></td><td id=timertd3><input id=tinfo></td><td id=timertd4><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button></td></tr>
 </table><br>
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
 </div>
