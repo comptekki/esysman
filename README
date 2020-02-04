@@ -140,6 +140,15 @@ Client/Server Setup
 --------
 Versions
 --------
+1.11
+
+-Test with Erlang 22.2.5
+-Update look for workstation select row/column and options
+-Update manage scripts search - much faster now
+-Add file time in manage scripts
+-Add manage timers (simple cron like function)
+-Other simple updates and fixes
+--------
 1.10
 
 -Test with Cowboy 2.7.0
