@@ -330,7 +330,6 @@ Port/binary,
   var ws_str = '';
 
   var r=false;
-//  rall=false;
   var first=true;
   var tot_cnt=0;
   var shutbox='';
@@ -1570,7 +1569,7 @@ function progress(e){
 (rms_keys(Get_rms,Get_rms))/binary,
 "
 
-  interval_chk_dupes=setInterval(chk_dupe_users,rtime);
+  interval_chk_dupes=setInterval(chk_dupe_users,", ?CHKDUPETIME,");
   interval_com_timers=setInterval(chk_timers,rtime);
 
 }//End else - has websockets
