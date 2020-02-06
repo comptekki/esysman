@@ -1528,6 +1528,9 @@ function progress(e){
       $('#hncp').finish().show().delay(2000).fadeOut('slow');
     });
 
+    $(document).on('click', '#aboutb', function(){     
+      $('#abouti').finish().show().delay(5000).fadeOut('slow')
+    });
 
 ",
 (jsAll(?ROOMS,<<"ping">>))/binary,
@@ -2381,6 +2384,9 @@ mkselunseltogAll(Rm) ->
 <div class='brk'></div>
 
   <button id='toggleAll",Rm/binary,"' class='ui-button ui-widget ui-corner-all' title='Toggle select/unselect all Workstations...' />Toggle All</button><br>
+
+  <button id='aboutb' class='ui-button ui-widget ui-corner-all' title='Show ESysMan/Erlang versions...' />About</button><br><br>
+  <span id='abouti' style='display:none'>ESysMan 1.11<br>Erlang 22.2.6</span>
 ">>.
 
 %%
