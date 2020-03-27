@@ -1126,7 +1126,7 @@ Port/binary,
       }
 
       $('#timertd1').html('<input id=tdate><select id=dhour></select><select id=dmin></select>');
-      $('#timertd2').html('<span id=tsystem></span>');
+      $('#timertd2').html('<span id=tsystem>Click ecom@host<br>to add it here...</span>');
       $('#timertd3').html('<input id=tinfo>');
       $('#timertd4').html('<button id=addtimer class=\"ui-button ui-widget ui-corner-all\">Add Timer</button>');
 
@@ -1828,7 +1828,7 @@ function progress(e){
 </select>
 <select id=dmin>
 </select>
-</td><td id=timertd2><span id=tsystem></span></td><td id=timertd3><input id=tinfo></td><td id=timertd4><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button></td></tr>
+</td><td id=timertd2><span id=tsystem>Click ecom@host<br>to add it here...</span></td><td id=timertd3><input id=tinfo></td><td id=timertd4><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button></td></tr>
 </table><br>
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
 </div>
