@@ -5,6 +5,7 @@
 -define(COMS, [<<"">>,<<"anycmd">>,<<"listupfls">>,<<"mkuploads">>,<<"ninite">>,<<"ninitecmd">>,<<"ninitelog">>,<<"wuinstall">>,<<"wuilog">>,<<"unamea">>,<<"lsbver">>,<<"yumcheck">>,<<"yumupdate">>,<<"ubuntuver">>,<<"aptcheck">>,<<"aptupgrade-list">>,<<"aptupgrade">>,<<"aptdistupgrade-list">>,<<"aptdistupgrade">>,<<"aptulog">>,<<"yumcheck">>,<<"yumupdate">>,<<"dnfcheck">>,<<"dnfupdate">>,<<"osxsupdate">>,<<"osxsulog">>]).
 -define(CONF,"/usr/local/src/esysman/src/esysman.conf").
 -define(PASSWDCONF,"/usr/local/src/esysman/src/passwd.conf").
+-define(ROOMS,"/path/to/rooms.conf").
 -define(UPLOADS,<<"/usr/local/src/uploads/">>).
 -define(DOWNLOADS,<<"/home/user/esysman/priv/downloads/">>).
 
@@ -28,17 +29,4 @@
 -define(JQUERYUI, "/static/jquery-ui-1.12.1/jquery-ui.min.js").
 -define(JQUERYUICSS, "/static/jquery-ui-1.12.1/jquery-ui.min.css").
 -define(LINES, "10000").
-% workstation params {<<"hostname">>,<<"hostname.domain.name">>,<<"mac address seprated by '-'">>,<<"AutoS On or AutoS Off">>}
--define(ROOMS,
-[
- [<<"room1">>,
-   [{<<".">>,<<"">>,<<"">>,<<"">>},{<<".">>,<<"">>,<<"">>,<<"">>},{<<"room1-01">>,<<"fqdn">>,<<"00-00-00-00-00-00">>,<<"">>}],
-   [{<<"room1-02">>,<<"fqdn">>,<<"00-00-00-00-00-00">>,<<"">>},{<<"room1-03">>,<<"fqdn">>,<<"00-00-00-00-00-00">>,<<"">>},{<<"room1-04">>,<<"fqdn">>,<<"00-00-00-00-00-00">>,<<"">>}]
- ],
- [<<"room2">>,
-   [{<<".">>,<<"">>,<<"">>,<<"">>},{<<"room2-01">>,<<"fqdn">>,<<"00-00-00-00-00-00">>,<<"">>},{<<"room2-02">>,<<"fqdn">>,<<"00-00-00-00-00-00">>,<<"">>}],
-   [{<<".">>,<<"">>,<<"">>,<<"">>},{<<".">>,<<"">>,<<"">>,<<"">>},{<<".">>,<<"">>,<<"">>,<<"">>},{<<".">>,<<"">>,<<"">>,<<"">>},{<<".">>,<<"">>,<<"">>,<<"">>},{<<".">>,<<"">>,<<"">>,<<"">>}],
-   [{<<"room2-03">>,<<"fqdn">>,<<"00-00-00-00-00-00">>,<<"">>}],
-   [{<<"room2-04">>,<<"fqdn">>,<<"00-00-00-00-00-00">>,<<"">>},{<<".">>,<<"">>,<<"">>,<<"">>},{<<"room2-05">>,<<"fqdn">>,<<"00-00-00-00-00-00">>,<<"">>}]
- ]
-]).
+

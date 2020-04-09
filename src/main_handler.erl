@@ -276,7 +276,9 @@ app_front_end(Req, Opts) ->
     Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
     io:format("~ndate: ~p -> host: ~p : ~p~n", [Date, Host, Port]),
     
-    Get_rms = get_rms_keys(?ROOMS, 49),
+    {ok, [{ARooms}]} = file:consult(?ROOMS),
+
+    Get_rms = get_rms_keys(ARooms, 49),
 
     {ok, [_, _, _, {ShutdownStartTime,ShutdownStopTime,OnorOff}]} = file:consult(?CONF),
 
@@ -350,7 +352,7 @@ Port/binary,
 
   function refreshCons() {
 ",
-(init2(?ROOMS))/binary,
+(init2(ARooms))/binary,
 "
    }
 
@@ -363,7 +365,7 @@ Port/binary,
 			send('client-connected');
 			message(true, socket.readyState);
 ",
-(init_open(?ROOMS))/binary,
+(init_open(ARooms))/binary,
 "
 
       if (",?AUTOLOCK,") {
@@ -1533,42 +1535,42 @@ function progress(e){
     });
 
 ",
-(jsAll(?ROOMS,<<"ping">>))/binary,
-(jsAllConfirm(?ROOMS,<<"reboot">>))/binary,
-(jsAllConfirm(?ROOMS,<<"shutdown">>))/binary,
-(jsAllConfirm(?ROOMS,<<"dfthaw">>))/binary,
-(jsAllConfirm(?ROOMS,<<"dffreeze">>))/binary,
-(jsAll(?ROOMS,<<"wake">>))/binary,
-(jsAll(?ROOMS,<<"dfstatus">>))/binary,
-(jsAll(?ROOMS,<<"net_restart">>))/binary,
-(jsAll(?ROOMS,<<"net_stop">>))/binary,
-(jsAll(?ROOMS,<<"loggedon">>))/binary,
-(jsAll(?ROOMS,<<"copy">>))/binary,
-(jsAll(?ROOMS,<<"com">>))/binary,
-(mkjsAllSelect_copy(?ROOMS))/binary,
-(mkjsSelect_copy(?ROOMS))/binary,
-(mkjsAllSelect_com(?ROOMS))/binary,
-(mkjsSelect_com(?ROOMS))/binary,
-(mkjsSelectAllChk(?ROOMS))/binary,
-(mkjsUnSelectAllChk(?ROOMS))/binary,
-(mkjsToggleAllChk(?ROOMS))/binary,
-(mkcomButtons(?ROOMS))/binary,
-(mkjsComAll(?ROOMS,<<"ping">>))/binary,
-(mkjsComAll(?ROOMS,<<"reboot">>))/binary,
-(mkjsComAll(?ROOMS,<<"shutdown">>))/binary,
-(mkjsComAll(?ROOMS,<<"wake">>))/binary,
-(mkjsComAll(?ROOMS,<<"dfthaw">>))/binary,
-(mkjsComAll(?ROOMS,<<"dffreeze">>))/binary,
-(mkjsComAll(?ROOMS,<<"dfstatus">>))/binary,
-(mkjsComAll(?ROOMS,<<"net_restart">>))/binary,
-(mkjsComAll(?ROOMS,<<"net_stop">>))/binary,
-(mkjsComAll(?ROOMS,<<"loggedon">>))/binary,
-(mkjsComAll(?ROOMS,<<"copy">>))/binary,
-(mkjsComAll(?ROOMS,<<"com">>))/binary,
-(chk_dupe_usersa(?ROOMS))/binary,
-(chk_dupe_users(?ROOMS))/binary,
-(refresh_cons(?ROOMS))/binary,
-(toggles(?ROOMS))/binary,
+(jsAll(ARooms,<<"ping">>))/binary,
+(jsAllConfirm(ARooms,<<"reboot">>))/binary,
+(jsAllConfirm(ARooms,<<"shutdown">>))/binary,
+(jsAllConfirm(ARooms,<<"dfthaw">>))/binary,
+(jsAllConfirm(ARooms,<<"dffreeze">>))/binary,
+(jsAll(ARooms,<<"wake">>))/binary,
+(jsAll(ARooms,<<"dfstatus">>))/binary,
+(jsAll(ARooms,<<"net_restart">>))/binary,
+(jsAll(ARooms,<<"net_stop">>))/binary,
+(jsAll(ARooms,<<"loggedon">>))/binary,
+(jsAll(ARooms,<<"copy">>))/binary,
+(jsAll(ARooms,<<"com">>))/binary,
+(mkjsAllSelect_copy(ARooms))/binary,
+(mkjsSelect_copy(ARooms))/binary,
+(mkjsAllSelect_com(ARooms))/binary,
+(mkjsSelect_com(ARooms))/binary,
+(mkjsSelectAllChk(ARooms))/binary,
+(mkjsUnSelectAllChk(ARooms))/binary,
+(mkjsToggleAllChk(ARooms))/binary,
+(mkcomButtons(ARooms))/binary,
+(mkjsComAll(ARooms,<<"ping">>))/binary,
+(mkjsComAll(ARooms,<<"reboot">>))/binary,
+(mkjsComAll(ARooms,<<"shutdown">>))/binary,
+(mkjsComAll(ARooms,<<"wake">>))/binary,
+(mkjsComAll(ARooms,<<"dfthaw">>))/binary,
+(mkjsComAll(ARooms,<<"dffreeze">>))/binary,
+(mkjsComAll(ARooms,<<"dfstatus">>))/binary,
+(mkjsComAll(ARooms,<<"net_restart">>))/binary,
+(mkjsComAll(ARooms,<<"net_stop">>))/binary,
+(mkjsComAll(ARooms,<<"loggedon">>))/binary,
+(mkjsComAll(ARooms,<<"copy">>))/binary,
+(mkjsComAll(ARooms,<<"com">>))/binary,
+(chk_dupe_usersa(ARooms))/binary,
+(chk_dupe_users(ARooms))/binary,
+(refresh_cons(ARooms))/binary,
+(toggles(ARooms,ARooms))/binary,
 (rms_keys(Get_rms,Get_rms))/binary,
 "
 
@@ -1775,7 +1777,7 @@ function progress(e){
 
 <div id='switcher'>
 ",
-(switcher(?ROOMS))/binary,
+(switcher(ARooms))/binary,
 "
 </div>
 
@@ -1858,15 +1860,15 @@ function progress(e){
 				 {<<"net_restart">>,<<"Restart Service All">>},
 				 {<<"net_stop">>,<<"Stop Service All">>},
 				 {<<"loggedon">>,<<"Logged On All">>}
-				]))/binary,
+				],ARooms))/binary,
 "
  </div>
 
  <div id='tinputs'>
 ",
-(mkAllRoomsComsInput({<<"copy">>,<<"Copy All">>}))/binary,
-(mkAllRoomsComsInput({<<"com">>,<<"Com All">>}))/binary,
-(mkAllRoomsSelectUnselectToggleAll(?ROOMS))/binary,
+(mkAllRoomsComsInput({<<"copy">>,<<"Copy All">>},ARooms))/binary,
+(mkAllRoomsComsInput({<<"com">>,<<"Com All">>},ARooms))/binary,
+(mkAllRoomsSelectUnselectToggleAll(ARooms))/binary,
 "
  </div>
 
@@ -1898,7 +1900,7 @@ function progress(e){
  <div id='workstations'>
 
 ",
-(mkRooms(?ROOMS))/binary,
+(mkRooms(ARooms))/binary,
 "
  </div>
  </div>
@@ -1927,18 +1929,18 @@ function progress(e){
 
 %%
 
-toggles([Room|Rooms]) ->
-	<<(toggles_rm(Room))/binary,(toggles(Rooms))/binary>>;
-toggles([]) ->
+toggles([Room|Rooms],ARooms) ->
+	<<(toggles_rm(Room,ARooms))/binary,(toggles(Rooms,ARooms))/binary>>;
+toggles([],_) ->
 	<<>>.
 
 %%
 
-toggles_rm([Rm|_]) ->
+toggles_rm([Rm|_],ARooms) ->
 	<<"
 	 $('#",Rm/binary,"toggle').click(function(){
 ",
-	  (toggle_items(?ROOMS,Rm))/binary,
+	  (toggle_items(ARooms,Rm))/binary,
 "
 	 });
 ">>.
@@ -2269,8 +2271,8 @@ mkjsToggleAllChk([]) ->
 
 %%
 
-mkAllRoomsComs(Coms) ->
-    mkARComs(?ROOMS,Coms).
+mkAllRoomsComs(Coms,ARooms) ->
+    mkARComs(ARooms,Coms).
 
 %%
 
@@ -2298,8 +2300,8 @@ mkARComsComs(_Rm,[]) ->
 
 %%
 
- mkAllRoomsComsInput(Com) ->
-    mkARComsInput(?ROOMS,Com).
+ mkAllRoomsComsInput(Com,ARooms) ->
+    mkARComsInput(ARooms,Com).
 
  mkARComsInput([Room|Rooms],ComT) ->
     {Com,ComText}=ComT,
