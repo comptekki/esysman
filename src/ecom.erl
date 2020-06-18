@@ -111,6 +111,10 @@ process_msg(Box, Com, Args) ->
 			"w" ->
 			    Date=get_date(),
 			    os:cmd(?UPLOADS_DIR++"NiniteOne.exe /updateonly /exclude Python  /disableshortcuts /silent "++?UPLOADS_DIR++"ninite_"++Date++"_log.txt"),
+			    os:cmd("echo "++Date++" >> "++?UPLOADS_DIR++"ninite_log.txt"),
+			    os:cmd("type "++?UPLOADS_DIR++"ninite_"++Date++"_log.txt >> "++?UPLOADS_DIR++"ninite_log.txt"),
+			    os:cmd("del /F /Q "++?UPLOADS_DIR++"ninite_"++Date++"_log.txt"),
+			    os:cmd("rmdir "++?UPLOADS_DIR++"NiniteDownloads /S /Q"),
 			    send_msg(?SERVERS, <<Box/binary, (list_to_binary(":ninite date -> "++Date))/binary>>);
 			_ ->
 			    send_msg(?SERVERS, <<Box/binary,":error - no function on this platform...">>)
