@@ -3047,7 +3047,7 @@ jsrefcons_row([{Wk,_FQDN,_MacAddr,_AutoS}|Wks],Rm) ->
 		$('#",Wk/binary,"_hltd').css('background-color','#000');
 		$('#",Wk/binary,"_ltd').css('background-color','#000');
 		$('#",Wk/binary,"dfstatus').css('color','cyan');
-		$('#",Wk/binary,"dfstatus').css('background-color','#006666');
+		$('#",Wk/binary,"dfstatus').css('background-color','#333333');
 		$('#",Wk/binary,"status').css('color','red');
 		$('#",Wk/binary,"status').css('background-color','#550000');
         $('#",Wk/binary,"status').html('.');
