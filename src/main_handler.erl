@@ -1666,12 +1666,9 @@ function progress(e){
 	});
 
     $('#sacs').click(function(){
-        if($(':checkbox:lt(1)').is(':checked')){
-          $(':checkbox').removeAttr('checked');
-        }
-        else {
-          $(':checkbox').attr('checked', 'checked');  
-      }
+      $('input:checkbox').each(function() {
+         this.checked = !this.checked;
+      });
     });
 
     $('#logout').click(function() {
