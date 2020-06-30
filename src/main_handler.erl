@@ -66,7 +66,7 @@ fire_wall(Req) ->
     {PeerAddress, _Port} = cowboy_req:peer(Req),
     {{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
     Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
-    {ok, [_,{FireWallOnOff,IPAddresses},_,_]}=file:consult(?CONF),
+    {ok, [_,{FireWallOnOff,IPAddresses},_,_,_]}=file:consult(?CONF),
     case FireWallOnOff of
 	on ->
 	    case lists:member(PeerAddress,IPAddresses) of
@@ -84,7 +84,7 @@ fire_wall(Req) ->
 %%
 
 login_is() ->
-    {ok, [_,_,{UPOnOff,UnamePasswds},_]}=file:consult(?CONF),
+    {ok, [_,_,{UPOnOff,UnamePasswds},_,_]}=file:consult(?CONF),
     case UPOnOff of
 	on ->
 	    UnamePasswds;
@@ -280,7 +280,7 @@ app_front_end(Req, Opts) ->
 
     Get_rms = get_rms_keys(ARooms, 49),
 
-    {ok, [_, _, _, {ShutdownStartTime,ShutdownStopTime,OnorOff}]} = file:consult(?CONF),
+    {ok, [_, _, _, {ShutdownStartTime,ShutdownStopTime,OnorOff},_]} = file:consult(?CONF),
 
     Req2 = cowboy_req:reply(
 	     200,
@@ -2373,6 +2373,7 @@ mkAllRoomsSelectUnselectToggleAll([Room|Rooms]) ->
 %%
 
 mkselunseltogAll(Rm) ->
+    {ok, [_, _, _, _, {About}]} = file:consult(?CONF),
     <<"
   <button id='selectAll",Rm/binary,"' class='ui-button ui-widget ui-corner-all'  title='Select all Workstations...' />Select All</button>
 
@@ -2385,7 +2386,7 @@ mkselunseltogAll(Rm) ->
   <button id='toggleAll",Rm/binary,"' class='ui-button ui-widget ui-corner-all' title='Toggle select/unselect all Workstations...' />Toggle All</button><br>
 
   <button id='aboutb' class='ui-button ui-widget ui-corner-all' title='Show ESysMan/Erlang versions...' />About</button><br><br>
-  <span id='abouti' style='display:none'>ESysMan 1.11<br>Erlang 22.2.6</span>
+  <span id='abouti' style='display:none'>",About/binary,"</span>
 ">>.
 
 %%
