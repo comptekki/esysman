@@ -190,7 +190,6 @@ body {background-color:black; color:yellow}
 </head>
 
 <body>
-blah
 <form action='/esysman' method='post'>
 <div>
   <h3>", ?TITLE, " Login</h3>
