@@ -140,6 +140,14 @@ Client/Server Setup
 --------
 Versions
 --------
+1.12
+
+-Test with Cowboy 2.8.0
+-Test with Erlang 23.1.2
+-Upgrade to jquery 3.5.1
+-Fixes and adjustments
+-Move most ecom.erl options to conf file
+--------
 1.11
 
 -Test with Erlang 22.2.5
