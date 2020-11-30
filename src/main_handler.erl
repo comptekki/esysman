@@ -1726,8 +1726,11 @@ function progress(e){
         var now = new Date();
         var trigger = new Date(value);
         var seconds = (now - trigger)/1000;
-        if (seconds > 0 && seconds < 60) {
-          $('#com_'+$(this).find('td:nth-child(2)').text()).click()
+        if (seconds > 0 && seconds < 300) {
+	  tmr='#com_'+$(this).find('td:nth-child(2)').text();
+          $(tmr).click();
+	  mills = 1000 * 60 * 60 * 24;
+	  setInterval(function() { $(tmr).click(); }, mills);
         }
       }
     });
@@ -1744,7 +1747,7 @@ function progress(e){
     $('#dhour').html(select);
 
     select = '';
-    for (i=0;i<=59;i+=5){
+    for (i=0;i<=59;i+=1){
       const ii = i < 10 ? '0'+i : i;
       select += '<option val=' + ii + '>' + ii + '</option>';
     }
