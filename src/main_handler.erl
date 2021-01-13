@@ -1610,8 +1610,8 @@ function progress(e){
     $('#mngdwnlds').click(function(){
       if (!showmngdwnldsbox) {
 //        $('#mngdwnldsbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngtimersbox').css('z-index')));
-        $('#mngdwnlds').css('z-index', 2003);
-        $('#mngdwnlds').siblings('div').css('z-index', 2001);
+        $('#mngdwnldsbox').css('z-index', 2003);
+        $('#mngdwnldsbox').siblings('div').css('z-index', 2001);
         $('#mngdwnldsbox').show();
         $('#mngdwnldsbox').css('position', 'absolute');
 
