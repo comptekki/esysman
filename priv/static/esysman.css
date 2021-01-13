@@ -47,7 +47,7 @@ table { border-collapse:collapse;}
 //input {width:100px;}
 
 #wrapper {
-	/*	width:2900px; */
+	width:3200px;
 	overflow: auto;
 	margin:0 auto;
 	display:inline-block;
@@ -95,6 +95,8 @@ table { border-collapse:collapse;}
     white-space:nowrap;
     white-space: -moz-nowrap;
     padding: 5px 8px 5px 0;
+//    width: 3200px;
+//    overflow:auto;
 //    max-height:340px;
 }
 
