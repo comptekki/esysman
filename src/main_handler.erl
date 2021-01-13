@@ -1586,7 +1586,9 @@ function progress(e){
       if (!showmngscrbox) {
         $('scrfilter').val(scrfiltertxt);
 
-        $('#mngscrbox').css('z-index', parseInt($('#mngdwnldsbox').css('z-index')) + parseInt($('#mngtimersbox').css('z-index')));
+//        $('#mngscrbox').css('z-index', parseInt($('#mngdwnldsbox').css('z-index')) + parseInt($('#mngtimersbox').css('z-index')));
+        $('#mngscrbox').css('z-index', 2003);
+        $('#mngscrbox').siblings('div').css('z-index', 2001);
         $('#mngscrbox').show();
         $('#mngscrbox').css('position', 'absolute');
 
@@ -1607,7 +1609,9 @@ function progress(e){
 
     $('#mngdwnlds').click(function(){
       if (!showmngdwnldsbox) {
-        $('#mngdwnldsbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngtimersbox').css('z-index')));
+//        $('#mngdwnldsbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngtimersbox').css('z-index')));
+        $('#mngdwnlds').css('z-index', 2003);
+        $('#mngdwnlds').siblings('div').css('z-index', 2001);
         $('#mngdwnldsbox').show();
         $('#mngdwnldsbox').css('position', 'absolute');
 
@@ -1623,7 +1627,9 @@ function progress(e){
 
     $('#mngtimers').click(function(){
       if (!showmngtimersbox) {
-        $('#mngtimersbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngdwnldsbox').css('z-index')));
+//        $('#mngtimersbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngdwnldsbox').css('z-index')));
+        $('#mngtimersbox').css('z-index', 2003);
+        $('#mngtimersbox').siblings('div').css('z-index', 2001);
         $('#mngtimersbox').show();
         $('#mngtimersbox').css('position', 'absolute');
 
