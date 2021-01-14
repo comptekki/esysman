@@ -466,7 +466,7 @@ do_insert(TimeStamp, Box, User) ->
 list_dwnld_fls() ->
     {ok, Files0}=file:list_dir(?DOWNLOADS),
     Files=lists:sort(Files0),
-    Head = <<"<div id='dwnldslist'><button id='closedwnldslist' class='ui-button ui-widget ui-corner-all'>Close</button></div><div id='dprog'></div><form id='mypostd' method='post' enctype='multipart/form-data' action='/uptodown'><br><input id='fdwnload' type='submit' value='Upload'/><input id='selfiled' type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form><table><tr><th></th><th>File Name</th><th>File Size</th><th>File Date</th></tr>">>,
+    Head = <<"<div id='dwnldslist'>[ Manage Downloads ]<br><br><button id='closedwnldslist' class='ui-button ui-widget ui-corner-all'>Close</button></div><div id='dprog'></div><form id='mypostd' method='post' enctype='multipart/form-data' action='/uptodown'><br><input id='fdwnload' type='submit' value='Upload'/><input id='selfiled' type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form><table><tr><th></th><th>File Name</th><th>File Size</th><th>File Date</th></tr>">>,
     Mid = <<(list_to_binary([ mng_dfile(File) || File <- Files]))/binary>>,
     Tail = <<"</table><div class='brk'></div><button id='closedwnldslist' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
     <<Head/binary,Mid/binary,Tail/binary>>.
@@ -493,7 +493,7 @@ mng_dfile(File) ->
 list_up_fls(Filter) ->
     {ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
-    Head= <<"<script>$('#scrfilter').focus(); var tmp=$('#scrfilter').val(); $('#scrfilter').val(''); $('#scrfilter').val(tmp);</script><div id='scrslist'><button id='closescrslist' class='ui-button ui-widget ui-corner-all'>Close</button><button id='addscrf' class='ui-button ui-widget ui-corner-all'>Add Script</button> <div id='scrcount' class='fr'>[">>,
+    Head= <<"<script>$('#scrfilter').focus(); var tmp=$('#scrfilter').val(); $('#scrfilter').val(''); $('#scrfilter').val(tmp);</script><div id='scrslist'>[ Manage Scripts ]<br><br><button id='closescrslist' class='ui-button ui-widget ui-corner-all'>Close</button><button id='addscrf' class='ui-button ui-widget ui-corner-all'>Add Script</button> <div id='scrcount' class='fr'>[">>,
     Head2= <<"]-Items</div> <div class='brk'></div><div id='upprog'></div><form id='mypost' method='post' enctype='multipart/form-data' action='/upload'><br><input id='fupload' type='submit' value='Upload'/><input id='selfile' type='file' name='inputfile' value='No File Selected yet!' class='isize' /></form>Filter -> <input id='scrfilter' type='text' class='ui-widget' maxlength=20 value='", (Filter)/binary, "' /><br><br><table id='mngscripts'><tr><th class='comw'>Commands</th><th>File Name</th><th>File Size</th><th>File Date</th><th>Linked File Name</th><th>Description</th></tr>">>,
     Mid = [mng_file(File, Filter) || File <- Files],
     Tail = <<"</table><div class='brk'></div><button id='closescrslist' class='ui-button ui-widget ui-corner-all'>Close</button></div><div id='editscr'><div>Editing -> <span id='scrname'></span></div><div><div id='scrtxtbox'>Script text<br><textarea id='scripttext' rows='10' cols='60'></textarea><br><br></div>Script Description<br><input id='scrdesc' type='text' maxlength='69'><br><br><input type='button' id='scredcancel' value='Cancel'><input type='button' id='scrsave' value='Save'></div></div>">>,

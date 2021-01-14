@@ -575,14 +575,10 @@ Port/binary,
 			  break;
             case 'list_dwnlds_dir':
               $('#mngdwnldsbox').html(boxCom[2]);
-//              message(sepcol,boxCom[0] + ': ' + 'list_dwnlds_dir');
               break;
             case 'list_ups_dir':
 	      $('#mngscrbox').html(boxCom[2]);
               $('#mngscrbox').resizable({alsoResize: '#scrslist'});
-//              $('#scsrslist').css('width', $('#mngscrbox').css('width')-10);
-//              $('#scsrslist').css('height', $('#mngscrbox').css('height'));
-
               $('#mngscripts tr').slice(4).filter(function() {
                 $(this).toggle($(this).find('td').slice(1).text().toLowerCase().indexOf(scrfiltertxt) > -1)
               });
@@ -590,7 +586,6 @@ Port/binary,
               scrcount = $('#mngscripts tr').filter(':visible').length-4;
               $('#scrcount').html('[' + scrcount + ']-Items');
 
-//	      message(sepcol,boxCom[0] + ': ' + 'list_ups_dir');
               break;
             case 'editscrfile':
               var fname = $('#scrname').html().split('.');
@@ -1585,8 +1580,6 @@ function progress(e){
     $('#mngscripts').click(function(){
       if (!showmngscrbox) {
         $('scrfilter').val(scrfiltertxt);
-
-//        $('#mngscrbox').css('z-index', parseInt($('#mngdwnldsbox').css('z-index')) + parseInt($('#mngtimersbox').css('z-index')));
         $('#mngscrbox').css('z-index', 2003);
         $('#mngscrbox').siblings('div').css('z-index', 2001);
         $('#mngscrbox').show();
@@ -1609,7 +1602,6 @@ function progress(e){
 
     $('#mngdwnlds').click(function(){
       if (!showmngdwnldsbox) {
-//        $('#mngdwnldsbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngtimersbox').css('z-index')));
         $('#mngdwnldsbox').css('z-index', 2003);
         $('#mngdwnldsbox').siblings('div').css('z-index', 2001);
         $('#mngdwnldsbox').show();
@@ -1627,7 +1619,6 @@ function progress(e){
 
     $('#mngtimers').click(function(){
       if (!showmngtimersbox) {
-//        $('#mngtimersbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngdwnldsbox').css('z-index')));
         $('#mngtimersbox').css('z-index', 2003);
         $('#mngtimersbox').siblings('div').css('z-index', 2001);
         $('#mngtimersbox').show();
@@ -1823,6 +1814,7 @@ function progress(e){
 <div id='mngscrbox' class='ui-widget-content' title='Click to drag window'></div>
 <div id='mngdwnldsbox' class='ui-widget-content' title='Click to drag window'></div>
 <div id='mngtimersbox' class='ui-widget-content' title='Click to drag window'>
+[ Manage Timers ]<br><br>
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
 <span id='terr' style='float:right;display:none'>All fields must be used to add a timer!</span>
 <span id='hncp' style='float:right;display:none'>Host name copied...!</span>

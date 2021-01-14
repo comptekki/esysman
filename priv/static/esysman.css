@@ -400,8 +400,8 @@ a.clr {
 
 #mngdwnldsbox {
     position:absolute;
-    left:420px;
-    top:240px;
+    left:440px;
+    top:280px;
     width:850px;
     height:600px;
     padding:10px 10px 10px 10px;
@@ -418,8 +418,8 @@ a.clr {
 
 #mngtimersbox {
     position:absolute;
-    left:440px;
-    top:280px;
+    left:480px;
+    top:360px;
     width:950px;
     height:600px;
     padding:10px 10px 10px 10px;
