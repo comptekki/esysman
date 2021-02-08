@@ -11,6 +11,7 @@
 		ssl,
 		cowboy,
 		epgsql
+%,			os_mon
 	]},
 	{mod, {esysman_app, []}},
 	{env, []}
