@@ -60,7 +60,7 @@ start(_Type, _Args) ->
 		   {password, ""}],
 		  #{
 		    env => #{dispatch => Dispatch},
-		    max_received_frame_rate => {100000, 10000}
+		    max_received_frame_rate => {150000, 10000}
 		   }
                 ),
 	esysman_sup:start_link().
