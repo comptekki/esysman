@@ -18,7 +18,7 @@
 -define(IGNOREU2,"u2").
 -define(IGNOREU3,"u3").
 -define(IGNOREU4,"u4").
--define(AUTOLOCK, "true"). % "false" no,  "true" yes 
+
 -define(REFRESHTIME,300000). % 300000 = 5 minutes
 -define(CHKDUPETIME,60000).
 
