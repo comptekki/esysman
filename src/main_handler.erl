@@ -66,7 +66,7 @@ fire_wall(Req) ->
     {PeerAddress, _Port} = cowboy_req:peer(Req),
     {{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
     Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
-    {ok, [_,{FireWallOnOff,IPAddresses},_,_,_]}=file:consult(?CONF),
+    {ok, [_,{FireWallOnOff,IPAddresses},_,_,_,_]}=file:consult(?CONF),
     case FireWallOnOff of
 	on ->
 	    case lists:member(PeerAddress,IPAddresses) of
@@ -84,7 +84,7 @@ fire_wall(Req) ->
 %%
 
 login_is() ->
-    {ok, [_,_,{UPOnOff,UnamePasswds},_,_]}=file:consult(?CONF),
+    {ok, [_,_,{UPOnOff,UnamePasswds},_,_,_]}=file:consult(?CONF),
     case UPOnOff of
 	on ->
 	    UnamePasswds;
@@ -279,7 +279,7 @@ app_front_end(Req, Opts) ->
 
     Get_rms = get_rms_keys(ARooms, 49),
 
-    {ok, [_, _, _, {ShutdownStartTime,ShutdownStopTime,OnorOff},_]} = file:consult(?CONF),
+    {ok, [_,_,_,{ShutdownStartTime,ShutdownStopTime,OnorOff},_,{AUTOLOCK}]} = file:consult(?CONF),
 
     Req2 = cowboy_req:reply(
 	     200,
@@ -367,7 +367,7 @@ Port/binary,
 (init_open(ARooms))/binary,
 "
 
-      if (",?AUTOLOCK,") {
+      if (",AUTOLOCK/binary,") {
         lockscr();
       }
 
@@ -2373,7 +2373,7 @@ mkAllRoomsSelectUnselectToggleAll([Room|Rooms]) ->
 %%
 
 mkselunseltogAll(Rm) ->
-    {ok, [_, _, _, _, {About}]} = file:consult(?CONF),
+    {ok, [_, _, _, _, {About},_]} = file:consult(?CONF),
     <<"
   <button id='selectAll",Rm/binary,"' class='ui-button ui-widget ui-corner-all'  title='Select all Workstations...' />Select All</button>
 
