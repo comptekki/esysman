@@ -2385,8 +2385,10 @@ mkselunseltogAll(Rm) ->
 
   <button id='toggleAll",Rm/binary,"' class='ui-button ui-widget ui-corner-all' title='Toggle select/unselect all Workstations...' />Toggle All</button><br>
 
-  <button id='aboutb' class='ui-button ui-widget ui-corner-all' title='Show ESysMan/Erlang versions...' />About</button><br><br>
-  <span id='abouti' style='display:none'>",About/binary,"</span>
+  <button id='aboutb' class='ui-button ui-widget ui-corner-all' title='Show ESysMan/Erlang versions...' />About</button><br>
+
+  ",About/binary,"
+
 ">>.
 
 %%
@@ -2455,7 +2457,7 @@ divhc(Rm,[{Wk,FQDN,MacAddr,AutoS}|Wks],ColCnt) ->
 
 <div class='brk'></div>
 
-<div id='",Wk/binary,"macaddr' class='macaddr'>",MacAddr/binary,"</div> <div id='",Wk/binary,"dfstatus' class='dfstatus' title='DeepFreeze Status'>DF?</div> <div id='",Wk/binary,"autoshut-toggle' class='autoshut-toggle-",TogColor/binary,"' title='Auto Shutdown Status'>",AutoS2/binary,"</div>
+<div id='",Wk/binary,"macaddr' class='macaddr'>",MacAddr/binary,"</div> <div id='",Wk/binary,"dfstatus' class='dfstatus' title='DeepFreeze Status'>DF?</div> <div id='",Wk/binary,"autoshut-toggle class='autoshut-toggle-",TogColor/binary,"' title='Auto Shutdown Status'>",AutoS2/binary,"</div>
 
 <div class='brk'></div>
 
