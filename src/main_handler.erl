@@ -373,8 +373,6 @@ Port/binary,
 
   }
 
-
-    var togcnt = 0;
     var refreshcnt = 0;
     var cons1 = 0;
     var cons2 = 0;
@@ -404,15 +402,13 @@ Port/binary,
 
                 if (m.data.indexOf('toggleawsts') > -1) {
                     if ((m.data.indexOf('done') > -1)) {
-                        togcnt=0;
                         if(m.data.indexOf('(On)') > -1) {
                           $('#shutdownTimerSwitch').html('Off')
                         } else {
                           $('#shutdownTimerSwitch').html('On')
                         }
-                        togcnt++;
                     }
-                    if ((m.data.indexOf('from') > -1) && (togcnt == 0)) {
+                    if (m.data.indexOf('from') > -1) {
                         if(m.data.indexOf('(On)') > -1) {
                           $('#shutdownTimerSwitch').html('Off')
                         } else {
