@@ -7,7 +7,7 @@
 -define(PASSWDCONF,"/usr/local/src/esysman/src/passwd.conf").
 -define(ROOMS,"/path/to/rooms.conf").
 -define(UPLOADS,<<"/usr/local/src/uploads/">>).
--define(DOWNLOADS,<<"/home/user/esysman/priv/downloads/">>).
+-define(DOWNLOADS,<<"/home/user/erl/esysman/_rel/esysman/lib/esysman-version/priv/downloads/">>).
 
 -define(IGNOREDUPES,"box1").
 -define(IGNOREREBOOT,"box1").
