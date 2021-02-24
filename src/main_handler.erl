@@ -2402,9 +2402,13 @@ mkselunseltogAll(Rm) ->
 
 <div class='brk'></div>
 
-  <button id='toggleAll",Rm/binary,"' class='ui-button ui-widget ui-corner-all' title='Toggle select/unselect all Workstations...' />Toggle All</button><br>
+  <button id='toggleAll",Rm/binary,"' class='ui-button ui-widget ui-corner-all' title='Toggle select/unselect all Workstations...' />Toggle All</button>
 
-  <button id='aboutb' class='ui-button ui-widget ui-corner-all' title='Show ESysMan/Erlang versions...' />About</button><br>
+<div class='brk'></div>
+
+  <button id='aboutb' class='ui-button ui-widget ui-corner-all' title='Show ESysMan/Erlang/Cowboy versions...' />About</button>
+
+<div class='brk'></div>
 
   ",About/binary,"
 
