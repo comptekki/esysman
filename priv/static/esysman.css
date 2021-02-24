@@ -530,3 +530,7 @@ tr.r:hover {
 #abouti {
     display:none;
 }
+
+#shutdownTimeHi, #shutdownTimeH2i {
+    margin: -20px 0px;
+}
