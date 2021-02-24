@@ -339,6 +339,11 @@ websocket_handle({text, Msg}, State) ->
 			_ -> <<"done - 0/chkpasswd/fail">>
 		    end,
 		Data2;
+	    <<"sdtchng">> ->
+		send_msg(?SERVERS, <<"sdtchng (",Args/binary,") from ", (pid())/binary>>),
+		io:format("~ndate: ~p -> done - sdtchng/~p",[Date,Args]),
+		<<"done - server@localhost/sdtchng/(",Args/binary,")">>;
+
 	    _ ->					
 		send_msg(?SERVERS, <<"unsupported command from ", (pid())/binary>>),
 		<<"unsupported command">>
