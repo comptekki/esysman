@@ -327,6 +327,17 @@ websocket_handle({text, Msg}, State) ->
 		Data2;
 	    <<"toggleawsts">> ->
 		send_msg(?SERVERS, <<"toggleawsts (",Args/binary,") from ", (pid())/binary>>),
+		{ok, [{ShutdownStartTime,ShutdownStopTime,_OnorOff}]} = file:consult(?AUTOSHUTDOWNCONF),
+		case Args of
+		    <<"On">> ->
+			file:write_file(?AUTOSHUTDOWNCONF, 
+				"{<<\"" ++ binary_to_list(ShutdownStartTime) ++ "\">>,<<\""
+				++ binary_to_list(ShutdownStopTime) ++ "\">>,<<\"Off\">>}.");
+		    <<"Off">> ->
+			file:write_file(?AUTOSHUTDOWNCONF, 
+				"{<<\"" ++ binary_to_list(ShutdownStartTime) ++ "\">>,<<\""
+				++ binary_to_list(ShutdownStopTime) ++ "\">>,<<\"On\">>}.")
+		end,
 		io:format("~ndate: ~p -> done - toggleawsts/~p",[Date,Args]),
 		<<"done - server@localhost/toggleawsts/(",Args/binary,")">>;
 	    <<"chkpasswd">> ->
@@ -341,9 +352,13 @@ websocket_handle({text, Msg}, State) ->
 		Data2;
 	    <<"sdtchng">> ->
 		send_msg(?SERVERS, <<"sdtchng (",Args/binary,") from ", (pid())/binary>>),
+		{ok, [{_ShutdownStartTime,_ShutdownStopTime,OnorOff}]} = file:consult(?AUTOSHUTDOWNCONF),
+		[ShutdownStartTime,ShutdownStopTime]=binary:split(Args,<<"-">>),
+		file:write_file(?AUTOSHUTDOWNCONF, 
+				"{<<\"" ++ binary_to_list(ShutdownStartTime) ++ "\">>,<<\"" 
+				++ binary_to_list(ShutdownStopTime) ++ "\">>,<<\"" ++ binary_to_list(OnorOff) ++ "\">>}."),	      
 		io:format("~ndate: ~p -> done - sdtchng/~p",[Date,Args]),
 		<<"done - server@localhost/sdtchng/(",Args/binary,")">>;
-
 	    _ ->					
 		send_msg(?SERVERS, <<"unsupported command from ", (pid())/binary>>),
 		<<"unsupported command">>

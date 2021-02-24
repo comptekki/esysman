@@ -5,6 +5,8 @@
 -define(COMS, [<<"">>,<<"anycmd">>,<<"listupfls">>,<<"mkuploads">>,<<"ninite">>,<<"ninitecmd">>,<<"ninitelog">>,<<"wuinstall">>,<<"wuilog">>,<<"unamea">>,<<"lsbver">>,<<"yumcheck">>,<<"yumupdate">>,<<"ubuntuver">>,<<"aptcheck">>,<<"aptupgrade-list">>,<<"aptupgrade">>,<<"aptdistupgrade-list">>,<<"aptdistupgrade">>,<<"aptulog">>,<<"yumcheck">>,<<"yumupdate">>,<<"dnfcheck">>,<<"dnfupdate">>,<<"osxsupdate">>,<<"osxsulog">>]).
 -define(CONF,"/usr/local/src/esysman/src/esysman.conf").
 -define(PASSWDCONF,"/usr/local/src/esysman/src/passwd.conf").
+-define(AUTOSHUTDOWN,"/home/xulu/0erl/0esysman/src/autoshutdown.conf").
+
 -define(ROOMS,"/path/to/rooms.conf").
 -define(UPLOADS,<<"/usr/local/src/uploads/">>).
 -define(DOWNLOADS,<<"/home/user/erl/esysman/_rel/esysman/lib/esysman-version/priv/downloads/">>).
