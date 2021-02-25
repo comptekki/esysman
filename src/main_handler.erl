@@ -280,6 +280,12 @@ app_front_end(Req, Opts) ->
     Get_rms = get_rms_keys(ARooms, 49),
 
     {ok, [_,_,_,_,{AUTOLOCK}]} = file:consult(?CONF),
+
+    case file:read_file_info(?AUTOSHUTDOWNCONF) of
+        {error,enoent} -> file:write_file(?AUTOSHUTDOWNCONF, "{<<\"22\">>,<<\"06\">>,<<\"On\">>}.");
+                      _ -> ok
+    end,
+
     {ok, [{ShutdownStartTime,ShutdownStopTime,OnorOff}]} = file:consult(?AUTOSHUTDOWNCONF),
 
     Req2 = cowboy_req:reply(
