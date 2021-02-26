@@ -2667,10 +2667,12 @@ comButtons([{Wk,FQDN,MacAddr,_AutoS}|Wks],Rm,RowCnt,ColCnt) ->
     $('#",Wk/binary,"autoshut-toggle').click(function(){
         if ($('#",Wk/binary,"autoshut-toggle').html() == 'AutoS Off'){
           $('#",Wk/binary,"autoshut-toggle').html('AutoS On');
-          $('#",Wk/binary,"autoshut-toggle').css('color','red')
+          $('#",Wk/binary,"autoshut-toggle').css('color','red');
+          send('",Wk/binary,":wkautoshutdown:on');
         } else {
           $('#",Wk/binary,"autoshut-toggle').html('AutoS Off');
           $('#",Wk/binary,"autoshut-toggle').css('color','green')
+          send('",Wk/binary,":wkautoshutdown:off');
         }
     });
 

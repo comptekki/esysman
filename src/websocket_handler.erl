@@ -96,7 +96,7 @@ websocket_handle({text, Msg}, State) ->
     Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
 
     [Box,Com,Args]=Ldata,
-%    io:format("~ndate: ~p -> done - sent com ~p - data2: ~p ~n",[Box, Com, Args]),
+    io:format("~ndate: ~p -> done - sent com ~p - data2: ~p ~n",[Box, Com, Args]),
     Rec_Node=binary_to_atom(<<Box/binary>>,latin1),
     Data3 =
 	case Com of
@@ -359,6 +359,17 @@ websocket_handle({text, Msg}, State) ->
 				++ binary_to_list(ShutdownStopTime) ++ "\">>,<<\"" ++ binary_to_list(OnorOff) ++ "\">>}."),	      
 		io:format("~ndate: ~p -> done - sdtchng/~p",[Date,Args]),
 		<<"done - server@localhost/sdtchng/(",Args/binary,")">>;
+	    <<"wkautoshutdown">> ->
+		send_msg(?SERVERS, <<"wkautoshutdown (",Args/binary,") from ", (pid())/binary>>),
+		case Args of
+		    <<"on">> ->
+			file:write_file(?WKSCONF ++ binary_to_list(Box) ++ ".conf", "{<<\"on\">>}.");
+		    _ ->
+			file:write_file(?WKSCONF ++ binary_to_list(Box) ++ ".conf", "{<<\"off\">>}.")
+		end,
+		io:format("~ndate: ~p -> done - wkautoshutdown/~p",[Date,Args]),
+		<<"done - server@localhost/wkautoshutdown/(",Args/binary,")">>;
+
 	    _ ->					
 		send_msg(?SERVERS, <<"unsupported command from ", (pid())/binary>>),
 		<<"unsupported command">>
