@@ -286,6 +286,11 @@ app_front_end(Req, Opts) ->
                       _ -> ok
     end,
 
+    case file:read_file_info(?WKSCONF) of
+        {error,enoent} -> file:make_dir(?WKSCONF);
+                      _ -> ok
+    end,
+
     {ok, [{ShutdownStartTime,ShutdownStopTime,OnorOff}]} = file:consult(?AUTOSHUTDOWNCONF),
 
     Req2 = cowboy_req:reply(
@@ -2464,12 +2469,25 @@ divhc(Rm,[{Wk,FQDN,MacAddr,AutoS}|Wks],ColCnt) ->
     <<(case Wk of
 	   <<".">> ->	<<"<div class='hltd2'></div>">>;
 	   _ ->
-	       {AutoS2, TogColor} = case AutoS of
-		<<"">> ->
-		       {<<"AutoS On">>, <<"on">>};
-		   _ -> 
-		       {<<"AutoS Off">>,<<"off">>}
-	       end,
+	       {AutoS2, TogColor} = 
+		   case file:read_file_info(binary_to_list(<<?WKSCONF,Wk/binary,".conf">>)) of
+		       {error,enoent} ->
+			   case AutoS of
+			       <<"">> ->
+				   {<<"AutoS On">>, <<"on">>};
+			       _ -> 
+				   {<<"AutoS Off">>,<<"off">>}
+			   end;
+		       _ -> 
+			   {ok, [{OnorOff}]} = file:consult(<<?WKSCONF,Wk/binary,".conf">>),
+			   case OnorOff of
+			       <<"on">> ->
+				   {<<"AutoS On">>, <<"on">>};
+			       _ ->
+				   {<<"AutoS Off">>,<<"off">>}
+			   end
+		   end,
+	       
 	       <<"
 
 <!-- start cell 
@@ -2487,7 +2505,7 @@ divhc(Rm,[{Wk,FQDN,MacAddr,AutoS}|Wks],ColCnt) ->
 
 <div class='brk'></div>
 
-<div id='",Wk/binary,"macaddr' class='macaddr'>",MacAddr/binary,"</div> <div id='",Wk/binary,"dfstatus' class='dfstatus' title='DeepFreeze Status'>DF?</div> <div id='",Wk/binary,"autoshut-toggle class='autoshut-toggle-",TogColor/binary,"' title='Auto Shutdown Status'>",AutoS2/binary,"</div>
+<div id='",Wk/binary,"macaddr' class='macaddr'>",MacAddr/binary,"</div> <div id='",Wk/binary,"dfstatus' class='dfstatus' title='DeepFreeze Status'>DF?</div> <div id='",Wk/binary,"autoshut-toggle' class='autoshut-toggle-",TogColor/binary,"' title='Auto Shutdown Status'>",AutoS2/binary,"</div>
 
 <div class='brk'></div>
 

@@ -6,6 +6,7 @@
 -define(CONF,"/usr/local/src/esysman/src/esysman.conf").
 -define(PASSWDCONF,"/home/user/erl/esysman/src/passwd.conf").
 -define(AUTOSHUTDOWNCONF,"/home/user/erl/esysman/src/autoshutdown.conf").
+-define(WKSCONF,"/home/user/erl/esysman/src/wksconf/").
 
 -define(ROOMS,"/path/to/rooms.conf").
 -define(UPLOADS,<<"/usr/local/src/uploads/">>).
