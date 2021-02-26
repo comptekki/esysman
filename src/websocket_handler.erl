@@ -96,7 +96,7 @@ websocket_handle({text, Msg}, State) ->
     Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
 
     [Box,Com,Args]=Ldata,
-    io:format("~ndate: ~p -> done - sent com ~p - data2: ~p ~n",[Box, Com, Args]),
+%    io:format("~ndate: ~p -> done - sent com ~p - data2: ~p ~n",[Box, Com, Args]),
     Rec_Node=binary_to_atom(<<Box/binary>>,latin1),
     Data3 =
 	case Com of
