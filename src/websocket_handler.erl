@@ -360,7 +360,7 @@ websocket_handle({text, Msg}, State) ->
 		io:format("~ndate: ~p -> done - sdtchng/~p",[Date,Args]),
 		<<"done - server@localhost/sdtchng/(",Args/binary,")">>;
 	    <<"wkautoshutdown">> ->
-		send_msg(?SERVERS, <<"wkautoshutdown (",Args/binary,") from ", (pid())/binary>>),
+		send_msg(?SERVERS, <<"wkautoshutdown (-",Args/binary,"-",Box/binary,"-) from ", (pid())/binary>>),
 		case Args of
 		    <<"on">> ->
 			file:write_file(?WKSCONF ++ binary_to_list(Box) ++ ".conf", "{<<\"on\">>}.");
@@ -368,7 +368,7 @@ websocket_handle({text, Msg}, State) ->
 			file:write_file(?WKSCONF ++ binary_to_list(Box) ++ ".conf", "{<<\"off\">>}.")
 		end,
 		io:format("~ndate: ~p -> done - wkautoshutdown/~p",[Date,Args]),
-		<<"done - server@localhost/wkautoshutdown/(",Args/binary,")">>;
+		<<"done - server@localhost/wkautoshutdown/(-",Args/binary,"-",Box/binary,"-)">>;
 
 	    _ ->					
 		send_msg(?SERVERS, <<"unsupported command from ", (pid())/binary>>),

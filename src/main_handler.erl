@@ -442,6 +442,30 @@ Port/binary,
                     }
                 }
 
+                if (m.data.indexOf('wkautoshutdown') > -1) {
+                    if ((m.data.indexOf('done') > -1)) {
+                      hm=boxCom[2].split('-');
+                      if (hm[1].indexOf('off')) {
+                        $('#' + hm[2] + 'autoshut-toggle').html('AutoS On');
+                        $('#' + hm[2] + 'autoshut-toggle').css('color','red');
+                      } else {
+                        $('#' + hm[2] + 'autoshut-toggle').html('AutoS Off');
+                        $('#' + hm[2] + 'autoshut-toggle').css('color','green');
+                      }
+                    }
+
+                    if ((m.data.indexOf('from') > -1)) {
+                      hm=m.data.split(' ')[1].split('-');
+                      if (hm[1].indexOf('off')) {
+                        $('#' + hm[2] + 'autoshut-toggle').html('AutoS On');
+                        $('#' + hm[2] + 'autoshut-toggle').css('color','red');
+                      } else {
+                        $('#' + hm[2] + 'autoshut-toggle').html('AutoS Off');
+                        $('#' + hm[2] + 'autoshut-toggle').css('color','green');
+                      }
+                    }
+                }
+
                 if (m.data.indexOf('clearcmsg') > -1) {
                     $('#msgcl').html('');
                     $('#cntcl').html('0K/L');
