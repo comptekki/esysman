@@ -1,15 +1,15 @@
 -define(BROADCAST_ADDR, {192,168,0,255}).
 -define(SERVERS,['ecom@hostanme']).
 -define(CONSOLES, [hanwebs, hanwebs2, hanwebs3, hanwebs4]).
--define(APPS, [<<"">>,<<"any.cmd">>,<<"any.exe">>,<<"any.msi">>,<<"any.msp">>,<<"any.reg">>,<<"ecom.beam">>,<<"NiniteOne.exe">>,<<"ninite.cmd">>,<<"WUInstall.exe">>]).
--define(COMS, [<<"">>,<<"anycmd">>,<<"listupfls">>,<<"mkuploads">>,<<"ninite">>,<<"ninitecmd">>,<<"ninitelog">>,<<"wuinstall">>,<<"wuilog">>,<<"unamea">>,<<"lsbver">>,<<"yumcheck">>,<<"yumupdate">>,<<"ubuntuver">>,<<"aptcheck">>,<<"aptupgrade-list">>,<<"aptupgrade">>,<<"aptdistupgrade-list">>,<<"aptdistupgrade">>,<<"aptulog">>,<<"yumcheck">>,<<"yumupdate">>,<<"dnfcheck">>,<<"dnfupdate">>,<<"osxsupdate">>,<<"osxsulog">>]).
--define(CONF,"/usr/local/src/esysman/src/esysman.conf").
+-define(APPS, [<<"">>,<<"any.cmd">>,<<"any.exe">>,<<"any.msi">>,<<"any.msp">>,<<"any.reg">>,<<"ecom.beam">>,<<"NiniteOne.exe">>,<<"ninite.cmd">>]).
+-define(COMS, [<<"">>,<<"anycmd">>,<<"listupfls">>,<<"mkuploads">>,<<"ninite">>,<<"ninitecmd">>,<<"ninitelog">>,<<"unamea">>,<<"lsbver">>,<<"yumcheck">>,<<"yumupdate">>,<<"ubuntuver">>,<<"aptcheck">>,<<"aptupgrade-list">>,<<"aptupgrade">>,<<"aptdistupgrade-list">>,<<"aptdistupgrade">>,<<"aptulog">>,<<"yumcheck">>,<<"yumupdate">>,<<"dnfcheck">>,<<"dnfupdate">>,<<"osxsupdate">>,<<"osxsulog">>]).
+-define(CONF,"/home/user/erl/esysman/src/esysman.conf").
 -define(PASSWDCONF,"/home/user/erl/esysman/src/passwd.conf").
 -define(AUTOSHUTDOWNCONF,"/home/user/erl/esysman/src/autoshutdown.conf").
 -define(WKSCONF,"/home/user/erl/esysman/src/wksconf/").
 
 -define(ROOMS,"/path/to/rooms.conf").
--define(UPLOADS,<<"/usr/local/src/uploads/">>).
+-define(UPLOADS,<<"/home/user/erl/uploads/">>).
 -define(DOWNLOADS,<<"/home/user/erl/esysman/_rel/esysman/lib/esysman-version/priv/downloads/">>).
 
 -define(IGNOREDUPES,"box1").
