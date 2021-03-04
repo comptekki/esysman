@@ -154,7 +154,7 @@ table { border-collapse:collapse;}
 .msgc {
     overflow-y:auto;
     width:600px;
-    height:415px;
+    height:450px;
     //height:100%;
     color:yellow;
     background-color:black;
@@ -165,7 +165,7 @@ table { border-collapse:collapse;}
 .msgcsm {
     overflow-y:auto;
     width:600px;
-    height:415px;
+    height:450px;
     //height:100%;
     color:yellow;
     background-color:black;
@@ -176,7 +176,7 @@ table { border-collapse:collapse;}
 .msgcd {
     overflow-y:auto;
     width:600px;
-    height:415px;
+    height:450px;
     //height:100%;
     color:yellow;
     background-color:black;
