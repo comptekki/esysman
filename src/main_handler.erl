@@ -1839,7 +1839,7 @@ function progress(e){
 <div id='commands'>
 
 <div id='com_title' class='ui-widget'>
- <span style='font-size:large;font-weight:bold'>Commands -- Auto Wks Shutdown Time: </span>
+ <span style='font-size:large;font-weight:bold'>Auto Wks Shutdown Time: </span>
 <button id='shutdownTimeH' class='ui-button ui-widget ui-corner-all' style='background:gray' title='Shutdown Start Time'>",ShutdownStartTime/binary,"</button>
 
  <div id='shutdownTimeHid' style='display:none'>
@@ -1890,6 +1890,8 @@ function progress(e){
 </div> 
 
  <div id='tcoms'>
+<span style='font-size:large;font-weight:bold'>Commands</span><br>
+
 <button id='wsconnect' class='ui-button ui-widget ui-corner-all' title='Connect to server...' />Connect</button>
 <button id='wsdisconnect' class='ui-button ui-widget ui-corner-all' title='Disconnect from server...' />Disconnect</button>",
 (case is_list(login_is()) of
@@ -1917,6 +1919,7 @@ function progress(e){
  </div>
 
  <div id='tinputs'>
+<br>
 ",
 (mkAllRoomsComsInput({<<"copy">>,<<"Copy All">>},ARooms))/binary,
 (mkAllRoomsComsInput({<<"com">>,<<"Com All">>},ARooms))/binary,
