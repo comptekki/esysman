@@ -33,7 +33,7 @@
 -include("esysman.hrl").
 
 init(Req, Opts) ->
-	{ok, [_, _, {_, [{Uname, _}]}, _]} = file:consult(?CONF),
+	{ok, [_, _, {_, [{Uname, _}]}, _, _]} = file:consult(?CONF),
 
 %	Req2 = cowboy_req:set_resp_cookie(Uname, CookieVal, Req, #{max_age =>  ?MAXAGE, path => "/", secure => true, http_only => true}),
 	Req2 = cowboy_req:set_resp_cookie(Uname, <<"">>, Req, #{ path => "/", max_age => 0 }),
