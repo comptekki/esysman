@@ -195,11 +195,17 @@ body {background-color:black; color:yellow}
   <h3>", ?TITLE, " Login</h3>
 </div>
 <div class='unamed'>
-  <div class='unamed-t'>Username: </div><div><input id='uname' type='text' name='uname'></div>
+  <div class='unamed-t'>Username:<br><input type='text' name='uname'></div>
 </div>
+
+<div class='brk'></div>
+
 <div class='passwdd'>
-  <div class='passwdd-t'>Password: </div><div><input id='passwd' type='password' name='passwd'></div>
+  <div class='passwdd-t'>Password:<br><input type='password' name='passwd'></div>
 </div>
+
+<div class='brk'></div>
+
 <div class='logind'>
   <div class='fl'><input type='submit' name='login' value='Login'></div>
 </div>
