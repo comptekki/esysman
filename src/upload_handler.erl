@@ -34,18 +34,29 @@
 -include("esysman.hrl").
 
 init(Req, Opts) ->
-	{ok, Headers, Req2} = cowboy_req:read_part(Req),
-	{file, <<"inputfile">>, Filename, ContentType}
-		= cow_multipart:form_data(Headers),
-	case file:delete(<<(?UPLOADS)/binary,Filename/binary>>) of
-		ok -> "";
-		{error, _} -> ""
+    {{Ipprt1,Ipprt2,Ipprt3,Ipprt4}, _} = maps:get(peer, Req, {}),
+    [Host|_] = ?SERVERS,
+    Peer = list_to_atom(?NODENAME ++ "@" ++ integer_to_list(Ipprt1) ++ "." ++ integer_to_list(Ipprt2) ++ "." ++ integer_to_list(Ipprt3) ++ "." ++ integer_to_list(Ipprt4)),
+    Req4 =
+	case Peer of
+	    Host ->
+		{ok, Headers, Req2} = cowboy_req:read_part(Req),
+		{file, <<"inputfile">>, Filename, ContentType}
+		    = cow_multipart:form_data(Headers),
+		case file:delete(<<(?UPLOADS)/binary,Filename/binary>>) of
+		    ok -> "";
+		    {error, _} -> ""
+		end,
+		{ok, Req3} = body_to_console(Req2, Filename), 
+		{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
+		Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
+		io:format("~ndate: ~p -> Received file ~p of content-type ~p~n", [Date, Filename, ContentType]),
+		Req3;
+	    _ ->
+		io:format("~n~nBlocked upload IP: ~p~n", [Peer]),
+		Req 
 	end,
-	{ok, Req3} = body_to_console(Req2, Filename), 
-	{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
-	Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
-	io:format("date: ~p -> Received file ~p of content-type ~p~n~n", [Date, Filename, ContentType]),
-	{ok, Req3, Opts}.
+    {ok, Req4, Opts}.
 
 body_to_console(Req, Filename) ->
     case cowboy_req:read_part_body(Req) of

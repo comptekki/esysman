@@ -1,4 +1,5 @@
 -define(BROADCAST_ADDR, {192,168,0,255}).
+-define(NODENAME,"ecom").
 -define(SERVERS,['ecom@hostanme']).
 -define(CONSOLES, [hanwebs, hanwebs2, hanwebs3, hanwebs4]).
 -define(APPS, [<<"">>,<<"any.cmd">>,<<"any.exe">>,<<"any.msi">>,<<"any.msp">>,<<"any.reg">>,<<"ecom.beam">>,<<"NiniteOne.exe">>,<<"ninite.cmd">>]).
