@@ -36,7 +36,8 @@
 init(Req, Opts) ->
     {{Ipprt1,Ipprt2,Ipprt3,Ipprt4}, _} = maps:get(peer, Req, {}),
     [Host|_] = ?SERVERS,
-    Peer = list_to_atom(?NODENAME ++ "@" ++ integer_to_list(Ipprt1) ++ "." ++ integer_to_list(Ipprt2) ++ "." ++ integer_to_list(Ipprt3) ++ "." ++ integer_to_list(Ipprt4)),
+    PeerIP = integer_to_list(Ipprt1) ++ "." ++ integer_to_list(Ipprt2) ++ "." ++ integer_to_list(Ipprt3) ++ "." ++ integer_to_list(Ipprt4),
+    Peer = list_to_atom(?NODENAME ++ "@" ++ PeerIP),
     Req4 =
 	case Peer of
 	    Host ->
@@ -53,7 +54,7 @@ init(Req, Opts) ->
 		io:format("~ndate: ~p -> Received file ~p of content-type ~p~n", [Date, Filename, ContentType]),
 		Req3;
 	    _ ->
-		io:format("~n~nBlocked upload IP: ~p~n", [Peer]),
+		io:format("~n~nBlocked upload IP: ~p~n", [PeerIP]),
 		Req 
 	end,
     {ok, Req4, Opts}.

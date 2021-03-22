@@ -44,9 +44,22 @@
 %%
 
 init(Req, State) ->
+    {{Ipprt1,Ipprt2,Ipprt3,Ipprt4}, _} = maps:get(peer, Req, {}),
+    [Host|_] = ?SERVERS,
+    PeerIP = integer_to_list(Ipprt1) ++ "." ++ integer_to_list(Ipprt2) ++ "." ++ integer_to_list(Ipprt3) ++ "." ++ integer_to_list(Ipprt4),
+    Peer = list_to_atom(?NODENAME ++ "@" ++ PeerIP),
+    Res =
+	case Peer of
+	    Host ->
+		io:format("~n~nhost ws connect ok....~n"),
 %	Opts = #{ compress => true, idle_timeout => 36000000 },
-    Opts = #{ idle_timeout => 31200000 },
-    {cowboy_websocket, Req, State, Opts}.
+		Opts = #{ idle_timeout => 31200000 },
+		{cowboy_websocket, Req, State, Opts};
+	    _ ->
+		io:format("~n~nBlocked websocket connect attempt from IP: ~p~n", [PeerIP]),
+		{ok, Req, State}
+	end,
+    Res.
 
 %%
 
