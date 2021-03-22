@@ -1,5 +1,5 @@
 Erlang Systems Manager
-[ ESysMan 1.16 ]
+[ ESysMan 1.18 ]
 
 ESysMan is an Erlang based client/server computer systems 
 management console in which a web browser (with websockets
@@ -73,7 +73,7 @@ Prerequisites:
 1. Erlang (on server and client)
 		http://erlang.org
 
-2. Cowboy 2.6.1 (downloaded and compiled when 'make' is run)
+2. Cowboy 2.8.0 (downloaded and compiled when 'make' is run)
 	  https://github.com/extend/cowboy.git
 
 3. OpenSSL for creating selfsigned certificates
@@ -140,6 +140,11 @@ Client/Server Setup
 --------
 Versions
 --------
+1.18
+
+-Add security check to websocket connection
+
+-------
 1.16
 
 -Test with Erlang 23.2.7
@@ -147,11 +152,13 @@ Versions
 -Keep state of workstation AutoS (autoshutdown on/off) for all consoles
 -Restrict access to uploads and uptodown
 -Other fixes and tweaks
+
 -------
 1.14
 
 -Test with Erlang 23.2.4
 -A few updates and changes
+
 -------
 1.12
 
@@ -160,6 +167,7 @@ Versions
 -Upgrade to jquery 3.5.1
 -Fixes and adjustments
 -Move most ecom.erl options to conf file
+
 --------
 1.11
 
@@ -171,6 +179,7 @@ Versions
 -Other simple updates and fixes
 -Add CHKDUPETIME for wks counters in esysman.hrl
 -Add about button - show erlang/esysman versions
+
 --------
 1.10
 
@@ -179,6 +188,7 @@ Versions
 -Update to jquery 3.4.1
 -Change input method for shutdown start/stop times and copy/com
 -Miner updates and fixes
+
 --------
 1.9
 
