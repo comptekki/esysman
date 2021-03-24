@@ -34,13 +34,9 @@
 -include("esysman.hrl").
 
 init(Req, Opts) ->
-    {{Ipprt1,Ipprt2,Ipprt3,Ipprt4}, _} = maps:get(peer, Req, {}),
-    [Host|_] = ?SERVERS,
-    PeerIP = integer_to_list(Ipprt1) ++ "." ++ integer_to_list(Ipprt2) ++ "." ++ integer_to_list(Ipprt3) ++ "." ++ integer_to_list(Ipprt4),
-    Peer = list_to_atom(?NODENAME ++ "@" ++ PeerIP),
     Req4 =
-	case Peer of
-	    Host ->
+	case fire_wall(Req) of
+	    allow ->
 		{ok, Headers, Req2} = cowboy_req:read_part(Req),
 		{file, <<"inputfile">>, Filename, ContentType}
 		    = cow_multipart:form_data(Headers),
@@ -53,11 +49,13 @@ init(Req, Opts) ->
 		Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
 		io:format("date: ~p -> uptodown -> Received file ~p of content-type ~p~n~n", [Date, Filename, ContentType]),
 		Req3;
-	    _ ->
-		io:format("~n~nBlocked uptodown IP: ~p~n", [PeerIP]),
-		Req 
+	    deny ->
+		{ok, Req3, _} = fwDenyMessage(Req, Opts),
+		Req3
 	end,
     {ok, Req4, Opts}.
+
+%%
 
 body_to_console(Req, Filename) ->
     case cowboy_req:read_part_body(Req) of
@@ -81,3 +79,52 @@ body_to_console(Req, Filename) ->
 			end,
             {ok, Req2}
 	end.
+
+%%
+
+fire_wall(Req) ->	
+    {PeerAddress, _Port} = cowboy_req:peer(Req),
+    {{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
+    Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
+    {ok, [_,{FireWallOnOff,IPAddresses},_,_,_]}=file:consult(?CONF),
+    case FireWallOnOff of
+	on ->
+	    case lists:member(PeerAddress,IPAddresses) of
+		true ->
+		    io:format("~ndate: ~p -> uptodown - firewall allow -> ~p",[Date, PeerAddress]),
+		    allow;
+		false ->
+		    io:format("~ndate: ~p -> uptodown - firewall denied -> ~p",[Date, PeerAddress]),
+		    deny
+	    end;
+	off ->
+	    allow
+    end.
+
+%%
+
+fwDenyMessage(Req, Opts) ->
+    Req2 = cowboy_req:reply(
+	     200,
+	     #{ <<"content-type">> => <<"text/html">> },
+
+<<"<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>", ?TITLE, "</title>
+
+<meta Http-Equiv='Cache-Control' Content='no-cache'>
+<meta Http-Equiv='Pragma' Content='no-cache'>
+<meta Http-Equiv='Expires' Content='0'>
+<META HTTP-EQUIV='EXPIRES' CONTENT='Mon, 30 Apr 2012 00:00:01 GMT'>
+
+<link rel='icon' href='/static/favicon.ico' type='image/x-icon' />
+<style>
+body {background-color:black; color:yellow}
+</style>
+</head>
+<body>
+Access Denied!
+</body>
+</html>">>, Req),
+    {ok, Req2, Opts}.

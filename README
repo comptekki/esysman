@@ -1,5 +1,5 @@
 Erlang Systems Manager
-[ ESysMan 1.18 ]
+[ ESysMan 1.20 ]
 
 ESysMan is an Erlang based client/server computer systems 
 management console in which a web browser (with websockets
@@ -140,6 +140,12 @@ Client/Server Setup
 --------
 Versions
 --------
+1.20
+
+-Use firewall hosts in esysman.conf to restrict websocket, upload and uptodown
+-Test with Erlang 23.3
+
+-------
 1.18
 
 -Add security check to websocket connection
