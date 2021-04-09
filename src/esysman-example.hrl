@@ -13,7 +13,6 @@
 -define(UPLOADS,<<"/home/user/erl/uploads/">>).
 -define(DOWNLOADS,<<"/home/user/erl/esysman/_rel/esysman/lib/esysman-version/priv/downloads/">>).
 
--define(IGNOREDUPES,"box1").
 -define(IGNOREREBOOT,"box1").
 -define(IGNORESHOWUSERS,"box1").
 -define(IGNOREUSERS,"u1:Default2:default2").

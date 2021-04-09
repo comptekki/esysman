@@ -2144,7 +2144,7 @@ jsAllSelectRows_copy(_Room,[]) ->
 
 %%
 
-jsAllSelect_copy(Rm,[{Wk,_FQDN,_MacAddr,_AutoS}|Wks]) ->
+jsAllSelect_copy(Rm,[{Wk,_FQDN,_MacAddr,_AutoS,_IgnoreDupe}|Wks]) ->
     case Wk of
 	<<".">> ->	jsAllSelect_copy(Rm,Wks);
 	_ ->
@@ -2179,7 +2179,7 @@ jsSelectRows_copy([]) ->
 
 %%
 
-jsSelect_copy([{Wk,_FQDN,_MacAddr,_AutoS}|Wks]) ->
+jsSelect_copy([{Wk,_FQDN,_MacAddr,_AutoS,_IgnoreDupe}|Wks]) ->
     case Wk of
 	<<".">> ->	jsSelect_copy(Wks);
 	_ ->
@@ -2235,7 +2235,7 @@ jsAllSelectRows_com(_Room,[]) ->
 
 %%
 
-jsAllSelect_com(Rm,[{Wk,_FQDN,_MacAddr,_AutoS}|Wks]) ->
+jsAllSelect_com(Rm,[{Wk,_FQDN,_MacAddr,_AutoS,_IgnoreDupe}|Wks]) ->
     case Wk of
 	<<".">> ->	jsAllSelect_com(Rm,Wks);
 	_ ->
@@ -2270,7 +2270,7 @@ jsSelectRows_com([]) ->
 
 %%
 
-jsSelect_com([{Wk,_FQDN,_MacAddr,_AutoS}|Wks]) ->
+jsSelect_com([{Wk,_FQDN,_MacAddr,_AutoS,_IgnoreDupe}|Wks]) ->
     case Wk of
 	<<".">> ->	jsSelect_com(Wks);
 	_ ->
@@ -2498,7 +2498,7 @@ mkRoomRows([],_Rm,_RowCnt) ->
 
 %%
 
-divhc(Rm,[{Wk,FQDN,MacAddr,AutoS}|Wks],ColCnt) ->
+divhc(Rm,[{Wk,FQDN,MacAddr,AutoS,_IgnoreDupe}|Wks],ColCnt) ->
     <<(case Wk of
 	   <<".">> ->	<<"<div class='hltd2'></div>">>;
 	   _ ->
@@ -2559,7 +2559,7 @@ divhc(_Rm,[],_ColCnt) ->
 
 %%
 
-divc({Wk,_FQDN,_MacAddr,_AutoS}) ->
+divc({Wk,_FQDN,_MacAddr,_AutoS,_IgnoreDupe}) ->
     case Wk of
 	<<".">> ->	<<"<div class='ltd2'></div>">>;
 	_ ->
@@ -2673,7 +2673,7 @@ comButtonsRows([],_Rm,_RowCnt) ->
 
 %%
 
-comButtons([{Wk,FQDN,MacAddr,_AutoS}|Wks],Rm,RowCnt,ColCnt) ->
+comButtons([{Wk,FQDN,MacAddr,_AutoS,_IgnoreDupe}|Wks],Rm,RowCnt,ColCnt) ->
     case Wk of
 	<<".">> -> << (comButtons(Wks,Rm,RowCnt,ColCnt+1))/binary >>;
 	_ ->
@@ -2874,7 +2874,7 @@ mkjsComAllRows([],_Rm,_Com) ->
 
 %%
 
-mkjsComAllRow([{Wk,_FQDN,_MacAddr,_AutoS}|Wks],Rm,Com) ->
+mkjsComAllRow([{Wk,_FQDN,_MacAddr,_AutoS,_IgnoreDupe}|Wks],Rm,Com) ->
     case Wk of
 	<<".">> ->
 	    mkjsComAllRow(Wks,Rm,Com);
@@ -3042,15 +3042,13 @@ jschkduRows([],_Rm) ->
 
 %%
 
-jschkduRow([{Wk,_FQDN,_MacAddr,_AutoS}|Wks],Rm) ->
+jschkduRow([{Wk,_FQDN,_MacAddr,_AutoS,IgnoreDupe}|Wks],Rm) ->
     case Wk of
 	<<".">> ->	jschkduRow(Wks,Rm);
 	_ ->
 	    <<"
 
-    var ignore_box2 = '",?IGNOREDUPES,"';
-
-    if ($('#",Wk/binary,"status').html()!='.' && ignore_box2.indexOf('",Wk/binary,"') < 0){
+    if ($('#",Wk/binary,"status').html()!='.' && ",IgnoreDupe/binary,"){
         dupe_",Rm/binary,".push($('#",Wk/binary,"status').html().toLowerCase());
         if (typeof hash_",Rm/binary,"[dupe_",Rm/binary,"[dupe_",Rm/binary,".length-1]] === 'undefined')
             hash_",Rm/binary,"[dupe_",Rm/binary,"[dupe_",Rm/binary,".length-1]] = [];
@@ -3118,7 +3116,7 @@ jsrefcons_rows([],_Rm) ->
 
 %%
 
-jsrefcons_row([{Wk,_FQDN,_MacAddr,_AutoS}|Wks],Rm) ->
+jsrefcons_row([{Wk,_FQDN,_MacAddr,_AutoS,_IgnoreDupe}|Wks],Rm) ->
     case Wk of
 	<<".">> ->	jsrefcons_row(Wks,Rm);
 	_ ->
