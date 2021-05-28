@@ -1162,7 +1162,7 @@ Port/binary,
           var now = new Date();
           var trigger = new Date(value);
 
-          if (Math.abs(now.getTime() - trigger.getTime()) < 600000) {
+          if (Math.abs(now.getTime() - trigger.getTime()) < 540000) {
             var tmr='#com_'+$(this).find('td:nth-child(2)').text();
             $(tmr).click();
           }
