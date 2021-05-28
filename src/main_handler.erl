@@ -1154,6 +1154,47 @@ Port/binary,
       $('#mngscripts').click();
     });
 
+    function chk_timers() {
+      $('#timers tbody tr').each(function(e) {
+        var value = $(this).find('td:first').text();
+
+        if ((value.length > 0) && (value.length < 18)) {
+          var now = new Date();
+          var trigger = new Date(value);
+          var nhour = now.getHours();
+          var thour = trigger.getHours();
+
+          if (nhour == thour) {
+            var nmin = now.getMinutes();
+            var tmin = trigger.getMinutes();
+
+            if ((nmin >= tmin) && (nmin <= (tmin + 5))) {
+              var tmr='#com_'+$(this).find('td:nth-child(2)').text();
+              $(tmr).click();
+            }
+          }
+        }
+      });
+    }
+
+    set_hours_mins();
+
+    function set_hours_mins() {
+      var select = '';
+      for (i=0;i<=23;i++){
+        const ii = i < 10 ? '0'+i : i;
+        select += '<option val=' + ii + '>' + ii + '</option>';
+      }
+      $('#dhour').html(select);
+
+      select = '';
+      for (i=0;i<=59;i+=1){
+        const ii = i < 10 ? '0'+i : i;
+        select += '<option val=' + ii + '>' + ii + '</option>';
+    }
+      $('#dmin').html(select)
+    }
+
     set_date();
 
     function set_date(){
@@ -1161,7 +1202,6 @@ Port/binary,
     };
 
     $(document).on('click', '#addtimer', function(){
-
       var td1 = $('#tdate').val();
       var td1h = $('#dhour option:selected').text();
       var td1m = $('#dmin option:selected').text();
@@ -1777,41 +1817,6 @@ function progress(e){
       $('#mngtimersbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngdwnldsbox').css('z-index')));
     });
 
-  function chk_timers() {
-    $('#timers tbody tr').each(function(e) {
-      var value = $(this).find('td:first').text();
-      if ((value.length > 0) && (value.length < 18)) {
-        var now = new Date();
-        var trigger = new Date(value);
-        var seconds = (now - trigger)/1000;
-        if (seconds > 0 && seconds < 300) {
-	  tmr='#com_'+$(this).find('td:nth-child(2)').text();
-          $(tmr).click();
-	  mills = 1000 * 60 * 60 * 24;
-	  setInterval(function() { $(tmr).click(); }, mills);
-        }
-      }
-    });
-  }
-
-  set_hours_mins();
-
-  function set_hours_mins() {
-    var select = '';
-    for (i=0;i<=23;i++){
-      const ii = i < 10 ? '0'+i : i;
-      select += '<option val=' + ii + '>' + ii + '</option>';
-    }
-    $('#dhour').html(select);
-
-    select = '';
-    for (i=0;i<=59;i+=1){
-      const ii = i < 10 ? '0'+i : i;
-      select += '<option val=' + ii + '>' + ii + '</option>';
-    }
-    $('#dmin').html(select)
-  }
-
 });
 
 </script>
@@ -1874,6 +1879,7 @@ function progress(e){
 <span id='fncp' style='display:none'>File name copied to Clipboard!</span>
 <div id='mngscrbox' class='ui-widget-content' title='Click to drag window'></div>
 <div id='mngdwnldsbox' class='ui-widget-content' title='Click to drag window'></div>
+
 <div id='mngtimersbox' class='ui-widget-content' title='Click to drag window'>
 [ Manage Timers ]<br><br>
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
