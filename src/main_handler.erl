@@ -1161,17 +1161,10 @@ Port/binary,
         if ((value.length > 0) && (value.length < 18)) {
           var now = new Date();
           var trigger = new Date(value);
-          var nhour = now.getHours();
-          var thour = trigger.getHours();
 
-          if (nhour == thour) {
-            var nmin = now.getMinutes();
-            var tmin = trigger.getMinutes();
-
-            if ((nmin >= tmin) && (nmin <= (tmin + 5))) {
-              var tmr='#com_'+$(this).find('td:nth-child(2)').text();
-              $(tmr).click();
-            }
+          if (Math.abs(now.getTime() - trigger.getTime()) < 600000) {
+            var tmr='#com_'+$(this).find('td:nth-child(2)').text();
+            $(tmr).click();
           }
         }
       });
