@@ -292,12 +292,20 @@ app_front_end(Req, Opts) ->
                       _ -> ok
     end,
 
+    {ok, [{ShutdownStartTime,ShutdownStopTime,OnorOff}]} = file:consult(?AUTOSHUTDOWNCONF),
+
     case file:read_file_info(?WKSCONF) of
         {error,enoent} -> file:make_dir(?WKSCONF);
                       _ -> ok
     end,
 
-    {ok, [{ShutdownStartTime,ShutdownStopTime,OnorOff}]} = file:consult(?AUTOSHUTDOWNCONF),
+    case file:read_file_info(?TIMERSCONF) of
+        {error,enoent} -> file:write_file(?TIMERSCONF, "{[]}.");
+                      _ -> ok
+    end,
+
+    {ok, [{TimersList}]} = file:consult(?TIMERSCONF),
+io:format("~n~p~n",[TimersList]),
 
     Req2 = cowboy_req:reply(
 	     200,
@@ -1162,7 +1170,7 @@ Port/binary,
           var now = new Date();
           var trigger = new Date(value);
 
-          if (Math.abs(now.getTime() - trigger.getTime()) < 540000) {
+          if (Math.abs(now.getTime() - trigger.getTime()) < 300000) {
             var tmr='#com_'+$(this).find('td:nth-child(2)').text();
             $(tmr).click();
           }
@@ -1181,10 +1189,10 @@ Port/binary,
       $('#dhour').html(select);
 
       select = '';
-      for (i=0;i<=59;i+=1){
+      for (i=0;i<=55;i+=5){
         const ii = i < 10 ? '0'+i : i;
         select += '<option val=' + ii + '>' + ii + '</option>';
-    }
+      }
       $('#dmin').html(select)
     }
 

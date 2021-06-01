@@ -8,6 +8,7 @@
 -define(PASSWDCONF,"/home/user/erl/esysman/src/passwd.conf").
 -define(AUTOSHUTDOWNCONF,"/home/user/erl/esysman/src/autoshutdown.conf").
 -define(WKSCONF,"/home/user/erl/esysman/src/wksconf/").
+-define(TIMERSCONF,"/home/user/erl/esysman/src/timers.conf").
 
 -define(ROOMS,"/path/to/rooms.conf").
 -define(UPLOADS,<<"/home/user/erl/uploads/">>).
