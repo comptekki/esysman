@@ -399,7 +399,7 @@ Port/binary,
 
   }
 
-    var refreshcnt = 0;
+//    var refreshcnt = 0;
     var cons1 = 0;
     var cons2 = 0;
     var cons3 = 0;
@@ -845,7 +845,7 @@ Port/binary,
         (mins<10)?mins='0'+mins:mins;
         (seconds<10)?seconds='0'+seconds:seconds;
 
-        return jsnow.getFullYear()+'-'+month+'-'+day+' '+hour+':'+mins+':'+seconds;
+        return jsnow.getFullYear()+'/'+month+'/'+day+' '+hour+':'+mins+':'+seconds;
     }
 
     function getnow2(jsnow) {
@@ -861,7 +861,7 @@ Port/binary,
         (mins<10)?mins='0'+mins:mins;
         (seconds<10)?seconds='0'+seconds:seconds;
 
-        return jsnow.getFullYear()+'-'+month+'-'+day+' '+hour+':'+mins+':'+seconds;
+        return jsnow.getFullYear()+'/'+month+'/'+day+' '+hour+':'+mins+':'+seconds;
     }
     
     var reset = '';
@@ -1170,7 +1170,12 @@ Port/binary,
           var now = new Date();
           var trigger = new Date(value);
 
-          if (Math.abs(now.getTime() - trigger.getTime()) < 300000) {
+          var reft = new Date($('#reft').html());
+
+          var ngttgt = now.getTime() - trigger.getTime();
+          var rgttgt = reft.getTime() - trigger.getTime();
+
+          if ((ngttgt > 0) && (rgttgt > 0) && (ngttgt < 300000) && (rgttgt < 300000)) {
             var tmr='#com_'+$(this).find('td:nth-child(2)').text();
             $(tmr).click();
           }
@@ -1628,6 +1633,12 @@ function progress(e){
 
     $(document).on('click', '#aboutb', function(){     
       $('#abouti').finish().show().delay(5000).fadeOut('slow')
+    });
+
+    $(document).on('keyup', '#tinfo', function(e) {
+      if(e.which == 13) {
+        $('#addtimer').click();
+      }
     });
 
 ",
@@ -3103,7 +3114,7 @@ function refreshtimef() {
   d1 = getnow2(jsnow);
   d2 = getnow2(jsnow2);
 
-  $('#refreshtime').html('Refreshed: <span style=color:green>' +  d1 + '</span> -> Next Refresh: <span style=color:red>' + d2 + '</span>');
+  $('#refreshtime').html('Refreshed: <span id=reft style=color:green>' +  d1 + '</span> -> Next Refresh: <span style=color:red>' + d2 + '</span>');
 }
 
 function refresh_cons_",Rm/binary,"(){
