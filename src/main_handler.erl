@@ -305,7 +305,7 @@ app_front_end(Req, Opts) ->
     end,
 
     {ok, [{TimersList}]} = file:consult(?TIMERSCONF),
-io:format("~n~p~n",[TimersList]),
+io:format("Tlist:~n~p~n",[TimersList]),
 
     Req2 = cowboy_req:reply(
 	     200,
@@ -875,7 +875,7 @@ Port/binary,
                 mb = 1048576;
                 lines=$('#msgsm br').length;
 
-         		if (msg.indexOf('done') > -1 || msg.indexOf('_') > -1 || msg.indexOf('reboot sent to') > -1 || msg.indexOf('dfstatus sent to') > -1 || msg.indexOf('pong') > -1 || msg.indexOf('OK') > -1 || msg.indexOf('Results') > -1 || msg.indexOf('Thawing') > -1 || msg.indexOf('Freezing') > -1 || msg.indexOf('copied') > -1) {
+         		if (msg.indexOf('done') > -1 || msg.indexOf('_') > -1 || msg.indexOf('reboot sent to') > -1 || msg.indexOf('dfstatus sent to') > -1 || msg.indexOf('pong') > -1 || msg.indexOf('OK') > -1 || msg.indexOf('Results') > -1 || ms.indexOf('Thawing') > -1 || msg.indexOf('Freezing') > -1 || msg.indexOf('copied') > -1) {
                     reset=$('#cntrst').html();
      		        $('#cntrst').html('('+(Number(reset.substring(1, reset.indexOf(')'))) + 1)+') Reset');
 		        }
@@ -1906,7 +1906,8 @@ function progress(e){
 </select>
 <select id=dmin>
 </select>
-</td><td id=timertd2><span id=tsystem>Click ecom@host<br>to add it here...</span></td><td id=timertd3><input id=tinfo></td><td id=timertd4><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button></td></tr>
+</td><td id=timertd2><span id=tsystem>Click ecom@host<br>to add it here...</span></td><td id=timertd3><input id=tinfo></td><td id=timertd4><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button></td></tr>",(get_timers(TimersList))/binary,
+"
 </table><br>
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
 </div>
@@ -3161,3 +3162,14 @@ jsrefcons_row([],_Rm) ->
 now_bin() ->
     {N1,N2,N3}=erlang:timestamp(), %now()
     list_to_binary(integer_to_list(N1)++integer_to_list(N2)++integer_to_list(N3)).
+
+%
+
+get_timers([Timer|Rest]) ->
+io:format("~nTimer: ~p~n",[Timer]),
+io:format("~nrest: ~p~n",[Rest]),
+    [Tdate, Tsys, Tdesc] = Timer,
+    <<"<tr><td id=timertd1> ", Tdate/binary, "</td> <td id=timertd2>", Tsys/binary, " </td><td id=timertd3> ", Tdesc/binary, " </td><td id=timertd4><button id=deltimer class='ui-button ui-widget ui-corner-all' onclick=$(this).closest('tr').remove()>Del Timer</button></td></tr>",(get_timers(Rest))/binary>>;
+get_timers([]) ->
+io:format("~nempty get_timers~n"),
+    <<>>.
