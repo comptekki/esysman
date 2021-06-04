@@ -1163,14 +1163,17 @@ Port/binary,
     });
 
     function update_timers() {
+      var timers = '{[';
       $('#timers tbody tr').each(function(e) {
-        var rdate = $(this).find('td:first').text();
-        var rsys = $(this).find('td:nth-child(2)').text()
-        var rdesc = $(this).find('td:nth-child(3)').text();
+        var rdate = $(this).find('td:first').text().trim();
+        var rsys = $(this).find('td:nth-child(2)').text().trim();
+        var rdesc = $(this).find('td:nth-child(3)').text().trim();
         if ((rdate.length > 0) && (rdate.length < 18)) {
-          console.log('['+rdate+','+rsys+','+rdesc+']');
+          timers = timers + '[<<\"'+rdate+'\">>,<<\"'+rsys+'\">>,<<\"'+rdesc+'\">>],';
         }
       });
+      timers = timers.slice(0, -1) + ']}.';
+      send('0:update_timers:'+timers);
     }
 
     function chk_timers() {

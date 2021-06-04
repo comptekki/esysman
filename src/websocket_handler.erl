@@ -377,7 +377,12 @@ websocket_handle({text, Msg}, State) ->
 		end,
 		io:format("~ndate: ~p -> done - wkautoshutdown/~p",[Date,Args]),
 		<<"done - server@localhost/wkautoshutdown/(-",Args/binary,"-",Box/binary,"-)">>;
-
+	    <<"update_timers">> ->
+		send_msg(?SERVERS, <<"update_timers ",Args/binary," from ", (pid())/binary>>),
+%		file:write_file(?TIMERSCONF ++ "timers.conf", Args),
+		io:format("~n~p~n",[?TIMERSCONF ++ "timers.conf" ++ "args: " ++ Args]),
+		io:format("~ndate: ~p -> done - update_timers/~p",[Date,Args]),
+		<<"done - server@localhost/updates_timers/",Args/binary>>;
 	    _ ->					
 		send_msg(?SERVERS, <<"unsupported command from ", (pid())/binary>>),
 		<<"unsupported command">>
