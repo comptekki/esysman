@@ -88,6 +88,7 @@ websocket_handle({text, <<"close">>}, State) ->
 websocket_handle({text, <<"client-connected">>}, State) ->
     {reply, {text, <<"client-connected">> }, State, hibernate};
 websocket_handle({text, Msg}, State) ->
+
     Ldatacrt = binary:split(Msg,<<"^">>,[global]),
 
     Ldata = 
@@ -378,11 +379,12 @@ websocket_handle({text, Msg}, State) ->
 		io:format("~ndate: ~p -> done - wkautoshutdown/~p",[Date,Args]),
 		<<"done - server@localhost/wkautoshutdown/(-",Args/binary,"-",Box/binary,"-)">>;
 	    <<"update_timers">> ->
-		send_msg(?SERVERS, <<"update_timers ",Args/binary," from ", (pid())/binary>>),
-%		file:write_file(?TIMERSCONF ++ "timers.conf", Args),
-		io:format("~n~p~n",[?TIMERSCONF ++ "timers.conf" ++ "args: " ++ Args]),
-		io:format("~ndate: ~p -> done - update_timers/~p",[Date,Args]),
-		<<"done - server@localhost/updates_timers/",Args/binary>>;
+		send_msg(?SERVERS, <<"update_timers from ", (pid())/binary>>),
+		file:write_file(?TIMERSCONF, Args),
+%		io:format("~n~p~n",[?TIMERSCONF ++ "timers.conf" ++ "args: " ++ Args]),
+
+		io:format("~ndate: ~p -> done - update_timers/",[Date]),
+		<<"done - server@localhost/updates_timers">>;
 	    _ ->					
 		send_msg(?SERVERS, <<"unsupported command from ", (pid())/binary>>),
 		<<"unsupported command">>

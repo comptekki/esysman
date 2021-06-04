@@ -305,7 +305,6 @@ app_front_end(Req, Opts) ->
     end,
 
     {ok, [{TimersList}]} = file:consult(?TIMERSCONF),
-io:format("Tlist:~n~p~n",[TimersList]),
 
     Req2 = cowboy_req:reply(
 	     200,
@@ -1165,7 +1164,7 @@ Port/binary,
     function update_timers() {
       var timers = '{[';
       $('#timers tbody tr').each(function(e) {
-        var rdate = $(this).find('td:first').text().trim();
+        var rdate = $(this).find('td:first').text().trim().replace(/:/g, '-');
         var rsys = $(this).find('td:nth-child(2)').text().trim();
         var rdesc = $(this).find('td:nth-child(3)').text().trim();
         if ((rdate.length > 0) && (rdate.length < 18)) {
@@ -1208,7 +1207,7 @@ Port/binary,
       $('#dhour').html(select);
 
       select = '';
-      for (i=0;i<=55;i+=5){
+      for (i=0;i<=55;i+=2){
         const ii = i < 10 ? '0'+i : i;
         select += '<option val=' + ii + '>' + ii + '</option>';
       }
@@ -3181,7 +3180,8 @@ now_bin() ->
 %
 
 get_timers([Timer|Rest]) ->
-    [Tdate, Tsys, Tdesc] = Timer,
+    [Tdate1, Tsys, Tdesc] = Timer,
+    Tdate = binary:replace(Tdate1, <<"-">>, <<":">>),
     <<"<tr><td id=timertd1> ", Tdate/binary, "</td> <td id=timertd2>", Tsys/binary, " </td><td id=timertd3> ", Tdesc/binary, " </td><td id=timertd4><button id=deltimer class='ui-button ui-widget ui-corner-all' onclick=$(this).closest('tr').remove()>Del Timer</button></td></tr>",(get_timers(Rest))/binary>>;
 get_timers([]) ->
     <<>>.
