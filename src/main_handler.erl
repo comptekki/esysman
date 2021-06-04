@@ -1162,6 +1162,17 @@ Port/binary,
       $('#mngscripts').click();
     });
 
+    function update_timers() {
+      $('#timers tbody tr').each(function(e) {
+        var rdate = $(this).find('td:first').text();
+        var rsys = $(this).find('td:nth-child(2)').text()
+        var rdesc = $(this).find('td:nth-child(3)').text();
+        if ((rdate.length > 0) && (rdate.length < 18)) {
+          console.log('['+rdate+','+rsys+','+rdesc+']');
+        }
+      });
+    }
+
     function chk_timers() {
       $('#timers tbody tr').each(function(e) {
         var value = $(this).find('td:first').text();
@@ -1230,6 +1241,7 @@ Port/binary,
       set_hours_mins();
 
       $('#tinfo').focus();
+      update_timers();
     });
 
     $(document).on('change', '#selfile', function(evt){
@@ -3166,10 +3178,7 @@ now_bin() ->
 %
 
 get_timers([Timer|Rest]) ->
-io:format("~nTimer: ~p~n",[Timer]),
-io:format("~nrest: ~p~n",[Rest]),
     [Tdate, Tsys, Tdesc] = Timer,
     <<"<tr><td id=timertd1> ", Tdate/binary, "</td> <td id=timertd2>", Tsys/binary, " </td><td id=timertd3> ", Tdesc/binary, " </td><td id=timertd4><button id=deltimer class='ui-button ui-widget ui-corner-all' onclick=$(this).closest('tr').remove()>Del Timer</button></td></tr>",(get_timers(Rest))/binary>>;
 get_timers([]) ->
-io:format("~nempty get_timers~n"),
     <<>>.
