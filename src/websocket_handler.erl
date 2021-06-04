@@ -381,8 +381,6 @@ websocket_handle({text, Msg}, State) ->
 	    <<"update_timers">> ->
 		send_msg(?SERVERS, <<"update_timers from ", (pid())/binary>>),
 		file:write_file(?TIMERSCONF, Args),
-%		io:format("~n~p~n",[?TIMERSCONF ++ "timers.conf" ++ "args: " ++ Args]),
-
 		io:format("~ndate: ~p -> done - update_timers/",[Date]),
 		<<"done - server@localhost/updates_timers">>;
 	    _ ->					

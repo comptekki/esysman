@@ -378,7 +378,7 @@ Port/binary,
 ",
 (init2(ARooms))/binary,
 "
-   }
+  }
 
   function wsconnect() {
         socket = new WebSocket(ws_str);
@@ -399,6 +399,7 @@ Port/binary,
   }
 
 //    var refreshcnt = 0;
+
     var cons1 = 0;
     var cons2 = 0;
     var cons3 = 0;
@@ -1171,7 +1172,11 @@ Port/binary,
           timers = timers + '[<<\"'+rdate+'\">>,<<\"'+rsys+'\">>,<<\"'+rdesc+'\">>],';
         }
       });
-      timers = timers.slice(0, -1) + ']}.';
+      if (timers.length > 2) {
+        timers = timers.slice(0, -1) + ']}.';
+      } else {
+        timers = '{[]}.'
+      }
       send('0:update_timers:'+timers);
     }
 
@@ -1207,7 +1212,7 @@ Port/binary,
       $('#dhour').html(select);
 
       select = '';
-      for (i=0;i<=55;i+=2){
+      for (i=0;i<=55;i+=5){
         const ii = i < 10 ? '0'+i : i;
         select += '<option val=' + ii + '>' + ii + '</option>';
       }
@@ -1219,6 +1224,8 @@ Port/binary,
     function set_date(){
       $('#tdate').datepicker()
     };
+
+    var timercnt = ",(integer_to_binary(length(TimersList)))/binary,";
 
     $(document).on('click', '#addtimer', function(){
       var td1 = $('#tdate').val();
@@ -1237,13 +1244,25 @@ Port/binary,
       $('#timertd3').html('<input id=tinfo>');
       $('#timertd4').html('<button id=addtimer class=\"ui-button ui-widget ui-corner-all\">Add Timer</button>');
 
-      $('#timers').append('<tr><td id=timertd1> ' + td1 + ' ' + td1h + ':' + td1m + '</td> <td id=timertd2>' + td2 + ' </td><td id=timertd3> ' + td3 + ' </td><td id=timertd4><button id=deltimer class=\"ui-button ui-widget ui-corner-all\" onclick=$(this).closest(\"tr\").remove()>Del Timer</button></td></tr>');
+      $('#timers').append('<tr><td id=timertd1_' + timercnt + '> ' + td1 + ' ' + td1h + ':' + td1m + '</td> <td id=timertd2_' + timercnt + '>' + td2 + ' </td><td id=timertd3_' + timercnt + '> ' + td3 + ' </td><td id=timertd4_' + timercnt + '><button id=deltimer_' + timercnt + ' class=\"ui-button ui-widget ui-corner-all\" onclick=$(this).closest(\"tr\").remove()>Del Timer</button></td></tr>');
 
       set_date();
       set_hours_mins();
 
       $('#tinfo').focus();
+
+      document.getElementById('deltimer_'+timercnt).addEventListener ('click', update_timers, false);
+
+      timercnt = timercnt + 1;
+
       update_timers();
+    });
+
+    $(document).ready(function() {
+",
+(create_timer_events(TimersList,1))/binary,
+"
+
     });
 
     $(document).on('change', '#selfile', function(evt){
@@ -1920,7 +1939,7 @@ function progress(e){
 </select>
 <select id=dmin>
 </select>
-</td><td id=timertd2><span id=tsystem>Click ecom@host<br>to add it here...</span></td><td id=timertd3><input id=tinfo></td><td id=timertd4><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button></td></tr>",(get_timers(TimersList))/binary,
+</td><td id=timertd2><span id=tsystem>Click ecom@host<br>to add it here...</span></td><td id=timertd3><input id=tinfo></td><td id=timertd4><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button></td></tr>",(get_timers(TimersList,1))/binary,
 "
 </table><br>
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
@@ -3179,9 +3198,17 @@ now_bin() ->
 
 %
 
-get_timers([Timer|Rest]) ->
+get_timers([Timer|Rest],Timercnt) ->
     [Tdate1, Tsys, Tdesc] = Timer,
     Tdate = binary:replace(Tdate1, <<"-">>, <<":">>),
-    <<"<tr><td id=timertd1> ", Tdate/binary, "</td> <td id=timertd2>", Tsys/binary, " </td><td id=timertd3> ", Tdesc/binary, " </td><td id=timertd4><button id=deltimer class='ui-button ui-widget ui-corner-all' onclick=$(this).closest('tr').remove()>Del Timer</button></td></tr>",(get_timers(Rest))/binary>>;
-get_timers([]) ->
+    <<"<tr><td id=timertd1_' + timercnt + '> ", Tdate/binary, "</td> <td id=timertd2_' + timercnt + '>", Tsys/binary, "</td><td id=timertd3_' + timercnt + '>", Tdesc/binary, "</td><td id=timertd4_' + timercnt + '><button id=deltimer_", (list_to_binary(integer_to_list(Timercnt)))/binary," class='ui-button ui-widget ui-corner-all' onclick=$(this).closest('tr').remove()>Del Timer</button></td></tr>",(get_timers(Rest,Timercnt + 1))/binary>>;
+get_timers([],_) ->
     <<>>.
+
+%
+
+create_timer_events([_Timer|Rest],Timercnt) ->
+    <<"document.getElementById('deltimer_", (list_to_binary(integer_to_list(Timercnt)))/binary,"').addEventListener('click', update_timers, false);",(create_timer_events(Rest,Timercnt + 1))/binary>>;
+create_timer_events([],_) ->
+    <<>>.
+
