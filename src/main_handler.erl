@@ -2402,7 +2402,7 @@ mkARComsComs(Rm,[{Com,ComText}|Coms]) ->
 
  <div class='fl'>
  <input id='",Com/binary,"All",Rm/binary,"check' type='checkbox' class='checkbox ui-widget' /></a>
-  <button id='",Com/binary,"All",Rm/binary,"' class='ui-button ui-widget ui-corner-all' title='Send to all Workstations...'/>",ComText/binary,"</button>
+  <button id='",Com/binary,"All",Rm/binary,"' class='ui-button ui-widget ui-corner-all' title='",ComText/binary," Workstations...'/>",ComText/binary,"</button>
  </div>
 
 <div class='brk'></div>
@@ -2439,7 +2439,7 @@ mkARComsComsInput(Rm,{Com,ComText}) ->
 <div class='brk'></div>
 
  <input id='",Com/binary,"All",Rm/binary,"check' type='checkbox' class='checkbox ui-widget' /></a>
-  <button id='",Com/binary,"All",Rm/binary,"' class='ui-button ui-widget ui-corner-all' title='Send to all Workstations...' />",ComText/binary,"</button>
+  <button id='",Com/binary,"All",Rm/binary,"' class='ui-button ui-widget ui-corner-all' title='",ComText/binary," Workstations...' />",ComText/binary,"</button>
 
  <div class='brk'></div>
 
@@ -2646,7 +2646,7 @@ divc({Wk,_FQDN,_MacAddr,_AutoS,_IgnoreDupe}) ->
 
 <div class='brk'></div>
 <div class='brk'></div>
- <button id='copy_",Wk/binary,"' class='ui-button ui-widget ui-corner-all' title='Stop Service' />Copy</button>
+ <button id='copy_",Wk/binary,"' class='ui-button ui-widget ui-corner-all' title='Copy to Workstation...' />Copy</button>
 <div class='brk'></div>
 <select id='copyselect",Wk/binary,"' class='ui-widget'>
 ",
@@ -2666,7 +2666,7 @@ divc({Wk,_FQDN,_MacAddr,_AutoS,_IgnoreDupe}) ->
 <div>
 
 
- <button id='com_",Wk/binary,"' class='ui-button ui-widget ui-corner-all' title='Stop Service' />Com</button>
+ <button id='com_",Wk/binary,"' class='ui-button ui-widget ui-corner-all' title='Run run command on Workstation...' />Com</button>
 <div class='brk'></div>
 <select id='comselect",Wk/binary,"' class='ui-widget'>
 ",
