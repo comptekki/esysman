@@ -2666,7 +2666,7 @@ divc({Wk,_FQDN,_MacAddr,_AutoS,_IgnoreDupe}) ->
 <div>
 
 
- <button id='com_",Wk/binary,"' class='ui-button ui-widget ui-corner-all' title='Run run command on Workstation...' />Com</button>
+ <button id='com_",Wk/binary,"' class='ui-button ui-widget ui-corner-all' title='Run command on Workstation...' />Com</button>
 <div class='brk'></div>
 <select id='comselect",Wk/binary,"' class='ui-widget'>
 ",
