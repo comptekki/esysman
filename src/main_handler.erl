@@ -2462,7 +2462,7 @@ mkARComsComsInput(Rm,{Com,ComText}) ->
 	   <<"copy">> ->
                <<"<button id='",Com/binary,"AllInput",Rm/binary,"' type='text', name='",Com/binary,"AllInput' class='fl ui-button ui-widget ui-corner-all' style='background:gray' title='Copy All File Name'>any.cmd</button><input id='",Com/binary,"AllInputH",Rm/binary,"' type='hidden'>">>;
 	   <<"com">> ->
-              <<"<button id='",Com/binary,"AllInput",Rm/binary,"' type='text', name='",Com/binary,"AllInput' class='fl ui-button ui-widget ui-corner-all' style='background:gray' title='Com All Name'>anycmd</button><input id='",Com/binary,"AllInputH",Rm/binary,"' type='hidden'>">>
+              <<"<button id='",Com/binary,"AllInput",Rm/binary,"' type='text', name='",Com/binary,"AllInput' class='fl ui-button ui-widget ui-corner-all' style='background:gray' title='Com All File Name'>anycmd</button><input id='",Com/binary,"AllInputH",Rm/binary,"' type='hidden'>">>
        end)/binary,
 "
 
