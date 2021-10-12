@@ -1664,9 +1664,9 @@ function progress(e){
       $('#hncp').finish().show().delay(2000).fadeOut('slow');
     });
 
-    $(document).on('click', '#aboutb', function(){     
-      $('#abouti').finish().show().delay(5000).fadeOut('slow')
-    });
+//    $(document).on('click', '#aboutb', function(){     
+//      $('#abouti').finish().show().delay(5000).fadeOut('slow')
+//    });
 
     $(document).on('keyup', '#tinfo', function(e) {
       if(e.which == 13) {
@@ -2503,12 +2503,17 @@ mkselunseltogAll(Rm) ->
 
 <div class='brk'></div>
 
-  <button id='aboutb' class='ui-button ui-widget ui-corner-all' title='Show ESysMan/Erlang/Cowboy versions...' />About</button>
+  <button id='aboutb",Rm/binary,"' class='ui-button ui-widget ui-corner-all' title='Show ESysMan/Erlang/Cowboy versions...' />About</button>
 
 <div class='brk'></div>
 
-  ",About/binary,"
+  <span id='abouti",Rm/binary,"' style='display:none'>",About/binary,"</span>
 
+<script>
+$(document).on('click', '#aboutb",Rm/binary,"', function(){                                                      
+      $('#abouti",Rm/binary,"').finish().show().delay(5000).fadeOut('slow')                                          
+    }); 
+</script>
 ">>.
 
 %%
