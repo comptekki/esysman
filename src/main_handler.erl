@@ -1190,8 +1190,11 @@ Port/binary,
           var rgttgt = reft.getTime() - trigger.getTime();
 
           if ((rgttgt > 0) && (rgttgt < 300000)) {
-            var tmr='#com_'+$(this).find('td:nth-child(2)').text();
-            $(tmr).click();
+            var wks=$(this).find('td:nth-child(2)').text().split(',');
+            for (var wk of wks) {
+              var tmr='#com_'+wk;
+              $(tmr).click();
+            }
           }
         }
       });
@@ -1656,7 +1659,11 @@ function progress(e){
 
     $('.wk').click(function(e) {
       var tv=$(this).html();
-      $('#tsystem').html(tv.slice(5,tv.indexOf('.')));
+      if ($('#tsystem').html().includes('Click')) {
+        $('#tsystem').html(tv.slice(5,tv.indexOf('.')));
+      } else {
+        $('#tsystem').html($('#tsystem').html() + ',' + tv.slice(5,tv.indexOf('.')));
+      }
       $('#hncp').finish().show().delay(2000).fadeOut('slow');
     });
 
