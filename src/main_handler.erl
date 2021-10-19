@@ -1168,8 +1168,9 @@ Port/binary,
         var rdate = $(this).find('td:first').text().trim().replace(/:/g, '-');
         var rsys = $(this).find('td:nth-child(2)').text().trim();
         var rdesc = $(this).find('td:nth-child(3)').text().trim();
+        var rdaily = $(this).find('td:nth-child(4)').text().trim();
         if ((rdate.length > 0) && (rdate.length < 18)) {
-          timers = timers + '[<<\"'+rdate+'\">>,<<\"'+rsys+'\">>,<<\"'+rdesc+'\">>],';
+          timers = timers + '[<<\"'+rdate+'\">>,<<\"'+rsys+'\">>,<<\"'+rdesc+'\">>,<<\"'+rdaily+'\">>],';
         }
       });
       if (timers.length > 2) {
@@ -1182,10 +1183,11 @@ Port/binary,
 
     function chk_timers() {
       $('#timers tbody tr').each(function(e) {
-        var value = $(this).find('td:first').text();
+        var tdate = $(this).find('td:first').text();
+        var tdaily = $(this).find('td:nth-child(4)').text().trim();
 
-        if ((value.length > 0) && (value.length < 18)) {
-          var trigger = new Date(value);
+        if ((tdate.length > 0) && (tdate.length < 18)) {
+          var trigger = new Date(tdate);
           var reft = new Date($('#reft').html());
           var rgttgt = reft.getTime() - trigger.getTime();
 
@@ -1195,6 +1197,12 @@ Port/binary,
               var tmr='#com_'+wk;
               $(tmr).click();
             }
+          } else if (tdaily == 'yes') {
+            var now = new Date();
+            tds = tdate.split(' ')[2].split(':')
+console.log(tds)
+console.log(now.getHours() + ':' + now.getMinutes());
+console.log((parseInt(tds[0]) == now.getHours) ? 'yes' : 'no');
           }
         }
       });
@@ -1232,6 +1240,7 @@ Port/binary,
       var td1m = $('#dmin option:selected').text();
       var td2 = $('#tsystem').html();
       var td3 = $('#tinfo').val();
+      var td4 = ($('#tdaily').prop('checked')) ? 'yes' : 'no';
 
       if (td1.length == 0 || td2.length == 0 || td3.length == 0 ) {
         $('#terr').finish().show().delay(2000).fadeOut('slow');
@@ -1241,9 +1250,10 @@ Port/binary,
       $('#timertd1').html('<input id=tdate><select id=dhour></select><select id=dmin></select>');
       $('#timertd2').html('<span id=tsystem>Click ecom@host<br>to add it here...</span>');
       $('#timertd3').html('<input id=tinfo>');
-      $('#timertd4').html('<button id=addtimer class=\"ui-button ui-widget ui-corner-all\">Add Timer</button>');
+      $('#timertd4').html('<input id=tdaily type=checkbox>');
+      $('#timertd5').html('<button id=addtimer class=\"ui-button ui-widget ui-corner-all\">Add Timer</button>');
 
-      $('#timers').append('<tr><td id=timertd1_' + timercnt + '> ' + td1 + ' ' + td1h + ':' + td1m + '</td> <td id=timertd2_' + timercnt + '>' + td2 + ' </td><td id=timertd3_' + timercnt + '> ' + td3 + ' </td><td id=timertd4_' + timercnt + '><button id=deltimer_' + timercnt + ' class=\"ui-button ui-widget ui-corner-all\" onclick=$(this).closest(\"tr\").remove()>Del Timer</button></td></tr>');
+      $('#timers').append('<tr><td id=timertd1_' + timercnt + '> ' + td1 + ' ' + td1h + ':' + td1m + '</td> <td id=timertd2_' + timercnt + '>' + td2 + ' </td><td id=timertd3_' + timercnt + '> ' + td3 + ' </td><td id=timertd4_' + timercnt + '> ' + td4 + ' </td><td id=timertd5_' + timercnt + '><button id=deltimer_' + timercnt + ' class=\"ui-button ui-widget ui-corner-all\" onclick=$(this).closest(\"tr\").remove()>Del Timer</button></td></tr>');
 
       set_date();
       set_hours_mins();
@@ -1935,14 +1945,18 @@ function progress(e){
 <span id='hncp' style='float:right;display:none'>Host name copied...!</span>
 <br><br>
 <table id='timers'>
-<tr><th>Date/Time</th><th>System</th><th>Description</th></tr>
+<tr><th>Date/Time</th><th>System</th><th>Description</th><th>Daily</th></tr>
 <tr><td id=timertd1>
 <input id=tdate>
 <select id=dhour>
 </select>
 <select id=dmin>
 </select>
-</td><td id=timertd2><span id=tsystem>Click ecom@host<br>to add it here...</span></td><td id=timertd3><input id=tinfo></td><td id=timertd4><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button></td></tr>",(get_timers(TimersList,1))/binary,
+</td>
+<td id=timertd2><span id=tsystem>Click ecom@host<br>to add it here...</span></td>
+<td id=timertd3><input id=tinfo></td>
+<td id=timertd4><input id=tdaily type=checkbox></td>
+<td id=timertd5><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button></td></tr>",(get_timers(TimersList,1))/binary,
 "
 </table><br>
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
@@ -3207,9 +3221,9 @@ now_bin() ->
 %
 
 get_timers([Timer|Rest],Timercnt) ->
-    [Tdate1, Tsys, Tdesc] = Timer,
+    [Tdate1, Tsys, Tdesc, Tdaily] = Timer,
     Tdate = binary:replace(Tdate1, <<"-">>, <<":">>),
-    <<"<tr><td id=timertd1_' + timercnt + '> ", Tdate/binary, "</td> <td id=timertd2_' + timercnt + '>", Tsys/binary, "</td><td id=timertd3_' + timercnt + '>", Tdesc/binary, "</td><td id=timertd4_' + timercnt + '><button id=deltimer_", (list_to_binary(integer_to_list(Timercnt)))/binary," class='ui-button ui-widget ui-corner-all' onclick=$(this).closest('tr').remove()>Del Timer</button></td></tr>",(get_timers(Rest,Timercnt + 1))/binary>>;
+    <<"<tr><td id=timertd1_' + timercnt + '> ", Tdate/binary, "</td> <td id=timertd2_' + timercnt + '>", Tsys/binary, "</td><td id=timertd3_' + timercnt + '>", Tdesc/binary, "</td><td id=timertd4_' + timercnt + '>", Tdaily/binary, "</td><td id=timertd5_' + timercnt + '><button id=deltimer_", (list_to_binary(integer_to_list(Timercnt)))/binary," class='ui-button ui-widget ui-corner-all' onclick=$(this).closest('tr').remove()>Del Timer</button></td></tr>",(get_timers(Rest,Timercnt + 1))/binary>>;
 get_timers([],_) ->
     <<>>.
 
