@@ -1185,15 +1185,11 @@ Port/binary,
         var value = $(this).find('td:first').text();
 
         if ((value.length > 0) && (value.length < 18)) {
-          var now = new Date();
           var trigger = new Date(value);
-
           var reft = new Date($('#reft').html());
-
-          var ngttgt = now.getTime() - trigger.getTime();
           var rgttgt = reft.getTime() - trigger.getTime();
 
-          if ((ngttgt > 0) && (rgttgt > 0) && (ngttgt < 300000) && (rgttgt < 300000)) {
+          if ((rgttgt > 0) && (rgttgt < 300000)) {
             var tmr='#com_'+$(this).find('td:nth-child(2)').text();
             $(tmr).click();
           }
