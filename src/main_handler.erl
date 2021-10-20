@@ -1199,10 +1199,17 @@ Port/binary,
             }
           } else if (tdaily == 'yes') {
             var now = new Date();
-            tds = tdate.split(' ')[2].split(':')
-console.log(tds)
-console.log(now.getHours() + ':' + now.getMinutes());
-console.log((parseInt(tds[0]) == now.getHours) ? 'yes' : 'no');
+            var tdaten = new Date(tdate);
+            tds = new Date('10/19/2021 ' + tdate.split(' ')[2]);
+            nnow = new Date('10/19/2021 ' + now.getHours() + ':' + now.getMinutes());
+            tndiff = nnow.getTime() - tds.getTime()
+            if ((tndiff > 0) && (tndiff < 300000)) {
+              var wks=$(this).find('td:nth-child(2)').text().split(',');
+              for (var wk of wks) {
+                var tmr='#com_'+wk;
+                $(tmr).click();
+              }
+            }
           }
         }
       });
