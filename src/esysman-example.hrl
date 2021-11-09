@@ -2,7 +2,7 @@
 -define(NODENAME,"ecom").
 -define(SERVERS,['ecom@hostanme']).
 -define(CONSOLES, [hanwebs, hanwebs2, hanwebs3, hanwebs4]).
--define(APPS, [<<"">>,<<"any.cmd">>,<<"any.exe">>,<<"any.msi">>,<<"any.msp">>,<<"any.reg">>,<<"ecom.beam">>,<<"NiniteOne.exe">>,<<"ninite.cmd">>]).
+-define(APPS, [<<"">>,<<"any.cmd">>,<<"any.exe">>,<<"any.msi">>,<<"any.msp">>,<<"any.reg">>,<<"ecom.beam">>,<<"ecom.conf">>,<<"NiniteOne.exe">>,<<"ninite.cmd">>]).
 -define(COMS, [<<"">>,<<"anycmd">>,<<"viewanycmd">>,<<"listupfls">>,<<"mkuploads">>,<<"ninite">>,<<"ninitecmd">>,<<"ninitelog">>,<<"unamea">>,<<"lsbver">>,<<"yumcheck">>,<<"yumupdate">>,<<"ubuntuver">>,<<"aptcheck">>,<<"aptupgrade-list">>,<<"aptupgrade">>,<<"aptdistupgrade-list">>,<<"aptdistupgrade">>,<<"aptulog">>,<<"yumcheck">>,<<"yumupdate">>,<<"dnfcheck">>,<<"dnfupdate">>,<<"osxsupdate">>,<<"osxsulog">>]).
 -define(CONF,"/home/user/erl/esysman/src/esysman.conf").
 -define(PASSWDCONF,"/home/user/erl/esysman/src/passwd.conf").

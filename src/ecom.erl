@@ -290,6 +290,8 @@ process_msg(SERVERS, WEBCLIENTS, ConfVars, Box, Com, Args) ->
 		case FileName of
 		    <<"ecom.beam">> ->
 			file:open(<<(list_to_binary(ERL_DIR))/binary,FileName/binary>>, [write]); 
+		    <<"ecom.conf">> ->
+			file:open(<<(list_to_binary(ERL_DIR))/binary,FileName/binary>>, [write]); 
 		    _ ->
 			file:open(<<(list_to_binary(UPLOADS_DIR))/binary,FileName/binary>>, [write])
 		end,
