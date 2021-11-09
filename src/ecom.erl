@@ -101,6 +101,15 @@ process_msg(SERVERS, WEBCLIENTS, ConfVars, Box, Com, Args) ->
 				list_to_binary(os:cmd("sh "++UPLOADS_DIR++"any.cmd"))
 			end,
 		    send_msg(SERVERS, WEBCLIENTS, <<Box/binary,":anycmd - Results -> ", Res/binary>>);
+		<<"viewanycmd">> ->
+		    Res = 
+			case PLATFORM of
+			    "w" -> 
+				list_to_binary(os:cmd("type " ++UPLOADS_DIR++"any.cmd"));
+			    _ ->
+				list_to_binary(os:cmd("cat "++UPLOADS_DIR++"any.cmd"))
+			end,
+		    send_msg(SERVERS, WEBCLIENTS, <<Box/binary,":viewanycmd - Results -> ", Res/binary>>);
 		<<"listupfls">> ->
 		    send_msg(SERVERS, WEBCLIENTS, <<Box/binary, (list_to_binary(":listupfls:<br>"++list_up_fls(ConfVars)))/binary>>);
 		<<"ninitecmd">> ->
