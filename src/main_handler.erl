@@ -1705,6 +1705,7 @@ function progress(e){
 (jsAll(ARooms,<<"net_restart">>))/binary,
 (jsAll(ARooms,<<"net_stop">>))/binary,
 (jsAll(ARooms,<<"loggedon">>))/binary,
+(jsAll(ARooms,<<"autos">>))/binary,
 (jsAll(ARooms,<<"copy">>))/binary,
 (jsAll(ARooms,<<"com">>))/binary,
 (mkjsAllSelect_copy(ARooms))/binary,
@@ -1725,6 +1726,7 @@ function progress(e){
 (mkjsComAll(ARooms,<<"net_restart">>))/binary,
 (mkjsComAll(ARooms,<<"net_stop">>))/binary,
 (mkjsComAll(ARooms,<<"loggedon">>))/binary,
+(mkjsComAll(ARooms,<<"autos">>))/binary,
 (mkjsComAll(ARooms,<<"copy">>))/binary,
 (mkjsComAll(ARooms,<<"com">>))/binary,
 (chk_dupe_usersa(ARooms))/binary,
@@ -1995,7 +1997,8 @@ function progress(e){
 				 {<<"dfstatus">>,<<"DeepFreeze Status All">>},
 				 {<<"net_restart">>,<<"Restart Service All">>},
 				 {<<"net_stop">>,<<"Stop Service All">>},
-				 {<<"loggedon">>,<<"Logged On All">>}
+				 {<<"loggedon">>,<<"Logged On All">>},
+				 {<<"autos">>,<<"Auto Shutdown (AutoS) All">>}
 				],ARooms))/binary,
 "
  </div>
@@ -2515,6 +2518,12 @@ mkAllRoomsSelectUnselectToggleAll([Room|Rooms]) ->
 mkselunseltogAll(Rm) ->
     {ok, [_,_,_,{About},_]} = file:consult(?CONF),
     <<"
+
+
+<div class='brk'></div>
+|
+<div class='brk'></div>
+
   <button id='selectAll",Rm/binary,"' class='ui-button ui-widget ui-corner-all'  title='Select all Workstations...' />Select All</button>
 
 <div class='brk'></div>
@@ -2653,7 +2662,6 @@ divc({Wk,_FQDN,_MacAddr,_AutoS,_IgnoreDupe}) ->
  <button id='ping_",Wk/binary,"' class='ui-button ui-widget ui-corner-all' title='Ping' />P</button>
  <button id='reboot_",Wk/binary,"' class='ui-button ui-widget ui-corner-all' title='Reboot' />R</button>
  <button id='shutdown_",Wk/binary,"' class='ui-button ui-widget ui-corner-all' title='Shutdown' />S</button>
- <button id='loggedon_",Wk/binary,"' class='ui-button ui-widget ui-corner-all' title='Logged On' />L</button>
 
 <div class='brk'></div>
 
@@ -2979,7 +2987,12 @@ mkjsComAllRow([{Wk,_FQDN,_MacAddr,_AutoS,_IgnoreDupe}|Wks],Rm,Com) ->
         (!$('#",Com/binary,"All",Rm/binary,"check').prop('checked') && 
             (!$('#",Wk/binary,"check').prop('checked') || $('#",Wk/binary,"check').prop('checked')))
       )
-        $('#",Com/binary,"_",Wk/binary,"').click();
+        if('",Com/binary,"' == 'autos' ) {
+          $('#",Wk/binary,"autoshut-toggle').click();
+        } else {
+          $('#",Com/binary,"_",Wk/binary,"').click();
+        }
+
 ">>
 			   end)/binary,(mkjsComAllRow(Wks,Rm,Com))/binary>>
     end;
