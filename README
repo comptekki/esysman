@@ -147,7 +147,7 @@ Versions
 -Add repeating timer and multiple systems per timer
 -Works with Erlang 25.0
 -Works with Cowboy 2.9.0
--Other tweaks and updates
+-Other tweaks and fixes
 
 -------
 1.20
