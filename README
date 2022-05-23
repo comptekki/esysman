@@ -142,6 +142,7 @@ Versions
 --------
 1.30
 
+-Update release
 -Add erlang.mk that works with Erlang 25.0
 -Add toggle all button for auto shutdown
 -Add repeating timer and multiple systems per timer
