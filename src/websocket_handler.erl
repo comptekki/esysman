@@ -376,7 +376,7 @@ websocket_handle({text, Msg}, State) ->
 		    _ ->
 			file:write_file(?WKSCONF ++ binary_to_list(Box) ++ ".conf", "{<<\"off\">>}.")
 		end,
-		io:format("~ndate: ~p -> done - wkautoshutdown/~p",[Date,Args]),
+		io:format("~ndate: ~p -> done - wkautoshutdown/~p~p",[Date,Args,Box]),
 		<<"done - server@localhost/wkautoshutdown/(-",Args/binary,"-",Box/binary,"-)">>;
 	    <<"update_timers">> ->
 		send_msg(?SERVERS, <<"update_timers from ", (pid())/binary>>),
