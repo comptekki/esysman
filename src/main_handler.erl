@@ -2481,7 +2481,6 @@ mkARComsComsInput(Rm,{Com,ComText}) ->
        end)/binary,
 "
  </select>
-
 <div class='brk'></div>
 ",
 
@@ -2494,6 +2493,8 @@ mkARComsComsInput(Rm,{Com,ComText}) ->
 "
 
  </div>
+<div class='brk'></div>
+<span style='color:black'>|</span>
  ">>.
 
 %%
@@ -2519,9 +2520,6 @@ mkselunseltogAll(Rm) ->
     {ok, [_,_,_,{About},_]} = file:consult(?CONF),
     <<"
 
-
-<div class='brk'></div>
-|
 <div class='brk'></div>
 
   <button id='selectAll",Rm/binary,"' class='ui-button ui-widget ui-corner-all'  title='Select all Workstations...' />Select All</button>
