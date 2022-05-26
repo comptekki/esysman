@@ -1276,6 +1276,8 @@ Port/binary,
 
     $(document).on('click', '#resettimer', function(){
       $('#tsystem').html('Click ecom@host<br>to add it here...');
+      $('#tinfo').val('');
+      $('#tdaily').prop('checked', false);
     });
 
     $(document).ready(function() {
