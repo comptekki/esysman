@@ -1258,7 +1258,7 @@ Port/binary,
       $('#timertd2').html('<span id=tsystem>Click ecom@host<br>to add it here...</span>');
       $('#timertd3').html('<input id=tinfo>');
       $('#timertd4').html('<input id=tdaily type=checkbox>');
-      $('#timertd5').html('<button id=addtimer class=\"ui-button ui-widget ui-corner-all\">Add Timer</button>');
+      $('#timertd5').html('<button id=addtimer class=\"ui-button ui-widget ui-corner-all\">Add Timer</button><button id=resettimer class=\"ui-button ui-widget ui-corner-all\">Reset</button>');
 
       $('#timers').append('<tr><td id=timertd1_' + timercnt + '> ' + td1 + ' ' + td1h + ':' + td1m + '</td> <td id=timertd2_' + timercnt + '>' + td2 + ' </td><td id=timertd3_' + timercnt + '> ' + td3 + ' </td><td id=timertd4_' + timercnt + '> ' + td4 + ' </td><td id=timertd5_' + timercnt + '><button id=deltimer_' + timercnt + ' class=\"ui-button ui-widget ui-corner-all\" onclick=$(this).closest(\"tr\").remove()>Del Timer</button></td></tr>');
 
@@ -1272,6 +1272,10 @@ Port/binary,
       timercnt = timercnt + 1;
 
       update_timers();
+    });
+
+    $(document).on('click', '#resettimer', function(){
+      $('#tsystem').html('Click ecom@host<br>to add it here...');
     });
 
     $(document).ready(function() {
@@ -1973,7 +1977,7 @@ function progress(e){
 <td id=timertd2><span id=tsystem>Click ecom@host<br>to add it here...</span></td>
 <td id=timertd3><input id=tinfo></td>
 <td id=timertd4><input id=tdaily type=checkbox></td>
-<td id=timertd5><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button></td></tr>",(get_timers(TimersList,1))/binary,
+<td id=timertd5><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button><button id='resettimer' class='ui-button ui-widget ui-corner-all'>Reset</button><td></tr>",(get_timers(TimersList,1))/binary,
 "
 </table><br>
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
