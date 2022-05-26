@@ -1,5 +1,5 @@
 Erlang Systems Manager
-[ ESysMan 1.34 ]
+[ ESysMan 1.36 ]
 
 ESysMan is an Erlang based client/server computer systems 
 management console in which a web browser (with websockets
@@ -140,6 +140,11 @@ Client/Server Setup
 --------
 Versions
 --------
+1.36
+
+-Add reset timer button
+
+--------
 1.34
 
 -Fix timers dup add and require system before add
@@ -152,7 +157,6 @@ Versions
 --------
 1.30
 
--Update release
 -Add erlang.mk that works with Erlang 25.0
 -Add toggle all button for auto shutdown
 -Add repeating timer and multiple systems per timer
