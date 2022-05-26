@@ -1249,8 +1249,8 @@ Port/binary,
       var td3 = $('#tinfo').val();
       var td4 = ($('#tdaily').prop('checked')) ? 'yes' : 'no';
 
-      if (td1.length == 0 || td2.length == 0 || td3.length == 0 ) {
-        $('#terr').finish().show().delay(2000).fadeOut('slow');
+      if (td1.length == 0 || td2.search('add it') > 0 || td3.length == 0 ) {
+        $('#terr').finish().show().delay(8000).fadeOut('slow');
         return false
       }
 
@@ -1678,10 +1678,17 @@ function progress(e){
       var tv=$(this).html();
       if ($('#tsystem').html().includes('Click')) {
         $('#tsystem').html(tv.slice(5,tv.indexOf('.')));
+        $('#hncp').finish().show().delay(2000).fadeOut('slow');
       } else {
-        $('#tsystem').html($('#tsystem').html() + ',' + tv.slice(5,tv.indexOf('.')));
+        tvh = tv.slice(5,tv.indexOf('.'));
+        if ($('#tsystem').html().indexOf(tvh) >= 0) { 
+          $('#terr2').finish().show().delay(4000).fadeOut('slow');
+        }
+        else {
+          $('#tsystem').html($('#tsystem').html() + ',' + tvh);
+          $('#hncp').finish().show().delay(2000).fadeOut('slow');  
+        }
       }
-      $('#hncp').finish().show().delay(2000).fadeOut('slow');
     });
 
 //    $(document).on('click', '#aboutb', function(){     
@@ -1950,7 +1957,8 @@ function progress(e){
 <div id='mngtimersbox' class='ui-widget-content' title='Click to drag window'>
 [ Manage Timers ]<br><br>
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
-<span id='terr' style='float:right;display:none'>All fields must be used to add a timer!</span>
+<span id='terr' style='float:right;display:none'>All fields must be used to add a timer. Also, click on at least one system name: ecom@hostname!</span>
+<span id='terr2' style='float:right;display:none'>System name: ecom@hostname is already in the System list!</span>
 <span id='hncp' style='float:right;display:none'>Host name copied...!</span>
 <br><br>
 <table id='timers'>
