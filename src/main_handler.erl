@@ -1822,7 +1822,7 @@ function progress(e){
               $('.msgcsm').css('z-index', parseInt($('.msgc').css('z-index')) + 1);
           }
           else {
-              $('.msgcsm').height(450);
+              $('.msgcsm').height(480);
               $('.msgcsm').width(600);
               $('.msgc').css('position', 'relative');
           }
@@ -1836,7 +1836,7 @@ function progress(e){
               $('.msgc').css('z-index', parseInt($('.msgcsm').css('z-index')) + 1);
           }
           else {
-              $('.msgc').height(450);
+              $('.msgc').height(480);
               $('.msgc').width(600);
               $('.msgc').css('position', 'relative');
           }

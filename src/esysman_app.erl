@@ -57,7 +57,9 @@ start(_Type, _Args) ->
 %		   {cacertfile, PrivDir ++ "/ssl/cowboy-ca.crt"},
 		   {certfile, PrivDir ++ "/ssl/server.crt"},
 		   {keyfile, PrivDir ++ "/ssl/server.key"},
-		   {password, ""}],
+		   {password, ""},
+ 		   {fail_if_no_peer_cert, false}, {verify, verify_none}
+		  ],
 		  #{
 		    env => #{dispatch => Dispatch},
 		    max_received_frame_rate => {150000, 10000}
