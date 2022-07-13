@@ -110,12 +110,27 @@ websocket_handle({text, Msg}, State) ->
     Data3 =
 	case Com of
 	    <<"com">> ->
-		send_msg(?SERVERS, <<"com - ",Args/binary," - from ", (pid())/binary>>),
-		{rec_com, Rec_Node} ! {Box,Com,Args},
-		Data2= <<"done - com -> ",Args/binary,"  <- sent to: ",Box/binary>>,
+	        send_msg(?SERVERS, <<"com - ",Args/binary," - from ", (pid())/binary>>),
+	    	%io:format("ldata: ~p~n",[Ldata]),
+		Data2=case binary:match(Args,[<<"sql">>]) of
+		  nomatch ->
+		    {rec_com, Rec_Node} ! {Box,Com,Args},
+		    <<"done - com -> ",Args/binary,"  <- sent to: ",Box/binary>>;
+		  _ ->
+		    {ok, Db} = pgsql:connect(?DBHOST, ?USERNAME, ?PASSWORD, [{database, ?DB}, {port, ?PORT}]),
+		    S = <<"select * from esysman order by atimestamp desc limit 1">>,
+		    {ok, _, [{Timestampp, Boxp, Userp, Idp}]} = pgsql:squery(Db, S),
+		    <<"done - com -> ",
+		    Args/binary,"  <- sent to: ",Box/binary,
+		    " -- <br><br>Last record:<br>atimestamp: ",Timestampp/binary,
+		    "<br>box: ",Boxp/binary,
+		    "<br>user: ",Userp/binary,
+		    "<br>id: ",Idp/binary,"<br>">>
+                end,
+		%Data2= <<"done - com -> ",Args/binary,"  <- sent to: ",Box/binary>>,
 		io:format("~ndate: ~p -> done - sent com ~p - data2: ~p ~n",[Date, Box, Data2]),
 		Data2;
-	    <<"loggedon">> ->
+            <<"loggedon">> ->
 		{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 		Data2= <<"done - loggedon sent to: ",Box/binary>>,
 		io:format("~ndate: ~p -> done - loggedon ~p - data2: ~p ~n",[Date, Box, Data2]),
