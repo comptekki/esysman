@@ -2508,7 +2508,7 @@ mkARComsComsInput(Rm,{Com,ComText}) ->
 
  </div>
 <div class='brk'></div>
-<span style='color:#111'>|</span>
+<span style='color:\#111111'>|</span>
  ">>.
 
 %%
