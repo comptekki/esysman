@@ -270,7 +270,7 @@ process_msg(SERVERS, WEBCLIENTS, ConfVars, Box, Com, Args) ->
 			_ ->
 			    send_msg(SERVERS, WEBCLIENTS, <<Box/binary,":error - no function on this platform...">>)
 		    end;
-		<<WOLNAME>> ->
+		WOLNAME ->
 		    case PLATFORM of
 			"x" ->
 			    % list of mac addresses in different subnet
@@ -352,6 +352,7 @@ process_msg(SERVERS, WEBCLIENTS, ConfVars, Box, Com, Args) ->
 
 wol([MacAddr|Macs], BROADCAST_ADDR) ->
     MacAddrBin= <<<<(list_to_integer(X, 16))>> || X <- string:tokens(MacAddr,"-")>>,
+    io:format("~nmac: ~p~n",[MacAddrBin]),
     MagicPacket= << (dup(<<16#FF>>, 6))/binary, (dup(MacAddrBin, 16))/binary >>,
     {ok,S} = gen_udp:open(0, [{broadcast, true}]),
     gen_udp:send(S, BROADCAST_ADDR, 9, MagicPacket),
