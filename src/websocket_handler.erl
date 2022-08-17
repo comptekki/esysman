@@ -112,7 +112,7 @@ websocket_handle({text, Msg}, State) ->
 	    <<"com">> ->
 	        send_msg(?SERVERS, <<"com - ",Args/binary," - from ", (pid())/binary>>),
 	    	%io:format("ldata: ~p~n",[Ldata]),
-		Data2=case binary:match(Args,[<<"sql">>]) of
+		Data2=case binary:match(Args,[<<"sqllastentrycmd">>]) of
 		  nomatch ->
 		    {rec_com, Rec_Node} ! {Box,Com,Args},
 		    <<"done - com -> ",Args/binary,"  <- sent to: ",Box/binary>>;
