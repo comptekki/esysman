@@ -398,6 +398,11 @@ websocket_handle({text, Msg}, State) ->
 		file:write_file(?TIMERSCONF, Args),
 		io:format("~ndate: ~p -> done - update_timers/",[Date]),
 		<<"done - server@localhost/updates_timers">>;
+	    <<"getmem">> ->
+		{ok, [_,_,_,_,_,{OS}]} = file:consult(?CONF),
+  		Memo = get_mem(OS),
+		Data2 = <<"done - 0/getmem/",Memo/binary>>,
+		Data2;
 	    _ ->					
 		send_msg(?SERVERS, <<"unsupported command from ", (pid())/binary>>),
 		<<"unsupported command">>
@@ -720,7 +725,7 @@ fire_wall(Req) ->
     {PeerAddress, _Port} = cowboy_req:peer(Req),
     {{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
     Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
-    {ok, [_,{FireWallOnOff,IPAddresses},_,_,_]}=file:consult(?CONF),
+    {ok, [_,{FireWallOnOff,IPAddresses},_,_,_,_]}=file:consult(?CONF),
     case FireWallOnOff of
 	on ->
 	    case lists:member(PeerAddress,IPAddresses) of
@@ -762,3 +767,16 @@ Access Denied!
 </body>
 </html>">>, Req),
     {ok, Req2, Opts}.
+
+get_mem(OS) ->
+  case OS of
+    <<"bsd">> ->
+        % Rel = remove empty list
+        Rel = fun Rel(_,[]) -> []; Rel(X,[X|R]) -> Rel(X,R); Rel(X,[Y|R]) -> [Y] ++ Rel(X,R) end,
+        Mem=string:split(os:cmd("freecolor -m -o|grep Mem:"), " ", all),
+        {Memt, _}=string:to_integer(lists:nth(2,Rel([],Mem))),
+        {Memu, _}=string:to_integer(lists:nth(4,Rel([],Mem))),
+        Memo=list_to_binary(io_lib:format("T ~.2fGB | U ~.2fGB", [Memt/1000,Memu/1000])),
+        Memo;
+    _ -> ""
+  end.

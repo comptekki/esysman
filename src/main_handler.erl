@@ -66,7 +66,7 @@ fire_wall(Req) ->
     {PeerAddress, _Port} = cowboy_req:peer(Req),
     {{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
     Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
-    {ok, [_,{FireWallOnOff,IPAddresses},_,_,_]}=file:consult(?CONF),
+    {ok, [_,{FireWallOnOff,IPAddresses},_,_,_,_]}=file:consult(?CONF),
     case FireWallOnOff of
 	on ->
 	    case lists:member(PeerAddress,IPAddresses) of
@@ -84,7 +84,7 @@ fire_wall(Req) ->
 %%
 
 login_is() ->
-    {ok, [_,_,{UPOnOff,UnamePasswds},_,_]}=file:consult(?CONF),
+    {ok, [_,_,{UPOnOff,UnamePasswds},_,_,_]}=file:consult(?CONF),
     case UPOnOff of
 	on ->
 	    UnamePasswds;
@@ -280,12 +280,14 @@ app_front_end(Req, Opts) ->
     {{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
     Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
     io:format("~ndate: ~p -> host: ~p : ~p~n", [Date, Host, Port]),
-    
+
     {ok, [{ARooms}]} = file:consult(?ROOMS),
 
     Get_rms = get_rms_keys(ARooms, 49),
 
-    {ok, [_,_,_,_,{AUTOLOCK}]} = file:consult(?CONF),
+    {ok, [_,_,_,_,{AUTOLOCK},{OS}]} = file:consult(?CONF),
+
+    Memo = get_mem(OS),
 
     case file:read_file_info(?AUTOSHUTDOWNCONF) of
         {error,enoent} -> file:write_file(?AUTOSHUTDOWNCONF, "{<<\"22\">>,<<\"06\">>,<<\"On\">>}.");
@@ -633,11 +635,15 @@ Port/binary,
 			  $('#'+box+'status').css('background-color','#006600');
 			  message(sepcol,boxCom[0] + ': ' + 'copy');
 			  break;
+		    case 'getmem':
+			// meminfo=boxCom[2].replace(/=/gi, '/');
+	      		$('#mem_info').html('['+boxCom[2]+']-Mem');
+			break;
             case 'list_dwnlds_dir':
               $('#mngdwnldsbox').html(boxCom[2]);
               break;
             case 'list_ups_dir':
-	      $('#mngscrbox').html(boxCom[2]);
+	      $('#mngscrbox').html(boxcom[2]);
               $('#mngscrbox').resizable({alsoResize: '#scrslist'});
               $('#mngscripts tr').slice(4).filter(function() {
                 $(this).toggle($(this).find('td').slice(1).text().toLowerCase().indexOf(scrfiltertxt) > -1)
@@ -1913,6 +1919,9 @@ function progress(e){
 
 <div id='menu' class='fl'>
 
+<div id='mem_info' class='fl'>
+",Memo/binary," 
+</div>
 <div id='rooms_title' class='fl'>
 [0]-Rooms
 </div>
@@ -2531,7 +2540,7 @@ mkAllRoomsSelectUnselectToggleAll([Room|Rooms]) ->
 %%
 
 mkselunseltogAll(Rm) ->
-    {ok, [_,_,_,{About},_]} = file:consult(?CONF),
+    {ok, [_,_,_,{About},_,_]} = file:consult(?CONF),
     <<"
 
 <div class='brk'></div>
@@ -3071,6 +3080,7 @@ loop_rm_keys({Rm,Key}) ->
 chk_dupe_usersa(Rooms) ->
     <<"
 function  chk_dupe_users(){
+    send(':getmem:0');
     tot_cnt=0;
     $('#rooms_title').html('[0]-Rooms');
 ",
@@ -3266,3 +3276,17 @@ create_timer_events([_Timer|Rest],Timercnt) ->
 create_timer_events([],_) ->
     <<>>.
 
+%
+
+get_mem(OS) ->
+  case OS of
+    <<"bsd">> ->
+	% Rel = remove empty list
+	Rel = fun Rel(_,[]) -> []; Rel(X,[X|R]) -> Rel(X,R); Rel(X,[Y|R]) -> [Y] ++ Rel(X,R) end,
+	Mem=string:split(os:cmd("freecolor -m -o|grep Mem:"), " ", all),
+	{Memt, _}=string:to_integer(lists:nth(2,Rel([],Mem))),
+	{Memu, _}=string:to_integer(lists:nth(4,Rel([],Mem))),
+	Memo=list_to_binary(io_lib:format("[T ~.2fGB | U ~.2fGB]-Mem", [Memt/1000,Memu/1000])),
+	Memo;
+    _ -> ""
+  end.

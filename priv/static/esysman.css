@@ -67,10 +67,10 @@ table { border-collapse:collapse;}
 	white-space: nowrap;
 }
 
-#rooms_title {
+#rooms_title, #mem_info {
 	font-size: 17pt;
 	font-weight: bold;
-	background-color: #666;
+	background-color: #111;
 	padding: 1px 3px 3px 3px;
 	margin-right: 5px;
 	height: 37px;
