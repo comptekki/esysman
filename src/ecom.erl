@@ -124,7 +124,7 @@ process_msg(SERVERS, WEBCLIENTS, ConfVars, Box, Com, Args) ->
 		    case PLATFORM of
 			"w" ->
 			    Date=get_date(),
-			    os:cmd(UPLOADS_DIR++"NiniteOne.exe /updateonly /exclude Python  /disableshortcuts /silent "++UPLOADS_DIR++"ninite_"++Date++"_log.txt"),
+			    os:cmd(UPLOADS_DIR++"NiniteOne.exe /updateonly /exclude Python Edge /disableshortcuts /silent "++UPLOADS_DIR++"ninite_"++Date++"_log.txt"),
 			    os:cmd("echo "++Date++" >> "++UPLOADS_DIR++"ninite_log.txt"),
 			    os:cmd("type "++UPLOADS_DIR++"ninite_"++Date++"_log.txt >> "++UPLOADS_DIR++"ninite_log.txt"),
 			    os:cmd("del /F /Q "++UPLOADS_DIR++"ninite_"++Date++"_log.txt"),

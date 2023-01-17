@@ -1,4 +1,4 @@
-% Copyright (c) 2012, Wes James <comtekki@gmail.com>
+%% Copyright (c) 2012, Wes James <comtekki@gmail.com>
 %% All rights reserve.
 %% 
 %% Redistribution and use in source and binary forms, with or without
