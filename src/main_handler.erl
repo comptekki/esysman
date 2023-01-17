@@ -643,7 +643,7 @@ Port/binary,
               $('#mngdwnldsbox').html(boxCom[2]);
               break;
             case 'list_ups_dir':
-	      $('#mngscrbox').html(boxcom[2]);
+	      $('#mngscrbox').html(boxCom[2]);
               $('#mngscrbox').resizable({alsoResize: '#scrslist'});
               $('#mngscripts tr').slice(4).filter(function() {
                 $(this).toggle($(this).find('td').slice(1).text().toLowerCase().indexOf(scrfiltertxt) > -1)
