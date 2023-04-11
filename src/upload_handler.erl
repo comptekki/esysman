@@ -83,7 +83,7 @@ fire_wall(Req) ->
     {PeerAddress, _Port} = cowboy_req:peer(Req),
     {{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
     Date = lists:flatten(io_lib:format("~4..0w-~2..0w-~2..0w ~2..0w:~2..0w:~2..0w",[Year,Month,Day,Hour,Minute,Second])),
-    {ok, [_,{FireWallOnOff,IPAddresses},_,_,_]}=file:consult(?CONF),
+    {ok, [_,{FireWallOnOff,IPAddresses},_,_,_,_]}=file:consult(?CONF),
     case FireWallOnOff of
 	on ->
 	    case lists:member(PeerAddress,IPAddresses) of
