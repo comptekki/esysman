@@ -316,7 +316,7 @@ app_front_end(Req, Opts) ->
 <html lang='en'>
 <head>
 <meta charset='utf-8'>
-<title>", ?TITLE, "</title>
+<title>[0]-", ?TITLE, "</title>
 
 <meta Http-Equiv='Cache-Control' Content='no-cache'>
 <meta Http-Equiv='Pragma' Content='no-cache'>
@@ -3083,6 +3083,7 @@ function  chk_dupe_users(){
     send(':getmem:0');
     tot_cnt=0;
     $('#rooms_title').html('[0]-Rooms');
+    $(document).attr('title', '[0]-ESysMan');
 ",
 (chk_dupe_users_rms(Rooms))/binary,
 "
@@ -3172,7 +3173,8 @@ jschkduRow([{Wk,_FQDN,_MacAddr,_AutoS,IgnoreDupe}|Wks],Rm) ->
         hash_",Rm/binary,"[dupe_",Rm/binary,"[dupe_",Rm/binary,".length-1]].push('",Wk/binary,"');
         ",Rm/binary,"cnt++;
         tot_cnt++;
-        $('#rooms_title').html('['+tot_cnt.toString()+']-'+'Rooms');
+        $('#rooms_title').html('['+tot_cnt+']-'+'Rooms');
+	$(document).attr('title', '['+tot_cnt+']-ESysMan');
     }
 ",(jschkduRow(Wks,Rm))/binary>>
     end;
