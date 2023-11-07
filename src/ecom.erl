@@ -441,7 +441,7 @@ logged_on(ConfVars) ->
 get_user([UserInfo|Rest], PLATFORM, USERS) ->
     case PLATFORM of
 	"w" ->
-	    case lists:member(UserInfo, USERS) of
+	    case lists:member(UserInfo, USERS) or lists:member(hd("$"), UserInfo) of
 		true ->
 		    case Rest of
 			[] ->
