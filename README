@@ -140,6 +140,12 @@ Client/Server Setup
 --------
 Versions
 --------
+1.60
+
+-Add total system count to document title - will show on browser tab
+-Ignore users with $ symbol in name
+
+--------
 1.50
 
 -Add total/usage memory indicator on console
