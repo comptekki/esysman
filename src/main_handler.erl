@@ -3281,14 +3281,20 @@ create_timer_events([],_) ->
 %
 
 get_mem(OS) ->
+  % Rel = remove empty list
+  Rel = fun Rel(_,[]) -> []; Rel(X,[X|R]) -> Rel(X,R); Rel(X,[Y|R]) -> [Y] ++ Rel(X,R) end,
   case OS of
     <<"bsd">> ->
-	% Rel = remove empty list
-	Rel = fun Rel(_,[]) -> []; Rel(X,[X|R]) -> Rel(X,R); Rel(X,[Y|R]) -> [Y] ++ Rel(X,R) end,
 	Mem=string:split(os:cmd("freecolor -m -o|grep Mem:"), " ", all),
 	{Memt, _}=string:to_integer(lists:nth(2,Rel([],Mem))),
 	{Memu, _}=string:to_integer(lists:nth(4,Rel([],Mem))),
 	Memo=list_to_binary(io_lib:format("[T ~.2fGB | U ~.2fGB]-Mem", [Memt/1000,Memu/1000])),
 	Memo;
-    _ -> ""
+    <<"linux">> ->
+        Mem=string:split(os:cmd("free -h|grep Mem:"), " ", all),
+        Memt=lists:nth(2,Rel([],Mem)),
+        Memu=lists:nth(4,Rel([],Mem)),
+        Memo=list_to_binary(io_lib:format("T ~p | U ~p", [Memt,Memu])),
+        Memo;
+    _ -> <<"">>
   end.
