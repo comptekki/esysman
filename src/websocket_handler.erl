@@ -239,7 +239,9 @@ websocket_handle({text, Msg}, State) ->
 			    [_, <<"exe">>] ->
 				file:delete(<<(?UPLOADS)/binary, "any.exe">>);
 			    [_, <<"msi">>] ->
-				file:delete(<<(?UPLOADS)/binary, "any.msi">>)
+				file:delete(<<(?UPLOADS)/binary, "any.msi">>);
+			    [_, <<"msp">>] ->
+				file:delete(<<(?UPLOADS)/binary, "any.msp">>)
 			end,
 			file:make_symlink(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary, F2/binary>>)
 		end,
@@ -598,6 +600,9 @@ any_mng_file(File, _Filter) ->
 			"any.msi" -> 
 			    ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
 			    tr1(File, Fsize, Ftime, Res, "msidiv", "lnmsidiv", ShortLnf);
+			"any.msp" -> 
+			    ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
+			    tr1(File, Fsize, Ftime, Res, "mspdiv", "lnmspdiv", ShortLnf);
 			_ -> 
 				<<>>
 		    end
@@ -610,6 +615,8 @@ any_mng_file(File, _Filter) ->
 		    tr1(File, "", "", Res, "exediv", "lnexediv", "");
 		"any.msi" ->
 		    tr1(File, "", "", Res, "msidiv", "lnmsidiv", "");
+		"any.msp" ->
+		    tr1(File, "", "", Res, "mspdiv", "lnmspdiv", "");
 		_ -> 
 		    <<>>			
 	    end
@@ -632,6 +639,8 @@ mng_file(File, _Filter) ->
 			"any.exe" -> 
 			    "";
 			"any.msi" -> 
+			    "";
+			"any.msp" -> 
 			    "";
 			_ -> 
 			    Filter2 = "",
@@ -660,6 +669,8 @@ mng_file(File, _Filter) ->
 		"any.exe" ->
 		    "";			
 		"any.msi" ->
+		    "";			
+		"any.msp" ->
 		    "";			
 		_ -> 
 		    tr(File, "", "", 0, mng_file_info(File))	
@@ -693,7 +704,7 @@ tr1(File, Fsize, Ftime, Res, Fdiv, Ldiv, LnFile) ->
 %%
 
 tr(File, Fsize, Ftime, 0, FileInfo) ->
-    "<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all' title='Delete File'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all' title='Rename File'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all' 'Link file to any(.cmd/.exe/.msi)>ln</button><button id='ebut' class='ui-button ui-widget ui-corner-all' title='Edit Script'>Edit</button><button id='fncbut' class='ui-button ui-widget ui-corner-all' title='Copy file name to clipboard'>Copy</button></td><td>"++File++"</td><td align=right>"++Fsize++"</td><td>"++Ftime++"</td><td></td><td>"++FileInfo++"</td></tr>".
+    "<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all' title='Delete File'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all' title='Rename File'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all' 'Link file to any(.cmd/.exe/.msi/.msp)>ln</button><button id='ebut' class='ui-button ui-widget ui-corner-all' title='Edit Script'>Edit</button><button id='fncbut' class='ui-button ui-widget ui-corner-all' title='Copy file name to clipboard'>Copy</button></td><td>"++File++"</td><td align=right>"++Fsize++"</td><td>"++Ftime++"</td><td></td><td>"++FileInfo++"</td></tr>".
 
 tr(File, Fsize, Ftime, 2) ->
     "<tr class='r'><td><button id='dbutd' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbutd' class='ui-button ui-widget ui-corner-all'>Ren</button></td><td>"++File++"</td><td align=right>"++Fsize++"</td><td>"++Ftime++"</td><td></td></tr>".
@@ -784,5 +795,5 @@ get_mem(OS) ->
         Memu=lists:nth(4,Rel([],Mem)),
         Memo=list_to_binary(io_lib:format("T ~s | U ~s", [Memt,Memu])),
         Memo;
-    _ -> <<"">>
+    _ -> <<>>
   end.

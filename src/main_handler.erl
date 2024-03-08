@@ -1011,6 +1011,9 @@ Port/binary,
               else if ($(obj).parent().next('td').html() == $('#lnmsidiv').html()) {
                 $('#lnmsidiv').html('')
               }
+              else if ($(obj).parent().next('td').html() == $('#lnmspdiv').html()) {
+                $('#lnmspdiv').html('')
+              }
 
               $(obj).closest('tr').remove();
 
@@ -1057,6 +1060,10 @@ Port/binary,
           else if ($(this).parent().next('td').html().indexOf('.msi')>0) {
             $('#lnmsidiv').html($(this).parent().next('td').html());
             send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.msi');
+          }
+          else if ($(this).parent().next('td').html().indexOf('.msp')>0) {
+            $('#lnmspdiv').html($(this).parent().next('td').html());
+            send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any.msp');
           }
 	});
 
@@ -3296,5 +3303,5 @@ get_mem(OS) ->
         Memu=lists:nth(4,Rel([],Mem)),
         Memo=list_to_binary(io_lib:format("[T ~s | U ~s]-Mem", [Memt,Memu])),
         Memo;
-    _ -> <<"">>
+    _ -> <<>>
   end.
