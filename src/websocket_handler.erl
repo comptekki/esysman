@@ -787,13 +787,13 @@ get_mem(OS) ->
         Mem=string:split(os:cmd("freecolor -m -o|grep Mem:"), " ", all),
         {Memt, _}=string:to_integer(lists:nth(2,Rel([],Mem))),
         {Memu, _}=string:to_integer(lists:nth(4,Rel([],Mem))),
-        Memo=list_to_binary(io_lib:format("T ~.2fGB | U ~.2fGB", [Memt/1000,Memu/1000])),
+        Memo=list_to_binary(io_lib:format(" T ~.2fGB | U ~.2fGB ", [Memt/1000,Memu/1000])),
         Memo;
     <<"linux">> ->
-        Mem=string:split(os:cmd("free -h|grep Mem:"), " ", all),
+        Mem=string:split(os:cmd("free --giga|grep Mem:"), " ", all),
         Memt=lists:nth(2,Rel([],Mem)),
         Memu=lists:nth(4,Rel([],Mem)),
-        Memo=list_to_binary(io_lib:format("T ~s | U ~s", [Memt,Memu])),
+        Memo=list_to_binary(io_lib:format(" T ~sGB | U ~sGB ", [Memt,Memu])),
         Memo;
     _ -> <<>>
   end.
