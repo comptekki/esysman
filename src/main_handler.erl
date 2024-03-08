@@ -3294,7 +3294,7 @@ get_mem(OS) ->
         Mem=string:split(os:cmd("free -h|grep Mem:"), " ", all),
         Memt=lists:nth(2,Rel([],Mem)),
         Memu=lists:nth(4,Rel([],Mem)),
-        Memo=list_to_binary(io_lib:format("T ~p | U ~p", [Memt,Memu])),
+        Memo=list_to_binary(io_lib:format("[T ~s | U ~s]-Mem", [Memt,Memu])),
         Memo;
     _ -> <<"">>
   end.
