@@ -205,6 +205,11 @@ websocket_handle({text, Msg}, State) ->
 		Data2= <<"done - ping sent to: ",Box/binary>>,
 		io:format("~ndate: ~p -> done - ping ~p~n",[Date, Box]),
 		Data2;
+	    <<"dbinfo">> ->
+		send_msg(?SERVERS, <<"dbinfo from ", (pid())/binary>>),
+		Data2= <<Box/binary,":dbinfo:",(dbinfo(Args))/binary>>,
+		io:format("~ndate: ~p -> done - dbinfo ~p ~n",[Date, Box]),
+		Data2;
 	    <<"list_dwnlds_dir">> ->
 		send_msg(?SERVERS, <<"list_dwnlds_dir from ", (pid())/binary>>),
 		Data2= <<Box/binary,":list_dwnlds_dir:",(list_dwnld_fls())/binary>>,
@@ -553,6 +558,27 @@ mng_dfile(File) ->
 	_ ->
 	    tr(File, "", "", 2)
     end.
+
+%%
+
+dbinfo(_Args) ->
+    S = <<"select * from esysman limit 10">>,
+    Res1 = case pgsql:connect(?DBHOST, ?USERNAME, ?PASSWORD, [{database, ?DB}, {port, ?PORT}]) of
+	{error,_} ->
+	    {S, error};
+	{ok, Db} -> 
+	    case pgsql:squery(Db, S) of
+		{error,Error} ->
+		    io:format("insert error: ~p~n", [Error]),
+		    {S, error};
+		{_,Res} ->
+		    pgsql:close(Db),
+		    {S, Res}
+	    end
+    end,
+    Head = <<"<div id='dbinfo'>[ DB Info ]<br><br><button id='closedbinfo' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
+    Tail = <<"</table><div class='brk'></div><button id='closedinfo' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
+    <<Head/binary,Res1/binary,Tail/binary>>.
 
 %%
 

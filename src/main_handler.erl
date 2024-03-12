@@ -1,4 +1,4 @@
-%% Copyright (c) 2012, Wes James <comptekki@gmail.com>
+% Copyright (c) 2012, Wes James <comptekki@gmail.com>
 %% All rights reserve.
 %% 
 %% Redistribution and use in source and binary forms, with or without
@@ -541,23 +541,46 @@ Port/binary,
 			else {
 			  message(sepcol,boxCom[0] + ':');
 		        }
+	console.log('boxCom[2]...');
+	console.log(boxCom[2]);
 
+	console.log('users...');
+	console.log(users);
+		console.log('box...');
+	console.log(box);
+		console.log('retUsers....');
+	console.log(retUsers);
 		        if (boxCom[2].indexOf('command not')<0) {
+				console.log('in1');
 			   if(boxCom[2].length>0) {
+   				console.log('in2');
+   				console.log('-- ",?IGNOREUSERS ," -- ');
                              if(chk_users('", ?IGNOREUSERS, "',boxCom[2])) {
+       				console.log('in3');
 				 if(users.indexOf(box)<0) {
-				     $('#'+box+'status').html(retUsers);									
+				     $('#'+box+'status').html(retUsers);
+//		$('#'+box+'status').html('blah2');
+console.log('retUsers2....');
+	console.log(retUsers);
+
+       				console.log('in44');
 				 }
                                  else {
+    				console.log('in5');
 				   $('#'+box+'status').html('Up');									
                                  }
                              }
                              else {
+      				console.log('retUsers....');
+      				console.log(retUsers);
+       				console.log('in6');
                                  $('#'+box+'status').html('Up');
                              }
                            }
-			   else
+			   else {
+      				console.log('in7');
 			     $('#'+box+'status').html('Up');
+			     }
                         }
                         else {
                            $('#'+box+'status').html('.');
@@ -639,7 +662,10 @@ Port/binary,
 			// meminfo=boxCom[2].replace(/=/gi, '/');
 	      		$('#mem_info').html('['+boxCom[2]+']-Mem');
 			break;
-            case 'list_dwnlds_dir':
+            case 'dbinfo':
+              $('#mngdbbox').html(boxCom[2]);
+              break;
+	    case 'list_dwnlds_dir':
               $('#mngdwnldsbox').html(boxCom[2]);
               break;
             case 'list_ups_dir':
@@ -782,9 +808,25 @@ Port/binary,
        cnt=0;
        userArr=users.split('|');
 
+       console.log('ignore...');
+       console.log(ignore);
+
+       console.log('userarr...');
+       console.log(userArr);
+
        for (var i=0; i<userArr.length; i++) {
+       console.log('userArr[i]');
+       console.log(userArr[i]);
+       
+              console.log('ignore.indexOf(userArr[i])...');
+       console.log(ignore.indexOf(userArr[i]));
+       
           if (ignore.indexOf(userArr[i]) < 0) {
-            if (cnt==0) {
+
+console.log('usrarr[i]');
+	  console.log(userArr[i]);
+
+	    if (cnt==0) {
               cnt++;
               retUsers=userArr[i];
             }
@@ -799,10 +841,22 @@ Port/binary,
             }
           }
        }
+console.log('users....');
+console.log(users);
 
-       if (retUsers.length == 0)
+console.log('retUsers...');
+console.log(retUsers);
+
+console.log('retUsers.length...');
+console.log(retUsers.length);
+
+       if (retUsers.length == 0) {
+       console.log('retUsers.length == 0 ... retrun false');
+retUsers='oink';
            return false;
- 
+       }
+
+console.log('retUsers...return true');
       return true;
     }
 
@@ -1459,6 +1513,11 @@ function progress(e){
       $('#mngtimers').click();
     });
 
+    $(document).on('click', '#closemngdbbox', function(){
+      showmngdbsbox = true;
+      $('#mngdb').click();
+    });
+
     $(document).on('click', '#lockscr', function(evt){
       lockscr();
     });
@@ -1770,6 +1829,7 @@ function progress(e){
     var showmngscrbox = false
     var showmngdwnldsbox = false
     var showmngtimersbox = false
+    var showmngdbbox = false
 
     $('#mngscripts').click(function(){
       if (!showmngscrbox) {
@@ -1824,6 +1884,23 @@ function progress(e){
       else {
         $('#mngtimersbox').hide();
         showmngtimersbox = false;
+      }
+    });
+
+    $('#mngdb').click(function(){
+      if (!showmngdbbox) {
+        $('#mngdbbox').css('z-index', 2003);
+        $('#mngdbbox').siblings('div').css('z-index', 2001);
+        $('#mngdbbox').show();
+        $('#mngdbbox').css('position', 'absolute');
+
+        showmngdbbox = true;
+
+	send('localhost@domain:dbinfo:0');
+      }
+      else {
+        $('#mngdbbox').hide();
+        showmngdbbox = false;
       }
     });
 
@@ -1889,6 +1966,12 @@ function progress(e){
       $('#mngtimersbox').draggable({disabled:false});
     });
 
+    $('#mngdbbox').mouseup(function(evt) {
+      $('#mngdbbox').draggable({disabled:true});
+    }).mousedown(function(evt) {
+      $('#mngdbbox').draggable({disabled:false});
+    });
+
     $('#mngscrbox').draggable({disabled:false});
     $('#mngscrbox').draggable({disabled:true});
 
@@ -1898,16 +1981,23 @@ function progress(e){
     $('#mngtimersbox').draggable({disabled:false});
     $('#mngtimersbox').draggable({disabled:true});
 
+    $('#mngdbbox').draggable({disabled:false});
+    $('#mngdbbox').draggable({disabled:true});
+
     $('#mngscrbox').click(function(evt) {
-      $('#mngscrbox').css('z-index', parseInt($('#mngdwnldsbox').css('z-index')) + parseInt($('#mngtimersbox').css('z-index')));
+      $('#mngscrbox').css('z-index', parseInt($('#mngdwnldsbox').css('z-index')) + parseInt($('#mngtimersbox').css('z-index')) + parseInt($('#mngdbbox').css('z-index')));
     });
 
     $('#mngdwnldsbox').click(function(evt) {
-      $('#mngdwnldsbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngtimersbox').css('z-index')));
+      $('#mngdwnldsbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngtimersbox').css('z-index')) + parseInt($('#mngdbbox').css('z-index')));
     });
 
     $('#mngtimersbox').click(function(evt) {
-      $('#mngtimersbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngdwnldsbox').css('z-index')));
+      $('#mngdbbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngdwnldsbox').css('z-index'))) + parseInt($('#mngtimersbox').css('z-index'));
+    });
+
+    $('#mngdbbox').click(function(evt) {
+      $('#mngdbbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngdwnldsbox').css('z-index')) + parseInt($('#mngtimersbox').css('z-index')));
     });
 
 });
@@ -1971,6 +2061,7 @@ function progress(e){
 <button id='mngscripts' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Scripts and Binaries panel'>Manage Scripts</button>
 <button id='mngdwnlds' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Downloads panel'>Manage Downloads</button>
 <button id='mngtimers' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Timers panel'>Manage Timers</button>
+<button id='mngdb' class='ui-button ui-widget ui-corner-all' title='View DB info panel'>DB</button>
 <span id=refreshtime></span>
 <span id='fncp' style='display:none'>File name copied to Clipboard!</span>
 <div id='mngscrbox' class='ui-widget-content' title='Click to drag window'></div>
@@ -2000,6 +2091,8 @@ function progress(e){
 </table><br>
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
 </div>
+
+<div id='mngdbbox' class='ui-widget-content' title='Click to drag window'></div>
 
 </div> 
 
