@@ -541,44 +541,22 @@ Port/binary,
 			else {
 			  message(sepcol,boxCom[0] + ':');
 		        }
-	console.log('boxCom[2]...');
-	console.log(boxCom[2]);
-
-	console.log('users...');
-	console.log(users);
-		console.log('box...');
-	console.log(box);
-		console.log('retUsers....');
-	console.log(retUsers);
 		        if (boxCom[2].indexOf('command not')<0) {
-				console.log('in1');
 			   if(boxCom[2].length>0) {
-   				console.log('in2');
-   				console.log('-- ",?IGNOREUSERS ," -- ');
                              if(chk_users('", ?IGNOREUSERS, "',boxCom[2])) {
-       				console.log('in3');
 				 if(users.indexOf(box)<0) {
-				     $('#'+box+'status').html(retUsers);
-//		$('#'+box+'status').html('blah2');
-console.log('retUsers2....');
-	console.log(retUsers);
-
-       				console.log('in44');
+				     auser=retUsers.split('|')[1];
+				     unum=retUsers.split('|').length;
+				     $('#'+box+'status').html(auser+'('+unum+')');
 				 }
                                  else {
-    				console.log('in5');
-				   $('#'+box+'status').html('Up');									
-                                 }
+				   $('#'+box+'status').html('Up');						                                 }
                              }
                              else {
-      				console.log('retUsers....');
-      				console.log(retUsers);
-       				console.log('in6');
                                  $('#'+box+'status').html('Up');
                              }
                            }
 			   else {
-      				console.log('in7');
 			     $('#'+box+'status').html('Up');
 			     }
                         }
@@ -808,24 +786,8 @@ console.log('retUsers2....');
        cnt=0;
        userArr=users.split('|');
 
-       console.log('ignore...');
-       console.log(ignore);
-
-       console.log('userarr...');
-       console.log(userArr);
-
        for (var i=0; i<userArr.length; i++) {
-       console.log('userArr[i]');
-       console.log(userArr[i]);
-       
-              console.log('ignore.indexOf(userArr[i])...');
-       console.log(ignore.indexOf(userArr[i]));
-       
           if (ignore.indexOf(userArr[i]) < 0) {
-
-console.log('usrarr[i]');
-	  console.log(userArr[i]);
-
 	    if (cnt==0) {
               cnt++;
               retUsers=userArr[i];
@@ -841,23 +803,10 @@ console.log('usrarr[i]');
             }
           }
        }
-console.log('users....');
-console.log(users);
-
-console.log('retUsers...');
-console.log(retUsers);
-
-console.log('retUsers.length...');
-console.log(retUsers.length);
-
-       if (retUsers.length == 0) {
-       console.log('retUsers.length == 0 ... retrun false');
-retUsers='oink';
+       if (retUsers.length == 0)
            return false;
-       }
 
-console.log('retUsers...return true');
-      return true;
+       return true;
     }
 
     function hdiff(start, end) {
