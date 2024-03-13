@@ -207,7 +207,13 @@ websocket_handle({text, Msg}, State) ->
 		Data2;
 	    <<"dbinfo">> ->
 		send_msg(?SERVERS, <<"dbinfo from ", (pid())/binary>>),
-		Data2= <<Box/binary,":dbinfo:",(dbinfo(Args))/binary>>,
+		case Args of
+		 {blah,blah} ->
+		 	        %Data2=
+				io:format("~p",[<<Box/binary,":dbinfo:",(dbinfo(Args))/binary>>]);
+			_ -> ""
+		end,				   
+		Data2= <<Box/binary,":dbinfo:","test">>,
 
 		%    {ok, Db} = pgsql:connect(?DBHOST, ?USERNAME, ?PASSWORD, [{database, ?DB}, {port, ?PORT}]),
 		%    S = <<"select * from esysman order by atimestamp desc limit 1">>,

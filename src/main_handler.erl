@@ -2042,7 +2042,14 @@ function progress(e){
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
 </div>
 
-<div id='mngdbbox' class='ui-widget-content' title='Click to drag window'></div>
+<div id='mngdbbox' class='ui-widget-content' title='Click to drag window'>
+[ DB Query ]<br><br>
+<button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button>
+<br>
+
+<button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button>
+
+</div>
 
 </div> 
 
