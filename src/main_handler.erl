@@ -1,5 +1,5 @@
-% Copyright (c) 2012, Wes James <comptekki@gmail.com>
-%% All rights reserve.
+%% Copyright (c) 2012, Wes James <comptekki@gmail.com>
+%% All rights reserved.
 %% 
 %% Redistribution and use in source and binary forms, with or without
 %% modification, are permitted provided that the following conditions are met:
@@ -686,8 +686,8 @@ Port/binary,
                 send('0:lockloginfailed:');
               }
               break;
-		    default:
-		      if(boxCom[2] != undefined) {
+            default:
+	            if(boxCom[2] != undefined) {
 		        message(sepcol,boxCom[0] + ': <br>.....' + boxCom[1] + ' ' + boxCom[2] + '<br>' + m.data.replace(/\\n|\\r\\n|\\r/g, '<br>').replace(/->/g, '-> <br>'))
                       }
                	    else if(boxCom[1] == undefined) {
