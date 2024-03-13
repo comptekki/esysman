@@ -208,8 +208,20 @@ websocket_handle({text, Msg}, State) ->
 	    <<"dbinfo">> ->
 		send_msg(?SERVERS, <<"dbinfo from ", (pid())/binary>>),
 		Data2= <<Box/binary,":dbinfo:",(dbinfo(Args))/binary>>,
+
+		%    {ok, Db} = pgsql:connect(?DBHOST, ?USERNAME, ?PASSWORD, [{database, ?DB}, {port, ?PORT}]),
+		%    S = <<"select * from esysman order by atimestamp desc limit 1">>,
+		%    {ok, _, [{Timestampp, Boxp, Userp, Idp}]} = pgsql:squery(Db, S),
+		%    Data2= <<"done - com -> ",
+		%    Args/binary,"  <- sent to: ",Box/binary,
+		%    " -- <br><br>Last record:<br>atimestamp: ",Timestampp/binary,
+		%    "<br>box: ",Boxp/binary,
+		%    "<br>user: ",Userp/binary,
+		%    "<br>id: ",Idp/binary,"<br>">>,
+		
 		io:format("~ndate: ~p -> done - dbinfo ~p ~n",[Date, Box]),
 		Data2;
+
 	    <<"list_dwnlds_dir">> ->
 		send_msg(?SERVERS, <<"list_dwnlds_dir from ", (pid())/binary>>),
 		Data2= <<Box/binary,":list_dwnlds_dir:",(list_dwnld_fls())/binary>>,
@@ -562,23 +574,14 @@ mng_dfile(File) ->
 %%
 
 dbinfo(_Args) ->
-    S = <<"select * from esysman limit 10">>,
-    Res1 = case pgsql:connect(?DBHOST, ?USERNAME, ?PASSWORD, [{database, ?DB}, {port, ?PORT}]) of
-	{error,_} ->
-	    {S, error};
-	{ok, Db} -> 
-	    case pgsql:squery(Db, S) of
-		{error,Error} ->
-		    io:format("insert error: ~p~n", [Error]),
-		    {S, error};
-		{_,Res} ->
-		    pgsql:close(Db),
-		    {S, Res}
-	    end
-    end,
-    Head = <<"<div id='dbinfo'>[ DB Info ]<br><br><button id='closedbinfo' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
-    Tail = <<"</table><div class='brk'></div><button id='closedinfo' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
-    <<Head/binary,Res1/binary,Tail/binary>>.
+%    S = <<"select * from esysman order by atimestamp desc limit 1">>,
+%    Db = pgsql:connect(?DBHOST, ?USERNAME, ?PASSWORD, [{database, ?DB}, {port, ?PORT}]),
+%    Res = pgsql:squery(Db, S),
+
+%    Head = <<"<div id='dbinfo'>[ DB Info ]<br><br><button id='closedbinfo' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
+%    Tail = <<"</table><div class='brk'></div><button id='closedinfo' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
+%    <<Head/binary,Res/binary,Tail/binary>>,
+    <<"dbinfo">>.
 
 %%
 

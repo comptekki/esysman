@@ -641,7 +641,8 @@ Port/binary,
 	      		$('#mem_info').html('['+boxCom[2]+']-Mem');
 			break;
             case 'dbinfo':
-              $('#mngdbbox').html(boxCom[2]);
+	    console.log(boxCom[2]);
+              //$('#mngdbbox').html(boxCom[2]);
               break;
 	    case 'list_dwnlds_dir':
               $('#mngdwnldsbox').html(boxCom[2]);
