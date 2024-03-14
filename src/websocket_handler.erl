@@ -212,9 +212,12 @@ websocket_handle({text, Msg}, State) ->
 		 	        %Data2=
 				io:format("~p",[<<Box/binary,":dbinfo:",(dbinfo(Args))/binary>>]);
 			_ -> ""
-		end,				   
-		Data2= <<Box/binary,":dbinfo:","test">>,
+		end,
+		
+%		Data2= <<Box/binary,":dbinfo:","test">>,
 
+		Data2= <<Box/binary,":dbinfo:",(dbinfo(Args))/binary>>,
+		
 		%    {ok, Db} = pgsql:connect(?DBHOST, ?USERNAME, ?PASSWORD, [{database, ?DB}, {port, ?PORT}]),
 		%    S = <<"select * from esysman order by atimestamp desc limit 1">>,
 		%    {ok, _, [{Timestampp, Boxp, Userp, Idp}]} = pgsql:squery(Db, S),
@@ -587,7 +590,16 @@ dbinfo(_Args) ->
 %    Head = <<"<div id='dbinfo'>[ DB Info ]<br><br><button id='closedbinfo' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
 %    Tail = <<"</table><div class='brk'></div><button id='closedinfo' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
 %    <<Head/binary,Res/binary,Tail/binary>>,
-    <<"dbinfo">>.
+%%    <<"dbinfo">>.
+
+    Head= <<"<div id='scrslist'>[ DB Query ]<br><br><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br><button id='query' class='ui-button ui-widget ui-corner-all'>Submit Query</button> <div class='brk'><br>Query -> <input id='qrytxt' type='text' class='ui-widget' maxlength=60 value='' /><br><br>">>,
+    
+    Mid = <<"query-data">>,
+    
+    Tail = <<"<div class='brk'></div><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
+    
+    <<Head/binary,Mid/binary,Tail/binary>>.
+
 
 %%
 

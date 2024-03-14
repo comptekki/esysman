@@ -641,8 +641,10 @@ Port/binary,
 	      		$('#mem_info').html('['+boxCom[2]+']-Mem');
 			break;
             case 'dbinfo':
-	    console.log(boxCom[2]);
-              //$('#mngdbbox').html(boxCom[2]);
+
+//console.log(boxCom[2]);
+
+		$('#mngdbbox').html(boxCom[2]);
               break;
 	    case 'list_dwnlds_dir':
               $('#mngdwnldsbox').html(boxCom[2]);
@@ -2011,7 +2013,7 @@ function progress(e){
 <button id='mngscripts' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Scripts and Binaries panel'>Manage Scripts</button>
 <button id='mngdwnlds' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Downloads panel'>Manage Downloads</button>
 <button id='mngtimers' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Timers panel'>Manage Timers</button>
-<button id='mngdb' class='ui-button ui-widget ui-corner-all' title='View DB info panel'>DB</button>
+<button id='mngdb' class='ui-button ui-widget ui-corner-all' title='View DB query panel'>DB</button>
 <span id=refreshtime></span>
 <span id='fncp' style='display:none'>File name copied to Clipboard!</span>
 <div id='mngscrbox' class='ui-widget-content' title='Click to drag window'></div>
@@ -2042,14 +2044,7 @@ function progress(e){
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
 </div>
 
-<div id='mngdbbox' class='ui-widget-content' title='Click to drag window'>
-[ DB Query ]<br><br>
-<button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button>
-<br>
-
-<button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button>
-
-</div>
+<div id='mngdbbox' class='ui-widget-content' title='Click to drag window'></div>
 
 </div> 
 
