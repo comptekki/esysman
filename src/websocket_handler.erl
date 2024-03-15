@@ -582,43 +582,23 @@ mng_dfile(File) ->
 
 %%
 
-dbinfo(_Args) ->
-%    S = <<"select * from esysman order by atimestamp desc limit 1">>,
-%    Db = pgsql:connect(?DBHOST, ?USERNAME, ?PASSWORD, [{database, ?DB}, {port, ?PORT}]),
+dbinfo(Args) ->
+    {ok, Db} = pgsql:connect(?DBHOST, ?USERNAME, ?PASSWORD, [{database, ?DB}, {port, ?PORT}]),
+io:format("args: ~p",[Args]),
+    Res1 = case Args of
+    	 <<"0">> ->
+	         S = <<"select * from esysman order by atimestamp desc limit 1">>,
+		 {ok, _, [{Timestampp, Boxp, Userp, Idp}]} = pgsql:squery(Db, S),
+		 <<"-- <br><br>Last record:<br>atimestamp: ",Timestampp/binary,
+		 "<br>box: ",Boxp/binary,
+		 "<br>user: ",Userp/binary,
+		 "<br>id: ",Idp/binary,"<br><br>--<br><br>">>;
+	 _ -> <<"">>
+     end,
+	 
+    Res=binary:replace(Res1, <<":">>, <<"-">>, [global]),
 
-%    Res = pgsql:squery(Db, S),
-
-%{ok, _, [{Timestampp, Boxp, Userp, Idp}]} = pgsql:squery(Db, S),
-
-%Res1 = pgsql:squery(Db, S),
-
-
-%io:format("~p ~p ~p ~p",[Timestampp, Boxp, Userp, Idp]),
-%io:format("~p",[Db]),
-
-%Res = <<"yada">>,
-
-%    Head = <<"<div id='dbinfo'>[ DB Info ]<br><br><button id='closedbinfo' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
-%    Tail = <<"</table><div class='brk'></div><button id='closedinfo' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
-%    <<Head/binary,Res/binary,Tail/binary>>,
-%%    <<"dbinfo">>.
-
-
-		    {ok, Db} = pgsql:connect(?DBHOST, ?USERNAME, ?PASSWORD, [{database, ?DB}, {port, ?PORT}]),
-		    S = <<"select * from esysman order by atimestamp desc limit 1">>,
-		    {ok, _, [{Timestampp, Boxp, Userp, Idp}]} = pgsql:squery(Db, S),
-		    Res1 = <<"-- <br><br>Last record:<br>atimestamp: ",Timestampp/binary,
-		    "<br>box: ",Boxp/binary,
-		    "<br>user: ",Userp/binary,
-		    "<br>id: ",Idp/binary,"<br>">>,
-
-Res = binary:replace(Res1, <<":">>, <<"-">>, [global]),
-
-io:format("~p",[Res]),
-
-
-
-    Head= <<"<div id='scrslist'>[ DB Query ]<br><br><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br><button id='query' class='ui-button ui-widget ui-corner-all'>Submit Query</button> <div class='brk'><br>Query -> <input id='qrytxt' type='text' class='ui-widget' maxlength=60 value='' /><br><br>">>,
+    Head= <<"<div id='scrslist'>[ DB Query ]<br><br><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br><button id='dbquery' class='ui-button ui-widget ui-corner-all'>Submit Query</button> <div class='brk'><br>Query -> <input id='qrytxt' type='text' class='ui-widget' size=90 maxlength=220 value='select * from esysman order by atimestamp desc limit 1' /><br><br>">>,
     
     Mid = Res, %<<"query-data">>,
     
