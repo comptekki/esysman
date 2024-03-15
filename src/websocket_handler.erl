@@ -207,12 +207,12 @@ websocket_handle({text, Msg}, State) ->
 		Data2;
 	    <<"dbinfo">> ->
 		send_msg(?SERVERS, <<"dbinfo from ", (pid())/binary>>),
-		case Args of
-		 {blah,blah} ->
-		 	        %Data2=
-				io:format("~p",[<<Box/binary,":dbinfo:",(dbinfo(Args))/binary>>]);
-			_ -> ""
-		end,
+%		case Args of
+%		 {blah,blah} ->
+%		 	        %Data2=
+%				io:format("~p",[<<Box/binary,":dbinfo:",(dbinfo(Args))/binary>>]);
+%			_ -> ""
+%		end,
 		
 %		Data2= <<Box/binary,":dbinfo:","test">>,
 
@@ -585,16 +585,42 @@ mng_dfile(File) ->
 dbinfo(_Args) ->
 %    S = <<"select * from esysman order by atimestamp desc limit 1">>,
 %    Db = pgsql:connect(?DBHOST, ?USERNAME, ?PASSWORD, [{database, ?DB}, {port, ?PORT}]),
+
 %    Res = pgsql:squery(Db, S),
+
+%{ok, _, [{Timestampp, Boxp, Userp, Idp}]} = pgsql:squery(Db, S),
+
+%Res1 = pgsql:squery(Db, S),
+
+
+%io:format("~p ~p ~p ~p",[Timestampp, Boxp, Userp, Idp]),
+%io:format("~p",[Db]),
+
+%Res = <<"yada">>,
 
 %    Head = <<"<div id='dbinfo'>[ DB Info ]<br><br><button id='closedbinfo' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
 %    Tail = <<"</table><div class='brk'></div><button id='closedinfo' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
 %    <<Head/binary,Res/binary,Tail/binary>>,
 %%    <<"dbinfo">>.
 
+
+		    {ok, Db} = pgsql:connect(?DBHOST, ?USERNAME, ?PASSWORD, [{database, ?DB}, {port, ?PORT}]),
+		    S = <<"select * from esysman order by atimestamp desc limit 1">>,
+		    {ok, _, [{Timestampp, Boxp, Userp, Idp}]} = pgsql:squery(Db, S),
+		    Res1 = <<"-- <br><br>Last record:<br>atimestamp: ",Timestampp/binary,
+		    "<br>box: ",Boxp/binary,
+		    "<br>user: ",Userp/binary,
+		    "<br>id: ",Idp/binary,"<br>">>,
+
+Res = binary:replace(Res1, <<":">>, <<"-">>, [global]),
+
+io:format("~p",[Res]),
+
+
+
     Head= <<"<div id='scrslist'>[ DB Query ]<br><br><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br><button id='query' class='ui-button ui-widget ui-corner-all'>Submit Query</button> <div class='brk'><br>Query -> <input id='qrytxt' type='text' class='ui-widget' maxlength=60 value='' /><br><br>">>,
     
-    Mid = <<"query-data">>,
+    Mid = Res, %<<"query-data">>,
     
     Tail = <<"<div class='brk'></div><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
     
