@@ -593,13 +593,21 @@ io:format("args: ~p",[Args]),
 		 "<br>box: ",Boxp/binary,
 		 "<br>user: ",Userp/binary,
 		 "<br>id: ",Idp/binary,"<br><br>--<br><br>">>;
-	 _ -> <<"">>
+	 _ -> 
+	         S = <<Args/binary>>,
+		 {ok, _, [{Timestampp, Boxp, Userp, Idp}]} = pgsql:squery(Db, S),
+		 <<"-- <br><br>Last record:<br>atimestamp: ",Timestampp/binary,
+		 "<br>box: ",Boxp/binary,
+		 "<br>user: ",Userp/binary,
+		 "<br>id: ",Idp/binary,"<br><br>--<br><br>">>
+
+%<<"">>
      end,
 
-S2 = <<"select distinct(auser), abox from esysman where atimestamp > (SELECT (SELECT current_date - interval \'1 days\') + \'17:00\') group by abox, auser">>,
- {ok, _, Res3} = pgsql:squery(Db, S2),
+% S2 = <<"select distinct(auser), abox from esysman where atimestamp > (SELECT (SELECT current_date - interval \'1 days\') + \'17:00\') group by abox, auser">>,
+%  {ok, _, Res3} = pgsql:squery(Db, S2),
 
-io:format("~p",[Res3]),
+% io:format("~p",[Res3]),
 
     Res=binary:replace(Res1, <<":">>, <<"-">>, [global]),
 

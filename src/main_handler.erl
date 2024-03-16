@@ -1470,6 +1470,12 @@ function progress(e){
       $('#mngdb').click();
     });
 
+    $(document).on('click', '#dbquery', function(){
+      val = $('#qrytxt').val();
+      send('0:dbinfo:'+val);
+    });
+
+
     $(document).on('click', '#lockscr', function(evt){
       lockscr();
     });
