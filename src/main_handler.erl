@@ -642,8 +642,6 @@ Port/binary,
 			break;
             case 'dbinfo':
 
-//console.log(boxCom[2]);
-
 		$('#mngdbbox').html(boxCom[2]);
               break;
 	    case 'list_dwnlds_dir':
@@ -1854,7 +1852,7 @@ function progress(e){
 
         showmngdbbox = true;
 
-	send('localhost@domain:dbinfo:0');
+//	send('localhost@domain:dbinfo:0');
       }
       else {
         $('#mngdbbox').hide();
@@ -2044,13 +2042,26 @@ function progress(e){
 <td id=timertd2><span id=tsystem>Click ecom@host<br>to add it here...</span></td>
 <td id=timertd3><input id=tinfo></td>
 <td id=timertd4><input id=tdaily type=checkbox></td>
-<td id=timertd5><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button><button id='resettimer' class='ui-button ui-widget ui-corner-all'>Reset</button><td></tr>",(get_timers(TimersList,1))/binary,
+<td id=timertd5><button id='addtimer' class='ui-button ui-widget ui-corner-all'>Add Timer</button><button id='resettimer' class='ui-button ui-widget ui-corner-all'>Reset<button><td></tr>",(get_timers(TimersList,1))/binary,
 "
 </table><br>
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
 </div>
 
-<div id='mngdbbox' class='ui-widget-content' title='Click to drag window'></div>
+<div id='mngdbbox' class='ui-widget-content' title='Click to drag window'>
+[ DB Query ]<br><br><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br>
+<button id='dbquery' class='ui-button ui-widget ui-corner-all'>Submit Query</button>
+<br>
+Query -> <input id='qrytxt' type='text' class='ui-widget' size=90 maxlength=220 value='select * from esysman order by atimestamp desc limit 1' /><br><br>
+
+<div>---
+
+---  
+</div>                                                                                                                        
+
+<button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button>
+
+</div>
 
 </div> 
 
