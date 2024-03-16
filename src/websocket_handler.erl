@@ -611,13 +611,14 @@ io:format("args: ~p",[Args]),
 
     Res=binary:replace(Res1, <<":">>, <<"-">>, [global]),
 
-    Head= <<"<div id='scrslist'>[ DB Query ]<br><br><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br><button id='dbquery' class='ui-button ui-widget ui-corner-all'>Submit Query</button> <div class='brk'><br>Query -> <input id='qrytxt' type='text' class='ui-widget' size=90 maxlength=220 value='select * from esysman order by atimestamp desc limit 1' /><br><br>">>,
+%    Head= <<"<div id='scrslist'>[ DB Query ]<br><br><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br><button id='dbquery' class='ui-button ui-widget ui-corner-all'>Submit Query</button> <div class='brk'><br>Query -> <input id='qrytxt' type='text' class='ui-widget' size=90 maxlength=220 value='select * from esysman order by atimestamp desc limit 1' /><br><br>">>,
     
     Mid = Res, %<<"query-data">>,
     
-    Tail = <<"<div class='brk'></div><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
+ %   Tail = <<"<div class='brk'></div><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
     
-    <<Head/binary,Mid/binary,Tail/binary>>.
+%    <<Head/binary,Mid/binary,Tail/binary>>.
+  <<Mid/binary>>.
 
 
 %%

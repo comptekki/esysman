@@ -642,7 +642,7 @@ Port/binary,
 			break;
             case 'dbinfo':
 
-		$('#mngdbbox').html(boxCom[2]);
+		$('#dbinfo').html(boxCom[2]);
               break;
 	    case 'list_dwnlds_dir':
               $('#mngdwnldsbox').html(boxCom[2]);
@@ -2054,7 +2054,9 @@ function progress(e){
 <br>
 Query -> <input id='qrytxt' type='text' class='ui-widget' size=90 maxlength=220 value='select * from esysman order by atimestamp desc limit 1' /><br><br>
 
-<div>---
+<div id=dbinfo>
+
+---
 
 ---  
 </div>                                                                                                                        
