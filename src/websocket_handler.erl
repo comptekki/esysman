@@ -595,11 +595,15 @@ io:format("args: ~p",[Args]),
 		 "<br>id: ",Idp/binary,"<br><br>--<br><br>">>;
 	 _ -> 
 	         S = <<Args/binary>>,
-		 {ok, _, [{Timestampp, Boxp, Userp, Idp}]} = pgsql:squery(Db, S),
-		 <<"-- <br><br>Last record:<br>atimestamp: ",Timestampp/binary,
-		 "<br>box: ",Boxp/binary,
-		 "<br>user: ",Userp/binary,
-		 "<br>id: ",Idp/binary,"<br><br>--<br><br>">>
+		 {ok, _, Qres} = pgsql:squery(Db, S),
+%		 {ok, _, [{Timestampp, Boxp, Userp, Idp}]} = pgsql:squery(Db, S),
+		 <<(list_to_binary(Qres))/binary
+		 %  "-- <br><br>Query Result:",
+		 %  "<br>atimestamp: ", Timestampp/binary,
+		 %  "<br>box: ",Boxp/binary,
+		 %  "<br>user: ",Userp/binary,
+		 %  "<br>id: ",Idp/binary,"<br><br>--<br><br>"
+		 >>
 
 %<<"">>
      end,
