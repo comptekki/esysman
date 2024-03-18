@@ -2051,14 +2051,14 @@ function progress(e){
 <div id='mngdbbox' class='ui-widget-content' title='Click to drag window'>
 [ DB Query ]<br><br><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br>
 <button id='dbquery' class='ui-button ui-widget ui-corner-all'>Submit Query</button>
-<br>
+<br><br>
 Query -> <input id='qrytxt' type='text' class='ui-widget' size=90 maxlength=220 value='select * from esysman order by atimestamp desc limit 1' /><br><br>
 
 <div id=dbinfo>
 
----
-
----  
+--<br><br>
+Query results...<br><br>
+--<br>
 </div>                                                                                                                        
 
 <button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button>

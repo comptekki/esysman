@@ -595,15 +595,15 @@ io:format("args: ~p",[Args]),
 		 "<br>id: ",Idp/binary,"<br><br>--<br><br>">>;
 	 _ -> 
 	         S = <<Args/binary>>,
-		 {ok, _, Qres} = pgsql:squery(Db, S),
+		 {ok, Cols, Rows} = pgsql:squery(Db, S),
+		 process_query(Cols, Rows)
+		   
+%io:format("Cols: ~p - Rows: ~p",[Cols,Rows]),
 %		 {ok, _, [{Timestampp, Boxp, Userp, Idp}]} = pgsql:squery(Db, S),
-		 <<(list_to_binary(Qres))/binary
-		 %  "-- <br><br>Query Result:",
-		 %  "<br>atimestamp: ", Timestampp/binary,
-		 %  "<br>box: ",Boxp/binary,
-		 %  "<br>user: ",Userp/binary,
-		 %  "<br>id: ",Idp/binary,"<br><br>--<br><br>"
-		 >>
+%		 <<"-- <br><br>Last record:<br>atimestamp: ",Timestampp/binary,
+%		 "<br>box: ",Boxp/binary,
+%		 "<br>user: ",Userp/binary,
+%		 "<br>id: ",Idp/binary,"<br><br>--<br><br>">>
 
 %<<"">>
      end,
@@ -622,8 +622,22 @@ io:format("args: ~p",[Args]),
  %   Tail = <<"<div class='brk'></div><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
     
 %    <<Head/binary,Mid/binary,Tail/binary>>.
-  <<Mid/binary>>.
+  <<"<br>--<br><br>", Mid/binary, "<br>--<br><br>">>.
 
+%%
+    
+process_row([ColName|ColNames], [Val|Vals]) ->
+    {_, Col, _, _, _, _} = ColName,
+    <<Col/binary," - ", Val/binary, "<br>", (process_row(ColNames, Vals))/binary>>;
+process_row([], []) ->
+    <<"<br>">>.
+
+%%
+
+process_query(Cols, [Row|Rows]) ->
+    <<(process_query(Cols, Rows))/binary, (process_row(Cols, tuple_to_list(Row)))/binary>>;
+process_query(_Cols,[]) ->
+    <<"">>.
 
 %%
 

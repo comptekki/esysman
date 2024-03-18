@@ -436,19 +436,20 @@ a.clr {
 
 #mngdbbox {
     position:absolute;
-    left:480px;
-    top:360px;
-    width:950px;
+    left:400px;
+    top:200px;
+    width:1400px;
+    min-width:950px;
     height:600px;
+    min-height: 500px;
     padding:10px 10px 10px 10px;
     border:6px solid #888;
-    -moz-border-radius:5x;
+    -moz-border-radius:5px;
     -webkit-border-radius:5px;
     color:yellow;
-    background-color:#003300;
-    overflow-y:scroll;
+    background-color:#003300; 
     display:none;
-    overflow:hidden;
+    overflow:auto;
     z-index:2003;
 }
 
