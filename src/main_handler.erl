@@ -1583,9 +1583,8 @@ function progress(e){
       }
     });
 
-
     $(document).on('keyup', '#qrytxt',function(e) {
-      if(e.which == 9 || (e.shiftKey && e.which == 9)) {
+      if(e.which == 13) {
          $('#dbquery').click();
       }
     });
@@ -1853,10 +1852,17 @@ function progress(e){
 
     $('#mngdb').click(function(){
       if (!showmngdbbox) {
-        $('#mngdbbox').css('z-index', 2003);
+        $('#mngdbbox').css('z-index', 2004);
         $('#mngdbbox').siblings('div').css('z-index', 2001);
         $('#mngdbbox').show();
         $('#mngdbbox').css('position', 'absolute');
+
+        $('#mngdbbox').resizable();
+
+        input = $('#qrytxt');
+        end  = input.val().length;
+        input.focus();
+        input[0].setSelectionRange(end, end);
 
         showmngdbbox = true;
 
@@ -2057,7 +2063,7 @@ function progress(e){
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
 </div>
 
-<div id='mngdbbox' class='ui-widget ui-corner-all' title='Click to drag window'>
+<div id='mngdbbox' class='ui-widget-content' title='Click to drag window'>
 [ DB Query ]<br><br><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br>
 <button id='dbquery' class='ui-button ui-widget ui-corner-all'>Submit Query</button>
 <br><br>
