@@ -1583,6 +1583,14 @@ function progress(e){
       }
     });
 
+
+    $(document).on('keyup', '#qrytxt',function(e) {
+      if(e.which == 9 || (e.shiftKey && e.which == 9)) {
+         $('#dbquery').click();
+      }
+    });
+
+
     refreshtimef();
 
     $('#shutdownTimeH').click(function(){
@@ -1857,6 +1865,7 @@ function progress(e){
       else {
         $('#mngdbbox').hide();
         showmngdbbox = false;
+        $('#mngdbbox').resizable('destroy');
       }
     });
 
@@ -2048,7 +2057,7 @@ function progress(e){
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
 </div>
 
-<div id='mngdbbox' class='ui-widget-content' title='Click to drag window'>
+<div id='mngdbbox' class='ui-widget ui-corner-all' title='Click to drag window'>
 [ DB Query ]<br><br><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br>
 <button id='dbquery' class='ui-button ui-widget ui-corner-all'>Submit Query</button>
 <br><br>

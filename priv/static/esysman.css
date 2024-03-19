@@ -451,6 +451,7 @@ a.clr {
     display:none;
     overflow:auto;
     z-index:2003;
+    resize:both;
 }
 
 table, th, td {
