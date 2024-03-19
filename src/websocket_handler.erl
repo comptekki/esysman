@@ -622,13 +622,13 @@ io:format("args: ~p",[Args]),
  %   Tail = <<"<div class='brk'></div><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
     
 %    <<Head/binary,Mid/binary,Tail/binary>>.
-  <<"<br>--<br><br>", Mid/binary, "<br>--<br><br>">>.
+  <<"<table>", Mid/binary, "</table><br>">>.
 
 %%
     
 process_row([ColName|ColNames], [Val|Vals]) ->
     {_, Col, _, _, _, _} = ColName,
-    <<Col/binary," - ", Val/binary, "<br>", (process_row(ColNames, Vals))/binary>>;
+    <<"<td>",Col/binary,"</td><td>", Val/binary, "</td></tr>", (process_row(ColNames, Vals))/binary>>;
 process_row([], []) ->
     <<"<br>">>.
 
