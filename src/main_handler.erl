@@ -642,7 +642,7 @@ Port/binary,
 			break;
             case 'dbinfo':
 
-		$('#dbinfo').html(boxCom[2]);
+		$('#dbinfo').html(boxCom[2].replace(/~/gi, ':'));
               break;
 	    case 'list_dwnlds_dir':
               $('#mngdwnldsbox').html(boxCom[2]);

@@ -613,7 +613,7 @@ io:format("args: ~p",[Args]),
 
 % io:format("~p",[Res3]),
 
-    Res=binary:replace(Res1, <<":">>, <<"-">>, [global]),
+    Res=binary:replace(Res1, <<":">>, <<"~">>, [global]),
 
 %    Head= <<"<div id='scrslist'>[ DB Query ]<br><br><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br><button id='dbquery' class='ui-button ui-widget ui-corner-all'>Submit Query</button> <div class='brk'><br>Query -> <input id='qrytxt' type='text' class='ui-widget' size=90 maxlength=220 value='select * from esysman order by atimestamp desc limit 1' /><br><br>">>,
     
