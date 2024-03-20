@@ -637,12 +637,10 @@ Port/binary,
 			  message(sepcol,boxCom[0] + ': ' + 'copy');
 			  break;
 		    case 'getmem':
-			// meminfo=boxCom[2].replace(/=/gi, '/');
 	      		$('#mem_info').html('['+boxCom[2]+']-Mem');
 			break;
             case 'dbinfo':
 	      $('#dbinfo').html(boxCom[2].replace(/~/gi, ':'));
-//              $('#mngdbbox').resizable({alsoResize: '#dbinfo'});
               break;
 	    case 'list_dwnlds_dir':
               $('#mngdwnldsbox').html(boxCom[2]);
@@ -1470,6 +1468,7 @@ function progress(e){
 
     $(document).on('click', '#dbquery', function(){
       val = $('#qrytxt').val();
+      val = val.replace(/:/gi, '~');
       send('0:dbinfo:'+val);
     });
 

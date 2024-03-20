@@ -573,7 +573,8 @@ dbinfo(Args) ->
 		 "<br>id: ",Idp/binary,"<br><br>--<br><br>">>;
 	 _ -> 
 	         S = <<Args/binary>>,
-		 {ok, Cols, Rows} = pgsql:squery(Db, S),
+		 S2=binary:replace(S, <<"~">>, <<":">>, [global]),
+		 {ok, Cols, Rows} = pgsql:squery(Db, S2),
 		 process_query(Cols, Rows)
      end,
 
