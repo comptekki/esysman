@@ -207,30 +207,9 @@ websocket_handle({text, Msg}, State) ->
 		Data2;
 	    <<"dbinfo">> ->
 		send_msg(?SERVERS, <<"dbinfo from ", (pid())/binary>>),
-%		case Args of
-%		 {blah,blah} ->
-%		 	        %Data2=
-%				io:format("~p",[<<Box/binary,":dbinfo:",(dbinfo(Args))/binary>>]);
-%			_ -> ""
-%		end,
-		
-%		Data2= <<Box/binary,":dbinfo:","test">>,
-
 		Data2= <<Box/binary,":dbinfo:",(dbinfo(Args))/binary>>,
-		
-		%    {ok, Db} = pgsql:connect(?DBHOST, ?USERNAME, ?PASSWORD, [{database, ?DB}, {port, ?PORT}]),
-		%    S = <<"select * from esysman order by atimestamp desc limit 1">>,
-		%    {ok, _, [{Timestampp, Boxp, Userp, Idp}]} = pgsql:squery(Db, S),
-		%    Data2= <<"done - com -> ",
-		%    Args/binary,"  <- sent to: ",Box/binary,
-		%    " -- <br><br>Last record:<br>atimestamp: ",Timestampp/binary,
-		%    "<br>box: ",Boxp/binary,
-		%    "<br>user: ",Userp/binary,
-		%    "<br>id: ",Idp/binary,"<br>">>,
-		
 		io:format("~ndate: ~p -> done - dbinfo ~p ~n",[Date, Box]),
 		Data2;
-
 	    <<"list_dwnlds_dir">> ->
 		send_msg(?SERVERS, <<"list_dwnlds_dir from ", (pid())/binary>>),
 		Data2= <<Box/binary,":list_dwnlds_dir:",(list_dwnld_fls())/binary>>,
@@ -584,7 +563,6 @@ mng_dfile(File) ->
 
 dbinfo(Args) ->
     {ok, Db} = pgsql:connect(?DBHOST, ?USERNAME, ?PASSWORD, [{database, ?DB}, {port, ?PORT}]),
-io:format("args: ~p",[Args]),
     Res1 = case Args of
     	 <<"0">> ->
 	         S = <<"select * from esysman order by atimestamp desc limit 1">>,
@@ -597,32 +575,11 @@ io:format("args: ~p",[Args]),
 	         S = <<Args/binary>>,
 		 {ok, Cols, Rows} = pgsql:squery(Db, S),
 		 process_query(Cols, Rows)
-		   
-%io:format("Cols: ~p - Rows: ~p",[Cols,Rows]),
-%		 {ok, _, [{Timestampp, Boxp, Userp, Idp}]} = pgsql:squery(Db, S),
-%		 <<"-- <br><br>Last record:<br>atimestamp: ",Timestampp/binary,
-%		 "<br>box: ",Boxp/binary,
-%		 "<br>user: ",Userp/binary,
-%		 "<br>id: ",Idp/binary,"<br><br>--<br><br>">>
-
-%<<"">>
      end,
 
-% S2 = <<"select distinct(auser), abox from esysman where atimestamp > (SELECT (SELECT current_date - interval \'1 days\') + \'17:00\') group by abox, auser">>,
-%  {ok, _, Res3} = pgsql:squery(Db, S2),
-
-% io:format("~p",[Res3]),
-
-    Res=binary:replace(Res1, <<":">>, <<"~">>, [global]),
-
-%    Head= <<"<div id='scrslist'>[ DB Query ]<br><br><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br><button id='dbquery' class='ui-button ui-widget ui-corner-all'>Submit Query</button> <div class='brk'><br>Query -> <input id='qrytxt' type='text' class='ui-widget' size=90 maxlength=220 value='select * from esysman order by atimestamp desc limit 1' /><br><br>">>,
-    
-    Mid = Res, %<<"query-data">>,
-    
- %   Tail = <<"<div class='brk'></div><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button></div>">>,
-    
-%    <<Head/binary,Mid/binary,Tail/binary>>.
-  <<"<table>", Mid/binary, "</table><br>">>.
+     Res=binary:replace(Res1, <<":">>, <<"~">>, [global]),
+     Mid = Res, %<<"query-data">>,
+     <<"<table>", Mid/binary, "</table><br>">>.
 
 %%
     

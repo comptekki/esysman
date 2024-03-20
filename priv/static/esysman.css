@@ -440,7 +440,7 @@ a.clr {
     top:200px;
     width:1400px;
     min-width:950px;
-    height:600px;
+    height:640px;
     min-height: 500px;
     padding:10px 10px 10px 10px;
     border:6px solid #888;
@@ -449,8 +449,19 @@ a.clr {
     color:yellow;
     background-color:#003300; 
     display:none;
-    overflow:auto;
+    overflow:hidden;
     z-index:2003;
+}
+
+#dbinfo {
+    height:400px;
+    min-width:950px;
+    min-height: 400px;
+    color:yellow;
+    background-color:#003300;
+    overflow-y:hidden;
+    overflow-y:auto;
+//    overflow:auto;
 }
 
 table, th, td {

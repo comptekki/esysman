@@ -641,8 +641,8 @@ Port/binary,
 	      		$('#mem_info').html('['+boxCom[2]+']-Mem');
 			break;
             case 'dbinfo':
-
-		$('#dbinfo').html(boxCom[2].replace(/~/gi, ':'));
+	      $('#dbinfo').html(boxCom[2].replace(/~/gi, ':'));
+//              $('#mngdbbox').resizable({alsoResize: '#dbinfo'});
               break;
 	    case 'list_dwnlds_dir':
               $('#mngdwnldsbox').html(boxCom[2]);
@@ -1865,8 +1865,6 @@ function progress(e){
         input[0].setSelectionRange(end, end);
 
         showmngdbbox = true;
-
-//	send('localhost@domain:dbinfo:0');
       }
       else {
         $('#mngdbbox').hide();
@@ -2069,13 +2067,14 @@ function progress(e){
 <br><br>
 Query -> <input id='qrytxt' type='text' class='ui-widget' size=90 maxlength=220 value='select * from esysman order by atimestamp desc limit 1' /><br><br>
 
-<div id=dbinfo>
+<div id=dbinfo class='ui-widget-content'>
 
 --<br><br>
 Query results...<br><br>
 --<br>
 </div>                                                                                                                        
 
+<br>
 <button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button>
 
 </div>
