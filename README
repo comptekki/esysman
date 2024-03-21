@@ -140,7 +140,7 @@ Client/Server Setup
 --------
 Versions
 --------
-1.7
+1.70
 
 -Add a db query panel
 -Update to erlang 26.2.2
