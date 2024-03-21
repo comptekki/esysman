@@ -545,12 +545,19 @@ Port/binary,
 			   if(boxCom[2].length>0) {
                              if(chk_users('", ?IGNOREUSERS, "',boxCom[2])) {
 				 if(users.indexOf(box)<0) {
-				     auser=retUsers.split('|')[1];
-				     unum=retUsers.split('|').length;
-				     $('#'+box+'status').html(auser+'('+unum+')');
+                                     retuval=retUsers.split('|');
+				     if (retuval.length > 1) {
+				       auser=retuval[0];
+				       unum=retuval.length;
+				       $('#'+box+'status').html(auser+'('+unum+')');
+                                     }
+                                     else {
+				       $('#'+box+'status').html(retuval[0]);
+                                     }
 				 }
                                  else {
-				   $('#'+box+'status').html('Up');						                                 }
+                                   $('#'+box+'status').html('Up');
+                                 }
                              }
                              else {
                                  $('#'+box+'status').html('Up');

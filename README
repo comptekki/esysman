@@ -148,7 +148,7 @@ Versions
 -Show only one user (user(count)) on box when multiple users logged in
 -Add linux mem info on main panel for when esysman is running on linux
 -Add msp to manage scripts panel
--A few fixes/cleanup
+-A few updates/fixes/cleanup
 
 --------
 1.60
