@@ -547,9 +547,36 @@ Port/binary,
 				 if(users.indexOf(box)<0) {
                                      retuval=retUsers.split('|');
 				     if (retuval.length > 1) {
-				       auser=retuval[0];
-				       unum=retuval.length;
-				       $('#'+box+'status').html(auser+'('+unum+')');
+                                       userlist = '';
+
+// from: https://stackoverflow.com/questions/15052702/count-unique-elements-in-array-without-sorting
+
+//				       auser=retuval[0];
+//				       unum=retuval.length;
+
+users_cnt = retuval.reduce(function (acc, curr) {
+    if (acc[curr]) {
+        acc[curr] = ++acc[curr];
+    } else {
+        acc[curr] = 1;
+    }
+    return acc;
+}, {});
+
+//console.log(output);
+
+// from: https://www.freecodecamp.org/news/how-to-iterate-over-objects-in-javascript/
+
+for (const aauser in users_cnt) {
+  if (users_cnt.hasOwnProperty(aauser)) {
+    console.log(`${aauser}: ${users_cnt[aauser]}`);
+    userlist = userlist + `${aauser}(${users_cnt[aauser]})`;
+  }
+}
+
+//				       $('#'+box+'status').html(auser+'('+unum+')');
+
+				       $('#'+box+'status').html(userlist);
                                      }
                                      else {
 				       $('#'+box+'status').html(retuval[0]);
