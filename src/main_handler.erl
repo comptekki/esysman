@@ -949,7 +949,30 @@ for (const aauser in users_cnt) {
 
             } 
             else {
-			    $('#msgcl').html(now+':'+msg+'<br>'+$('#msgcl').html());
+              msgs = msg.split(' ');
+              if (msgs.length > 1 && msg.indexOf('pong') < 0) {
+                msguval=msgs[1].split('|');
+
+                userlist = '';
+                users_cnt = msguval.reduce(function (acc, curr) {
+                  if (acc[curr]) {
+                    acc[curr] = ++acc[curr];
+                  } else {
+                    acc[curr] = 1;
+                  }
+                  return acc;
+                }, {});
+
+                for (const aauser in users_cnt) {
+                  if (users_cnt.hasOwnProperty(aauser)) {
+                    userlist = userlist + `${aauser}(${users_cnt[aauser]})` +'|';
+                  }
+                }
+                msg=userlist.slice(0, -1);
+              }
+              
+              $('#msgcl').html(now+':'+msg+'<br>'+$('#msgcl').html());
+
                 mcnt = $('#msgcl').html().length;
                 kb = 1024;
                 mb = 1048576;
