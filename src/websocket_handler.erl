@@ -586,9 +586,9 @@ dbinfo(Args) ->
     
 process_row([ColName|ColNames], [Val|Vals]) ->
     {_, Col, _, _, _, _} = ColName,
-    <<"<td>",Col/binary,"</td><td>", Val/binary, "</td></tr>", (process_row(ColNames, Vals))/binary>>;
+    <<"<tr><td>",Col/binary,"</td><td>", Val/binary, "</td></tr>", (process_row(ColNames, Vals))/binary>>;
 process_row([], []) ->
-    <<"">>.
+    <<"<tr><td>-</td></tr>">>.
 
 %%
 
