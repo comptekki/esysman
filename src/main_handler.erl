@@ -965,7 +965,12 @@ for (const aauser in users_cnt) {
 
                 for (const aauser in users_cnt) {
                   if (users_cnt.hasOwnProperty(aauser)) {
-                    userlist = userlist + `${aauser}(${users_cnt[aauser]})` +'|';
+                    if (users_cnt[aauser] > 1) {
+                      userlist = userlist + `${aauser}(${users_cnt[aauser]})|`;
+                    }
+                    else {
+                       userlist = userlist + `${aauser}|`;
+                    }
                   }
                 }
                 msg=userlist.slice(0, -1);
