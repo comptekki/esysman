@@ -588,7 +588,7 @@ process_row([ColName|ColNames], [Val|Vals]) ->
     {_, Col, _, _, _, _} = ColName,
     <<"<tr><td>",Col/binary,"</td><td>", Val/binary, "</td></tr>", (process_row(ColNames, Vals))/binary>>;
 process_row([], []) ->
-    <<"<tr><td>-</td></tr>">>.
+    <<"<tr><td colspan=100>-</td></tr>">>.
 
 %%
 
