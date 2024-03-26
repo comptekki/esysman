@@ -1850,10 +1850,11 @@ function progress(e){
 
 }//End else - has websockets
 
-    var showmngscrbox = false
-    var showmngdwnldsbox = false
-    var showmngtimersbox = false
-    var showmngdbbox = false
+    var showmngscrbox = false;
+    var showmngdwnldsbox = false;
+    var showmngtimersbox = false;
+    var showmngdbbox = false;
+    var mute_dupe_msgs = false;
 
     $('#mngscripts').click(function(){
       if (!showmngscrbox) {
@@ -2030,6 +2031,9 @@ function progress(e){
       $('#mngdbbox').css('z-index', parseInt($('#mngscrbox').css('z-index')) + parseInt($('#mngdwnldsbox').css('z-index')) + parseInt($('#mngtimersbox').css('z-index')));
     });
 
+    $('#mute_msgdup').click(function(evt) {
+       mute_dupe_msgs = !mute_dupe_msgs;
+    });
 });
 
 </script>
@@ -2196,7 +2200,7 @@ Query results...<br><br>
  </div>
 
  <div id='tmsgsdup' class='tmsgsc'>
-   <div id='mtopdup' class='mtopcd'><button id='duclear' class='clr ui-button ui-widget ui-corner-all' title='Clear Duplicate Messages'>Clr</button> Duplicate Users (most recent at top) <div id='cntdup'>0KB/0L</div></div>
+   <div id='mtopdup' class='mtopcd'><button id='duclear' class='clr ui-button ui-widget ui-corner-all' title='Clear Duplicate Messages'>Clr</button> <button id='mute_msgdup' class='clr ui-button ui-widget ui-corner-all' title='Mute messages'>Mute</button> Duplicate Users (most recent at top) <div id='cntdup'>0KB/0L</div></div>
 
 	 <div id='msgdup' class='msgcd'></div>
 
@@ -3262,6 +3266,9 @@ jschkduRm([Rm|Rows]) ->
     <<"
 
 function chk_dupe_users_",Rm/binary,"(){
+    if (mute_dupe_msgs) {
+      return;
+    }
     var dupe_",Rm/binary,"=[];
 
     var hash_",Rm/binary," = [];
