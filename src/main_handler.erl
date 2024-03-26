@@ -2033,6 +2033,12 @@ function progress(e){
 
     $('#mute_msgdup').click(function(evt) {
        mute_dupe_msgs = !mute_dupe_msgs;
+       if(mute_dupe_msgs) {
+         $('#mute_msgdup').html('Unmute');
+       } else {
+         $('#mute_msgdup').html('Mute');
+       }
+
     });
 });
 
