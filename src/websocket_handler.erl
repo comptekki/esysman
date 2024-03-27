@@ -574,8 +574,17 @@ dbinfo(Args) ->
 	 _ -> 
 	         S = <<Args/binary>>,
 		 S2=binary:replace(S, <<"~">>, <<":">>, [global]),
-		 {ok, Cols, Rows} = pgsql:squery(Db, S2),
-		 process_query(Cols, Rows)
+%		 {ok, Cols, Rows} = pgsql:squery(Db, S2),
+
+                 try pgsql:squery(Db, S2) of
+                   {ok, Cols, Rows} ->
+			 process_query(Cols, Rows);
+                   {error, _Reason} ->
+			 <<"--<br><br>querry error<br><br>--">>
+                 catch
+                   _:_ ->
+			 <<"--<br><br>querry error<br><br>--">>
+                 end
      end,
 
      Res=binary:replace(Res1, <<":">>, <<"~">>, [global]),
