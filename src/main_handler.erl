@@ -569,12 +569,13 @@ users_cnt = retuval.reduce(function (acc, curr) {
 
 for (const aauser in users_cnt) {
   if (users_cnt.hasOwnProperty(aauser)) {
-//    console.log(`${aauser}: ${users_cnt[aauser]}`);
-    userlist = userlist + `${aauser}(${users_cnt[aauser]})` +'|';
+    if (users_cnt[aauser] > 1) {
+      userlist = userlist + `${aauser}(${users_cnt[aauser]})` +'|';
+    } else {
+      userlist = userlist + aauser +'|';
+    }
   }
 }
-
-//				       $('#'+box+'status').html(auser+'('+unum+')');
 
 				       $('#'+box+'status').html(userlist.slice(0, -1));
                                      }
