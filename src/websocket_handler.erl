@@ -580,10 +580,10 @@ dbinfo(Args) ->
                    {ok, Cols, Rows} ->
 			 process_query(Cols, Rows);
                    {error, _Reason} ->
-			 <<"--<br><br>query error<br><br>--">>
+			 <<"--<br><br>Query error<br><br>--">>
                  catch
                    _:_ ->
-			 <<"--<br><br>query error<br><br>--">>
+			 <<"--<br><br>Query error<br><br>--">>
                  end
      end,
 
