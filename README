@@ -1,5 +1,5 @@
 Erlang Systems Manager
-[ ESysMan 1.70 ]
+[ ESysMan 1.80 ]
 
 ESysMan is an Erlang based client/server computer systems 
 management console in which a web browser (with websockets
@@ -139,6 +139,17 @@ Client/Server Setup
 
 --------
 Versions
+--------
+1.80
+
+-Update to release 1.80
+-Change user ouput on each box and message panel
+-Add Mute/Unmute to dupe users panel
+-Add simple error handler to db query
+-Rename jquery file in repo and update to jquery from 3.5.1 to 3.7.1
+-Update esysman-example.hrl to new jquery name
+-Other updates and fixes
+
 --------
 1.70
 
