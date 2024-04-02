@@ -1535,6 +1535,10 @@ function progress(e){
       send('0:dbinfo:'+val);
     });
 
+    $(document).on('click', '#mrrt', function(){
+        refreshtimef();
+    });
+
 
     $(document).on('click', '#lockscr', function(evt){
       lockscr();
@@ -2104,6 +2108,7 @@ function progress(e){
 <button id='mngtimers' class='ui-button ui-widget ui-corner-all' title='Open/Close Manage Timers panel'>Manage Timers</button>
 <button id='mngdb' class='ui-button ui-widget ui-corner-all' title='View DB query panel'>DB</button>
 <span id=refreshtime></span>
+<button id='mrrt' class='ui-button ui-widget ui-corner-all' title='Manual Refresh Refresh Timer'>Refresh</button>
 <span id='fncp' style='display:none'>File name copied to Clipboard!</span>
 <div id='mngscrbox' class='ui-widget-content' title='Click to drag window'></div>
 <div id='mngdwnldsbox' class='ui-widget-content' title='Click to drag window'></div>
@@ -3427,7 +3432,7 @@ now_bin() ->
 get_timers([Timer|Rest],Timercnt) ->
     [Tdate1, Tsys, Tdesc, Tdaily] = Timer,
     Tdate = binary:replace(Tdate1, <<"-">>, <<":">>),
-    <<"<tr><td id=timertd1_' + timercnt + '> ", Tdate/binary, "</td> <td id=timertd2_' + timercnt + '>", Tsys/binary, "</td><td id=timertd3_' + timercnt + '>", Tdesc/binary, "</td><td id=timertd4_' + timercnt + '>", Tdaily/binary, "</td><td id=timertd5_' + timercnt + '><button id=deltimer_", (list_to_binary(integer_to_list(Timercnt)))/binary," class='ui-button ui-widget ui-corner-all' onclick=$(this).closest('tr').remove()>Del Timer</button></td></tr>",(get_timers(Rest,Timercnt + 1))/binary>>;
+    <<"<tr><td id=timertd1_' + timercnt + '> ", Tdate/binary, "</td> <td id=timertd2_' + timercnt + '>", Tsys/binary, "</td><td id=timertd3_' + timercnt + '>", Tdesc/binary, "</td><td id=timertd4_' + timercnt + '>", Tdaily/binary, "</td><td id=timertd5_' + timercnt + '><button id=deltimer_", (list_to_binary(integer_to_list(Timercnt)))/binary," class='ui-button ui-widget ui-corne-all' onclick=$(this).closest('tr').remove()>Del Timer</button></td></tr>",(get_timers(Rest,Timercnt + 1))/binary>>;
 get_timers([],_) ->
     <<>>.
 
