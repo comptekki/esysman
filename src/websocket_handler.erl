@@ -78,8 +78,29 @@ websocket_init(State) ->
 	false ->
 	    register(hanwebs, self())
 	end,
-    timer:apply_interval(?REFRESHTIME, websocket_handler, send_msg, [?SERVERS, <<"com - resetrefreshtimer - from ", (pid())/binary>>]),
+    update_refresh_timer(1),
     {ok, State, hibernate}.
+
+%%
+
+update_refresh_timer(Arg) ->
+    case Arg of
+	1 ->
+	    {ok, TRef} = timer:apply_interval(?REFRESHTIME, websocket_handler, send_msg, [?SERVERS, <<"com - resetrefreshtimer - from ", (pid())/binary>>]),
+io:format("tref: ~p",[TRef]),
+	    Res = file:write_file(?TIMERREFFILE, io_lib:fwrite("~p", [TRef])),
+io:format("tfile write res: ~p",[Res]);
+        _ ->
+	    {ok, [FTRef]} = file:consult(?TIMERREFFILE),
+
+    FTRefToTuple = list_to_tuple([list_to_atom(T) || T <- string:tokens([X || X <- binary_to_list(FTRef), X =/= $\", X=/=${, X=/=$}], ",")]),
+
+
+io:format("tfile read res: ~p",[FTRefToTuple]),
+            timer:cancel(FTRefToTuple),
+	    {ok, TRef} = timer:apply_interval(?REFRESHTIME, websocket_handler, send_msg, [?SERVERS, <<"com - resetrefreshtimer - from ", (pid())/binary>>]),
+	    file:write_file(?TIMERREFFILE, io_lib:fwrite("~p.", [TRef]))
+    end.
 
 %%
 
@@ -204,11 +225,6 @@ websocket_handle({text, Msg}, State) ->
 		{rec_com, Rec_Node} ! {Box,Com,<<"">>},
 		Data2= <<"done - ping sent to: ",Box/binary>>,
 		io:format("~ndate: ~p -> done - ping ~p~n",[Date, Box]),
-		Data2;
-	    <<"dbinfo">> ->
-		send_msg(?SERVERS, <<"dbinfo from ", (pid())/binary>>),
-		Data2= <<Box/binary,":dbinfo:",(dbinfo(Args))/binary>>,
-		io:format("~ndate: ~p -> done - dbinfo ~p ~n",[Date, Box]),
 		Data2;
 	    <<"list_dwnlds_dir">> ->
 		send_msg(?SERVERS, <<"list_dwnlds_dir from ", (pid())/binary>>),
@@ -409,6 +425,17 @@ websocket_handle({text, Msg}, State) ->
 		{ok, [_,_,_,_,_,{OS}]} = file:consult(?CONF),
   		Memo = get_mem(OS),
 		Data2 = <<"done - 0/getmem/",Memo/binary>>,
+		Data2;
+	    <<"dbinfo">> ->
+		send_msg(?SERVERS, <<"dbinfo from ", (pid())/binary>>),
+		Data2= <<Box/binary,":dbinfo:",(dbinfo(Args))/binary>>,
+		io:format("~ndate: ~p -> done - dbinfo ~p ~n",[Date, Box]),
+		Data2;
+	    <<"update_refresh_timer">> ->
+		update_refresh_timer(2),
+		send_msg(?SERVERS, <<"update refresh timer ", (pid())/binary>>),
+		Data2= <<Box/binary,":update_refresh_timer:0">>,
+		io:format("~ndate: ~p -> done - update refresh timer ~p ~n",[Date, Box]),
 		Data2;
 	    _ ->					
 		send_msg(?SERVERS, <<"unsupported command from ", (pid())/binary>>),

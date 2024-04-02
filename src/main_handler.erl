@@ -1537,6 +1537,7 @@ function progress(e){
 
     $(document).on('click', '#mrrt', function(){
         refreshtimef();
+      send('0:update_refresh_timer:2');
     });
 
 
