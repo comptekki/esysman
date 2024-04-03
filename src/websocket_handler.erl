@@ -333,12 +333,12 @@ websocket_handle({text, Msg}, State) ->
 		Data2;
 	    <<"clearcmsg">> ->
 		send_msg(?SERVERS, <<"clearcmsg from ", (pid())/binary>>),
-		io:format("~ndate: ~p -> done - clearing client message panel",[Date]),
+		io:format("~ndate: ~p -> done - clearing client message panel~n",[Date]),
 		Data2= <<"done - clearing client message panel:">>,
 		Data2;
 	    <<"clearsmsg">> ->
 		send_msg(?SERVERS, <<"clearsmsg from ", (pid())/binary>>),
-		io:format("~ndate: ~p -> done - clearing *server message panel",[Date]),
+		io:format("~ndate: ~p -> done - clearing *server message panel~n",[Date]),
 		Data2= <<"done - clearing *server message panel:">>,
 		Data2;
 	    <<"cleardmsg">> ->
