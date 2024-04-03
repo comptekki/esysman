@@ -343,7 +343,7 @@ websocket_handle({text, Msg}, State) ->
 		Data2;
 	    <<"cleardmsg">> ->
 		send_msg(?SERVERS, <<"cleardmsg from ", (pid())/binary>>),
-		io:format("~ndate: ~p -> done - clearing duplicates message panel",[Date]),
+		io:format("~ndate: ~p -> done - clearing duplicates message panel~n",[Date]),
 		Data2= <<"done - clearing duplicates message panel:">>,
 		Data2;
 	    <<"resetall">> ->
