@@ -84,17 +84,17 @@ websocket_init(State) ->
 %%
 
 update_refresh_timer(Arg) ->
-    case Arg of
-	1 ->
-	    {ok, TRef} = timer:apply_interval(?REFRESHTIME, websocket_handler, send_msg, [?SERVERS, <<"com - resetrefreshtimer - from ", (pid())/binary>>]),
-	    file:write_file(?TIMERREFFILE, io_lib:fwrite("~p.", [term_to_binary(TRef)]));
-        _ ->
+    case Arg > 1 of
+        true ->
 	    {ok, [FTRef]} = file:consult(?TIMERREFFILE),
 	    FTRefToTuple = binary_to_term(FTRef),
-            timer:cancel(FTRefToTuple),
-	    {ok, TRef} = timer:apply_interval(?REFRESHTIME, websocket_handler, send_msg, [?SERVERS, <<"com - resetrefreshtimer - from ", (pid())/binary>>]),
-	    file:write_file(?TIMERREFFILE, io_lib:fwrite("~p.", [term_to_binary(TRef)]))
-    end.
+            timer:cancel(FTRefToTuple);
+	_ ->
+	    []
+    end,
+    {ok, TRef} = timer:apply_interval(?REFRESHTIME, websocket_handler, send_msg, [?SERVERS, <<"com - resetrefreshtimer - from ", (pid())/binary>>]),
+    file:write_file(?TIMERREFFILE, io_lib:fwrite("~p.", [term_to_binary(TRef)])).
+
 
 %%
 
