@@ -93,7 +93,7 @@ update_refresh_timer(Arg) ->
 	    FTRefToTuple = binary_to_term(FTRef),
             timer:cancel(FTRefToTuple),
 	    {ok, TRef} = timer:apply_interval(?REFRESHTIME, websocket_handler, send_msg, [?SERVERS, <<"com - resetrefreshtimer - from ", (pid())/binary>>]),
-	    file:write_file(?TIMERREFFILE, io_lib:fwrite("~p.", [TRef]))
+	    file:write_file(?TIMERREFFILE, io_lib:fwrite("~p.", [term_to_binary(TRef)]))
     end.
 
 %%
