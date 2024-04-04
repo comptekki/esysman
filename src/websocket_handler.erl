@@ -348,22 +348,22 @@ websocket_handle({text, Msg}, State) ->
 		Data2;
 	    <<"resetall">> ->
 		send_msg(?SERVERS, <<"resetall from ", (pid())/binary>>),
-		io:format("~ndate: ~p -> done - reset all",[Date]),
+		io:format("~ndate: ~p -> done - reset all~n",[Date]),
 		Data2= <<"done - reset all:">>,
 		Data2;
 	    <<"lockactivate">> ->
 		send_msg(?SERVERS, <<"lockactivate from ", (pid())/binary>>),
-		io:format("~ndate: ~p -> done - lock activate",[Date]),
+		io:format("~ndate: ~p -> done - lock activate~n",[Date]),
 		Data2= <<"done - lock activate:">>,
 		Data2;
 	    <<"lockloginok">> ->
 		send_msg(?SERVERS, <<"lockloginok from ", (pid())/binary>>),
-		io:format("~ndate: ~p -> done - login from lock ok",[Date]),
+		io:format("~ndate: ~p -> done - login from lock ok~n",[Date]),
 		Data2= <<"done - login from lock ok:">>,
 		Data2;
 	    <<"lockloginfailed">> ->
 		send_msg(?SERVERS, <<"lockloginfailed from ", (pid())/binary>>),
-		io:format("~ndate: ~p -> done - login from lock failed",[Date]),
+		io:format("~ndate: ~p -> done - login from lock failed~n",[Date]),
 		Data2= <<"done - login from lock failed:">>,
 		Data2;
 	    <<"toggleawsts">> ->
@@ -379,11 +379,11 @@ websocket_handle({text, Msg}, State) ->
 				"{<<\"" ++ binary_to_list(ShutdownStartTime) ++ "\">>,<<\""
 				++ binary_to_list(ShutdownStopTime) ++ "\">>,<<\"On\">>}.")
 		end,
-		io:format("~ndate: ~p -> done - toggleawsts/~p",[Date,Args]),
+		io:format("~ndate: ~p -> done - toggleawsts/~p~n",[Date,Args]),
 		<<"done - server@localhost/toggleawsts/(",Args/binary,")">>;
 	    <<"chkpasswd">> ->
 		send_msg(?SERVERS, <<"chkpasswd from ", (pid())/binary>>),
-		io:format("~ndate: ~p -> done - chkpasswd",[Date]),
+		io:format("~ndate: ~p -> done - chkpasswd~n",[Date]),
 		{ok, [{Passwd}]}=file:consult(?PASSWDCONF),
 		Data2 =
 		    case Passwd of
@@ -398,7 +398,7 @@ websocket_handle({text, Msg}, State) ->
 		file:write_file(?AUTOSHUTDOWNCONF, 
 				"{<<\"" ++ binary_to_list(ShutdownStartTime) ++ "\">>,<<\"" 
 				++ binary_to_list(ShutdownStopTime) ++ "\">>,<<\"" ++ binary_to_list(OnorOff) ++ "\">>}."),	      
-		io:format("~ndate: ~p -> done - sdtchng/~p",[Date,Args]),
+		io:format("~ndate: ~p -> done - sdtchng/~p~n",[Date,Args]),
 		<<"done - server@localhost/sdtchng/(",Args/binary,")">>;
 	    <<"wkautoshutdown">> ->
 		send_msg(?SERVERS, <<"wkautoshutdown (-",Args/binary,"-",Box/binary,"-) from ", (pid())/binary>>),
@@ -413,7 +413,7 @@ websocket_handle({text, Msg}, State) ->
 	    <<"update_timers">> ->
 		send_msg(?SERVERS, <<"update_timers from ", (pid())/binary>>),
 		file:write_file(?TIMERSCONF, Args),
-		io:format("~ndate: ~p -> done - update_timers/",[Date]),
+		io:format("~ndate: ~p -> done - update_timers~n",[Date]),
 		<<"done - server@localhost/updates_timers">>;
 	    <<"getmem">> ->
 		{ok, [_,_,_,_,_,{OS}]} = file:consult(?CONF),
@@ -814,10 +814,10 @@ fire_wall(Req) ->
 	on ->
 	    case lists:member(PeerAddress,IPAddresses) of
 		true ->
-		    io:format("~ndate: ~p -> websocket - firewall allow -> ~p",[Date, PeerAddress]),
+		    io:format("~ndate: ~p -> websocket - firewall allow -> ~p~n",[Date, PeerAddress]),
 		    allow;
 		false ->
-		    io:format("~ndate: ~p -> websocket - firewall denied -> ~p",[Date, PeerAddress]),
+		    io:format("~ndate: ~p -> websocket - firewall denied -> ~p~n",[Date, PeerAddress]),
 		    deny
 	    end;
 	off ->
