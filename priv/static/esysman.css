@@ -454,14 +454,12 @@ a.clr {
 }
 
 #dbinfo {
-    height:400px;
+    height:60%;
     min-width:950px;
     min-height: 400px;
     color:yellow;
     background-color:#003300;
-    overflow-y:hidden;
-    overflow-y:auto;
-//    overflow:auto;
+    overflow:scroll;
 }
 
 table, th, td {
