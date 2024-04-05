@@ -614,11 +614,19 @@ dbinfo(Args) ->
 
 %%
     
-process_row([ColName|ColNames], [Val|Vals]) ->
-    {_, Col, _, _, _, _} = ColName,
-    <<"<tr><td>",Col/binary,"</td><td>", Val/binary, "</td></tr>", (process_row(ColNames, Vals))/binary>>;
-process_row([], []) ->
-    <<"<tr><td colspan=100>-</td></tr>">>.
+process_row(Colns, Flds) ->
+    <<"<tr>", (get_colns(Colns))/binary, "</tr><tr>", (get_fields(Flds))/binary, "</tr><tr><td colspan=100>-</td></tr>">>.
+
+get_colns([Coln|Colns]) ->
+    {_, Val, _, _, _, _} = Coln,
+    <<"<td>",Val/binary,"</td>", (get_colns(Colns))/binary>>;
+get_colns([]) ->
+    <<"">>.
+
+get_fields([Fld|Flds]) ->
+    <<"<td>",Fld/binary,"</td>", (get_fields(Flds))/binary>>;
+get_fields([]) ->
+    <<"">>.
 
 %%
 
