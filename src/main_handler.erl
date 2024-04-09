@@ -3279,9 +3279,6 @@ jschkduRm([Rm|Rows]) ->
     <<"
 
 function chk_dupe_users_",Rm/binary,"(){
-    if (mute_dupe_msgs) {
-      return;
-    }
     var dupe_",Rm/binary,"=[];
 
     var hash_",Rm/binary," = [];
@@ -3293,7 +3290,7 @@ function chk_dupe_users_",Rm/binary,"(){
 "
     now = getnow();
     for (var key in hash_",Rm/binary,"){
-        if (hash_",Rm/binary,".hasOwnProperty(key) && hash_",Rm/binary,"[key].length > 1) {
+        if (hash_",Rm/binary,".hasOwnProperty(key) && hash_",Rm/binary,"[key].length > 1 && !mute_dupe_msgs) {
             $('#msgdup').html(now+':'+key+':['+hash_",Rm/binary,"[key]+']<br>'+$('#msgdup').html());
                 mcnt = $('#msgdup').html().length;
                 kb = 1024;
