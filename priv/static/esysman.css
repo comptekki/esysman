@@ -1,4 +1,4 @@
-/*
+*
 Copyright (c) 2011, Wes James <comptekki@gmail.com>
 All rights reserved.
 
@@ -440,7 +440,7 @@ a.clr {
     top:200px;
     width:1400px;
     min-width:950px;
-    height:640px;
+    height:800px;
     min-height: 500px;
     padding:10px 10px 10px 10px;
     border:6px solid #888;
@@ -512,7 +512,7 @@ tr.r:hover {
 	height:5000vh;
 	background-color:#444;
 	display:none;
-	z-index:5000;
+	z-index:50000;
 	opacity:0.95;
 	overflow-x: hidden;
 }

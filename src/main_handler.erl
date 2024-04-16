@@ -2143,7 +2143,10 @@ function progress(e){
 [ DB Query ]<br><br><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br>
 <button id='dbquery' class='ui-button ui-widget ui-corner-all'>Submit Query</button>
 <br><br>
-Query -> <input id='qrytxt' type='text' class='ui-widget' size=90 maxlength=220 value='select * from esysman order by atimestamp desc limit 1' /><br><br>
+<table>
+<tr><td text-align=middle style='border:none;'>Query -></td><td style='border:none;'><textarea id='qrytxt' type='text' class='ui-widget' cols=120 rows=5>select * from esysman order by atimestamp desc limit 1</textarea></tr>
+</table>
+<br>
 
 <div id=dbinfo class='ui-widget-content'>
 
