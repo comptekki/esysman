@@ -658,7 +658,6 @@ file_count([]) ->
 file_count(<<>>) ->
     0.
 
-
 %%
 
 any_mng_file(File, _Filter) ->
@@ -671,18 +670,15 @@ any_mng_file(File, _Filter) ->
 		_ ->
 		    Fsize = file_size(Fsize1),
 		    Ftime = file_time(Ftime1),
+		    ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
 		    case File of
 			"any.cmd" -> 
-			    ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
 			    tr1(File, Fsize, Ftime, Res, "cmddiv", "lncmddiv", ShortLnf);
 			"any.exe" -> 
-			    ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
 			    tr1(File, Fsize, Ftime, Res, "exediv", "lnexediv", ShortLnf);
 			"any.msi" -> 
-			    ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
 			    tr1(File, Fsize, Ftime, Res, "msidiv", "lnmsidiv", ShortLnf);
 			"any.msp" -> 
-			    ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
 			    tr1(File, Fsize, Ftime, Res, "mspdiv", "lnmspdiv", ShortLnf);
 			_ -> 
 				<<>>
@@ -725,10 +721,6 @@ mng_file(File, _Filter) ->
 			    "";
 			_ -> 
 			    Filter2 = "",
-			%	case Filter of
-			%	    <<>> -> "";
-			%	    _ -> binary:bin_to_list(Filter)
-			%	end,
 			    FileInfo = mng_file_info(File),
 			    case Filter2 of
 				"" -> 

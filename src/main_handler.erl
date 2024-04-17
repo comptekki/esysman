@@ -102,7 +102,7 @@ checkCreds(UnamePasswds, Req, _Opts) ->
 	    checkPost(UnamePasswds, Req);
 	false  ->
 	    CookieVal = get_cookie_val(), 
-	    Req2 = cowboy_req:set_resp_cookie(Uname, CookieVal, Req, #{max_age =>  ?MAXAGE, path => "/", Secure => true, http_only => true, SameSite => None}),
+	    Req2 = cowboy_req:set_resp_cookie(Uname, CookieVal, Req, #{max_age =>  ?MAXAGE, path => "/", secure => true, http_only => true, samesite => none}),
 	    {pass, Req2}
     end.
 
@@ -114,7 +114,7 @@ checkCreds([{Uname,Passwd}|UnamePasswds], Uarg, Parg, Req) ->
 	    case Passwd of
 		Parg ->
 		    CookieVal = get_cookie_val(), 
-		    Req0 = cowboy_req:set_resp_cookie(Uname, CookieVal, Req, #{max_age =>  ?MAXAGE, path => "/", Secure => true, http_only => true, SameSite => None}),
+		    Req0 = cowboy_req:set_resp_cookie(Uname, CookieVal, Req, #{max_age =>  ?MAXAGE, path => "/", secure => true, http_only => true, samesite => none}),
 		    {pass, Req0};
 		_ ->
 		    checkCreds(UnamePasswds,Uarg,Parg,Req)
