@@ -1630,6 +1630,8 @@ function progress(e){
 
         scrfiltertxt = $(this).val();
 
+// 5 in next two sections means keep top 5 lines in script list
+
         if (value.length > 0) {
           $('#mngscripts tr').slice(5).filter(function() {
             $(this).toggle($(this).find('td').slice(1).text().toLowerCase().indexOf(value) > -1)
