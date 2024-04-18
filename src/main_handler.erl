@@ -1606,11 +1606,13 @@ function progress(e){
 
         scrfiltertxt = $(this).val() + String.fromCharCode(e.which);
 
-        $('#mngscripts tr').slice(4).filter(function() {
+// 5 in next two sections means keep top 5 lines in script list
+
+        $('#mngscripts tr').slice(5).filter(function() {
           $(this).toggle($(this).find('td').slice(1).text().toLowerCase().indexOf(value) > -1)
         });
 
-        $('#mngscripts tr').slice(4).filter(function() {
+        $('#mngscripts tr').slice(5).filter(function() {
             if($(this).find('td').slice(1).text().indexOf('-temp.cmd') > -1)
               $(this).show()
         });
@@ -1629,7 +1631,7 @@ function progress(e){
         scrfiltertxt = $(this).val();
 
         if (value.length > 0) {
-          $('#mngscripts tr').slice(4).filter(function() {
+          $('#mngscripts tr').slice(5).filter(function() {
             $(this).toggle($(this).find('td').slice(1).text().toLowerCase().indexOf(value) > -1)
           });
           scrcount = $('#mngscripts tr').filter(':visible').length-4;
@@ -1640,7 +1642,7 @@ function progress(e){
           showmngscrbox = false;
           $('#mngscripts').click();
         }
-        $('#mngscripts tr').slice(4).filter(function() {
+        $('#mngscripts tr').slice(5).filter(function() {
           if($(this).find('td').slice(1).text().indexOf('-temp.cmd') > -1)
             $(this).show()
         });
