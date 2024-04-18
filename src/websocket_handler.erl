@@ -727,7 +727,14 @@ mng_file(File, _Filter) ->
 			    FileInfo = mng_file_info(File),
 			    case Filter2 of
 				"" -> 
-				    tr(File, Fsize, Ftime, 0, FileInfo);
+				    case 
+					  (string:str(File, ".exe") >= 0) or 
+					  (string:str(File, ".msi") >= 0) or 
+					  (string:str(File, ".msp") >= 0) of
+
+					true -> tr2(File, Fsize, Ftime, 0, FileInfo);
+					_ -> tr(File, Fsize, Ftime, 0, FileInfo)
+				    end;
 				_ ->
 				    FF = string:rstr(File, Filter2),
 				    FIF = string:rstr(FileInfo, Filter2),
@@ -781,6 +788,14 @@ tr1(File, Fsize, Ftime, Res, Fdiv, Ldiv, LnFile) ->
 
 tr(File, Fsize, Ftime, 0, FileInfo) ->
     "<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all' title='Delete File'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all' title='Rename File'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all' 'Link file to any(.cmd/.exe/.msi/.msp)>ln</button><button id='ebut' class='ui-button ui-widget ui-corner-all' title='Edit Script'>Edit</button><button id='fncbut' class='ui-button ui-widget ui-corner-all' title='Copy file name to clipboard'>Copy</button></td><td>"++File++"</td><td align=right>"++Fsize++"</td><td>"++Ftime++"</td><td></td><td>"++FileInfo++"</td></tr>".
+
+%%
+
+tr2(File, Fsize, Ftime, 0, FileInfo) ->
+    "<tr class='r'><td><button id='dbut' class='ui-button ui-widget ui-corner-all' title='Delete File'>Del</button><button id='rbut' class='ui-button ui-widget ui-corner-all' title='Rename File'>Ren</button><button id='lbut' class='ui-button ui-widget ui-corner-all' 'Link file to any(.cmd/.exe/.msi/.msp)>ln</button><button disabled id='lbut2' class='ui-button ui-widget ui-corner-all' 'Link second file to any(.exe/.msi/.msp)>ln2</button><button id='ebut' class='ui-button ui-widget ui-corner-all' title='Edit Script'>Edit</button><button id='fncbut' class='ui-button ui-widget ui-corner-all' title='Copy file name to clipboard'>Copy</button></td><td>"++File++"</td><td align=right>"++Fsize++"</td><td>"++Ftime++"</td><td></td><td>"++FileInfo++"</td></tr>".
+
+
+%%
 
 tr(File, Fsize, Ftime, 2) ->
     "<tr class='r'><td><button id='dbutd' class='ui-button ui-widget ui-corner-all'>Del</button><button id='rbutd' class='ui-button ui-widget ui-corner-all'>Ren</button></td><td>"++File++"</td><td align=right>"++Fsize++"</td><td>"++Ftime++"</td><td></td></tr>".

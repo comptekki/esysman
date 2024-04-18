@@ -1132,6 +1132,22 @@ for (const aauser in users_cnt) {
           }
 	});
 
+
+	$(document).on('click', '#lbut2', function(){
+          if ($(this).parent().next('td').html().indexOf('.exe')>0) {
+            $('#lnexediv').html($(this).parent().next('td').html());
+            send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any2.exe');
+          }
+          else if ($(this).parent().next('td').html().indexOf('.msi')>0) {
+            $('#lnmsidiv').html($(this).parent().next('td').html());
+            send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any2.msi');
+          }
+          else if ($(this).parent().next('td').html().indexOf('.msp')>0) {
+            $('#lnmspdiv').html($(this).parent().next('td').html());
+            send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any2.msp');
+          }
+	});
+
     $(document).on('click', '#rbut', function(){     
       var fnameo = $(this).parent().next('td').html();
 
