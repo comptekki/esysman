@@ -1633,7 +1633,7 @@ function progress(e){
               $(this).show()
         });
 
-        scrcount = $('#mngscripts tr').filter(':visible').length-4;
+        scrcount = $('#mngscripts tr').filter(':visible').length-8;
         $('#scrcount').html('[' + scrcount + ']-Items');
      }
       else {
@@ -1652,7 +1652,7 @@ function progress(e){
           $('#mngscripts tr').slice(8).filter(function() {
             $(this).toggle($(this).find('td').slice(1).text().toLowerCase().indexOf(value) > -1)
           });
-          scrcount = $('#mngscripts tr').filter(':visible').length-4;
+          scrcount = $('#mngscripts tr').filter(':visible').length-8;
           $('#scrcount').html('[' + scrcount + ']-Items');
         } else {
           showmngscrbox = true;
