@@ -1135,16 +1135,16 @@ for (const aauser in users_cnt) {
 
 	$(document).on('click', '#lbut2', function(){
           if ($(this).parent().next('td').html().indexOf('.exe')>0) {
-            $('#lnexediv').html($(this).parent().next('td').html());
-            send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any2.exe');
+            $('#ln2exediv').html($(this).parent().next('td').html());
+            send('0:ln2scrfile:' + $(this).parent().next('td').html() + '+' + 'any2.exe');
           }
           else if ($(this).parent().next('td').html().indexOf('.msi')>0) {
-            $('#lnmsidiv').html($(this).parent().next('td').html());
-            send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any2.msi');
+            $('#ln2msidiv').html($(this).parent().next('td').html());
+            send('0:ln2scrfile:' + $(this).parent().next('td').html() + '+' + 'any2.msi');
           }
           else if ($(this).parent().next('td').html().indexOf('.msp')>0) {
-            $('#lnmspdiv').html($(this).parent().next('td').html());
-            send('0:lnscrfile:' + $(this).parent().next('td').html() + '+' + 'any2.msp');
+            $('#ln2mspdiv').html($(this).parent().next('td').html());
+            send('0:ln2scrfile:' + $(this).parent().next('td').html() + '+' + 'any2.msp');
           }
 	});
 
@@ -1622,13 +1622,13 @@ function progress(e){
 
         scrfiltertxt = $(this).val() + String.fromCharCode(e.which);
 
-// 5 in next two sections means keep top 5 lines in script list
+// 5 in next two sections means keep top 8 lines in script list
 
-        $('#mngscripts tr').slice(5).filter(function() {
+        $('#mngscripts tr').slice(8).filter(function() {
           $(this).toggle($(this).find('td').slice(1).text().toLowerCase().indexOf(value) > -1)
         });
 
-        $('#mngscripts tr').slice(5).filter(function() {
+        $('#mngscripts tr').slice(8).filter(function() {
             if($(this).find('td').slice(1).text().indexOf('-temp.cmd') > -1)
               $(this).show()
         });
@@ -1646,10 +1646,10 @@ function progress(e){
 
         scrfiltertxt = $(this).val();
 
-// 5 in next two sections means keep top 5 lines in script list
+// 5 in next two sections means keep top 8 lines in script list
 
         if (value.length > 0) {
-          $('#mngscripts tr').slice(5).filter(function() {
+          $('#mngscripts tr').slice(8).filter(function() {
             $(this).toggle($(this).find('td').slice(1).text().toLowerCase().indexOf(value) > -1)
           });
           scrcount = $('#mngscripts tr').filter(':visible').length-4;
@@ -1660,7 +1660,7 @@ function progress(e){
           showmngscrbox = false;
           $('#mngscripts').click();
         }
-        $('#mngscripts tr').slice(5).filter(function() {
+        $('#mngscripts tr').slice(8).filter(function() {
           if($(this).find('td').slice(1).text().indexOf('-temp.cmd') > -1)
             $(this).show()
         });

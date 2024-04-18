@@ -263,6 +263,26 @@ websocket_handle({text, Msg}, State) ->
 		io:format("~ndate: ~p -> done - linking file/script file: ~p -> ~p~n",[Date, F1, F2]),
 		Data2= <<"done - linking file/script file: ", F1/binary, "->", F2/binary, "....!">>,
 		Data2;
+	    <<"ln2scrfile">> ->
+		send_msg(?SERVERS, <<"ln2scrfile from ", (pid())/binary>>),
+		[F1,F2] = binary:split(Args, <<"+">>, [global]),
+		case file:make_symlink(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary,F2/binary>>) of
+		    ok ->
+			"";
+		    {error, eexist} ->
+			case binary:split(F1, <<".">>, [global]) of
+			    [_, <<"exe">>] ->
+				file:delete(<<(?UPLOADS)/binary, "any2.exe">>);
+			    [_, <<"msi">>] ->
+				file:delete(<<(?UPLOADS)/binary, "any2.msi">>);
+			    [_, <<"msp">>] ->
+				file:delete(<<(?UPLOADS)/binary, "any2.msp">>)
+			end,
+			file:make_symlink(<<(?UPLOADS)/binary,F1/binary>>, <<(?UPLOADS)/binary, F2/binary>>)
+		end,
+		io:format("~ndate: ~p -> done - linking file/script file (ln2): ~p -> ~p~n",[Date, F1, F2]),
+		Data2= <<"done - linking file/script file (ln2): ", F1/binary, "->", F2/binary, "....!">>,
+		Data2;
 	    <<"renscrfile">> ->
 		send_msg(?SERVERS, <<"renscrfile from ", (pid())/binary>>),
 		[F1,F2] = binary:split(Args, <<"+">>, [global]),
@@ -683,6 +703,15 @@ any_mng_file(File, _Filter) ->
 			"any.msp" ->
 			    ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
 			    tr1(File, Fsize, Ftime, Res, "mspdiv", "lnmspdiv", ShortLnf);
+			"any2.exe" ->
+			    ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
+			    tr1(File, Fsize, Ftime, Res, "exediv", "ln2exediv", ShortLnf);
+			"any2.msi" ->
+			    ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
+			    tr1(File, Fsize, Ftime, Res, "msidiv", "ln2msidiv", ShortLnf);
+			"any2.msp" ->
+			    ShortLnf = erlang:binary_to_list(lists:last(binary:split(erlang:list_to_binary(LnFile),<<"/">>, [global]))),
+			    tr1(File, Fsize, Ftime, Res, "mspdiv", "ln2mspdiv", ShortLnf);
 			_ -> 
 				<<>>
 		    end
@@ -697,6 +726,12 @@ any_mng_file(File, _Filter) ->
 		    tr1(File, "", "", Res, "msidiv", "lnmsidiv", "");
 		"any.msp" ->
 		    tr1(File, "", "", Res, "mspdiv", "lnmspdiv", "");
+		"any2.exe" ->
+		    tr1(File, "", "", Res, "exediv", "ln2exediv", "");
+		"any2.msi" ->
+		    tr1(File, "", "", Res, "msidiv", "ln2msidiv", "");
+		"any2.msp" ->
+		    tr1(File, "", "", Res, "mspdiv", "ln2mspdiv", "");
 		_ -> 
 		    <<>>			
 	    end
@@ -722,11 +757,17 @@ mng_file(File, _Filter) ->
 			    "";
 			"any.msp" -> 
 			    "";
+			"any2.exe" -> 
+			    "";
+			"any2.msi" -> 
+			    "";
+			"any2.msp" -> 
+			    "";
 			_ -> 
-			    Filter2 = "",
+%			    Filter2 = "",
 			    FileInfo = mng_file_info(File),
-			    case Filter2 of
-				"" -> 
+%			    case Filter2 of
+%				"" -> 
 				    case 
 					  (string:str(File, ".exe") > 0) or 
 					  (string:str(File, ".msi") > 0) or 
@@ -734,18 +775,19 @@ mng_file(File, _Filter) ->
  					    true -> tr2(File, Fsize, Ftime, 0, FileInfo);
 					_ ->
 					    tr(File, Fsize, Ftime, 0, FileInfo)
-				    end;
-				_ ->
-				    FF = string:rstr(File, Filter2),
-				    FIF = string:rstr(FileInfo, Filter2),
-				    case (FF > 0) or (FIF > 0) of
-					true -> tr(File, Fsize, Ftime, 0, FileInfo);
-					_ -> ""
-				    end
-			    end
+				    end %;
+%				_ ->
+%				    FF = string:rstr(File, Filter2),
+%				    FIF = string:rstr(FileInfo, Filter2),
+%				    case (FF > 0) or (FIF > 0) of
+%					true -> tr(File, Fsize, Ftime, 0, FileInfo);
+%					_ -> ""
+%				    end
+%			    end
 		    end
 	    end;
 	_ ->
+
 	    case File of
 		"any.cmd" ->
 		    "";
@@ -754,7 +796,13 @@ mng_file(File, _Filter) ->
 		"any.msi" ->
 		    "";			
 		"any.msp" ->
+		    "";
+		"any2.exe" ->
 		    "";			
+		"any2.msi" ->
+		    "";			
+		"any2.msp" ->
+		    "";		
 		_ -> 
 		    tr(File, "", "", 0, mng_file_info(File))	
 	    end
