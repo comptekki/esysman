@@ -532,7 +532,7 @@ tr.r:hover {
 }
 
 .ui-front{
-	z-index: 6000 !important;
+	z-index: 35000 !important;
 }
 
 .ui-resizable-se{
