@@ -728,12 +728,12 @@ mng_file(File, _Filter) ->
 			    case Filter2 of
 				"" -> 
 				    case 
-					  (string:str(File, ".exe") >= 0) or 
-					  (string:str(File, ".msi") >= 0) or 
-					  (string:str(File, ".msp") >= 0) of
-
-					true -> tr2(File, Fsize, Ftime, 0, FileInfo);
-					_ -> tr(File, Fsize, Ftime, 0, FileInfo)
+					  (string:str(File, ".exe") > 0) or 
+					  (string:str(File, ".msi") > 0) or 
+					  (string:str(File, ".msp") > 0) of
+ 					    true -> tr2(File, Fsize, Ftime, 0, FileInfo);
+					_ ->
+					    tr(File, Fsize, Ftime, 0, FileInfo)
 				    end;
 				_ ->
 				    FF = string:rstr(File, Filter2),
