@@ -489,7 +489,7 @@ Port/binary,
                 if (m.data.indexOf('cleardmsg') > -1) {
                     $('#msgdup').html('');
                     $('#cntdup').html('0K/L');
-                    $('#cntrst').html('(0) Reset');
+//                    $('#cntrst').html('(0) Reset');
                 }
                 if (m.data.indexOf('clearsmsg') > -1) {
                     $('#msgsm').html('');
