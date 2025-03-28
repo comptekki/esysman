@@ -346,11 +346,13 @@ a.button { text-decoration:none; padding: 0 2px 0 2px; }
 
 .checkbox
 {
-    float:left;
-    -moz-transform:scale(0.75);
-    -webkit-transform:scale(0.75);
-    -o-transform:scale(0.75);
-    transform:scale(0.75);
+    float:left;i
+    // orig 0.75
+    -moz-transform:scale(1.5);
+    -webkit-transform:scale(1.5);
+    -o-transform:scale(1.5);
+    transform:scale(1.5);
+    margin: 5px 5px 0px 0px; //top right bottom left
 }
 
 .cols {
