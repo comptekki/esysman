@@ -26,4 +26,8 @@
 -ssl_dist_opt server_certfile "/path/to/esysman/priv/ssl/server.crt"
 -ssl_dist_opt server_keyfile "/path/to/esysman/priv/ssl/server.key"
 -ssl_dist_opt server_secure_renegotiate true client_secure_renegotiate true
+#-ssl_dist_opt client_verify verify_peer
+-ssl_dist_opt client_verify verify_none
+#-ssl_dist_opt server_verify verify_peer
+-ssl_dist_opt server_verify verify_none
 
