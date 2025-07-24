@@ -464,15 +464,15 @@ get_user([UserInfo|Rest], PLATFORM, USERS) ->
 		    end
 	    end;
 	_ ->
-	    User =
-		case string:tokens(UserInfo, " ")  of
-		    [Usert,_,_,_] ->
-			Usert;
-		    [Usert,_,_,_,_] ->
-			Usert;
-		    [Usert,_,_,_,_,_] ->
-			Usert
-		end,
+	    [User|_] = string:tokens(UserInfo, " "),
+%		case string:tokens(UserInfo, " ")  of
+%		    [Usert,_,_,_] ->
+%			Usert;
+%		    [Usert,_,_,_,_] ->
+%	    Usert;
+%		    [Usert,_,_,_,_,_] ->
+%			Usert
+%		end,
 	    case Rest of
 		[] ->
 		    User;
