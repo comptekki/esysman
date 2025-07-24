@@ -60,7 +60,6 @@ does the command processing sent from the server.
 
 Todo list:
 
-- Get client OS, applications and hardware inventory
 - Create better comments/specs for functions
 - Create layout via web app, not just edit text file
 - Move .hrl vars to .conf

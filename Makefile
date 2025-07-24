@@ -1,6 +1,6 @@
 PROJECT = esysman
 PROJECT_DESCRIPTION = esysman
-PROJECT_VERSION = 1.9
+PROJECT_VERSION = 1.90
 
 DEPS = cowboy epgsql
 REL_DEPS += relx
