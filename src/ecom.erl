@@ -150,7 +150,7 @@ process_msg(SERVERS, WEBCLIENTS, ConfVars, Box, Com, Args) ->
 		<<"unamea">> ->
 		    case PLATFORM of
 			"x" ->
-			    Res = os:cmd("/bin/uname -a"),
+			    Res = os:cmd(string:strip(os:cmd("which uname"), right, $\n) ++ " -a"),
 			    send_msg(SERVERS, WEBCLIENTS, <<Box/binary,(list_to_binary(":unamea -> done..."))/binary, (fix_log(Res))/binary>>);
 			_ ->
 			    send_msg(SERVERS, WEBCLIENTS, <<Box/binary,":error - no function on this platform...">>)
