@@ -2023,7 +2023,7 @@ function progress(e){
       $('#mngtimersbox').draggable({disabled:false});
     });
 
-    $('#mngdbbox').mouseup(function(evt) {
+    $('#mngdbboxh').mouseup(function(evt) {
       $('#mngdbbox').draggable({disabled:true});
     }).mousedown(function(evt) {
       $('#mngdbbox').draggable({disabled:false});
@@ -2038,8 +2038,8 @@ function progress(e){
     $('#mngtimersbox').draggable({disabled:false});
     $('#mngtimersbox').draggable({disabled:true});
 
-    $('#mngdbbox').draggable({disabled:false});
-    $('#mngdbbox').draggable({disabled:true});
+//    $('#mngdbbox').draggable({disabled:false});
+//    $('#mngdbbox').draggable({disabled:true});
 
     $('#mngscrbox').click(function(evt) {
       $('#mngscrbox').css('z-index', parseInt($('#mngdwnldsbox').css('z-index')) + parseInt($('#mngtimersbox').css('z-index')) + parseInt($('#mngdbbox').css('z-index')));
@@ -2159,8 +2159,9 @@ function progress(e){
 <button id='closemngtimersbox' class='ui-button ui-widget ui-corner-all'>Close</button>
 </div>
 
-<div id='mngdbbox' class='ui-widget-content' title='Click to drag window'>
-[ DB Query ]<br><br><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br>
+<div id='mngdbbox' class='ui-widget-content'>
+<div id='mngdbboxh' class='ui-widget ui-corner-all' style='background-color: black; text-align:center;' title='Click to drag window'> [ DB Query ] </div>
+<br><button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button><br><br>
 <button id='dbquery' class='ui-button ui-widget ui-corner-all'>Submit Query</button>
 <br><br>
 <table>
@@ -2174,7 +2175,6 @@ function progress(e){
 Query results...<br><br>
 --<br>
 </div>                                                                                                                        
-
 <br>
 <button id='closemngdbbox' class='ui-button ui-widget ui-corner-all'>Close</button>
 
