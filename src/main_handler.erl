@@ -1962,7 +1962,7 @@ function progress(e){
     });
 
 	$('#smbig').click(function(){
-          if ($('.msgcsm').height() < 1024) {
+          if ($('.msgcsm').height() < 1023) {
               $('.msgcsm').height(1024);
               $('.msgcsm').width(1024);
               $('.msgcsm').css('position', 'absolute');
@@ -1976,7 +1976,7 @@ function progress(e){
 	});
 
 	$('#clbig').click(function(){
-          if ($('.msgc').height() < 1024) {
+          if ($('.msgc').height() < 1023) {
               $('.msgc').height(1024);
               $('.msgc').width(1024);
               $('.msgc').css('position', 'absolute');
