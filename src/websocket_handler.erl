@@ -866,7 +866,7 @@ mng_file_info(File) ->
 %%
 
 terminate(Reason, _Opts, _State) ->
-    io:format("~nTerminate Reason: ~p~n", [Reason]),
+    io:format("~nTerminate Reason: ~p - ~p ~n~n", [Reason,calendar:local_time()]),
     ok.
 
 %%
