@@ -47,7 +47,7 @@ init(Req, State) ->
     Res =
 	case fire_wall(Req) of
 	    allow ->
-		io:format("~n~nhost ws connect ok....~n"),
+		io:format("~n~nhost ws connect ok.... ~p~n~n", [calendar:local_time()]),
 %	Opts = #{ compress => true, idle_timeout => 36000000 },
 		Opts = #{ idle_timeout => 31200000 },
 		{cowboy_websocket, Req, State, Opts};
