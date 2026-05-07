@@ -658,6 +658,8 @@ process_query(_Cols,[]) ->
 %%
 
 list_up_fls(Filter) ->
+%    filelib:ensure_dir(<<(?UPLOADS)/binary>>),
+    filelib:ensure_dir(<<(?UPLOADS)/binary,"info/">>),
     {ok, Files0}=file:list_dir(?UPLOADS),
     Files=lists:sort(Files0),
     Head= <<"<script>$('#scrfilter').focus(); var tmp=$('#scrfilter').val(); $('#scrfilter').val(''); $('#scrfilter').val(tmp);</script><div id='scrslist'>[ Manage Scripts ]<br><br><button id='closescrslist' class='ui-button ui-widget ui-corner-all'>Close</button><button id='addscrf' class='ui-button ui-widget ui-corner-all'>Add Script</button> <div id='scrcount' class='fr'>[">>,
