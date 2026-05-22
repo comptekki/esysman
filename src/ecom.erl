@@ -343,6 +343,8 @@ process_msg(SERVERS, WEBCLIENTS, ConfVars, Box, Com, Args) ->
 	    case PLATFORM of
 		"w" ->
 		    os:cmd("shutdown -s -f -t 0");
+		"b" ->
+                    os:cmd("poweroff");
 		_ ->
 		    os:cmd("shutdown -h now")
 	    end;
