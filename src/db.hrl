@@ -4,4 +4,4 @@
 -define(PASSWORD, "pguser").
 -define(PORT, 5432).
 -define(TABLE, 	[<<"timedate">>, <<"boxuser">>]).
--define(USEPG, <<"false">>). % use pgsql -> true or false
+-define(USEPG, <<"true">>). % use pgsql -> true or false
