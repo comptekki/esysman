@@ -537,7 +537,9 @@ chk_insert([B1, _, B2]) ->
 	[_, _] ->
 	    [];
 	_ ->		
-            case binary:match(B2,binary:split(?IGNOREUSERS2,<<":">>,[global]), []) of
+            case ?USEPG of
+	     <<"true">> ->
+              case binary:match(B2,binary:split(?IGNOREUSERS2,<<":">>,[global]), []) of
 		nomatch ->
 		    {{Year, Month, Day}, {Hour, Min, _}} = calendar:local_time(),
 		    TimeStamp = list_to_binary(io_lib:format("~p-~2..0B-~2..0B ~2..0B:~2..0B", [Year, Month, Day, Hour, Min])),
@@ -551,7 +553,9 @@ chk_insert([B1, _, B2]) ->
 		    end;
 		_  -> 
 		    ok
-	    end
+  	       end;
+	  _ -> ok
+	 end
     end;
 chk_insert(_Data) when length(_Data) >= 2 -> ok.
 
